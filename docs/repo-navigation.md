@@ -72,6 +72,8 @@ This guide is a quick map for contributors and coding agents working in this mon
 
 ## 6) Build/test entry points
 
+- Pluto fork release: [`pluto-decoder-release.md`](pluto-decoder-release.md).
+
 - Build workspace WASM: `cargo build --target wasm32-unknown-unknown --release`
 - Build/pack per package: `make build`, `make pack` (where Makefile exists)
 - Local stream checks: `make noop` / `make gui` in module directories
