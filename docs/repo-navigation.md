@@ -40,6 +40,7 @@ This guide is a quick map for contributors and coding agents working in this mon
 ### Work on sink schemas
 
 - ClickHouse: `svm-*/clickhouse/schema.*.sql` and `Makefile`.
+- Canonical decoder-history archives and additive diagnostics: `svm-dex/backfill/`.
 
 ## 4) Workspace module inventory
 

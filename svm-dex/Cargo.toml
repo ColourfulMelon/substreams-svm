@@ -12,6 +12,7 @@ substreams = { workspace = true }
 substreams-solana = { workspace = true }
 substreams-database-change = { workspace = true }
 num_enum = "0.7.4"
+prost = { workspace = true }
 
 proto = { path = "../proto" }
 common = { path = "../common" }

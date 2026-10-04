@@ -1,3 +1,4 @@
+mod backfill;
 use common::db::{common_key_v2, set_clock};
 use proto::pb::dex::swaps::v1 as pb;
 use substreams::{errors::Error, pb::substreams::Clock};
@@ -31,7 +32,11 @@ fn protocol_slug(protocol: i32) -> &'static str {
 }
 
 #[substreams::handlers::map]
-pub fn db_out(mut clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
+pub fn db_out(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
+    write_swaps(clock, swaps)
+}
+
+fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
     let mut tables = substreams_database_change::tables::Tables::new();
 
     for (transaction_index, transaction) in swaps.transactions.iter().enumerate() {
