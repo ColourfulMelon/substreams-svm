@@ -3052,7 +3052,7 @@ dependencies = [
 [[package]]
 name = "substreams-solana-idls"
 version = "1.4.0"
-source = "git+https://github.com/pinax-network/substreams-solana-idls?tag=v1.4.0#67dc692c5000b616f3d942973ac3d58bffee204a"
+source = "git+https://github.com/pinax-network/substreams-solana-idls?rev=fb8fd5b75e4122534f118c9471315212abdca6bf#fb8fd5b75e4122534f118c9471315212abdca6bf"
 dependencies = [
  "base64 0.22.1",
  "borsh 1.5.7",

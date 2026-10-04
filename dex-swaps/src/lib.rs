@@ -159,3 +159,47 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         swaps,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn restores_missing_legs_from_public_transactions() {
+        for (fixture, pool, input_mint, output_mint, count) in [
+            (
+                include_bytes!("../fixtures/privacy.transaction.pb").as_slice(),
+                "2YwxAtr1XjYHm7VkraEVj4P4n7YL4m7NDsLjf4pUhZwX",
+                "So11111111111111111111111111111111111111112",
+                "H5hygVvXiYxk2a3BVtjiqcDJK8TdHTB5u5U1fXEuBAGS",
+                2,
+            ),
+            (
+                include_bytes!("../fixtures/knet.transaction.pb").as_slice(),
+                "B1JkXQH1yvTQtRavmAStwoy2Pu54SsjLqfWphL9VwpGu",
+                "CfVs3waH2Z9TM397qSkaipTDhA9wWgtt8UchZKfwkYiu",
+                "So11111111111111111111111111111111111111112",
+                1,
+            ),
+            (
+                include_bytes!("../fixtures/oilinu.transaction.pb").as_slice(),
+                "9Bvmg9W8yFv3bKAWeCBNWwKtCNYi8BgKqGKTDtsrRPVx",
+                "So11111111111111111111111111111111111111112",
+                "GJqCjtgEwqdFWVRsDs8JXKFoTeRVZeHs1RL4ccvrpump",
+                1,
+            ),
+        ] {
+            let transaction = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let decoded = process_transaction(transaction).expect("successful swap must be emitted");
+            assert_eq!(decoded.swaps.len(), count);
+            let swap = decoded
+                .swaps
+                .iter()
+                .find(|swap| base58::encode(&swap.amm_pool) == pool)
+                .expect("pool leg must be present");
+            assert_eq!(base58::encode(&swap.input_mint), input_mint);
+            assert_eq!(base58::encode(&swap.output_mint), output_mint);
+            assert!(swap.input_amount > 0 && swap.output_amount > 0);
+        }
+    }
+}
