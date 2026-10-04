@@ -1,0 +1,74 @@
+specVersion: v0.1.0
+package:
+  name: pluto_decoder_backfill
+  version: v0.1.0
+  description: Semantic additions between the production decoder and Pluto decoder fixes.
+  url: https://github.com/ColourfulMelon/substreams-svm
+imports:
+  previous: ../../spkg/svm-clickhouse-dex-v0.5.2.spkg
+  repaired: ../../spkg/dex-swaps-v0.5.2-pluto.1.spkg
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ../../target/wasm32-unknown-unknown/release/svm_dex.wasm
+modules:
+  - name: previous_events
+    use: previous:db:dex_swaps:map_events
+  - name: repaired_events
+    use: repaired:map_events
+  - name: map_missing_swaps
+    kind: map
+    inputs:
+      - map: previous_events
+      - map: repaired_events
+    output:
+      type: proto:dex.swaps.v1.Events
+  - name: db_out
+    kind: map
+    inputs:
+      - source: sf.substreams.v1.Clock
+      - map: map_missing_swaps
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+  - name: map_routed_updates
+    kind: map
+    inputs:
+      - map: previous_events
+      - map: repaired_events
+    output:
+      type: proto:dex.swaps.v1.Events
+  - name: map_previous_unassigned
+    kind: map
+    inputs:
+      - map: previous_events
+    output:
+      type: proto:dex.swaps.v1.Events
+  - name: db_routed
+    kind: map
+    inputs:
+      - source: sf.substreams.v1.Clock
+      - map: map_routed_updates
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+  - name: db_unassigned
+    kind: map
+    inputs:
+      - source: sf.substreams.v1.Clock
+      - map: map_previous_unassigned
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+  - name: db_backfill
+    kind: map
+    inputs:
+      - map: db_out
+      - map: db_routed
+      - map: db_unassigned
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+sink:
+  module: db_backfill
+  type: sf.substreams.sink.sql.v1.Service
+  config:
+    schema: ./schema.sql
+    engine: clickhouse
+network: solana

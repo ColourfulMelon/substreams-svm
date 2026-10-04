@@ -1,0 +1,26 @@
+specVersion: v0.1.0
+package:
+  name: pluto_decoder_history
+  version: v0.1.0
+  description: Canonical daily history for repairing every affected token.
+  url: https://github.com/ColourfulMelon/substreams-svm
+imports:
+  repaired: ../../spkg/svm-clickhouse-dex-v0.5.2-pluto.1.spkg
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ../../target/wasm32-unknown-unknown/release/svm_dex.wasm
+modules:
+  - name: db_archive
+    kind: map
+    inputs:
+      - map: repaired:db_out
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+sink:
+  module: db_archive
+  type: sf.substreams.sink.sql.v1.Service
+  config:
+    schema: ./history-schema.sql
+    engine: clickhouse
+network: solana

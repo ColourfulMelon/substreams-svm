@@ -3118,6 +3118,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "num_enum",
+ "prost",
  "proto",
  "substreams 0.7.3",
  "substreams-database-change",
