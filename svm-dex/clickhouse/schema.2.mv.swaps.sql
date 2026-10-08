@@ -39,7 +39,7 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS event_id String COMMENT 'signature:AMM invocation:transfer position',
     ADD COLUMN IF NOT EXISTS source_instruction_index UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,
-    ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) DEFAULT '',
+    ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) MATERIALIZED '',
 
     -- indexes --
     ADD INDEX IF NOT EXISTS         idx_input_amount                (input_amount) TYPE minmax GRANULARITY 1,
@@ -60,3 +60,9 @@ ALTER TABLE swaps
     ADD PROJECTION IF NOT EXISTS    prj_user_by_minute              ( SELECT user, minute GROUP BY user, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_input_mint_by_minute        ( SELECT input_mint, minute GROUP BY input_mint, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_output_mint_by_minute       ( SELECT output_mint, minute GROUP BY output_mint, minute );
+
+-- The diagnostic-free db_out omits this legacy field. The SQL sink derives its
+-- explicit insert list from non-materialized columns, so a writable default
+-- would expect a field that is no longer streamed. Retain existing values and
+-- change metadata only; do not MATERIALIZE or rewrite historical partitions.
+ALTER TABLE swaps MODIFY COLUMN verification_failure LowCardinality(String) MATERIALIZED '';
