@@ -3,7 +3,11 @@
 The Pluto normalized decoder adds GoonFi V2, BisonFi, Manifest, HumidiFi,
 classic Orca V2, AlphaQ, Kipseli, Flux, Scorch, Obsidian, TesseraV, Deriverse
 and ZeroFi in `dex-swaps/src/native_venues.rs`. Protocol enum IDs 21–33 are
-appended; existing IDs and the ClickHouse swap schema remain unchanged.
+appended; existing IDs remain unchanged. The ClickHouse protocol enums append these IDs
+on swaps, pool/candle state and their materialized views. Apply the idempotent
+`schema.4.native_venues.sql` migration with the writer stopped before starting
+the new writer. Projection/view metadata is refreshed once; the pricing
+startup helper skips it when every expected enum is already present.
 
 ## Helius comparison (2026-10-08)
 
@@ -98,7 +102,7 @@ Finalized token flows determine the amounts; parser labels alone are insufficien
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains
-swaps with the existing 24 fields and compact block counters. Previously missing
+swaps with the existing 22 emitted fields and compact block counters. Previously missing
 trades can increase swap-row volume; native/router deduplication prevents counting
 the same physical leg twice. The targeted sample does not predict billing growth.
 
