@@ -82,6 +82,24 @@ Native support means swaps are decoded directly from on-chain program instructio
 | ByReal CLMM | REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2 |
 | Jupiter Aggregator V4 | JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB |
 | Jupiter Aggregator V6 | JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 |
+| GoonFi V2 | goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE |
+| BisonFi | BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi |
+| Manifest | MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms |
+| HumidiFi | 9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp |
+| Orca V2 (classic token swap) | 9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP |
+| AlphaQ | ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA |
+| Kipseli | 3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU |
+| Flux | FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK |
+| Scorch | SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn |
+| Obsidian | HBVw6bZtcCaezhcBrmfyXBSBRWCdv72271xQ4GPvms2z |
+| TesseraV | TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH |
+| Deriverse | DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD |
+| ZeroFi | ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY |
+
+The additional native venues are normalized in `dex-swaps/src/native_venues.rs`.
+Only recognized swap instruction variants with exact scoped token-flow evidence
+are emitted. See [the Helius validation notes](docs/native-venue-validation.md)
+for verified variants, fixtures and exclusions.
 
 ## Quick Build
 

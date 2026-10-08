@@ -26,6 +26,14 @@ This guide is a quick map for contributors and coding agents working in this mon
 
 ### Add or edit a DEX protocol decoder
 
+For the Pluto normalized pricing stream, start in `dex-swaps/src/lib.rs`,
+`native_venues.rs`, `quality.rs`, and `routed_pool.rs`. Additional native
+market layouts do not need separate imported modules or SQL schema changes.
+See [`native-venue-validation.md`](native-venue-validation.md) for verified
+variants and fixture evidence.
+
+For standalone protocol packages:
+
 1. Start in `dex/<protocol>/` and update `src/lib.rs`.
 2. Confirm `substreams.yaml` block filter (`program:<PROGRAM_ID>`).
 3. Ensure matching protobuf in `proto/v1/*.proto`.

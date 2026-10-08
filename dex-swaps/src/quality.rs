@@ -16,11 +16,14 @@ use crate::token_mints::TokenMintLookup;
 
 struct Transfer {
     index: u32,
+    depth: u32,
     mint: Vec<u8>,
     amounts: Vec<u64>,
     source: Vec<u8>,
     destination: Vec<u8>,
+    authority: Vec<u8>,
     fee_token: bool,
+    net_verified: bool,
 }
 
 pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swaps: &mut Vec<pb::Swap>) -> Vec<pb::Swap> {
@@ -56,6 +59,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 let mut amounts = vec![amount];
                 if program.0 == &token_2022::PROGRAM_ID && data.first() == Some(&26) {
                     let fee = u64::from_le_bytes(data[11..19].try_into().unwrap());
+                    if fee >= amount { continue; }
                     if let Some(net) = amount.checked_sub(fee).filter(|net| *net > 0) {
                         if net != amount {
                             amounts.push(net);
@@ -64,11 +68,14 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 }
                 transfers.push(Transfer {
                     index: index as u32,
+                    depth: ix.stack_height(),
                     mint,
                     amounts,
                     source: accounts[source].0.clone(),
                     destination: accounts[destination].0.clone(),
+                    authority: accounts.get(destination + 1).map(|a| a.0.clone()).unwrap_or_default(),
                     fee_token: program.0 == &token_2022::PROGRAM_ID,
+                    net_verified: program.0 != &token_2022::PROGRAM_ID || data.first() == Some(&26),
                 });
             }
         }
@@ -104,11 +111,66 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 .and_then(|delta| u64::try_from(delta + debits.get(account).unwrap_or(&0)).ok())
                 .filter(|net| *net > 0 && *net <= transfer.amounts[0]);
             if let Some(net) = net {
+                transfer.net_verified = true;
                 if !transfer.amounts.contains(&net) {
                     transfer.amounts.push(net);
                 }
             }
         }
+    }
+
+    // New native venues are normalized from recognized instruction layouts
+    // and exact, immediate token CPIs. Never synthesize a trade from arbitrary
+    // same-program transfers (deposit, withdraw, lending, quote update).
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some(layout) = crate::native_venues::layout(ix) else { continue; };
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        if depth == 0 { continue; }
+        let end = instructions.iter().enumerate().skip(index + 1)
+            .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
+            .map(|(end, _)| end as u32).unwrap_or(instructions.len() as u32);
+        let accounts = ix.accounts();
+        let pool = accounts[layout.pool].0;
+        let user = accounts[layout.authority].0;
+        let scoped: Vec<_> = transfers.iter().filter(|t| t.index > index as u32 && t.index < end && t.depth == depth + 1).collect();
+        let mut candidates = Vec::new();
+        for reverse in [false, true] {
+            if reverse && layout.input_first { continue; }
+            let a = usize::from(reverse);
+            let b = 1 - a;
+            let source = accounts[layout.users[a]].0;
+            let destination = accounts[layout.users[b]].0;
+            let vault_in = accounts[layout.vaults[a]].0;
+            let vault_out = accounts[layout.vaults[b]].0;
+            if source == destination || source == vault_in || destination == vault_out || vault_in == vault_out { continue; }
+            let inputs: Vec<_> = scoped.iter().filter(|t| &t.source == source && &t.destination == vault_in && &t.authority == user).collect();
+            let outputs: Vec<_> = scoped.iter().filter(|t| &t.source == vault_out && &t.destination == destination).collect();
+            if inputs.len() != 1 || outputs.len() != 1 { continue; }
+            let (input, output) = (inputs[0], outputs[0]);
+            if input.mint == output.mint || mints.mint_for(vault_in).as_ref() != Some(&input.mint)
+                || mints.mint_for(vault_out).as_ref() != Some(&output.mint)
+                || mints.mint_for(source).as_ref() != Some(&input.mint)
+                || mints.mint_for(destination).as_ref() != Some(&output.mint)
+                || (layout.exact_input && !layout.input_limit && input.amounts[0] != layout.amount)
+                || ((!layout.exact_input || layout.input_limit) && input.amounts[0] > layout.amount)
+                || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified) { continue; }
+            candidates.push(pb::Swap {
+                protocol: layout.protocol as i32,
+                program_id: ix.program_id().0.clone(),
+                stack_height: depth,
+                amm: ix.program_id().0.clone(),
+                amm_pool: pool.clone(),
+                user: user.clone(),
+                input_mint: input.mint.clone(),
+                input_amount: input.amounts[0],
+                output_mint: output.mint.clone(),
+                output_amount: *output.amounts.iter().min().unwrap(),
+                source_index: Some(index as u32),
+                source_transfer_index: Some(input.index.min(output.index)),
+                ..Default::default()
+            });
+        }
+        if candidates.len() == 1 { swaps.push(candidates.pop().unwrap()); }
     }
 
     let mut rejected = Vec::new();
@@ -119,6 +181,8 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
     let mut pending = std::mem::take(swaps);
     pending.sort_by_key(|swap| matches!(swap.protocol, 4 | 5));
     for mut swap in pending {
+        let expected_source = swap.source_index;
+        let expected_transfer = swap.source_transfer_index;
         swap.transfer_verified = false;
         swap.source_index = None;
         swap.source_transfer_index = None;
@@ -133,6 +197,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
             && swap.amm_pool.len() == 32
         {
             'candidate: for (index, ix) in instructions.iter().enumerate() {
+                if expected_source.is_some_and(|source| source != index as u32) { continue; }
                 let accounts = ix.accounts();
                 if ix.program_id().0 != &swap.amm || !accounts.iter().any(|account| account.0 == &swap.amm_pool) {
                     continue;
@@ -221,6 +286,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 });
                 if let Some((input, output, input_index, output_index)) = corrected {
                     let identity = (index as u32, input_index, output_index);
+                    if expected_transfer.is_some_and(|transfer| transfer != input_index.min(output_index)) { continue; }
                     if !native_evidence.contains(&identity) {
                         if (swap.input_amount, swap.output_amount) != (input, output) {
                             let mut original = swap.clone();
@@ -246,6 +312,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 }) {
                     for output in scoped.iter().filter(|t| t.mint == swap.output_mint && t.amounts.contains(&swap.output_amount)) {
                         let identity = (index as u32, input.index, output.index);
+                        if expected_transfer.is_some_and(|transfer| transfer != input.index.min(output.index)) { continue; }
                         if !matches!(swap.protocol, 4 | 5) && native_evidence.contains(&identity) {
                             continue;
                         }

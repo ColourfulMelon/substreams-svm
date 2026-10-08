@@ -1,0 +1,1694 @@
+{
+  "provider": "mainnet.helius-rpc.com",
+  "commitment": "finalized",
+  "rawTransactionEncoding": "json",
+  "comparison": "Immediate invocation-scoped SPL/Token-2022 CPIs; receipt deltas plus outgoing debits for implicit transfer fees; finalized market account owners",
+  "auditTransactions": 217,
+  "auditNativeSwaps": 211,
+  "auditDistinctPools": 64,
+  "mismatches": 0,
+  "fixtures": [
+    {
+      "id": 0,
+      "venue": "Manifest",
+      "signature": "4ke3e2PUUqNbiNLxb24ijFtEuYWdFLLH3SqgBaZ2xvEowaCueZJo8DMa5iTdKfanpDVKrRF9r9Zyx9yq1NAMmn46",
+      "slot": "454641425",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 18,
+          "pool": "EyJ71p1ZdwZcDSGrB9NsTUe91tTMS1ZtynxDiAQPKuS",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "PFER6ENqP8r8NF3CqVt4mFowxsin3V5MLidBNQFCC3x",
+          "inputAmount": "94693",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "2624071",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "000-manifest.transaction.pb",
+      "sha256": "a75f9e5636249cbd8c88d80c3891fcfe2c44901f95eb3bc5a6e425ca0b299239"
+    },
+    {
+      "id": 1,
+      "venue": "Manifest",
+      "signature": "3Nu8vKLUJyVx6QSBkjKAfDwvojkkWzkbjUNzDC5fUcHdTrwreAzxqCcYGaW4msu3kdeC57wv3ga3NUCVHMiURGbm",
+      "slot": "454641425",
+      "swaps": [
+        {
+          "protocol": 27,
+          "source": 25,
+          "pool": "7yD7gfXv49SFxhx9uTc11dEd7Nj98rGWeYMdZJgheZbG",
+          "user": "9Phg2BmnddrZUJdhVu8XwDjfzfXsVHdyE9wn84gfLqBE",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "4078366",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "444960",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 23,
+          "source": 29,
+          "pool": "5oJtKpdv7Gh9yz9zXtHWz192gsZLoFxwQQYbm6Br6eTQ",
+          "user": "9Phg2BmnddrZUJdhVu8XwDjfzfXsVHdyE9wn84gfLqBE",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "444959",
+          "outputMint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+          "outputAmount": "192588",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "fixture": "001-manifest.transaction.pb",
+      "sha256": "0c860ce7590b54caef4fab740ce6414831f274b5bcc612d38e6763b447dfb387"
+    },
+    {
+      "id": 3,
+      "venue": "Manifest",
+      "signature": "4WrjyLQb8sYQccpo55RBTQCn2eFX71oBQCpMWj2v4ZFVZgNxV5StbuwcF9mV2T5ozKzps2TA4LDg64onv4aFCXBG",
+      "slot": "454641425",
+      "swaps": [],
+      "fixture": "003-manifest.transaction.pb",
+      "sha256": "3bc662886da8b4311dd8d06f4eaa410a5fc4ee8b2581226a334d4850c3816b3a"
+    },
+    {
+      "id": 8,
+      "venue": "GoonFi V2",
+      "signature": "4BFeVGcvEwHPMWBpkGxH6TW14AaNBqHL7PNyvtLMYzGiGKEFMUGVnrXVfTew4c9cJUctTxf2eB1FiMXXENJYiXPM",
+      "slot": "454641428",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 4,
+          "pool": "GMCJvYGf5Ex2ARiMquaBDqU6iKM8uiEQkB8jCnoNfHpC",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "450093564",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "4125731848",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 21,
+          "source": 15,
+          "pool": "9yE49sMheNg9Jia9eokPiEgG7suBgD1crLJoN4tn2Y8u",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "3ZLekZYq2qkZiSpnSvabjit34tUkjSwD1JFuW9as9wBG",
+          "inputAmount": "98304484469",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "450107431",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "008-goonfi-v2.transaction.pb",
+      "sha256": "a5dd6479fd991588d02bca1cd3dd9e0e06b590d771de2c4aa5c9875b87b4769d"
+    },
+    {
+      "id": 11,
+      "venue": "GoonFi V2",
+      "signature": "24wTr3iq5yC6f3uLdPeBQQxmVWa35kYAGBz52nR1WCwPHwFHWQSZA2xpMexRFix5JJ4MBCWkNJHcHw59LpMUDLTp",
+      "slot": "454641427",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 12,
+          "pool": "GMCJvYGf5Ex2ARiMquaBDqU6iKM8uiEQkB8jCnoNfHpC",
+          "user": "FLQJ6e3ZbkSAynqvtUrhNagA4EGSLZs6NZdAqFwy5h43",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "13768000",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "125961799",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "011-goonfi-v2.transaction.pb",
+      "sha256": "d6efe79570968663048f4ade5afc8113989be327cd4ddc19440322193706e733"
+    },
+    {
+      "id": 13,
+      "venue": "GoonFi V2",
+      "signature": "42HFB7ooMmWv5z2gm8wo4dnHQpdyKH9onFJ1G1L1rez8bBmHUkXRQhXS4wy3XoDQ1Mn6Kprux65GMru68nE1yvku",
+      "slot": "454641427",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 7,
+          "pool": "9yE49sMheNg9Jia9eokPiEgG7suBgD1crLJoN4tn2Y8u",
+          "user": "Dn4EspAgfPybydvrXhBKeqHaVPiJPDrTiGW2yB5aqryM",
+          "inputMint": "3ZLekZYq2qkZiSpnSvabjit34tUkjSwD1JFuW9as9wBG",
+          "inputAmount": "5644387766",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "25844855",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "013-goonfi-v2.transaction.pb",
+      "sha256": "56c57df7dd2a8c6622888e44e2a8aae7f44c9bfd81a1e5aedb45e008f4804066"
+    },
+    {
+      "id": 14,
+      "venue": "GoonFi V2",
+      "signature": "4vyLeEzLFe7xBhBGC5o7Xf1bMVqnJyW8euSmoDbCWbFFfpvGfdvA6Pvw1D841KBmjFo436mPerXGZj5Fi65xNo84",
+      "slot": "454641427",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 12,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "J3HdC72zBccqPmnai6xukvJuZ6DkN5F4P8BeG26bQUC5",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "594068",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "5445100",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 21,
+          "source": 15,
+          "pool": "AkxuRa1soguFpVRjnDrRsXAcfTkZjRv1XyNXySzVivmC",
+          "user": "J3HdC72zBccqPmnai6xukvJuZ6DkN5F4P8BeG26bQUC5",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "476711",
+          "outputMint": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+          "outputAmount": "1400373",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "014-goonfi-v2.transaction.pb",
+      "sha256": "4402cad399caf73d39aafbbc2952119c438ae8786ca5a6b74a9bf2af6a0f39a4"
+    },
+    {
+      "id": 16,
+      "venue": "Deriverse",
+      "signature": "Tm2H9Uus79YvSCh1fXQZFEpfm3ubQA69GzK9SjV3CngcijgTEWp4rBdDt4ZTXBjEL8rdJa1pcYxwjjbm1ZEP8Wu",
+      "slot": "454641426",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 3,
+          "pool": "3iqCGFyyef6gSwwsTpzxozx91ifC9wNaWP8msYoGjKTa",
+          "user": "56YM95f3yAmNbVxHRfho1MAx78GBL1fTjQGwaMDYVmNm",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "65000000",
+          "outputMint": "JuprjznTrTSp2UFa3ZBUFgwdAmtZCq4MQCwysN55USD",
+          "outputAmount": "65025236",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 23,
+          "source": 6,
+          "pool": "7A2he8uMY9HTmnd47JwFs1CC2iKL19g6GEFmiwFYuUGC",
+          "user": "56YM95f3yAmNbVxHRfho1MAx78GBL1fTjQGwaMDYVmNm",
+          "inputMint": "JuprjznTrTSp2UFa3ZBUFgwdAmtZCq4MQCwysN55USD",
+          "inputAmount": "65025236",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "65040055",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 32,
+          "source": 9,
+          "pool": "H7o7KCr5n3whqcPsPkeCPWrzivKrarqzidD3kt8fijvB",
+          "user": "56YM95f3yAmNbVxHRfho1MAx78GBL1fTjQGwaMDYVmNm",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "65040055",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "65000770",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "016-deriverse.transaction.pb",
+      "sha256": "420d77bc4ba86ce19355933a55c6eef421f18d6648a46f2136632b6b2f8b06fb"
+    },
+    {
+      "id": 18,
+      "venue": "Deriverse",
+      "signature": "539F5rHLntteKYd8n7LAp5L1h5EJPrURcwWTMDoqf8cc4VzVRsK4Fmz8eVGiGBsMr4m6pLwnwSDDtT6zqQ5cm9Rd",
+      "slot": "454641424",
+      "swaps": [
+        {
+          "protocol": 32,
+          "source": 5,
+          "pool": "H7o7KCr5n3whqcPsPkeCPWrzivKrarqzidD3kt8fijvB",
+          "user": "GDV7Qf1nRs6i93eX19tg4kDTSVGQjpEkAZS2jKrEoujA",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "389247740",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "389012244",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 18,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "GDV7Qf1nRs6i93eX19tg4kDTSVGQjpEkAZS2jKrEoujA",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "354001213",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "3244768390",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "018-deriverse.transaction.pb",
+      "sha256": "007fa3316950c5ea1908a1294198eb351c2b12954bb211097a9592b8504ae98b"
+    },
+    {
+      "id": 20,
+      "venue": "Deriverse",
+      "signature": "3LKLYtm4Es4QUaKiGrFpRNdfxdJV6sBCehUV6qPAXgTcAmVjWerRqydQJDVAETDdMh64NvfJLeMsbUdx4pCK21WD",
+      "slot": "454641423",
+      "swaps": [
+        {
+          "protocol": 32,
+          "source": 3,
+          "pool": "3vzgUvXqpqdKH55R4xVcAbThoXt5xusVLojquA3s1YHh",
+          "user": "FBi88guYAyt6zSxxtGEShCGMmFxAp88nQot1N7iFQ9v",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "15000000",
+          "outputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+          "outputAmount": "18351",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 21,
+          "source": 11,
+          "pool": "HBDaV4ndLuVe6qK1vGCXReon4B1DJKa9UrbqP8cVqywx",
+          "user": "FBi88guYAyt6zSxxtGEShCGMmFxAp88nQot1N7iFQ9v",
+          "inputMint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
+          "inputAmount": "1292384",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "15003159",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "020-deriverse.transaction.pb",
+      "sha256": "bd13781c1ad38595e63a2505343dffe33b38f974d2125ec5f45fe15add6f22e6"
+    },
+    {
+      "id": 21,
+      "venue": "Deriverse",
+      "signature": "zz1nMpjc8oKPNKsFxjauVxZ8yPQTctVRnUDBWUBPSJ9DenXF4eh6QwArhtdFb37ti59Nq7eqgoTqpj8ir78dS5K",
+      "slot": "454641422",
+      "swaps": [
+        {
+          "protocol": 32,
+          "source": 25,
+          "pool": "H7o7KCr5n3whqcPsPkeCPWrzivKrarqzidD3kt8fijvB",
+          "user": "AmLbqQs5numg3p6CUwYffAxNF2EAhLbVsZ9cAsTnfYNj",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "10746329",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "10739827",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "021-deriverse.transaction.pb",
+      "sha256": "90262bed9c23cd64997141a721d66f372474564a9f0f18ac1cedcf4b3214705b"
+    },
+    {
+      "id": 23,
+      "venue": "Deriverse",
+      "signature": "36eeGskqtqMi74NYpPaNQ69FckaPep8YRDPjqUjzwt6TmGKytcQvpFhjVtAHwPDisRMBEZ1FXXSBe2Tdpu38MgnC",
+      "slot": "454641418",
+      "swaps": [],
+      "fixture": "023-deriverse.transaction.pb",
+      "sha256": "ec9a9e6278d60d32ae07d9d6270db39209f1012efe96c5f61984a16befcbff34"
+    },
+    {
+      "id": 25,
+      "venue": "AlphaQ",
+      "signature": "5p8yp8BsYH1L78q7MVuccq1yRSGi7f9si3xoD7MWhdwTiCuM6Czb1Hv4BBXst7vxpVo9NkgwRdM7ibq44ZrnQCko",
+      "slot": "454641431",
+      "swaps": [
+        {
+          "protocol": 26,
+          "source": 1,
+          "pool": "9xPhpwq6GLUkrDBNfXCbnSP9ARAMMyUQqgkrqaDW6NLV",
+          "user": "EmFL9SjAX8QHHfzdoAYaGJ5c8hiQ34zHRLDXrCdMubsP",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "11435984",
+          "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "outputAmount": "11444481",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 10,
+          "pool": "6b5LxeDVxqCGAhZjjjgieGP71c5GBt2cBwiafCFX6NMU",
+          "user": "EmFL9SjAX8QHHfzdoAYaGJ5c8hiQ34zHRLDXrCdMubsP",
+          "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "inputAmount": "11444481",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "104838134",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "025-alphaq.transaction.pb",
+      "sha256": "0a552e5cb2723a61aa9dfd190217de98f2c8d6768c2e6f3ab9da88dddef73fca"
+    },
+    {
+      "id": 31,
+      "venue": "AlphaQ",
+      "signature": "64AWV9VjaGR7zqLh9fcBATqAVixHuUe4ghprvF9b3aNJC6mkVTWjSRJSZJ22xsMhhKNd5rfoj2LgqbwHNWDDLHDN",
+      "slot": "454641430",
+      "swaps": [
+        {
+          "protocol": 26,
+          "source": 12,
+          "pool": "9xPhpwq6GLUkrDBNfXCbnSP9ARAMMyUQqgkrqaDW6NLV",
+          "user": "CpfZxEmQPD1PTTqxeskTYkPHVWrjUPLeJpXmqF8FTcMu",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "2503550",
+          "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "outputAmount": "2505410",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 21,
+          "pool": "6b5LxeDVxqCGAhZjjjgieGP71c5GBt2cBwiafCFX6NMU",
+          "user": "CpfZxEmQPD1PTTqxeskTYkPHVWrjUPLeJpXmqF8FTcMu",
+          "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "inputAmount": "2505410",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "22949049",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "031-alphaq.transaction.pb",
+      "sha256": "5bdecadc7c883f60e3080781fc8fa05239cbc3d80a2d3f1d1019ef01fd15ede3"
+    },
+    {
+      "id": 33,
+      "venue": "BisonFi",
+      "signature": "29c2pweaVzvzzh7PW7MWwmz8fd8D9DoDpT1LmyjTU4E33aSgDKpkGNB9jjJ4gP2PMjEqoNaMb9Fpqk4hV4T8ybze",
+      "slot": "454641434",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 13,
+          "pool": "FJnaiidSLXFweWkgbinxEHRykVHsnkzDcYbNDR3RF5LN",
+          "user": "F6H4GGWrwhfbmYUbEt9cfEjDwviGc3gzboQqMBJ5P31W",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "96437547",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "10525917",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "033-bisonfi.transaction.pb",
+      "sha256": "83e3bbc214b0827bb4b07b325acec5b1d0620fa07c56480de4e0efbec5e3b4d5"
+    },
+    {
+      "id": 35,
+      "venue": "BisonFi",
+      "signature": "5mFJ69E4VhJXgQQpg5k8c41mDRWYvzaU51iBPjDdW7jSTb2guug8vQcMXSeEKtyvjtSHmk62w7CQWHyD9LBuitQ5",
+      "slot": "454641434",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 20,
+          "pool": "FJnaiidSLXFweWkgbinxEHRykVHsnkzDcYbNDR3RF5LN",
+          "user": "3ZAAZQ4C95woQh7sDi8jPDT3Bt7ZeT6ZQWSxCtowNiyD",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "37955110",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "4142705",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "035-bisonfi.transaction.pb",
+      "sha256": "2dd7fe85871beef023cd831ece99cef587905f7e82d86d26afcb7ff87b78313d"
+    },
+    {
+      "id": 40,
+      "venue": "Orca V2",
+      "signature": "588HFn5SNJkHhkHcp9s8LdteydiDeocMYMsoMj4r6awagZL839As64z4VJNapXMXEtRiYFQXZ4MsFoQUJcK4Cni1",
+      "slot": "454641422",
+      "swaps": [
+        {
+          "protocol": 25,
+          "source": 7,
+          "pool": "3THMPkPmcHJ54JtHRyazhs7UN7HbV5KiNJVLJs6hSPSC",
+          "user": "3CgvbiM3op4vjrrjH2zcrQUwsqh5veNVRjFCB9N6sRoD",
+          "inputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+          "inputAmount": "290008",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "5934476",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 25,
+          "source": 14,
+          "pool": "2R2VhohRc5WoNHtRdwnjovAQaZRAmr1DE3QFW5jfgb6v",
+          "user": "3CgvbiM3op4vjrrjH2zcrQUwsqh5veNVRjFCB9N6sRoD",
+          "inputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+          "inputAmount": "566114",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "1264461",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 18,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "3CgvbiM3op4vjrrjH2zcrQUwsqh5veNVRjFCB9N6sRoD",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "2310096",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "21174127",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "040-orca-v2.transaction.pb",
+      "sha256": "e0998ed4af518ba40471361f595af3f02b7e2f28cd65e5bf4c175cee9d96bbd9"
+    },
+    {
+      "id": 43,
+      "venue": "Orca V2",
+      "signature": "3RiFtjC9TAo8LLHanR7vzmuSLskQy4Auva2fNb5CCveDCoLvUtXgkbG1eBVD2bkxyFKzan4nPyhpWcn1GCxoh63V",
+      "slot": "454641413",
+      "swaps": [
+        {
+          "protocol": 31,
+          "source": 3,
+          "pool": "FWyD88TgTj3XrpiEAfdTZTbHwLwXCGjBFK5FGdjSecrt",
+          "user": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "5000000",
+          "outputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+          "outputAmount": "2239226",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 25,
+          "source": 9,
+          "pool": "Epvp7qMYAF21VVjacdB3VfKn6nnXQSF4rGYu8sD6Bkow",
+          "user": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4",
+          "inputMint": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+          "inputAmount": "13400461739609",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "5000837",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "043-orca-v2.transaction.pb",
+      "sha256": "8889fda604c45c1de304a7056e83438f0561a868d6d2f6dca50752c8e3823f06"
+    },
+    {
+      "id": 45,
+      "venue": "Orca V2",
+      "signature": "5NtBXiX1zX4JYuWmtxTC3RJc3y5NXMni2xHNeBLBPsznsKB6GM7N1m9T7AACapMGHjb19hnapBB21MnXhQrJpTxT",
+      "slot": "454641412",
+      "swaps": [
+        {
+          "protocol": 31,
+          "source": 5,
+          "pool": "FWyD88TgTj3XrpiEAfdTZTbHwLwXCGjBFK5FGdjSecrt",
+          "user": "GxDC9e7SP9mzhDo4re5HbpLa2RW7gB9DtmThx4i4pXSq",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "118830",
+          "outputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+          "outputAmount": "53217",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 25,
+          "source": 13,
+          "pool": "PQ1sBpkZYTkXo2aDRqWU2sEJGUj7yaeJ3GePoCRYU4V",
+          "user": "GxDC9e7SP9mzhDo4re5HbpLa2RW7gB9DtmThx4i4pXSq",
+          "inputMint": "GENEtH5amGSi8kHAtQoezp1XEXwZJ8vcuePYnXdKrMYz",
+          "inputAmount": "39872139443",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "119752",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "045-orca-v2.transaction.pb",
+      "sha256": "67c2f313b489aa9dfbd4ec60907218c558c1888fe0ced49eb2ad3d46c2e17fad"
+    },
+    {
+      "id": 48,
+      "venue": "HumidiFi",
+      "signature": "2S3XJ6v2BVanu9qvjx4A5UcX3vtm6yoTEmgfByJkV4URbSjMQAH999bB93dNBTdu2KyV1k6JL5aZfL8uERn4ngHQ",
+      "slot": "454641438",
+      "swaps": [],
+      "fixture": "048-humidifi.transaction.pb",
+      "sha256": "94015693e41b7db7f442450746bc24a994919a8054c5265be173973b8ce9a3f1"
+    },
+    {
+      "id": 57,
+      "venue": "Flux",
+      "signature": "9GM2iwNQNhjVwr6pujR3w4p1Hd8RRapdZCL681TGdYLUiUrG9shaL75PELmguJ6ayR7L6doyCDfz7hCZqoL8gst",
+      "slot": "454641440",
+      "swaps": [
+        {
+          "protocol": 28,
+          "source": 4,
+          "pool": "F3ds62W3NNEBQrwi2ZFy2vX3xu5fxL6f7VMtRdmKjoCv",
+          "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "49999981",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "458329211",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "057-flux.transaction.pb",
+      "sha256": "4da985b6d53be3222357a20966955a8aba8ecb5c0aa018c37cba56ae443ac565"
+    },
+    {
+      "id": 61,
+      "venue": "Flux",
+      "signature": "4QzBu7Zkz23exYUkURiq8c2EvyPNUxark4J8U1UdL2wGyKUf8tJXkGGJpsq8c1eBgQcSUVyR3gnUFXurEKnJFJUi",
+      "slot": "454641436",
+      "swaps": [
+        {
+          "protocol": 28,
+          "source": 8,
+          "pool": "82RLfDeEAoYtx3rwZF7igAQC1nGsBBvAMkygB5mcJojZ",
+          "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "112737914",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "12295923",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "061-flux.transaction.pb",
+      "sha256": "054e5e7ba52eab741550b2a21a59d7acf233025821da5b776b703312f05bf4b4"
+    },
+    {
+      "id": 64,
+      "venue": "ZeroFi",
+      "signature": "WcUTA91WemKTp2NTjSXaoSVkkJUTUvpsa545SszC4TXRbRUSsErdR59fEDznF3HCZSeKMgJMUyq9M5ZBWQpAVhA",
+      "slot": "454641441",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 6,
+          "pool": "BwNJma5cJzn9jobrsc4d7UuWHekjai1B7oUdRzRnVqAM",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "8910000",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "81670653",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "064-zerofi.transaction.pb",
+      "sha256": "d9ae5161b4e04cce96a33f785fce517fabd835b6a026cf9ca3bdca2932376ed5"
+    },
+    {
+      "id": 66,
+      "venue": "ZeroFi",
+      "signature": "3CsrdAgavKTKkqfxyBrTqVhrRhQEoS2YWdmdCYUG5hGTo1Fg4qwzHKjPCPEvA9yC31UtD1ngERNDcpyQ5NQCrH4h",
+      "slot": "454641438",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 10,
+          "pool": "BwNJma5cJzn9jobrsc4d7UuWHekjai1B7oUdRzRnVqAM",
+          "user": "CDZeveCGfF2W9B2ySkXKs4q8jg5cystBbZajEWjLtdqw",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "202017903",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "22033841",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "066-zerofi.transaction.pb",
+      "sha256": "3f16d9ec7da3ec8140b6a44423dee8d77a4a3edca5440bd4c8d68b475e7fee5a"
+    },
+    {
+      "id": 69,
+      "venue": "ZeroFi",
+      "signature": "2GE8FhyM6Z5yofyyPXa5ZBu4kPcccWTHzQb6BmtEmtBzMrRaMXMPuiyS84KUDFmZoLg15WdCjFKpQMztLJ469dyN",
+      "slot": "454641432",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 5,
+          "pool": "9XVKRT2D53LEDyA5jyhBLMEv23kw91iNrXBzvghUDfT9",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "79990388",
+          "outputMint": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1",
+          "outputAmount": "77362",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "protocol": 21,
+          "source": 9,
+          "pool": "FrQuDkgAc1WQ9Vswxq3LWjB5BgnFxaKareWK4YGh1ZMM",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1",
+          "inputAmount": "77362",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "80009562",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "069-zerofi.transaction.pb",
+      "sha256": "552e61983574b3987c0ad3f4c0d757f94158971e1a6f691330b191adbefde2fc"
+    },
+    {
+      "id": 70,
+      "venue": "ZeroFi",
+      "signature": "29f1uXHbCNiWeF6ADosLwtAiM61TmbEmbGb6uE2kW6jd2Nv4Rd3ZonZUB5QRox7cQ1XvG3E3FV9uZin8gTnZgoZW",
+      "slot": "454641431",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 2,
+          "pool": "9XVKRT2D53LEDyA5jyhBLMEv23kw91iNrXBzvghUDfT9",
+          "user": "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "1184302418",
+          "outputMint": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1",
+          "outputAmount": "1145480",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "fixture": "070-zerofi.transaction.pb",
+      "sha256": "937149d57989922443fe779979f4651c2007dfbc2fb904365e7c767191fad9d1"
+    },
+    {
+      "id": 72,
+      "venue": "Scorch",
+      "signature": "4SMDBsEtkG9gXTN66dt3csPd4iW7U3PL5MoZJYK6GsUEKdBYxHQhaHMazJrJXMKmC6k5EZuZ2eGtbhFZwQ5GsRS5",
+      "slot": "454641444",
+      "swaps": [],
+      "fixture": "072-scorch.transaction.pb",
+      "sha256": "f28b52a66d204644de3880f0ab3b3f0e819e38258e2096f219fe23a276d7cbdf"
+    },
+    {
+      "id": 82,
+      "venue": "Obsidian",
+      "signature": "2fjQpahxDJhJn6b9t63wGGLQ8KET4upAGn86WP5NNw3LAMGm5xfChQ2jedc5vGyXjiYEfS9GKemTwVtgDq8vUx2d",
+      "slot": "454641445",
+      "swaps": [
+        {
+          "protocol": 30,
+          "source": 3,
+          "pool": "C2AFToqwbmHEvCPXhjyUTS2q2VWmXyHeUBwqje5LLQLt",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "247194935",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "2266263023",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "082-obsidian.transaction.pb",
+      "sha256": "7f0fb4d296c7150c2004edf3a063ae53af701328fd2bb285c7b9046da0b23027"
+    },
+    {
+      "id": 84,
+      "venue": "Obsidian",
+      "signature": "4EbEngBbBTrM1kGjGKQZK5xNSyHsnSBmTfDhocWMbjNyJjAExrnhzx9PLjP6b8ALM9tvWzmKFLzxGLmQ6kwRdPX4",
+      "slot": "454641445",
+      "swaps": [
+        {
+          "protocol": 30,
+          "source": 4,
+          "pool": "C2AFToqwbmHEvCPXhjyUTS2q2VWmXyHeUBwqje5LLQLt",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "241160942",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "2210948245",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "084-obsidian.transaction.pb",
+      "sha256": "41cd656511b53e9fe6c87169c3b8024613397da3770556274a82be619a3cd11c"
+    },
+    {
+      "id": 88,
+      "venue": "Kipseli",
+      "signature": "5Qd55CQWgrdcKRqK85JTaXAwfMnVRft88LG381kUa8HYXVeQMiJ5ZgRSb1mxXapR2DM627NYEkLqwDmXMRMfGimF",
+      "slot": "454641447",
+      "swaps": [
+        {
+          "protocol": 27,
+          "source": 4,
+          "pool": "7yD7gfXv49SFxhx9uTc11dEd7Nj98rGWeYMdZJgheZbG",
+          "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "93800000",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "859912528",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "088-kipseli.transaction.pb",
+      "sha256": "2c0876bcc57b2937052a264d2f306382ff3a28d03e2de58fa51a77daac30456f"
+    },
+    {
+      "id": 91,
+      "venue": "Kipseli",
+      "signature": "5JuWt4dLXsdLVBjsdjYbPRCCioqkUbHQEhbX6qX1jSyrDpmEFsYEpeJam1jViYk7Kf4ML4gaXpSTfKfJBDdyQ6SC",
+      "slot": "454641446",
+      "swaps": [
+        {
+          "protocol": 27,
+          "source": 3,
+          "pool": "vwqdqdBPoYjSdR78acsiRvzqeCDEw27dver5kbGjPAt",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "74525000",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "683267982",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "091-kipseli.transaction.pb",
+      "sha256": "f8df330cadc905d197487bba6b19dee3d5c587e0a014cee56c73f1e367dbcae3"
+    },
+    {
+      "id": 92,
+      "venue": "Kipseli",
+      "signature": "Kw814svALhBwqsgMWjB3kqPXHY31XRdjKkDyPqW4WfbwgJcXytgQPRF3Jeaw42HMCRkaYfc1hKcB6hKo38BbdKF",
+      "slot": "454641446",
+      "swaps": [
+        {
+          "protocol": 27,
+          "source": 18,
+          "pool": "7yD7gfXv49SFxhx9uTc11dEd7Nj98rGWeYMdZJgheZbG",
+          "user": "8s7mVuZA8tvqmfSUurgK5W2ys8eoMJePQt65Lwe3ppCs",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "86548798",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "9436737",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "092-kipseli.transaction.pb",
+      "sha256": "b934d7942fb063447eb92be194824a52ae1034d392c43d2b2e0c450c68a7c56f"
+    },
+    {
+      "id": 94,
+      "venue": "Kipseli",
+      "signature": "5QZ5H4ELUbHrwnuSNW9vJofCwrSio2Eo87syFqNghS4tbcL9p6Es2p8EePNcYXSHAnweUF1dhNqRvniKNtkRQueW",
+      "slot": "454641445",
+      "swaps": [],
+      "fixture": "094-kipseli.transaction.pb",
+      "sha256": "6a277c585c20d9e8535e59331486f8ca3faddcd6a5a81186800ee1d701e13ea0"
+    },
+    {
+      "id": 96,
+      "venue": "TesseraV",
+      "signature": "creTKJ333xjpMVdPMk3F48kt9KdW1ZmfXSXUyrbtAaWbbLSDf55UUP8yKH3mUWfifDwESN1j3ps8aZ3zZ8aKN6s",
+      "slot": "454641449",
+      "swaps": [
+        {
+          "protocol": 31,
+          "source": 12,
+          "pool": "FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
+          "user": "4B8srvotmWddTZuMt4RrBQrnx1sQj2Z7FaXgLbWvpVdd",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "58387992",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "535276794",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "096-tesserav.transaction.pb",
+      "sha256": "262f836734a86fdfdb6ecd19e9d432894242a4bed52d03782e5722eaee1fb386"
+    },
+    {
+      "id": 100,
+      "venue": "TesseraV",
+      "signature": "27rnuPZGz2iZU9ft5nEYaKsDedutRjZ2PSTeBdL9Hzrgf5BYnUET2LNUoEab5cCPe4jtfnGRddGvgeH6BfdAXJwZ",
+      "slot": "454641448",
+      "swaps": [],
+      "fixture": "100-tesserav.transaction.pb",
+      "sha256": "8af3e7d07ad202f5a04c13ae2d7d4875178f8d8dbd62f128ea2d90acdc220f4d"
+    },
+    {
+      "id": 104,
+      "venue": "HumidiFi",
+      "signature": "4hcHiYvYRLoUJwn4hvzpzGKv7HuyfgdzFTvPNUv8cYbGv3oW9dE5M68uB1qfFFFZKrVH45GJ6UebtC4dqxWAxQtp",
+      "slot": "454641813",
+      "swaps": [],
+      "fixture": "104-humidifi.transaction.pb",
+      "sha256": "e9c4c39c8642c944124b0e46f5a0c087e3a09490a3b6535fc119fad332255c86"
+    },
+    {
+      "id": 112,
+      "venue": "HumidiFi",
+      "signature": "5tQ3PNVeqH8UVrc3f8MkJN1uigEf6GtdUpr3R9s5NzGmi9A4K2NjREf2oPoq35Xoe3WGUZvCwzak7cFnzWzFzHH2",
+      "slot": "454641807",
+      "swaps": [
+        {
+          "protocol": 24,
+          "source": 10,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "C2VVCEYjXFmoyFYFFJADLfSJ9dwG6qXXopSvRPAjBpH7",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "2000000000",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "217749925",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "112-humidifi.transaction.pb",
+      "sha256": "73987db768daf47ad2b5a7ae3bd49c07e67d6c70752820012a8e39cbef6a9f2f"
+    },
+    {
+      "id": 116,
+      "venue": "HumidiFi",
+      "signature": "2PDzFBUF6jGn96JS1wYgWZNyVbmMaknvPNyieioTgSQJpUB5oN96kMgAqZ19pR1vX2WjKJaR6aYwh8eyk61Vag9L",
+      "slot": "454641806",
+      "swaps": [
+        {
+          "protocol": 31,
+          "source": 5,
+          "pool": "FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
+          "user": "4B8srvotmWddTZuMt4RrBQrnx1sQj2Z7FaXgLbWvpVdd",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "7851210187",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "855745614",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 24,
+          "source": 9,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "4B8srvotmWddTZuMt4RrBQrnx1sQj2Z7FaXgLbWvpVdd",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "855745614",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "7851269196",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "116-humidifi.transaction.pb",
+      "sha256": "6b73af4ffb7073a519626e2914a8650776963bb01b604d24b94a6ab22e6dda2a"
+    },
+    {
+      "id": 133,
+      "venue": "Scorch",
+      "signature": "4pK5fZkcVBMuFCy6BpcVPxpizbr9hmbAaZJnzu5iAP6APA3MLMdJ2y6MBvBcVQek7wGv6yeKgbBad1L8uSKSWLHf",
+      "slot": "454641418",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 9,
+          "pool": "FkGgvNwKBMkDAWStXx7C9CbYiwTCHq2pFrkWHkvS9eJg",
+          "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "93600000",
+          "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "outputAmount": "16959594129",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "protocol": 29,
+          "source": 13,
+          "pool": "HEXeWK7CzigT7tU6Tvn4KCWVWdjcxQVaNy6KpXhLWDq1",
+          "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+          "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+          "inputAmount": "16959594129",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "93638500",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 29,
+          "source": 18,
+          "pool": "J4rZDyGyf4XvJAYGD6M2SYgy6noegqNr7LJmfppQMX9n",
+          "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "93638500",
+          "outputMint": "ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82",
+          "outputAmount": "91291000000",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "133-scorch.transaction.pb",
+      "sha256": "18d00af5555313f4d14195ff945f053a2df905dbea970d3e774ce933bf5b65da"
+    },
+    {
+      "id": 168,
+      "venue": "Scorch",
+      "signature": "x5k956APJxjfapVyQAsqcGtSE24k1enkQAJhyVeJyJ7KwwTmyZUT9ZrJ9EAZS3JK99acYAcoWyDo1LHKAJ63btz",
+      "slot": "454642178",
+      "swaps": [],
+      "fixture": "168-scorch.transaction.pb",
+      "sha256": "137bf4949ff40d89cc27aaa4ff592192f4eb5ecf976ce384b94b0a58f5350d38"
+    },
+    {
+      "id": 174,
+      "venue": "Scorch",
+      "signature": "4XtvsvAPudW1rtpx5ogGhFNAUYcBuPAkZfJyjetoriXRcjUzQFABWmDii1RzWCbeiyV2tFRmLG4k6wUfZ28oPPTU",
+      "slot": "454642173",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 2,
+          "pool": "FpPP9PDMPSTEwpX1ykS5QEkA5MSrEuWzV55hoWG3pKoN",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "2552884",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "2554395",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 29,
+          "source": 6,
+          "pool": "9BLPceGrgxKEHU7Qdz3r46vSpTzqqx7hmaeq9jgspCWh",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "2554395",
+          "outputMint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+          "outputAmount": "3158300",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "fixture": "174-scorch.transaction.pb",
+      "sha256": "1f4bb494f299c26124915cc8aa00b396ad6a28a7d26c48f6d817309897568480"
+    },
+    {
+      "id": 176,
+      "venue": "Scorch",
+      "signature": "RQYaxf2FyuXsk1HssCnYCkrupPMPxPHMMVPgueHMFNaT3otQqJEdrQWX5mBezjeLYeZQikJwt7LwnLqPFKrArua",
+      "slot": "454642170",
+      "swaps": [
+        {
+          "protocol": 29,
+          "source": 4,
+          "pool": "GfRwVz2u8Sn5XbcWq75Xs11wDbJBrfJSjpXSH4o87Asr",
+          "user": "3CgvbiM3op4vjrrjH2zcrQUwsqh5veNVRjFCB9N6sRoD",
+          "inputMint": "DoGEV7LASBkQbibMc5k5vKnTZoMg423GpJ5QtJEGfm7R",
+          "inputAmount": "84509971752",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "649570000",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "176-scorch.transaction.pb",
+      "sha256": "b7e6693f00bf48b42b22b42ba5b527526eaf12cbf04dafa4631ceb60fc00ad87"
+    },
+    {
+      "id": 178,
+      "venue": "GoonFi V2",
+      "signature": "2MRXWhAaFQKgJmyxHdqddwZRyZWWbvU4RERznPPq8ghwGV5ATy1kReSUEHGSoFbxqkX3XgWDAyo5iKChWC8SMvAv",
+      "slot": "450966515",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 6,
+          "pool": "8TxrtAxqA5PA2Y1d2pxzCz9SoDhjrBcYqNAQKVv6p443",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "229977000",
+          "outputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+          "outputAmount": "270511",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "178-goonfi-v2.transaction.pb",
+      "sha256": "d2e424989e7e6ecc3e424ffbe24b9c48bf66fbe5dc80d6d937772ea55b3c4bb4"
+    },
+    {
+      "id": 181,
+      "venue": "BisonFi",
+      "signature": "22VFxreHs9cEvHoYiooU62iLsK76vJo6E1WGXsjFRcM7PwCrUUhNiBhvUMztPCdxCgyfcDCB79TUaRDEC2VPLYAF",
+      "slot": "450950354",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 3,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "Cr6vUmtz58dtsyDJX2GKbifgYf7zvwgPt9HyJvwMRLL8",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "248815402",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "2003709082",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 24,
+          "source": 7,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "Cr6vUmtz58dtsyDJX2GKbifgYf7zvwgPt9HyJvwMRLL8",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "2003709082",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "248818446",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "181-bisonfi.transaction.pb",
+      "sha256": "2a8d5e74b2d617f2f02d0ea5c2eb2fdf372c5eccb11361fc4f75bc9459f784ae"
+    },
+    {
+      "id": 182,
+      "venue": "BisonFi",
+      "signature": "2AbymqA3xMNTPgcPu6qh9EZWUnXtudS3JNmvzAU4c4s5ziPhwVwUQx5PZsmQahfqigvzcRg99SLCvRCrVvNzGCvm",
+      "slot": "450990413",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 4,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "MenuxY5yMzJkeKZTvDTcovjh4fuJHMHhJyjJ5v5LzG6",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "122990681",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "15245220",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "182-bisonfi.transaction.pb",
+      "sha256": "5f56034ac17e27fbc8eedd43cff386a74e1ee866fd67103060aa59f8e275158f"
+    },
+    {
+      "id": 183,
+      "venue": "BisonFi",
+      "signature": "4e8T9Hnh2AbXV482VcwLr1FWcZeCtQNKW5qsw3uJRt5oQpvyp6qRK2aoxP7JYHaQRScEzFWid1krx7ezDUNAyx1X",
+      "slot": "450911106",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 12,
+          "pool": "6b5LxeDVxqCGAhZjjjgieGP71c5GBt2cBwiafCFX6NMU",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "33756628",
+          "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "outputAmount": "4097114",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 26,
+          "source": 16,
+          "pool": "9xPhpwq6GLUkrDBNfXCbnSP9ARAMMyUQqgkrqaDW6NLV",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+          "inputAmount": "4097114",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "4095264",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "183-bisonfi.transaction.pb",
+      "sha256": "40e8f34eb013cb3a5733dca1ba69345c102619851a7f917ea06c4804ce5d4b72"
+    },
+    {
+      "id": 184,
+      "venue": "BisonFi",
+      "signature": "262n1pEgfLq9G87vRNBsb5xKdmADSQxFGWXXb2qXkxqtsPViu5ifNWC2UsGCFpo1aXaagpsetjxNZKoR2mG6D3xw",
+      "slot": "450994236",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 8,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "26773035",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "215496676",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "184-bisonfi.transaction.pb",
+      "sha256": "9b1a36784a37d92f59c88bddd5408136dbb2201b4423a6d1b937cae6d69dfeaf"
+    },
+    {
+      "id": 187,
+      "venue": "TesseraV",
+      "signature": "YfyJgF3Ph3GhxoEFpZR9MUnr2EGspamfUZh2VYhQEFP2caVqrwQbxP6a4aqTPufCz2kNRXiF1tX1HFCHvYGToz2",
+      "slot": "368909200",
+      "swaps": [
+        {
+          "protocol": 24,
+          "source": 10,
+          "pool": "6n9VhCwQ7EwK6NqFDjnHPzEk6wZdRBTfh43RFgHQWHuQ",
+          "user": "HV1KXxWFaSeriyFvXyx48FqG9BoFbfinB8njCJonqP7K",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "15006048",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "3160022",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 31,
+          "source": 13,
+          "pool": "FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
+          "user": "HV1KXxWFaSeriyFvXyx48FqG9BoFbfinB8njCJonqP7K",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "789792",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "166493",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "187-tesserav.transaction.pb",
+      "sha256": "6f0a232740b609d0bd60ebf76ea16ebc6817dfe1fe9a5b2ec6c2eb3357c7efb8"
+    },
+    {
+      "id": 188,
+      "venue": "TesseraV",
+      "signature": "29b7yFfvur5vt9VQkvu1aPDZFUgastzdXpqQYAZ41XYgvW25UDz48EYMTZEHxtWQ3P8SsZ9SSALedVzTcGLvbo96",
+      "slot": "450994234",
+      "swaps": [
+        {
+          "protocol": 31,
+          "source": 5,
+          "pool": "FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "99050000",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "797306100",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "188-tesserav.transaction.pb",
+      "sha256": "75c218ba42b5dd11c85b32148f1bdc2ffe15e605451d3add21205f1b44b5bad8"
+    },
+    {
+      "id": 191,
+      "venue": "AlphaQ",
+      "signature": "23RNqCyLYWXqPjEWednSdDiXHoie64EdyP94NpVJn1ic2HnxyaDmHLt5314j1HyYBDq2hDKw8Z1S8jw7U6duFhy4",
+      "slot": "450995661",
+      "swaps": [
+        {
+          "protocol": 26,
+          "source": 4,
+          "pool": "Pi9nzTjPxD8DsRfRBGfKYzmefJoJM8TcXu2jyaQjSHm",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "42996568",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "42991563",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 23,
+          "source": 7,
+          "pool": "8sjV1AqBFvFuADBCQHhotaRq5DFFYSjjg1jMyVWMqXvZ",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "inputAmount": "7587628",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "7586752",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "191-alphaq.transaction.pb",
+      "sha256": "fbbc159fd5e268e198c0471d872e6da7a9af06f72b29e9fdf445999f928b2665"
+    },
+    {
+      "id": 192,
+      "venue": "AlphaQ",
+      "signature": "38iesCRDJKFGDFCnYPpuZiJd4xFTArXoy33LqvyZNTpvqRnp9CTYqZbqtEDiwMboRdMM6kMN86Shjga9NJ1QyrKg",
+      "slot": "450993863",
+      "swaps": [
+        {
+          "protocol": 26,
+          "source": 8,
+          "pool": "2YR8bXXn4tTnq8nVjvpYnBiQ7ZKjN3G16wxE8ShL3KaB",
+          "user": "5k2ANzw8cxhSXpPCnLdGYLqfxmN1LovvJdWVGsnYJsiS",
+          "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "inputAmount": "99992438",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "99960237",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 17,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "5k2ANzw8cxhSXpPCnLdGYLqfxmN1LovvJdWVGsnYJsiS",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "99960237",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "804972159",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "192-alphaq.transaction.pb",
+      "sha256": "337b1ecdfe62057ca196b834f667b427b37af41ba21e9dca68f0e601fdc52d91"
+    },
+    {
+      "id": 197,
+      "venue": "ZeroFi",
+      "signature": "49kwguyf3UZMbDA1f5bSidtiX5Pi972zYRdTtJaJuYyMUvJsz258JzEuUj3SVdqDoRinwdDcCu3hETrEwpiWa9xL",
+      "slot": "451125726",
+      "swaps": [
+        {
+          "protocol": 21,
+          "source": 4,
+          "pool": "FrQuDkgAc1WQ9Vswxq3LWjB5BgnFxaKareWK4YGh1ZMM",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "42289675",
+          "outputMint": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1",
+          "outputAmount": "38803",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "protocol": 33,
+          "source": 8,
+          "pool": "9XVKRT2D53LEDyA5jyhBLMEv23kw91iNrXBzvghUDfT9",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "MUxEsUKSMACyw5fZf68wxf5FLnZVhtU9CwH8uNNGay1",
+          "inputAmount": "38803",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "42292620",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "197-zerofi.transaction.pb",
+      "sha256": "04867ba93dfac9220e807aaeb214f6a68f1b8765014a8a31ab07603379ba354f"
+    },
+    {
+      "id": 198,
+      "venue": "ZeroFi",
+      "signature": "3zxaqfr5Pk5yf4npN55Usb92ZDdrjRKLLKEb4rEy3UVbkBVLmMRWQAopFjTdiLmFVNAdxsZcMqJuQ76AJFnZWrLf",
+      "slot": "451125728",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 23,
+          "pool": "7DyH4hFA9KY2Uf3ZC2fUGP9ATsLqAEq3pUpyJPA2Mjft",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "5246547495",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "639646456",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 23,
+          "source": 27,
+          "pool": "E1XDrrALLZJuzicaw7xBfQeSsFCWsZ6tY3dthWuB7GiU",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "639646456",
+          "outputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "outputAmount": "639798787",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "fixture": "198-zerofi.transaction.pb",
+      "sha256": "3ec2c9fe96c5f19374cb528e90bc730f2c27deebb2315d84006646ff8c820f2b"
+    },
+    {
+      "id": 199,
+      "venue": "ZeroFi",
+      "signature": "psShYLi8kZ5ZFsCfBSTYpXUGe2h1okSfq4aDsnVW9nPfsMQZeiJeXFRbTZ4v3a7P6KuzvCW2nX4qWbb77QhifuT",
+      "slot": "451129534",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 5,
+          "pool": "HsE6AfxKJQgWMdK1Z23u1xgZhstxXjMVnm5gVaGJ2J7",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "SNDKbwMUQvZhnLnxLduradgLHG5KrPuKwpnrkkGRhfH",
+          "inputAmount": "7448",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "13221532",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "199-zerofi.transaction.pb",
+      "sha256": "c7e128e8094b3c397136e0c454bc1c88cefee6cc5afbb33f31e48b14bfffb653"
+    },
+    {
+      "id": 200,
+      "venue": "ZeroFi",
+      "signature": "2p56piVJ8pF3mrNXdC2q3szEcaLJTbMaZbD7SCcSUdqzf9cucZrPR2L8gsLXn89GqC6uSikZ2QzKQMQix7HorL4b",
+      "slot": "451134625",
+      "swaps": [
+        {
+          "protocol": 33,
+          "source": 7,
+          "pool": "CgPE85QVWX3Ca4isTetNwSirCVTVRkWEjq42yhT2rJfV",
+          "user": "AjkDC1KdkgPaFRtrCbeSh6B6dhVX2JM4o2XhPSs2qu4b",
+          "inputMint": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3",
+          "inputAmount": "362",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "69155",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "200-zerofi.transaction.pb",
+      "sha256": "87ac131952850ef56ed4a92c31a5d87a1c3f77cc2d70028f609bca5eb8bc42fc"
+    },
+    {
+      "id": 204,
+      "venue": "Scorch",
+      "signature": "3tHnRiFwCdzB92qnpui67qviFD24YUuVcu7VMNhrUEYVL2xdVsmQy9v4of3bA9oEPxmMWckKicXtESKqY6zemP73",
+      "slot": "450994357",
+      "swaps": [
+        {
+          "protocol": 29,
+          "source": 3,
+          "pool": "FnhxUP3dcQbypCUmGWw55ijxPBxifPT558UQSCYDfcCU",
+          "user": "GSbXzhCrPuA68VaX3uApGM7Fn3Z53y8Fpcd68CLGyRHu",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "309365132",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "2490560000",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "204-scorch.transaction.pb",
+      "sha256": "21d3bebee72b1ba4cb4c2c25983f73a969769ec55cfa4ef27ca59b86b220a446"
+    },
+    {
+      "id": 205,
+      "venue": "Scorch",
+      "signature": "5dnD4akxGFE31hLnSfybpL24geVkFDHNVcyCsDwVLwig2HPwL26EjKRkwEm8CKajGamYRDV1DN4BkFDDWMnJntEv",
+      "slot": "450991337",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 9,
+          "pool": "9VaVgdReZVxmEZLv9kqorjcS2hyGMAU77wEMFu3G7FiL",
+          "user": "Aisnj7VpDa8msoBQXadkzGocLobRaSeSMYQms46fnYp3",
+          "inputMint": "3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh",
+          "inputAmount": "255093",
+          "outputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+          "outputAmount": "255014",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 29,
+          "source": 18,
+          "pool": "382i8DWxUuNLYXrYqnbK151otneeqjsJgrtVpdKArtm6",
+          "user": "Aisnj7VpDa8msoBQXadkzGocLobRaSeSMYQms46fnYp3",
+          "inputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+          "inputAmount": "255014",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "1742210000",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "205-scorch.transaction.pb",
+      "sha256": "150f931445cb6702f3b093842302f3b0326e04518adbcbacd03802f3ff86c6b1"
+    },
+    {
+      "id": 206,
+      "venue": "Scorch",
+      "signature": "4v27ccyrAgpCdCHLvjvn8smFn4Fb4HGcRVTSt952eNcF5jg5niA5bKRLPoGrzxXZdZULEZujgA5TXdESNbwmFYE8",
+      "slot": "438881024",
+      "swaps": [
+        {
+          "protocol": 29,
+          "source": 22,
+          "pool": "8aAuC8E1Sc72gniUHAJ3utwWzzLKP1YLzMF3hPgfaSaC",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "Dfh5DzRgSvvCFDoYc2ciTkMrbDfRKybA4SoFbPmApump",
+          "inputAmount": "6631746",
+          "outputMint": "SKRbvo6Gf7GondiT3BbTfuRDPqLWei4j2Qy2NPGZhW3",
+          "outputAmount": "15650000",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "206-scorch.transaction.pb",
+      "sha256": "5f20b90d5171b764d8131b961767529549a12cd110a1f5996f45cc10d1a40209"
+    },
+    {
+      "id": 207,
+      "venue": "Scorch",
+      "signature": "23bHd9VasKUhimfGv5Qs7cu8d1yhVETq5vzC68NArW1i9fvYN7LjGtFvgvFzBoyimQiNSBpXGqYzKxYHsmgMYiNF",
+      "slot": "450991646",
+      "swaps": [],
+      "fixture": "207-scorch.transaction.pb",
+      "sha256": "fea5e8ee766889565b9d5199565508f5a537b262e12d7cfa73bc92e847f7e034"
+    },
+    {
+      "id": 209,
+      "venue": "Manifest",
+      "signature": "1T2XZsyrPudVFb6xKCocTq6Yv93Kxhy6kWYSE4244jeSix9WZDL1sbRcF1BTs8FmU4UiEWFcE2SL4p25NnWXcKn",
+      "slot": "450990124",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 5,
+          "pool": "8sjV1AqBFvFuADBCQHhotaRq5DFFYSjjg1jMyVWMqXvZ",
+          "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "2442100",
+          "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "outputAmount": "2442405",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "209-manifest.transaction.pb",
+      "sha256": "1892179d6c44a01be3e4434528a4e54aac6b841027bfca0ef60a90e3d437aca6"
+    },
+    {
+      "id": 210,
+      "venue": "Manifest",
+      "signature": "2Xgfh9FHC2EAjBErQgv52cfMurnsVc9kHpfsSws7SoYBaJD8Cgh47T9qBfhgksgvTAMgz1M48PiuRm1ynAW4QU84",
+      "slot": "450997186",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 18,
+          "pool": "2QLNw13jbu9EfiwQv579hL4qngWHHvj3yCwdqfmkuMWv",
+          "user": "5Rnv985FHQF8XMSfvZXSBdyrYxm5GdGq5xdTVaELmSvR",
+          "inputMint": "J1yxV53EmVRmt9RUj6PPufMfdAYUbtgwXCuNYTBTsYzJ",
+          "inputAmount": "14541579714",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "177562935",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 22,
+          "source": 27,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "5Rnv985FHQF8XMSfvZXSBdyrYxm5GdGq5xdTVaELmSvR",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "536333189",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "66491887",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "210-manifest.transaction.pb",
+      "sha256": "52a1b34dfe98ffe5e5a98fb84879d003034f5e267288c0c89b303e219dd8a1a1"
+    },
+    {
+      "id": 212,
+      "venue": "HumidiFi",
+      "signature": "2YDhCqd2KUQ9SHVZQFwiKFzWuP6HkfxxA3Wsu5k7xoMPY3NW36B6h55MSZYyH9sfW1dCjPxhGtf2U6mRZGhs8Cj4",
+      "slot": "451000745",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 3,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "2886316360",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "358053005",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 24,
+          "source": 7,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "358053005",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "2886321962",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "212-humidifi.transaction.pb",
+      "sha256": "a9c77e21a36eebf5e7f3c54dbbf77cdef8a43081ab2e7d9e76e5972b2f65569f"
+    },
+    {
+      "id": 213,
+      "venue": "HumidiFi",
+      "signature": "2kCAkYGndEdQZemihC8r5yeFfa2DCo2msxtLHZU8RqVb8SArQKyhAthgwgMEWc2xeBc5tXdh7N2bkRRfXqND6apM",
+      "slot": "451000743",
+      "swaps": [
+        {
+          "protocol": 24,
+          "source": 7,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "Fe7SEekiKygziaEGKxsDsgLVzrCfNvVBvAYsaJBwFA8s",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "2003133373",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "248176935",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "213-humidifi.transaction.pb",
+      "sha256": "0b552ebe8bf73849226135c4c19e0073dfb74bae73906c4bfd331c350f276a43"
+    },
+    {
+      "id": 214,
+      "venue": "HumidiFi",
+      "signature": "4tzaGfjUtBPNKaSJcZWcWbUeVyMj3aEsQ6XXpq341dJWUEYAFK7MX5jCcDKkCNuZRNLqBhEBMMVf8APdRXHtX4rT",
+      "slot": "450996734",
+      "swaps": [
+        {
+          "protocol": 23,
+          "source": 25,
+          "pool": "EVgBqnKVRZTzg5mzWdsqKTxLs8dX2Z15qhSS94t6arK1",
+          "user": "2PhRZsgSFjeUjNS7i15xipuGEytfjr2AnoCdbJaVhhVr",
+          "inputMint": "8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS",
+          "inputAmount": "10247492328",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "689646227",
+          "inputProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 24,
+          "source": 29,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "7092795050",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "879077963",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "214-humidifi.transaction.pb",
+      "sha256": "0f8fa8bceed4f42c483956dbe798f2ac420787ae8b7ce807f20b670bac2ab29a"
+    },
+    {
+      "id": 215,
+      "venue": "HumidiFi",
+      "signature": "3dhDZRhpSNK5Naku3R9CKERXP4MXEYecwkBTpN4SqtJZcDCDsh3ob4J2jdMkAbNyT6KmkamqsBomTEQNFHrLkZ9u",
+      "slot": "450950353",
+      "swaps": [
+        {
+          "protocol": 22,
+          "source": 3,
+          "pool": "8FnX3xo2yYw3EUE6w3nQA4GfXGS9wpK6oj3veJpbFzLo",
+          "user": "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
+          "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "inputAmount": "502083100",
+          "outputMint": "So11111111111111111111111111111111111111112",
+          "outputAmount": "4043218367",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "protocol": 24,
+          "source": 7,
+          "pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "user": "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
+          "inputMint": "So11111111111111111111111111111111111111112",
+          "inputAmount": "4043218367",
+          "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outputAmount": "502093499",
+          "inputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "outputProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "fixture": "215-humidifi.transaction.pb",
+      "sha256": "ec6e1d83698f8c3fec876004da5080dc8d5c11eb4d9efe3fe4637e46cb3076e8"
+    },
+    {
+      "id": 216,
+      "venue": "HumidiFi",
+      "signature": "275Z7BNmhGqM9jsh5vYxT5jdKF6jusj2hR4eBRQyqp9TskWwjWMYCRq656RRumbi41Su2nntTdkRyS8uEb7Xyh12",
+      "slot": "450950353",
+      "swaps": [],
+      "fixture": "216-humidifi.transaction.pb",
+      "sha256": "8a1661f60edea3f9bcd0bbbd2d228961dcb91fb28303778216777e4c40c84acc"
+    }
+  ]
+}

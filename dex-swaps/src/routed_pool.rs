@@ -67,6 +67,7 @@ fn dispatch(ix: &InstructionView) -> Option<Vec<u8>> {
         .or_else(|| crate::meteora_dlmm::extract_pool(ix))
         .or_else(|| crate::pumpfun::extract_pool(ix))
         .or_else(|| crate::raydium_launchpad::extract_pool(ix))
+        .or_else(|| crate::native_venues::extract_pool(ix))
 }
 
 #[cfg(test)]

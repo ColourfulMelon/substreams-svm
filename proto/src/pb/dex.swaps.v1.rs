@@ -25,6 +25,7 @@ pub struct Transaction {
     pub compute_units_consumed: u64,
     #[prost(message, repeated, tag="6")]
     pub swaps: ::prost::alloc::vec::Vec<Swap>,
+    /// Position in the source block, before filtering votes or unsuccessful txs.
     #[prost(uint32, optional, tag="7")]
     pub source_index: ::core::option::Option<u32>,
     #[prost(message, repeated, tag="8")]
@@ -53,6 +54,7 @@ pub struct Swap {
     pub output_mint: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag="10")]
     pub output_amount: u64,
+    /// Position in the transaction's complete instruction walk, before filtering.
     #[prost(uint32, optional, tag="11")]
     pub source_index: ::core::option::Option<u32>,
     #[prost(uint32, optional, tag="12")]
@@ -86,6 +88,19 @@ pub enum Protocol {
     Pancakeswap = 18,
     SplTokenSwap = 19,
     OkxDex = 20,
+    GoonfiV2 = 21,
+    Bisonfi = 22,
+    Manifest = 23,
+    Humidifi = 24,
+    OrcaV2 = 25,
+    Alphaq = 26,
+    Kipseli = 27,
+    Flux = 28,
+    Scorch = 29,
+    Obsidian = 30,
+    Tesserav = 31,
+    Deriverse = 32,
+    Zerofi = 33,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -115,6 +130,19 @@ impl Protocol {
             Protocol::Pancakeswap => "PROTOCOL_PANCAKESWAP",
             Protocol::SplTokenSwap => "PROTOCOL_SPL_TOKEN_SWAP",
             Protocol::OkxDex => "PROTOCOL_OKX_DEX",
+            Protocol::GoonfiV2 => "PROTOCOL_GOONFI_V2",
+            Protocol::Bisonfi => "PROTOCOL_BISONFI",
+            Protocol::Manifest => "PROTOCOL_MANIFEST",
+            Protocol::Humidifi => "PROTOCOL_HUMIDIFI",
+            Protocol::OrcaV2 => "PROTOCOL_ORCA_V2",
+            Protocol::Alphaq => "PROTOCOL_ALPHAQ",
+            Protocol::Kipseli => "PROTOCOL_KIPSELI",
+            Protocol::Flux => "PROTOCOL_FLUX",
+            Protocol::Scorch => "PROTOCOL_SCORCH",
+            Protocol::Obsidian => "PROTOCOL_OBSIDIAN",
+            Protocol::Tesserav => "PROTOCOL_TESSERAV",
+            Protocol::Deriverse => "PROTOCOL_DERIVERSE",
+            Protocol::Zerofi => "PROTOCOL_ZEROFI",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -141,6 +169,19 @@ impl Protocol {
             "PROTOCOL_PANCAKESWAP" => Some(Self::Pancakeswap),
             "PROTOCOL_SPL_TOKEN_SWAP" => Some(Self::SplTokenSwap),
             "PROTOCOL_OKX_DEX" => Some(Self::OkxDex),
+            "PROTOCOL_GOONFI_V2" => Some(Self::GoonfiV2),
+            "PROTOCOL_BISONFI" => Some(Self::Bisonfi),
+            "PROTOCOL_MANIFEST" => Some(Self::Manifest),
+            "PROTOCOL_HUMIDIFI" => Some(Self::Humidifi),
+            "PROTOCOL_ORCA_V2" => Some(Self::OrcaV2),
+            "PROTOCOL_ALPHAQ" => Some(Self::Alphaq),
+            "PROTOCOL_KIPSELI" => Some(Self::Kipseli),
+            "PROTOCOL_FLUX" => Some(Self::Flux),
+            "PROTOCOL_SCORCH" => Some(Self::Scorch),
+            "PROTOCOL_OBSIDIAN" => Some(Self::Obsidian),
+            "PROTOCOL_TESSERAV" => Some(Self::Tesserav),
+            "PROTOCOL_DERIVERSE" => Some(Self::Deriverse),
+            "PROTOCOL_ZEROFI" => Some(Self::Zerofi),
             _ => None,
         }
     }

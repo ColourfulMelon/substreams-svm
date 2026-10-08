@@ -22,6 +22,7 @@ mod routed_pool;
 mod spl_token_swap;
 mod token_mints;
 mod quality;
+mod native_venues;
 
 use std::collections::VecDeque;
 
@@ -184,7 +185,7 @@ mod tests {
                 "2YwxAtr1XjYHm7VkraEVj4P4n7YL4m7NDsLjf4pUhZwX",
                 "So11111111111111111111111111111111111111112",
                 "H5hygVvXiYxk2a3BVtjiqcDJK8TdHTB5u5U1fXEuBAGS",
-                2,
+                3,
             ),
             (
                 include_bytes!("../fixtures/knet.transaction.pb").as_slice(),
@@ -198,7 +199,7 @@ mod tests {
                 "9Bvmg9W8yFv3bKAWeCBNWwKtCNYi8BgKqGKTDtsrRPVx",
                 "So11111111111111111111111111111111111111112",
                 "GJqCjtgEwqdFWVRsDs8JXKFoTeRVZeHs1RL4ccvrpump",
-                1,
+                3,
             ),
         ] {
             let transaction = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
