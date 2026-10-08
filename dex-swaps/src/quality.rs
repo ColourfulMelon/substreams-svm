@@ -7,6 +7,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 use substreams_solana_idls::{
     meteora::amm,
+    pumpfun::bonding_curve as pumpfun,
     pumpswap,
     spl::{token, token_2022},
 };
@@ -43,7 +44,8 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         } else {
             None
         };
-        if parsed.is_none() && (program.0 == &token::PROGRAM_ID || program.0 == &token_2022::PROGRAM_ID) {
+        if parsed.is_none() && !matches!(data.first(), Some(1 | 16 | 18 | 21 | 22)) && (program.0 == &token::PROGRAM_ID || program.0 == &token_2022::PROGRAM_ID)
+        {
             for account in &accounts {
                 other_token_operations.insert(account.0.clone());
             }
@@ -51,10 +53,19 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         if let Some((mint, offset, source, destination)) = parsed {
             let amount = u64::from_le_bytes(data[offset..offset + 8].try_into().unwrap());
             if amount > 0 {
+                let mut amounts = vec![amount];
+                if program.0 == &token_2022::PROGRAM_ID && data.first() == Some(&26) {
+                    let fee = u64::from_le_bytes(data[11..19].try_into().unwrap());
+                    if let Some(net) = amount.checked_sub(fee).filter(|net| *net > 0) {
+                        if net != amount {
+                            amounts.push(net);
+                        }
+                    }
+                }
                 transfers.push(Transfer {
                     index: index as u32,
                     mint,
-                    amounts: vec![amount],
+                    amounts,
                     source: accounts[source].0.clone(),
                     destination: accounts[destination].0.clone(),
                     fee_token: program.0 == &token_2022::PROGRAM_ID,
@@ -63,13 +74,14 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         }
     }
 
-    // A single transfer touching an account has an exact independently observed
-    // net balance delta. This supports withheld Token-2022 fees without tolerances
-    // or guessing a percentage. Multi-transfer accounts provide no such evidence.
-    let mut touches = HashMap::<Vec<u8>, usize>::new();
+    // One incoming transfer plus known outgoing debits proves the exact
+    // receipt, even when a router forwards tokens or a pool pays a fee later.
+    // Mint/burn/close and other operations make this evidence unavailable.
+    let mut receipts = HashMap::<Vec<u8>, usize>::new();
+    let mut debits = HashMap::<Vec<u8>, i128>::new();
     for transfer in &transfers {
-        *touches.entry(transfer.source.clone()).or_default() += 1;
-        *touches.entry(transfer.destination.clone()).or_default() += 1;
+        *receipts.entry(transfer.destination.clone()).or_default() += 1;
+        *debits.entry(transfer.source.clone()).or_default() += i128::from(transfer.amounts[0]);
     }
     let mut deltas = HashMap::<Vec<u8>, i128>::new();
     let accounts = tx.resolved_accounts();
@@ -85,16 +97,15 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         }
     }
     for transfer in &mut transfers {
-        for (account, sign) in [(&transfer.source, -1i128), (&transfer.destination, 1)] {
-            if transfer.fee_token && touches.get(account) == Some(&1) && !other_token_operations.contains(account) {
-                if let Some(delta) = deltas
-                    .get(account)
-                    .and_then(|delta| u64::try_from(delta * sign).ok())
-                    .filter(|delta| *delta > 0)
-                {
-                    if !transfer.amounts.contains(&delta) {
-                        transfer.amounts.push(delta);
-                    }
+        let account = &transfer.destination;
+        if transfer.fee_token && transfer.mint != crate::SOL_MINT && receipts.get(account) == Some(&1) && !other_token_operations.contains(account) {
+            let net = deltas
+                .get(account)
+                .and_then(|delta| u64::try_from(delta + debits.get(account).unwrap_or(&0)).ok())
+                .filter(|net| *net > 0 && *net <= transfer.amounts[0]);
+            if let Some(net) = net {
+                if !transfer.amounts.contains(&net) {
+                    transfer.amounts.push(net);
                 }
             }
         }
@@ -146,6 +157,36 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                             && accounts.iter().any(|account| account.0 == &transfer.destination)
                     })
                     .collect();
+                // Pump's sell instruction debits program-owned lamports
+                // directly, without a System CPI. Only accept its exact pool
+                // balance delta when this is the sole pool-bearing invocation
+                // and there are no explicit SOL transfers touching that pool.
+                if swap.protocol == pb::Protocol::Pumpfun as i32
+                    && swap.output_mint == crate::SOL_MINT
+                    && matches!(pumpfun::instructions::unpack(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)))
+                {
+                    let calls = instructions
+                        .iter()
+                        .filter(|call| call.program_id().0 == &swap.amm && call.accounts().iter().any(|a| a.0 == &swap.amm_pool))
+                        .count();
+                    let explicit_sol = transfers
+                        .iter()
+                        .any(|t| t.mint == crate::SOL_MINT && (t.source == swap.amm_pool || t.destination == swap.amm_pool));
+                    let pool_delta = tx.resolved_accounts().iter().position(|a| *a == &swap.amm_pool).and_then(|position| {
+                        tx.meta
+                            .as_ref()
+                            .and_then(|meta| Some(i128::from(*meta.pre_balances.get(position)?) - i128::from(*meta.post_balances.get(position)?)))
+                    });
+                    if calls == 1 && !explicit_sol && pool_delta == Some(i128::from(swap.output_amount)) {
+                        if let Some(input) = scoped.iter().find(|t| t.mint == swap.input_mint && t.amounts.contains(&swap.input_amount)) {
+                            let identity = (index as u32, input.index, index as u32);
+                            if !native_evidence.contains(&identity) {
+                                evidence = Some(identity);
+                                break 'candidate;
+                            }
+                        }
+                    }
+                }
                 // Dynamic AMM v1 logs report vault-share conversions, which can
                 // differ from the transferred atoms. Its explicit user accounts
                 // let us use exact CPI flows instead of rounding the event.
@@ -173,17 +214,9 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                         return None;
                     }
                     let total = inputs.iter().try_fold(0u64, |total, t| total.checked_add(t.amounts[0]))?;
-                    // A fee token's single-receipt balance delta proves the net
-                    // received amount. Do not infer it on multi-transfer accounts.
-                    let amount = if outputs[0].fee_token && touches.get(&destination) == Some(&1) && !other_token_operations.contains(&destination) {
-                        deltas
-                            .get(&destination)
-                            .and_then(|d| u64::try_from(*d).ok())
-                            .filter(|d| *d > 0)
-                            .unwrap_or(outputs[0].amounts[0])
-                    } else {
-                        outputs[0].amounts[0]
-                    };
+                    // The verified recipient delta (or explicit checked fee)
+                    // supplies net output when it differs from the CPI debit.
+                    let amount = outputs[0].amounts.iter().copied().min()?;
                     Some((total, amount, inputs[0].index, outputs[0].index))
                 });
                 if let Some((input, output, input_index, output_index)) = corrected {
@@ -250,6 +283,25 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn public_native_sol_sell_and_fee_token_receipts_require_exact_evidence() {
+        for fixture in [
+            include_bytes!("../fixtures/pumpfun-native-sell.transaction.pb").as_slice(),
+            include_bytes!("../fixtures/raydium-transfer-fee.transaction.pb").as_slice(),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            assert_eq!(decoded.swaps.len(), 1, "{:?}", decoded.rejected_swaps);
+            assert!(decoded.swaps[0].transfer_verified);
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mut swap = decoded.swaps[0].clone();
+            swap.output_amount += 1;
+            let mut swaps = vec![swap];
+            assert_eq!(verify_and_deduplicate(&tx, &mints, &mut swaps).len(), 1);
+            assert!(swaps.is_empty());
+        }
+    }
 
     #[test]
     fn public_aqua_route_has_exact_verified_and_ordered_transfers() {

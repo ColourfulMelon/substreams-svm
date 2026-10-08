@@ -80,7 +80,7 @@ impl State {
 #[derive(Clone)]
 enum Pending {
     /// Per-instruction placeholder for `Swap` / `SwapV2` — paired 1:1 with a
-    /// `SwapEvent` log by sequential index.
+    /// `SwapEvent` log by its pool address.
     Swap(InstructionSwap),
     /// `SwapRouterBaseIn` placeholder — the router emits one `SwapEvent` per
     /// hop within a single program invocation. Rows are built from the event
@@ -96,8 +96,8 @@ struct InstructionSwap {
     pool_state: Vec<u8>,
     /// `None` when the legacy `Swap` decoder could not resolve the input
     /// vault to a mint via `TokenMintLookup`. The placeholder is kept so
-    /// `handle_log` can still match logs to instructions by sequential
-    /// index — the row is just dropped at emit time.
+    /// `handle_log` can consume the event for that pool without shifting
+    /// another pool's amounts — the row is dropped at emit time.
     input_mint: Option<Vec<u8>>,
     /// `None` when the legacy `Swap` decoder could not resolve the output
     /// vault to a mint via `TokenMintLookup`. See `input_mint` above.
@@ -200,10 +200,8 @@ fn decode_instruction(ix: &InstructionView, token_mints: Option<&TokenMintLookup
             // via the tx's pre/post token balances. When `token_mints` is
             // `None` (extract_pool path) or the lookup misses, leave the
             // mints unresolved (`None`). We still return the InstructionSwap
-            // placeholder so the `handle_log` sequential-index alignment is
-            // preserved across any subsequent CLMM swaps in the same tx —
-            // `handle_log` skips emitting when mints are unresolved while
-            // still advancing `next_index`.
+            // placeholder so the matching pool's event is consumed even when
+            // its mints are unresolved. Other pools keep their own events.
             let accounts = raydium::clmm::v3::accounts::get_swap_accounts(&ix).ok()?;
             let (input_mint, output_mint) = match token_mints {
                 Some(lookup) => (

@@ -13,14 +13,13 @@ pub(crate) struct PendingSwap {
 }
 
 struct SwapEvent {
+    pool: Vec<u8>,
     amount_in: u64,
     output_amount: u64,
     trade_direction: u8,
 }
 
-/// Hold pending swaps as a FIFO queue. See `meteora_dlmm` for the rationale —
-/// same hazard applies: a stale `Option<PendingSwap>` could be overwritten by
-/// a second swap instruction before the first's anchor-CPI event landed.
+/// Keep unresolved invocations and match events by their own pool address.
 pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instruction: &InstructionView) -> Option<pb::Swap> {
     let program_id = instruction.program_id().0;
     if program_id != &daam::PROGRAM_ID {
@@ -33,7 +32,8 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     }
 
     let event = decode_swap_event(instruction)?;
-    let swap = pending.pop_front()?;
+    let position = pending.iter().position(|swap| swap.pool == event.pool)?;
+    let swap = pending.remove(position)?;
     let (input_mint, output_mint) = if event.trade_direction == 0 {
         (swap.token_a_mint.clone(), swap.token_b_mint.clone())
     } else {
@@ -86,6 +86,7 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
 fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
     match daam::anchor_cpi_event::unpack(ix.data()) {
         Ok(daam::anchor_cpi_event::MeteoraDammAnchorCpiEvent::EvtSwap(event)) => Some(SwapEvent {
+            pool: event.pool.to_bytes().to_vec(),
             amount_in: event.actual_amount_in,
             output_amount: event.swap_result.output_amount,
             trade_direction: event.trade_direction,
@@ -95,6 +96,7 @@ fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
         // mirrors what the user paid (pre-pool fees) and is the analogue of
         // the legacy `actual_amount_in`.
         Ok(daam::anchor_cpi_event::MeteoraDammAnchorCpiEvent::EvtSwap2(event)) => Some(SwapEvent {
+            pool: event.pool.to_bytes().to_vec(),
             amount_in: event.included_transfer_fee_amount_in,
             output_amount: event.swap_result.output_amount,
             trade_direction: event.trade_direction,
