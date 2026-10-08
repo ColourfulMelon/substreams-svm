@@ -243,10 +243,10 @@ fn db_unassigned(
 fn db_archive(
     mut changes: substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges,
 ) -> Result<substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges, Error> {
-    changes.table_changes.retain(|change| matches!(change.table.as_str(), "swaps" | "blocks" | "swap_diagnostics"));
+    changes.table_changes.retain(|change| matches!(change.table.as_str(), "swaps" | "blocks"));
     for change in &mut changes.table_changes {
         change.table = match change.table.as_str() {
-            "blocks" => "canonical_blocks", "swap_diagnostics" => "canonical_diagnostics", _ => "canonical_swaps",
+            "blocks" => "canonical_blocks", _ => "canonical_swaps",
         }.into();
     }
     Ok(changes)

@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS {db}.canonical_swaps (
 `verification_failure` LowCardinality(String)
 ) ENGINE=ReplacingMergeTree PARTITION BY toDate(timestamp) ORDER BY (block_hash,transaction_index,instruction_index);
 
-CREATE TABLE IF NOT EXISTS {db}.canonical_diagnostics AS {db}.canonical_swaps;
 CREATE TABLE IF NOT EXISTS {db}.canonical_blocks (
     block_num UInt32, block_hash String, timestamp DateTime('UTC'),
     parent_slot UInt64, parent_hash String, decoder_version LowCardinality(String),

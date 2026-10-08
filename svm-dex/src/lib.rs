@@ -47,49 +47,42 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         if transaction_index >= 65536 {
             return Err(Error::msg("transaction position exceeds order-key bounds"));
         }
-        for (diagnostic, rows) in [(false, &transaction.swaps), (true, &transaction.rejected_swaps)] {
-            for (ordinal, swap) in rows.iter().enumerate() {
-                let instruction_index = if diagnostic {
-                    ordinal
-                } else {
-                    swap.source_transfer_index.map(|index| index as usize).unwrap_or(ordinal)
-                };
-                if instruction_index >= 65536 {
-                    return Err(Error::msg("instruction position exceeds order-key bounds"));
-                }
-                let key = common_key_v2(&clock, transaction_index, instruction_index);
-                let event_id = match (swap.source_index, swap.source_transfer_index) {
-                    (Some(instruction), Some(transfer)) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
-                    _ => String::new(),
-                };
-                let signers_raw = transaction.signers.iter().map(base58::encode).collect::<Vec<_>>().join(",");
-                let row = tables
-                    .create_row(if diagnostic { "swap_diagnostics" } else { "swaps" }, key)
-                    // Transaction
-                    .set("signature", base58::encode(&transaction.signature))
-                    .set("fee_payer", base58::encode(&transaction.fee_payer))
-                    .set("signers_raw", signers_raw)
-                    .set("fee", transaction.fee)
-                    .set("compute_units_consumed", transaction.compute_units_consumed)
-                    .set("program_id", base58::encode(&swap.program_id))
-                    .set("stack_height", swap.stack_height)
-                    .set("event_id", event_id)
-                    .set("decoder_version", "v0.5.2-pluto.3")
-                    .set("source_instruction_index", swap.source_index.unwrap_or_default())
-                    .set("transfer_verified", u32::from(swap.transfer_verified))
-                    .set("verification_failure", &swap.verification_failure)
-                    // Swap
-                    .set("protocol", protocol_slug(swap.protocol))
-                    .set("amm", base58::encode(&swap.amm))
-                    .set("amm_pool", base58::encode(&swap.amm_pool))
-                    .set("user", base58::encode(&swap.user))
-                    .set("input_mint", base58::encode(&swap.input_mint))
-                    .set("input_amount", swap.input_amount)
-                    .set("output_mint", base58::encode(&swap.output_mint))
-                    .set("output_amount", swap.output_amount);
-
-                set_clock(&clock, row);
+        for (ordinal, swap) in transaction.swaps.iter().enumerate() {
+            let instruction_index = swap.source_transfer_index.map(|index| index as usize).unwrap_or(ordinal);
+            if instruction_index >= 65536 {
+                return Err(Error::msg("instruction position exceeds order-key bounds"));
             }
+            let key = common_key_v2(&clock, transaction_index, instruction_index);
+            let event_id = match (swap.source_index, swap.source_transfer_index) {
+                (Some(instruction), Some(transfer)) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
+                _ => String::new(),
+            };
+            let signers_raw = transaction.signers.iter().map(base58::encode).collect::<Vec<_>>().join(",");
+            let row = tables
+                .create_row("swaps", key)
+                // Transaction
+                .set("signature", base58::encode(&transaction.signature))
+                .set("fee_payer", base58::encode(&transaction.fee_payer))
+                .set("signers_raw", signers_raw)
+                .set("fee", transaction.fee)
+                .set("compute_units_consumed", transaction.compute_units_consumed)
+                .set("program_id", base58::encode(&swap.program_id))
+                .set("stack_height", swap.stack_height)
+                .set("event_id", event_id)
+                .set("decoder_version", "v0.5.2-pluto.4")
+                .set("source_instruction_index", swap.source_index.unwrap_or_default())
+                .set("transfer_verified", u32::from(swap.transfer_verified))
+                // Swap
+                .set("protocol", protocol_slug(swap.protocol))
+                .set("amm", base58::encode(&swap.amm))
+                .set("amm_pool", base58::encode(&swap.amm_pool))
+                .set("user", base58::encode(&swap.user))
+                .set("input_mint", base58::encode(&swap.input_mint))
+                .set("input_amount", swap.input_amount)
+                .set("output_mint", base58::encode(&swap.output_mint))
+                .set("output_amount", swap.output_amount);
+
+            set_clock(&clock, row);
         }
     }
 
@@ -100,7 +93,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.3")
+        .set("decoder_version", "v0.5.2-pluto.4")
         .set("verified_swaps", all_swaps.filter(|swap| swap.transfer_verified).count() as u32)
         .set(
             "quarantined_swaps",
@@ -131,7 +124,7 @@ mod tests {
     use substreams_database_change::pb::sf::substreams::sink::database::v1::table_change::PrimaryKey;
 
     #[test]
-    fn source_positions_survive_filtered_output_and_diagnostics() {
+    fn rejected_rows_are_not_streamed_and_source_positions_survive() {
         let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
         let swap = pb::Swap { source_index: Some(30), source_transfer_index: Some(31), transfer_verified: true, ..Default::default() };
         let changes = write_swaps(clock, pb::Events {
@@ -147,7 +140,8 @@ mod tests {
         let Some(PrimaryKey::CompositePk(key)) = &financial[0].primary_key else { panic!("source key missing") };
         assert_eq!(key.keys["transaction_index"], "17");
         assert_eq!(key.keys["instruction_index"], "31");
-        assert!(changes.table_changes.iter().any(|row| row.table == "swap_diagnostics"));
+        assert!(changes.table_changes.iter().all(|row| matches!(row.table.as_str(), "swaps" | "blocks")));
+        assert_eq!(changes.table_changes.len(), 2);
         let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
         assert!(block.fields.iter().any(|field| field.name == "parent_slot" && field.value == "98"));
         assert!(block.fields.iter().any(|field| field.name == "duplicate_wrappers" && field.value == "1"));

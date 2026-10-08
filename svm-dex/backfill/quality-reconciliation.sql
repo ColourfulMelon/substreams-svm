@@ -10,10 +10,10 @@ GROUP BY block_hash, event_id HAVING copies > 1;
 SELECT b.block_num, b.parent_slot, b.parent_hash, p.block_hash AS indexed_parent_hash
 FROM blocks AS b LEFT JOIN blocks AS p ON b.parent_slot = p.block_num
 WHERE b.timestamp >= now() - INTERVAL 5 MINUTE
-  AND b.decoder_version = 'v0.5.2-pluto.3'
-  AND b.parent_slot >= (SELECT min(block_num) FROM blocks WHERE decoder_version = 'v0.5.2-pluto.3')
+  AND b.decoder_version IN ('v0.5.2-pluto.3', 'v0.5.2-pluto.4')
+  AND b.parent_slot >= (SELECT min(block_num) FROM blocks WHERE decoder_version IN ('v0.5.2-pluto.3', 'v0.5.2-pluto.4'))
   AND b.parent_hash != p.block_hash;
 
-SELECT protocol, verification_failure, count() AS events
-FROM swap_diagnostics WHERE timestamp >= now() - INTERVAL 5 MINUTE
-GROUP BY protocol, verification_failure ORDER BY events DESC;
+SELECT sum(quarantined_swaps) AS rejected, sum(duplicate_wrappers) AS duplicates,
+       sum(corrected_events) AS corrected
+FROM blocks WHERE timestamp >= now() - INTERVAL 5 MINUTE;

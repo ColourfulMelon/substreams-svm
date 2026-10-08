@@ -60,7 +60,3 @@ ALTER TABLE swaps
     ADD PROJECTION IF NOT EXISTS    prj_user_by_minute              ( SELECT user, minute GROUP BY user, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_input_mint_by_minute        ( SELECT input_mint, minute GROUP BY input_mint, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_output_mint_by_minute       ( SELECT output_mint, minute GROUP BY output_mint, minute );
-
--- Rejected events and removed wrapper duplicates never feed financial views.
-CREATE TABLE IF NOT EXISTS swap_diagnostics AS swaps;
-ALTER TABLE swap_diagnostics MODIFY TTL timestamp + INTERVAL 30 DAY;

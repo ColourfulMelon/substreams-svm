@@ -8,7 +8,6 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('replay')
 args = parser.parse_args()
 counts = collections.Counter()
-reasons = collections.Counter()
 events = set()
 blocks = {}
 for line in open(args.replay):
@@ -18,17 +17,16 @@ for line in open(args.replay):
         continue  # CLI progress/stream completion lines are not module output.
     for row in output.get('@data', {}).get('tableChanges', []):
         fields = {field['name']: field.get('value', '') for field in row['fields']}
-        table = {'canonical_blocks': 'blocks', 'canonical_swaps': 'swaps', 'canonical_diagnostics': 'swap_diagnostics'}.get(row['table'], row['table'])
+        table = {'canonical_blocks': 'blocks', 'canonical_swaps': 'swaps'}.get(row['table'], row['table'])
+        assert table in ('blocks', 'swaps'), f'unexpected streamed table {table}'
         counts[(table, fields.get('protocol', ''))] += 1
         if table == 'blocks':
             slot = int(fields['block_num'])
             assert slot not in blocks, f'duplicate block {slot}'
             blocks[slot] = fields
-        elif table == 'swap_diagnostics':
-            reasons[(fields['protocol'], fields['verification_failure'])] += 1
         elif table == 'swaps':
             assert fields['transfer_verified'] == '1', 'unverified financial event'
-            assert fields['decoder_version'] == 'v0.5.2-pluto.3', 'mixed decoder versions'
+            assert fields['decoder_version'] == 'v0.5.2-pluto.4', 'mixed decoder versions'
             assert fields['event_id'], 'missing immutable event identity'
             identity = (fields['block_hash'], fields['event_id'])
             assert identity not in events, f'duplicate financial event {identity}'
@@ -46,6 +44,7 @@ print(json.dumps({
     'first_slot': min(blocks), 'last_slot': max(blocks), 'blocks': len(blocks),
     'unique_verified_events': len(events),
     'counts': {':'.join(key): value for key, value in sorted(counts.items())},
-    'diagnostics': {':'.join(key): value for key, value in sorted(reasons.items())},
+    'quality_counters': {name: sum(int(block[name]) for block in blocks.values())
+                         for name in ('quarantined_swaps', 'duplicate_wrappers', 'corrected_events')},
     'parent_links_and_event_identity': 'verified',
 }, indent=2))

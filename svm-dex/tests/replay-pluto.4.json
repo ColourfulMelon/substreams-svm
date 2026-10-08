@@ -1,0 +1,30 @@
+{
+  "first_slot": 454558265,
+  "last_slot": 454558266,
+  "blocks": 2,
+  "unique_verified_events": 371,
+  "counts": {
+    "blocks:": 2,
+    "swaps:meteora_daam": 59,
+    "swaps:meteora_dlmm": 24,
+    "swaps:orca_whirlpool": 126,
+    "swaps:pumpfun": 13,
+    "swaps:pumpfun_amm": 132,
+    "swaps:raydium_amm_v4": 4,
+    "swaps:raydium_clmm": 8,
+    "swaps:raydium_cpmm": 2,
+    "swaps:raydium_launchpad": 3
+  },
+  "quality_counters": {
+    "quarantined_swaps": 2,
+    "duplicate_wrappers": 1,
+    "corrected_events": 94
+  },
+  "parent_links_and_event_identity": "verified",
+  "financialPayloads": "identical to pluto.3",
+  "oldPayloadBytes": 576070,
+  "newPayloadBytes": 443280,
+  "payloadReductionPct": 23.05101810543857,
+  "db_out_hash": "991342772971bd920afc46821cad7454a1a2475b",
+  "package_sha256": "a3945f342cca02d273be42f5741428c9b50c94c8bb18ec7e4a0cb9ccf8187465"
+}

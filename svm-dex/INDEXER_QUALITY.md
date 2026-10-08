@@ -1,16 +1,17 @@
-# Verified indexing: Pluto release 0.5.2-pluto.3
+# Verified indexing: Pluto release 0.5.2-pluto.4
 
 This fork corrects Orca event-to-pool alignment and checks all emitted financial
 swaps against their own AMM invocation and actual transaction transfers. An event
-that cannot be proved goes to `swap_diagnostics`, never into financial candles.
-Jupiter wrappers sharing a native swap's physical transfer evidence are retained
-only as diagnostics. Separate identical invocations remain separate trades.
+that cannot be proved is rejected before database output. Jupiter wrappers
+sharing a native swap's physical transfer evidence are removed. Separate
+identical invocations remain separate trades. Rejected and corrected payloads
+are internal verification evidence only: live and archive outputs never stream
+or store diagnostic rows. Compact per-block counters remain available.
 
 Meteora DLMM/DAMM and Raydium CLMM/CPMM match events by their recorded pool,
 rather than letting a skipped instruction shift the next pool's amounts.
 Meteora AMM vault-share rounding and PumpSwap fee-exclusive events are normalized
-to exact IDL user-account flows; original amounts remain in diagnostics. SPL and
-Token-2022 transfers are supported. Transfer fees require exact net receipt
+to exact IDL user-account flows. SPL and Token-2022 transfers are supported. Transfer fees require exact net receipt
 proof, not an assumed percentage. Native Pump.fun SOL sales require an exact
 pool lamport debit and a single unambiguous pool invocation.
 
@@ -50,12 +51,14 @@ and exact Token-2022 withheld fees.
 
 ## Rollout and retained history
 
-Apply additive raw/block/diagnostic columns and reporting views before the new
-writer. Update derived candle MVs without deleting aggregate tables. Stop the
+Apply additive raw/block verification columns and reporting views before the
+new writer. Update derived candle MVs without deleting aggregate tables. Stop the
 old writer gracefully, verify its durable cursor is at least every retained raw
 block and there are no duplicate event identities, then resume the same cursor.
 Allow the reviewed module hash once; restore strict mismatch enforcement after
 the new cursor is saved. Never run old and new writers concurrently.
+After a diagnostic-free writer is confirmed, drop legacy diagnostic tables
+synchronously to reclaim their retained rows and projections.
 
 For live pricing, request `--final-blocks-only` so provider-confirmed chain
 finality replaces the SDK's synthetic undo buffer. Use the supported SQL sink
@@ -63,8 +66,8 @@ finality replaces the SDK's synthetic undo buffer. Use the supported SQL sink
 parallel catch-up. Monitor actual block timestamps: a healthy process or a
 stream marked live does not establish freshness.
 
-Existing history is not silently rewritten. The v0.2.0 canonical archive records
-raw swaps, rejected events and every block. Use a new versioned archive namespace
+Existing history is not silently rewritten. The v0.3.0 canonical archive records
+verified raw swaps and every block. Use a new versioned archive namespace
 for a complete replay; do not mix old decoder archives or use additive repair
 when a pool/amount changed or a wrapper was removed. Retain backups and use the
 coordinator's bounded canonical day replacement before rebuilding historical
