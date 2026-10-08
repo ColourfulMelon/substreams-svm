@@ -8,7 +8,6 @@ use crate::token_mints::TokenMintLookup;
 
 pub(crate) struct State {
     pending: Vec<InstructionSwap>,
-    next_index: usize,
     is_invoked: bool,
 }
 
@@ -16,37 +15,36 @@ impl State {
     pub(crate) fn new() -> Self {
         Self {
             pending: Vec::new(),
-            next_index: 0,
             is_invoked: false,
         }
     }
 
     pub(crate) fn handle_instruction(&mut self, ix: &InstructionView, token_mints: &TokenMintLookup) {
-        // `Swap` / `SwapV2` push exactly one PendingSwap; `TwoHopSwap` /
-        // `TwoHopSwapV2` push two (one per hop) which are consumed in-order
-        // by the next two `Traded` events.
+        // Retain each hop's pool and direction even when another instruction
+        // cannot be decoded. Events must identify their own pending hop.
         for swap in decode_instructions(ix, Some(token_mints)) {
             self.pending.push(swap);
         }
     }
 
     pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
-        else {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
             return None;
         };
 
         let event = parse_log_data(log_message)?;
-        let instruction = self.pending.get(self.next_index)?;
-        self.next_index += 1;
+        let index = self
+            .pending
+            .iter()
+            .position(|instruction| instruction.whirlpool == event.whirlpool && instruction.a_to_b == event.a_to_b)?;
+        let instruction = self.pending.remove(index);
 
         // Legacy `Swap` / `TwoHopSwap` can have unresolved mints when the
         // tx's pre/post token balances don't reference the relevant vault.
-        // Skip emitting (next_index already advanced for sequential
-        // alignment with subsequent swaps in the same tx).
-        let mint_a = instruction.mint_a.clone()?;
-        let mint_b = instruction.mint_b.clone()?;
+        // Consume only this matching hop; unresolved mints must never cause
+        // another pool to receive its amounts.
+        let mint_a = instruction.mint_a?;
+        let mint_b = instruction.mint_b?;
 
         let (input_mint, output_mint) = if instruction.a_to_b { (mint_a, mint_b) } else { (mint_b, mint_a) };
 
@@ -80,6 +78,8 @@ struct InstructionSwap {
 }
 
 struct LogSwap {
+    whirlpool: Vec<u8>,
+    a_to_b: bool,
     input_amount: u64,
     output_amount: u64,
 }
@@ -98,7 +98,16 @@ fn decode_instructions(ix: &InstructionView, token_mints: Option<&TokenMintLooku
         return Vec::new();
     }
 
-    let parsed = match orca::whirlpool::instructions::unpack(ix.data()) {
+    // Anchor accepts trailing instruction data. The legacy Swap has fixed
+    // arguments; deserialize its known prefix so a harmless trailing byte
+    // does not discard its hop (observed in public routed transactions).
+    let data = ix.data();
+    let data = if data.starts_with(&orca::whirlpool::instructions::SWAP) {
+        data.get(..42).unwrap_or(data)
+    } else {
+        data
+    };
+    let parsed = match orca::whirlpool::instructions::unpack(data) {
         Ok(v) => v,
         Err(_) => return Vec::new(),
     };
@@ -224,6 +233,8 @@ fn parse_log_data(log_message: &str) -> Option<LogSwap> {
     let data = parse_program_data(log_message)?;
     match orca::whirlpool::events::parse_event(data.as_slice()) {
         Ok(orca::whirlpool::events::WhirlpoolEvent::Traded(event)) => Some(LogSwap {
+            whirlpool: event.whirlpool.to_bytes().to_vec(),
+            a_to_b: event.a_to_b,
             input_amount: event.input_amount,
             output_amount: event.output_amount,
         }),
@@ -234,16 +245,124 @@ fn parse_log_data(log_message: &str) -> Option<LogSwap> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use base64::Engine;
     use substreams_solana::base58;
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction,
-        TransactionStatusMeta, UiTokenAmount,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction, TransactionStatusMeta, UiTokenAmount,
     };
 
     /// Whirlpool `swap` discriminator from the IDL.
     const SWAP_DISC: [u8; 8] = [248, 198, 158, 145, 225, 117, 135, 200];
     /// Whirlpool `two_hop_swap` discriminator.
     const TWO_HOP_SWAP_DISC: [u8; 8] = [195, 96, 237, 108, 68, 162, 219, 230];
+
+    fn traded_log(pool: [u8; 32], a_to_b: bool, input_amount: u64, output_amount: u64) -> String {
+        let event = orca::whirlpool::events::Traded {
+            whirlpool: solana_program::pubkey::Pubkey::new_from_array(pool),
+            a_to_b,
+            pre_sqrt_price: 0,
+            post_sqrt_price: 0,
+            input_amount,
+            output_amount,
+            input_transfer_fee: 0,
+            output_transfer_fee: 0,
+            lp_fee: 0,
+            protocol_fee: 0,
+        };
+        let mut data = vec![225, 202, 73, 175, 147, 43, 160, 150];
+        data.extend_from_slice(&borsh::to_vec(&event).unwrap());
+        format!("Program data: {}", base64::engine::general_purpose::STANDARD.encode(data))
+    }
+
+    #[test]
+    fn skipped_instruction_does_not_shift_later_pool_events() {
+        let mut state = State::new();
+        state.is_invoked = true;
+        for (pool, a_to_b) in [([2u8; 32], false), ([3u8; 32], true)] {
+            state.pending.push(InstructionSwap {
+                stack_height: 2,
+                user: vec![1; 32],
+                whirlpool: pool.to_vec(),
+                mint_a: Some(vec![4; 32]),
+                mint_b: Some(vec![5; 32]),
+                a_to_b,
+            });
+        }
+        // The unparsed first hop must not consume either known pool.
+        assert!(state.handle_log(&traded_log([9; 32], true, 273_199_007, 53_097_662_110)).is_none());
+        assert_eq!(state.pending.len(), 2);
+        let second = state.handle_log(&traded_log([2; 32], false, 53_097_662_110, 2_214_641_291_345)).unwrap();
+        assert_eq!(second.amm_pool, vec![2; 32]);
+        assert_eq!(second.input_mint, vec![5; 32]);
+        let third = state.handle_log(&traded_log([3; 32], true, 2_170_348_465_518, 276_039_217)).unwrap();
+        assert_eq!(third.amm_pool, vec![3; 32]);
+        assert_eq!(third.output_amount, 276_039_217);
+        assert!(state.pending.is_empty());
+    }
+
+    #[test]
+    fn wrong_direction_and_duplicate_events_do_not_consume_another_hop() {
+        let mut state = State::new();
+        state.is_invoked = true;
+        for a_to_b in [false, true] {
+            state.pending.push(InstructionSwap {
+                stack_height: 2,
+                user: vec![1; 32],
+                whirlpool: vec![2; 32],
+                mint_a: Some(vec![3; 32]),
+                mint_b: Some(vec![4; 32]),
+                a_to_b,
+            });
+        }
+        let first = state.handle_log(&traded_log([2; 32], true, 100, 90)).unwrap();
+        assert_eq!(first.input_mint, vec![3; 32]);
+        assert!(state.handle_log(&traded_log([2; 32], true, 100, 90)).is_none());
+        assert_eq!(state.pending.len(), 1);
+        let second = state.handle_log(&traded_log([2; 32], false, 80, 70)).unwrap();
+        assert_eq!(second.input_mint, vec![4; 32]);
+        assert!(state.pending.is_empty());
+    }
+
+    #[test]
+    fn unresolved_mints_consume_only_the_matching_pool() {
+        let mut state = State::new();
+        state.is_invoked = true;
+        for (pool, mint_a) in [([2; 32], None), ([3; 32], Some(vec![4; 32]))] {
+            state.pending.push(InstructionSwap {
+                stack_height: 2,
+                user: vec![1; 32],
+                whirlpool: pool.to_vec(),
+                mint_a,
+                mint_b: Some(vec![5; 32]),
+                a_to_b: true,
+            });
+        }
+        assert!(state.handle_log(&traded_log([2; 32], true, 100, 90)).is_none());
+        let swap = state.handle_log(&traded_log([3; 32], true, 80, 70)).unwrap();
+        assert_eq!(swap.amm_pool, vec![3; 32]);
+        assert_eq!(swap.input_amount, 80);
+    }
+
+    #[test]
+    fn aqua_public_multihop_preserves_each_pool_mints_and_amounts() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/aqua-orca-multihop.transaction.pb").to_vec()).unwrap();
+        let decoded = crate::process_transaction(tx).unwrap();
+        let sol = "So11111111111111111111111111111111111111112";
+        let aqua = "AQVcP67EpMyu4cBZZjqMu91cVsWy1aX98JmcZm1FyY9";
+        let fku = "FKU35pM9FujrBMkMDXM7QpZ1Xxcfodw64S1rcvY92mCq";
+        assert_eq!(decoded.swaps.len(), 3);
+        for (swap, (pool, input_mint, input_amount, output_mint, output_amount)) in decoded.swaps.iter().zip([
+            ("FVB6knS78TJJswCrBhhB2T3cUKBQ8XyRvqwsjDq3oWwE", sol, 273_199_007, fku, 53_097_662_110),
+            ("GNzK4LP1nbfFcMNwB1zG4htCkToXjKYn5mn5yVKvaExm", fku, 53_097_662_110, aqua, 2_214_641_291_345),
+            ("9TT3NbWogWjbQh7b3s1hfcqYF7VJHmg8uNcXDjtPRnh4", aqua, 2_170_348_465_518, sol, 276_039_217),
+        ]) {
+            assert_eq!(base58::encode(&swap.amm_pool), pool);
+            assert_eq!(base58::encode(&swap.input_mint), input_mint);
+            assert_eq!(swap.input_amount, input_amount);
+            assert_eq!(base58::encode(&swap.output_mint), output_mint);
+            assert_eq!(swap.output_amount, output_amount);
+        }
+    }
 
     /// SwapInstruction args body.
     fn swap_body(a_to_b: bool) -> Vec<u8> {
@@ -577,7 +696,11 @@ mod tests {
 
         // hop 1: a_to_b_one=true → mint_a=input, mint_b=intermediate
         assert_eq!(swaps[0].whirlpool, whirlpool_one.to_vec());
-        assert_eq!(swaps[0].mint_a.as_deref(), Some(mint_input.as_slice()), "hop 1 mint_a (a_to_b=true) must be the user's input mint");
+        assert_eq!(
+            swaps[0].mint_a.as_deref(),
+            Some(mint_input.as_slice()),
+            "hop 1 mint_a (a_to_b=true) must be the user's input mint"
+        );
         assert_eq!(swaps[0].mint_b.as_deref(), Some(mint_intermediate.as_slice()));
         assert!(swaps[0].a_to_b);
 
@@ -608,13 +731,25 @@ mod tests {
             mint_input,
             mint_intermediate,
             mint_output,
-            [0x06; 32], [0x07; 32], [0x08; 32], [0x09; 32], // programs + user owner input
-            [0x0a; 32], [0x0b; 32], [0x0c; 32], [0x0d; 32], // vaults
-            [0x0e; 32], [0x01; 32],                         // owner output, token_authority
-            [0x10; 32], [0x11; 32], [0x12; 32],             // tick_array_one_*
-            [0x13; 32], [0x14; 32], [0x15; 32],             // tick_array_two_*
-            [0x16; 32], [0x17; 32],                         // oracles
-            [0x18; 32],                                      // memo_program
+            [0x06; 32],
+            [0x07; 32],
+            [0x08; 32],
+            [0x09; 32], // programs + user owner input
+            [0x0a; 32],
+            [0x0b; 32],
+            [0x0c; 32],
+            [0x0d; 32], // vaults
+            [0x0e; 32],
+            [0x01; 32], // owner output, token_authority
+            [0x10; 32],
+            [0x11; 32],
+            [0x12; 32], // tick_array_one_*
+            [0x13; 32],
+            [0x14; 32],
+            [0x15; 32], // tick_array_two_*
+            [0x16; 32],
+            [0x17; 32], // oracles
+            [0x18; 32], // memo_program
         ];
 
         let tx = make_tx(TWO_HOP_SWAP_V2_DISC, two_hop_swap_v2_body(false, true), &accounts, &[]);
