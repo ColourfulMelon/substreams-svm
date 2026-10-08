@@ -49,7 +49,8 @@ impl State {
             input_amount: event.in_amount,
             output_mint: instruction.output_mint.clone(),
             output_amount: event.out_amount,
-        })
+            ..Default::default()
+    })
     }
 }
 

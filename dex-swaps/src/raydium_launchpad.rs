@@ -45,6 +45,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
         input_amount: event.amount_in,
         output_mint,
         output_amount: event.amount_out,
+        ..Default::default()
     })
 }
 

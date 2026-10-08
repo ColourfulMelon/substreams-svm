@@ -49,7 +49,8 @@ impl State {
                         input_amount: event.input_amount,
                         output_mint: event.output_mint.to_bytes().to_vec(),
                         output_amount: event.output_amount,
-                    });
+                        ..Default::default()
+    });
                 }
             }
         }

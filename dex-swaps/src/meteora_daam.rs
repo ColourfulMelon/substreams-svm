@@ -51,6 +51,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
         input_amount: event.amount_in,
         output_mint,
         output_amount: event.output_amount,
+        ..Default::default()
     })
 }
 

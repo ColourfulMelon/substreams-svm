@@ -46,6 +46,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
         input_amount,
         output_mint: if is_buy { trade.base_mint } else { trade.quote_mint },
         output_amount,
+        ..Default::default()
     })
 }
 

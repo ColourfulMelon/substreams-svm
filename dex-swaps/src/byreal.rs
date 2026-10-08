@@ -55,7 +55,8 @@ impl State {
             input_amount,
             output_mint: instruction.output_mint.clone(),
             output_amount,
-        })
+            ..Default::default()
+    })
     }
 }
 

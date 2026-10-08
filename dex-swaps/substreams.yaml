@@ -24,7 +24,7 @@ modules:
   - name: map_events
     kind: map
     inputs:
-      - map: solana_common:blocks_without_votes
+      - source: sf.solana.type.v1.Block
     output:
       type: proto:dex.swaps.v1.Events
 

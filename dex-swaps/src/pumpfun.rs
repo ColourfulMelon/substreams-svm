@@ -39,6 +39,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
         input_amount: if event.is_buy { event.sol_amount } else { event.token_amount },
         output_mint: if event.is_buy { mint } else { SOL_MINT.to_vec() },
         output_amount: if event.is_buy { event.token_amount } else { event.sol_amount },
+        ..Default::default()
     })
 }
 

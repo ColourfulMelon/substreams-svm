@@ -51,7 +51,8 @@ impl State {
             input_amount: event.actual_amount_in,
             output_mint,
             output_amount: event.actual_amount_out,
-        })
+            ..Default::default()
+    })
     }
 }
 

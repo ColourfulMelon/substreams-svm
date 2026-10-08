@@ -183,7 +183,8 @@ impl State {
             input_amount: ctx.input_amount,
             output_mint: ctx.output_mint,
             output_amount: ctx.last_event_amount_out,
-        })
+            ..Default::default()
+    })
     }
 }
 

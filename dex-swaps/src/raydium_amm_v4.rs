@@ -75,7 +75,8 @@ impl State {
             input_amount: log.amount_in,
             output_mint,
             output_amount: log.amount_out,
-        })
+            ..Default::default()
+    })
     }
 }
 

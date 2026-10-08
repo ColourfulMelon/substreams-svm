@@ -21,6 +21,10 @@ pub struct Transaction {
     pub compute_units_consumed: u64,
     #[prost(message, repeated, tag="6")]
     pub swaps: ::prost::alloc::vec::Vec<Swap>,
+    #[prost(uint32, optional, tag="7")]
+    pub source_index: ::core::option::Option<u32>,
+    #[prost(message, repeated, tag="8")]
+    pub rejected_swaps: ::prost::alloc::vec::Vec<Swap>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -45,6 +49,14 @@ pub struct Swap {
     pub output_mint: ::prost::alloc::vec::Vec<u8>,
     #[prost(uint64, tag="10")]
     pub output_amount: u64,
+    #[prost(uint32, optional, tag="11")]
+    pub source_index: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag="12")]
+    pub source_transfer_index: ::core::option::Option<u32>,
+    #[prost(bool, tag="13")]
+    pub transfer_verified: bool,
+    #[prost(string, tag="14")]
+    pub verification_failure: ::prost::alloc::string::String,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]

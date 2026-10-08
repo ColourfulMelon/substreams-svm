@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use common::solana::parse_program_data;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
@@ -9,6 +11,7 @@ use crate::token_mints::TokenMintLookup;
 pub(crate) struct State {
     pending: Vec<Pending>,
     next_index: usize,
+    consumed: HashSet<usize>,
     is_invoked: bool,
     /// Set when a `SwapRouterBaseIn` placeholder at `pending[next_index]`
     /// has consumed at least one `SwapEvent`. The router's invocation can
@@ -23,6 +26,7 @@ impl State {
         Self {
             pending: Vec::new(),
             next_index: 0,
+            consumed: HashSet::new(),
             is_invoked: false,
             router_event_pending: false,
         }
@@ -38,13 +42,23 @@ impl State {
         match scoped_program_log(log_message, &raydium::clmm::v3::PROGRAM_ID.to_vec(), &mut self.is_invoked)? {
             ProgramLog::Data(data) => {
                 let log = parse_log_data(data)?;
-                let pending = self.pending.get(self.next_index)?.clone();
+                let position = self.pending.iter().enumerate().find_map(|(index, pending)| {
+                    if self.consumed.contains(&index) { return None; }
+                    match pending {
+                        Pending::Swap(swap) if swap.pool_state == log.pool_state => Some(index),
+                        _ => None,
+                    }
+                }).or_else(|| self.pending.iter().enumerate().skip(self.next_index)
+                    .find_map(|(index, pending)| if matches!(pending, Pending::Router(_)) && !self.consumed.contains(&index) { Some(index) } else { None }))?;
+                let pending = self.pending[position].clone();
                 match pending {
                     Pending::Swap(instruction) => {
-                        self.next_index += 1;
+                        self.consumed.insert(position);
+                        self.next_index = position + 1;
                         build_from_instruction(&instruction, &log)
                     }
                     Pending::Router(ctx) => {
+                        self.next_index = position;
                         self.router_event_pending = true;
                         build_from_router(&ctx, &log, token_mints)
                     }
@@ -52,6 +66,7 @@ impl State {
             }
             ProgramLog::Exit => {
                 if self.router_event_pending {
+                    self.consumed.insert(self.next_index);
                     self.next_index += 1;
                     self.router_event_pending = false;
                 }
@@ -136,6 +151,7 @@ fn build_from_instruction(instruction: &InstructionSwap, log: &LogSwap) -> Optio
         input_amount,
         output_mint,
         output_amount,
+        ..Default::default()
     })
 }
 
@@ -167,6 +183,7 @@ fn build_from_router(ctx: &RouterContext, log: &LogSwap, token_mints: &TokenMint
         input_amount,
         output_mint,
         output_amount,
+        ..Default::default()
     })
 }
 
@@ -349,6 +366,25 @@ mod tests {
                 ..Default::default()
             }),
         }
+    }
+
+    #[test]
+    fn missing_instruction_and_duplicate_events_cannot_shift_pools() {
+        let tx = make_tx(SWAP_DISC, &(1..=10).map(|i| [i; 32]).collect::<Vec<_>>(), &[]);
+        let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mut state = State::new();
+        state.pending.push(Pending::Swap(InstructionSwap {
+            stack_height: 1, payer: vec![1;32], pool_state: vec![3;32],
+            input_mint: Some(vec![4;32]), output_mint: Some(vec![5;32]),
+        }));
+        state.handle_log(&make_invoke_log(), &mints);
+        let missing = swap_event_log_line([9;32], [1;32], [4;32], [5;32], 10, 20, true);
+        assert!(state.handle_log(&missing, &mints).is_none());
+        let matching = swap_event_log_line([3;32], [1;32], [4;32], [5;32], 10, 20, true);
+        let swap = state.handle_log(&matching, &mints).unwrap();
+        assert_eq!(swap.amm_pool, vec![3;32]);
+        assert_eq!(swap.input_amount, 10);
+        assert!(state.handle_log(&matching, &mints).is_none());
     }
 
     #[test]

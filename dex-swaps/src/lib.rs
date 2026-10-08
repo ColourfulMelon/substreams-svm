@@ -21,6 +21,7 @@ mod raydium_launchpad;
 mod routed_pool;
 mod spl_token_swap;
 mod token_mints;
+mod quality;
 
 use std::collections::VecDeque;
 
@@ -39,11 +40,17 @@ pub(crate) const SOL_MINT: [u8; 32] = [
 #[substreams::handlers::map]
 fn map_events(block: Block) -> Result<pb::Events, Error> {
     Ok(pb::Events {
-        transactions: block.transactions_owned().filter_map(process_transaction).collect(),
+        transactions: block.transactions.into_iter().enumerate().filter_map(|(index, tx)| {
+            if !tx.is_successful() { return None; }
+            let mut transaction = process_transaction(tx)?;
+            transaction.source_index = Some(index as u32);
+            Some(transaction)
+        }).collect(),
     })
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
+    if !tx.is_successful() { return None; }
     let tx_meta = tx.meta.as_ref()?;
     let mut swaps = Vec::new();
     let mut boop_state = boop::State::new();
@@ -146,7 +153,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         }
     }
 
-    if swaps.is_empty() {
+    let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps);
+    if swaps.is_empty() && rejected_swaps.is_empty() {
         return None;
     }
 
@@ -157,6 +165,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
         swaps,
+        source_index: None,
+        rejected_swaps,
     })
 }
 
@@ -191,7 +201,7 @@ mod tests {
         ] {
             let transaction = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
             let decoded = process_transaction(transaction).expect("successful swap must be emitted");
-            assert_eq!(decoded.swaps.len(), count);
+            assert_eq!(decoded.swaps.len(), count, "pool {} rejected {:?}", pool, decoded.rejected_swaps);
             let swap = decoded
                 .swaps
                 .iter()

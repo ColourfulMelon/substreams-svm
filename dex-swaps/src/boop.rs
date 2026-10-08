@@ -40,7 +40,8 @@ impl State {
                 input_amount: event.amount_in,
                 output_mint: event.mint.to_bytes().to_vec(),
                 output_amount: event.amount_out,
-            }),
+                ..Default::default()
+    }),
             Ok(boop::events::BoopEvent::TokenSoldEvent(event)) => Some(pb::Swap {
                 protocol: pb::Protocol::Boop as i32,
                 program_id: boop::PROGRAM_ID.to_vec(),
@@ -52,7 +53,8 @@ impl State {
                 input_amount: event.amount_in,
                 output_mint: SOL_MINT.to_vec(),
                 output_amount: event.amount_out,
-            }),
+                ..Default::default()
+    }),
             _ => None,
         }
     }

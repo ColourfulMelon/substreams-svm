@@ -40,7 +40,8 @@ impl State {
                 input_amount: event.sol_in,
                 output_mint: event.mint.to_bytes().to_vec(),
                 output_amount: event.token_out,
-            }),
+                ..Default::default()
+    }),
             Ok(dumpfun::events::DumpfunEvent::SellTokenEvent(event)) => Some(pb::Swap {
                 protocol: pb::Protocol::Dumpfun as i32,
                 program_id: dumpfun::PROGRAM_ID.to_vec(),
@@ -52,7 +53,8 @@ impl State {
                 input_amount: event.token_in,
                 output_mint: SOL_MINT.to_vec(),
                 output_amount: event.sol_out,
-            }),
+                ..Default::default()
+    }),
             _ => None,
         }
     }

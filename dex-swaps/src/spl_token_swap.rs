@@ -49,6 +49,7 @@ pub(crate) fn handle_instruction(ix: &InstructionView, token_mints: &TokenMintLo
         input_amount: amount_in,
         output_mint,
         output_amount: minimum_amount_out,
+        ..Default::default()
     })
 }
 

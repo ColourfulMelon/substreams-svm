@@ -36,7 +36,8 @@ impl State {
                     input_amount: if is_buy { event.collateral_amount } else { event.amount },
                     output_mint: if is_buy { event.cost_token.to_bytes().to_vec() } else { SOL_MINT.to_vec() },
                     output_amount: if is_buy { event.amount } else { event.collateral_amount },
-                })
+                    ..Default::default()
+    })
             }
             _ => None,
         }

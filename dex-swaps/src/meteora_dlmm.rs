@@ -12,18 +12,14 @@ pub(crate) struct PendingSwap {
 }
 
 struct SwapEvent {
+    lb_pair: Vec<u8>,
     amount_in: u64,
     amount_out: u64,
     swap_for_y: bool,
 }
 
-/// Hold pending swaps as a FIFO queue rather than a single `Option` slot. The
-/// queue is consumed front-to-back in `walk_instructions` order, which on
-/// chain matches the order in which each swap's anchor-CPI `Swap` event
-/// fires after its own instruction. The single-slot variant could silently
-/// lose the first swap's context if a second swap instruction overwrote
-/// `pending` before the first event arrived (e.g. on a future anchor-CPI
-/// event variant the adapter doesn't yet match).
+/// Match the event's own pool. A missing instruction/event must never shift
+/// a later event onto another pool's mint pair.
 pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instruction: &InstructionView) -> Option<pb::Swap> {
     let program_id = instruction.program_id().0;
     if program_id != &dlmm::PROGRAM_ID {
@@ -36,7 +32,8 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     }
 
     let event = decode_swap_event(instruction)?;
-    let swap = pending.pop_front()?;
+    let position = pending.iter().position(|swap| swap.lb_pair == event.lb_pair)?;
+    let swap = pending.remove(position)?;
     let (input_mint, output_mint) = if event.swap_for_y {
         (swap.token_x_mint.clone(), swap.token_y_mint.clone())
     } else {
@@ -54,6 +51,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
         input_amount: event.amount_in,
         output_mint,
         output_amount: event.amount_out,
+        ..Default::default()
     })
 }
 
@@ -135,6 +133,7 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
 fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
     match dlmm::anchor_cpi_event::unpack(ix.data()) {
         Ok(dlmm::anchor_cpi_event::MeteoraDlmmAnchorCpiEvent::Swap(event)) => Some(SwapEvent {
+            lb_pair: event.lb_pair.to_bytes().to_vec(),
             amount_in: event.amount_in,
             amount_out: event.amount_out,
             swap_for_y: event.swap_for_y,

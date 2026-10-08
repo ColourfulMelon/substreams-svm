@@ -48,7 +48,8 @@ impl State {
             input_amount: log.input_amount,
             output_mint: log.output_mint.unwrap_or_else(|| instruction.output_token_mint.clone()),
             output_amount: log.output_amount,
-        })
+            ..Default::default()
+    })
     }
 }
 

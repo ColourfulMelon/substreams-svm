@@ -37,6 +37,9 @@ message Transaction {
   uint64 fee = 4;
   uint64 compute_units_consumed = 5;
   repeated Swap swaps = 6;
+  // Position in the source block, before filtering votes or unsuccessful txs.
+  optional uint32 source_index = 7;
+  repeated Swap rejected_swaps = 8;
 }
 
 message Swap {
@@ -50,4 +53,9 @@ message Swap {
   uint64 input_amount = 8;
   bytes output_mint = 9;
   uint64 output_amount = 10;
+  // Position in the transaction's complete instruction walk, before filtering.
+  optional uint32 source_index = 11;
+  optional uint32 source_transfer_index = 12;
+  bool transfer_verified = 13;
+  string verification_failure = 14;
 }
