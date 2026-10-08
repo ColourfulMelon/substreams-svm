@@ -35,6 +35,10 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
     for transaction in previous.transactions {
         for swap in transaction.swaps {
             let mut identity = swap.clone();
+            identity.source_index = None;
+            identity.source_transfer_index = None;
+            identity.transfer_verified = false;
+            identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) { identity.amm_pool.clear(); }
             existing.entry((transaction.signature.clone(), identity.encode_to_vec())).or_default().push(swap);
         }
@@ -46,6 +50,10 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
         let mut updated = transaction.clone(); updated.swaps.clear();
         for swap in &transaction.swaps {
             let mut identity = swap.clone();
+            identity.source_index = None;
+            identity.source_transfer_index = None;
+            identity.transfer_verified = false;
+            identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) { identity.amm_pool.clear(); }
             let previous = existing.get_mut(&(transaction.signature.clone(), identity.encode_to_vec()));
             let matched = previous.and_then(|swaps| {
@@ -81,6 +89,18 @@ mod tests {
                 ..Default::default()
             }],
         }
+    }
+
+    #[test]
+    fn quality_metadata_does_not_recount_old_financial_payloads() {
+        let old = events(1, &[10]);
+        let mut new = old.clone();
+        new.transactions[0].source_index = Some(123);
+        let swap = &mut new.transactions[0].swaps[0];
+        swap.source_index = Some(9);
+        swap.source_transfer_index = Some(10);
+        swap.transfer_verified = true;
+        assert!(missing_swaps(old, new).unwrap().transactions.is_empty());
     }
 
     #[test]

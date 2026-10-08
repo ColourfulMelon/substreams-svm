@@ -21,5 +21,9 @@ CREATE TABLE IF NOT EXISTS {db}.canonical_swaps (
 `input_mint` String,
 `input_amount` UInt64,
 `output_mint` String,
-`output_amount` UInt64
+`output_amount` UInt64,
+`event_id` String,
+`source_instruction_index` UInt32,
+`transfer_verified` UInt8,
+`verification_failure` LowCardinality(String)
 ) ENGINE=ReplacingMergeTree PARTITION BY toDate(timestamp) ORDER BY (block_hash,transaction_index,instruction_index);

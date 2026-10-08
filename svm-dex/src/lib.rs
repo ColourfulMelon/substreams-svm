@@ -39,12 +39,22 @@ pub fn db_out(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error>
 fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
     let mut tables = substreams_database_change::tables::Tables::new();
 
-    for (transaction_index, transaction) in swaps.transactions.iter().enumerate() {
-        for (instruction_index, swap) in transaction.swaps.iter().enumerate() {
-            let key: [(&str, String); 3] = common_key_v2(&clock, transaction_index, instruction_index);
+    if clock.number > u32::MAX as u64 { return Err(Error::msg("block number exceeds order-key bounds")); }
+    for (ordinal, transaction) in swaps.transactions.iter().enumerate() {
+        let transaction_index = transaction.source_index.map(|index| index as usize).unwrap_or(ordinal);
+        if transaction_index >= 65536 { return Err(Error::msg("transaction position exceeds order-key bounds")); }
+        for (diagnostic, rows) in [(false, &transaction.swaps), (true, &transaction.rejected_swaps)] {
+        for (ordinal, swap) in rows.iter().enumerate() {
+            let instruction_index = if diagnostic { ordinal } else { swap.source_transfer_index.map(|index| index as usize).unwrap_or(ordinal) };
+            if instruction_index >= 65536 { return Err(Error::msg("instruction position exceeds order-key bounds")); }
+            let key = common_key_v2(&clock, transaction_index, instruction_index);
+            let event_id = match (swap.source_index, swap.source_transfer_index) {
+                (Some(instruction), Some(transfer)) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
+                _ => String::new(),
+            };
             let signers_raw = transaction.signers.iter().map(base58::encode).collect::<Vec<_>>().join(",");
             let row = tables
-                .create_row("swaps", key)
+                .create_row(if diagnostic { "swap_diagnostics" } else { "swaps" }, key)
                 // Transaction
                 .set("signature", base58::encode(&transaction.signature))
                 .set("fee_payer", base58::encode(&transaction.fee_payer))
@@ -53,6 +63,10 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("compute_units_consumed", transaction.compute_units_consumed)
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
+                .set("event_id", event_id)
+                .set("source_instruction_index", swap.source_index.unwrap_or_default())
+                .set("transfer_verified", u32::from(swap.transfer_verified))
+                .set("verification_failure", &swap.verification_failure)
 
                 // Swap
                 .set("protocol", protocol_slug(swap.protocol))
@@ -65,6 +79,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("output_amount", swap.output_amount);
 
             set_clock(&clock, row);
+        }
         }
     }
 

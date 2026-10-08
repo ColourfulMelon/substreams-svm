@@ -88,63 +88,74 @@ ORDER BY (
 )
 COMMENT 'OHLCV prices for AMM pools, aggregated by interval';
 
+ALTER TABLE state_ohlc_prices
+    ADD COLUMN IF NOT EXISTS min_price0 SimpleAggregateFunction(min, Nullable(Float64)),
+    ADD COLUMN IF NOT EXISTS max_price0 SimpleAggregateFunction(max, Nullable(Float64));
+
+-- UInt64 state compatibility with a deterministic (slot, tx, transfer) order.
 CREATE MATERIALIZED VIEW IF NOT EXISTS mv_state_ohlc_prices
 TO state_ohlc_prices
 AS
 WITH
-    -- predefined intervals --
-    -- in minutes: 1m, 5m, 10m, 30m, 1h, 4h, 1d, 1w
     [1, 5, 10, 30, 60, 240, 1440, 10080] AS intervals,
-
-    -- canonical token ordering
     (input_mint <= output_mint) AS dir,
-    if (dir, input_mint,  output_mint) AS mint0,
-    if (dir, output_mint, input_mint) AS mint1,
-    if (dir, input_amount,  output_amount) AS amount0,
-    if (dir, output_amount, input_amount) AS amount1,
-    toFloat64(amount1) / amount0 AS price,
+    if(dir, input_mint, output_mint) AS mint0,
+    if(dir, output_mint, input_mint) AS mint1,
+    if(dir, input_amount, output_amount) AS amount0,
+    if(dir, output_amount, input_amount) AS amount1,
+    [
+        'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+        'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB'
+    ] AS stable_mints,
+    [
+        'So11111111111111111111111111111111111111112',
+        '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'
+    ] AS sol_mints,
+    (
+        transfer_verified = 1 AND
+        amount0 >= multiIf(mint0 IN stable_mints, 10000, mint0 IN sol_mints, 100000, 1)
+        AND amount1 >= multiIf(mint1 IN stable_mints, 10000, mint1 IN sol_mints, 100000, 1)
+    ) AS price_eligible,
+    toUInt64(block_num) * 4294967296 + toUInt64(transaction_index) * 65536 + toUInt64(instruction_index) AS trade_position,
+    if(amount0 > 0, toFloat64(amount1) / amount0, 0.0) AS price,
     abs(amount0) AS gv0,
     abs(amount1) AS gv1,
-    -- net flow of mint0: +in, -out
-    if(dir, toInt128(input_amount), -toInt128(output_amount))  AS nf0,
-    -- net flow of mint1: +in, -out (signs flipped vs. your original)
-    if(dir, -toInt128(output_amount), toInt128(input_amount))  AS nf1
-
+    if(dir, toInt128(input_amount), -toInt128(output_amount)) AS nf0,
+    if(dir, -toInt128(output_amount), toInt128(input_amount)) AS nf1
 SELECT
     arrayJoin(intervals) AS interval_min,
-    -- floor to the interval in seconds
     toDateTime(intDiv(toUInt32(s.timestamp), interval_min * 60) * interval_min * 60) AS timestamp,
-
-    -- timestamp & block number --
     min(s.timestamp) AS min_timestamp,
     max(s.timestamp) AS max_timestamp,
     min(s.block_num) AS min_block_num,
     max(s.block_num) AS max_block_num,
-
-    -- dimensions --
-    protocol, program_id, amm, amm_pool, mint0, mint1,
-
-    /* OHLC */
-    argMinState(price, toUInt64(block_num))                 AS open0,
-    quantileDeterministicState(price, toUInt64(block_num))  AS quantile0,
-    argMaxState(price, toUInt64(block_num))                 AS close0,
-
-    -- volumes & flows (all in canonical orientation) --
-    sum(gv0)                AS gross_volume0,
-    sum(gv1)                AS gross_volume1,
-    sum(nf0)                AS net_flow0,
-    sum(nf1)                AS net_flow1,
-
-    -- universal --
-    count()                 AS transactions,
-    uniqState(signer)       AS uniq_signer,
-    uniqState(fee_payer)    AS uniq_fee_payer,
-    uniqState(user)         AS uniq_user
-FROM swaps s
+    protocol,
+    program_id,
+    amm,
+    amm_pool,
+    mint0,
+    mint1,
+    argMinStateIf(price, trade_position, price_eligible) AS open0,
+    min(if(price_eligible, toNullable(price), NULL)) AS min_price0,
+    quantileDeterministicStateIf(price, trade_position, price_eligible) AS quantile0,
+    max(if(price_eligible, toNullable(price), NULL)) AS max_price0,
+    argMaxStateIf(price, trade_position, price_eligible) AS close0,
+    sum(gv0) AS gross_volume0,
+    sum(gv1) AS gross_volume1,
+    sum(nf0) AS net_flow0,
+    sum(nf1) AS net_flow1,
+    count() AS transactions,
+    uniqState(signer) AS uniq_signer,
+    uniqState(fee_payer) AS uniq_fee_payer,
+    uniqState(user) AS uniq_user
+FROM swaps AS s
 GROUP BY
-    -- bar interval
     interval_min,
-    -- canonical token ordering
-    amm_pool, protocol, program_id, amm, mint0, mint1,
-     -- bar beginning
+    amm_pool,
+    protocol,
+    program_id,
+    amm,
+    mint0,
+    mint1,
     timestamp;

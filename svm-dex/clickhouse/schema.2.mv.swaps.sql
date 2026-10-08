@@ -35,6 +35,11 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS output_mint                 String COMMENT 'Output token mint address',
     ADD COLUMN IF NOT EXISTS output_amount               UInt64 COMMENT 'Amount of output tokens received',
 
+    ADD COLUMN IF NOT EXISTS event_id String COMMENT 'signature:AMM invocation:transfer position',
+    ADD COLUMN IF NOT EXISTS source_instruction_index UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) DEFAULT '',
+
     -- indexes --
     ADD INDEX IF NOT EXISTS         idx_input_amount                (input_amount) TYPE minmax GRANULARITY 1,
     ADD INDEX IF NOT EXISTS         idx_output_amount               (output_amount) TYPE minmax GRANULARITY 1,
@@ -54,3 +59,7 @@ ALTER TABLE swaps
     ADD PROJECTION IF NOT EXISTS    prj_user_by_minute              ( SELECT user, minute GROUP BY user, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_input_mint_by_minute        ( SELECT input_mint, minute GROUP BY input_mint, minute ),
     ADD PROJECTION IF NOT EXISTS    prj_output_mint_by_minute       ( SELECT output_mint, minute GROUP BY output_mint, minute );
+
+-- Rejected events and removed wrapper duplicates never feed financial views.
+CREATE TABLE IF NOT EXISTS swap_diagnostics AS swaps;
+ALTER TABLE swap_diagnostics MODIFY TTL timestamp + INTERVAL 30 DAY;
