@@ -57,6 +57,12 @@ block and there are no duplicate event identities, then resume the same cursor.
 Allow the reviewed module hash once; restore strict mismatch enforcement after
 the new cursor is saved. Never run old and new writers concurrently.
 
+For live pricing, request `--final-blocks-only` so provider-confirmed chain
+finality replaces the SDK's synthetic undo buffer. Use the supported SQL sink
+`--live-drift-reconnect 1m` setting to force overdue live sessions back into
+parallel catch-up. Monitor actual block timestamps: a healthy process or a
+stream marked live does not establish freshness.
+
 Existing history is not silently rewritten. The v0.2.0 canonical archive records
 raw swaps, rejected events and every block. Use a new versioned archive namespace
 for a complete replay; do not mix old decoder archives or use additive repair
