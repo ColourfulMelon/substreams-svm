@@ -82,7 +82,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.4")
+                .set("decoder_version", "v0.5.2-pluto.5")
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
                 .set("transfer_verified", u32::from(swap.transfer_verified))
                 // Swap
@@ -106,7 +106,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.4")
+        .set("decoder_version", "v0.5.2-pluto.5")
         .set("verified_swaps", all_swaps.filter(|swap| swap.transfer_verified).count() as u32)
         .set(
             "quarantined_swaps",

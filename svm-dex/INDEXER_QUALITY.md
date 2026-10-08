@@ -1,4 +1,4 @@
-# Verified indexing: Pluto release 0.5.2-pluto.4
+# Verified indexing: Pluto release 0.5.2-pluto.5
 
 This fork corrects Orca event-to-pool alignment and checks all emitted financial
 swaps against their own AMM invocation and actual transaction transfers. An event
@@ -19,6 +19,10 @@ The mapper retains the original block transaction index and flattened transfer
 position. Candle open/close uses `(slot, transaction, transfer)` order. Stable
 `event_id` values identify physical events. Every block records its parent slot
 and hash, decoder version, accepted/rejected/duplicate/corrected counts.
+
+Thirteen additional native venues use explicit instruction layouts and immediate
+SPL/Token-2022 CPIs. The [Helius comparison](../docs/native-venue-validation.md)
+records finalized samples, supported variants and fail-closed exclusions.
 
 ## Fresh reporting evidence
 
@@ -41,7 +45,8 @@ cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --target wasm32-unknown-unk
 make -C svm-dex/clickhouse schema
 ```
 
-Pack dex-swaps, svm-dex, ClickHouse and history manifests in dependency order.
+Pack dex-swaps, svm-dex and ClickHouse manifests in dependency order. The older
+history package retains its original decoder; version a new archive separately.
 Run `svm-dex/tests/verified-prices.sql` after the schema in an isolated ClickHouse
 instance. Replay a bounded finalized range with `db_out -o jsonl`, then run
 `python3 svm-dex/backfill/quality-audit.py replay.jsonl`. This verifies immutable

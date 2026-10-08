@@ -6,6 +6,7 @@ import json
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('replay')
+parser.add_argument('--decoder-version', default='v0.5.2-pluto.5')
 args = parser.parse_args()
 counts = collections.Counter()
 events = set()
@@ -26,7 +27,7 @@ for line in open(args.replay):
             blocks[slot] = fields
         elif table == 'swaps':
             assert fields['transfer_verified'] == '1', 'unverified financial event'
-            assert fields['decoder_version'] == 'v0.5.2-pluto.4', 'mixed decoder versions'
+            assert fields['decoder_version'] == args.decoder_version, 'mixed decoder versions'
             assert fields['event_id'], 'missing immutable event identity'
             identity = (fields['block_hash'], fields['event_id'])
             assert identity not in events, f'duplicate financial event {identity}'
