@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS state_ohlc_prices (
 ENGINE = AggregatingMergeTree
 ORDER BY (
     interval_min,
-    amm_pool, program_id, amm, mint0, mint1,
+    amm_pool, protocol, program_id, amm, mint0, mint1,
     timestamp
 )
 COMMENT 'OHLCV prices for AMM pools, aggregated by interval';
