@@ -1,0 +1,37 @@
+{
+  "first_slot": 454558265,
+  "last_slot": 454558314,
+  "blocks": 50,
+  "unique_verified_events": 6183,
+  "counts": {
+    "blocks:": 50,
+    "swap_diagnostics:jupiter_v6": 268,
+    "swap_diagnostics:meteora_amm": 5,
+    "swap_diagnostics:meteora_daam": 4,
+    "swap_diagnostics:pumpfun_amm": 2312,
+    "swap_diagnostics:raydium_clmm": 1,
+    "swaps:byreal": 6,
+    "swaps:meteora_amm": 6,
+    "swaps:meteora_daam": 1432,
+    "swaps:meteora_dlmm": 250,
+    "swaps:orca_whirlpool": 323,
+    "swaps:pancakeswap": 21,
+    "swaps:pumpfun": 481,
+    "swaps:pumpfun_amm": 3384,
+    "swaps:raydium_amm_v4": 27,
+    "swaps:raydium_clmm": 179,
+    "swaps:raydium_cpmm": 52,
+    "swaps:raydium_launchpad": 22
+  },
+  "diagnostics": {
+    "jupiter_v6:duplicate_native_cpi": 151,
+    "jupiter_v6:pool_mints_or_amounts_not_verified": 117,
+    "meteora_amm:event_amounts_replaced_by_exact_user_flows": 5,
+    "meteora_daam:pool_mints_or_amounts_not_verified": 4,
+    "pumpfun_amm:event_amounts_replaced_by_exact_user_flows": 2312,
+    "raydium_clmm:pool_mints_or_amounts_not_verified": 1
+  },
+  "parent_links_and_event_identity": "verified",
+  "db_out_hash": "74d7bd474bec747f0f694f849d254037a62b8fa9",
+  "package_sha256": "fe64e71065ddb7dff487bcfb577efe5523bd2c52d677e56b1d6f118cc7e46d49"
+}

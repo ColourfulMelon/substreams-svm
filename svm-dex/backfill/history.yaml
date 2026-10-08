@@ -1,11 +1,11 @@
 specVersion: v0.1.0
 package:
   name: pluto_decoder_history
-  version: v0.1.0
+  version: v0.2.0
   description: Canonical daily history for repairing every affected token.
   url: https://github.com/ColourfulMelon/substreams-svm
 imports:
-  repaired: ../../spkg/svm-clickhouse-dex-v0.5.2-pluto.1.spkg
+  repaired: ../../spkg/svm-clickhouse-dex-v0.5.2-pluto.3.spkg
 binaries:
   default:
     type: wasm/rust-v1
