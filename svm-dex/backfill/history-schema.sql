@@ -23,7 +23,15 @@ CREATE TABLE IF NOT EXISTS {db}.canonical_swaps (
 `output_mint` String,
 `output_amount` UInt64,
 `event_id` String,
+`decoder_version` LowCardinality(String),
 `source_instruction_index` UInt32,
 `transfer_verified` UInt8,
 `verification_failure` LowCardinality(String)
 ) ENGINE=ReplacingMergeTree PARTITION BY toDate(timestamp) ORDER BY (block_hash,transaction_index,instruction_index);
+
+CREATE TABLE IF NOT EXISTS {db}.canonical_diagnostics AS {db}.canonical_swaps;
+CREATE TABLE IF NOT EXISTS {db}.canonical_blocks (
+    block_num UInt32, block_hash String, timestamp DateTime('UTC'),
+    parent_slot UInt64, parent_hash String, decoder_version LowCardinality(String),
+    verified_swaps UInt32, quarantined_swaps UInt32, duplicate_wrappers UInt32, corrected_events UInt32
+) ENGINE = ReplacingMergeTree PARTITION BY toDate(timestamp) ORDER BY block_num;

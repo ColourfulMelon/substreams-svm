@@ -40,6 +40,8 @@ pub(crate) const SOL_MINT: [u8; 32] = [
 #[substreams::handlers::map]
 fn map_events(block: Block) -> Result<pb::Events, Error> {
     Ok(pb::Events {
+        parent_slot: block.parent_slot,
+        parent_hash: block.previous_blockhash,
         transactions: block.transactions.into_iter().enumerate().filter_map(|(index, tx)| {
             if !tx.is_successful() { return None; }
             let mut transaction = process_transaction(tx)?;

@@ -5,6 +5,10 @@
 pub struct Events {
     #[prost(message, repeated, tag="1")]
     pub transactions: ::prost::alloc::vec::Vec<Transaction>,
+    #[prost(uint64, tag="2")]
+    pub parent_slot: u64,
+    #[prost(string, tag="3")]
+    pub parent_hash: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

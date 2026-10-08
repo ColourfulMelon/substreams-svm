@@ -11,3 +11,11 @@ CREATE TABLE IF NOT EXISTS blocks (
 ENGINE = MergeTree
 ORDER BY ( block_num )
 COMMENT 'Blocks';
+ALTER TABLE blocks
+    ADD COLUMN IF NOT EXISTS parent_slot UInt64 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS parent_hash String DEFAULT '',
+    ADD COLUMN IF NOT EXISTS decoder_version LowCardinality(String) DEFAULT '',
+    ADD COLUMN IF NOT EXISTS verified_swaps UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS quarantined_swaps UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS duplicate_wrappers UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS corrected_events UInt32 DEFAULT 0;

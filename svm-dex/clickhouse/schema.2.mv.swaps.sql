@@ -35,6 +35,7 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS output_mint                 String COMMENT 'Output token mint address',
     ADD COLUMN IF NOT EXISTS output_amount               UInt64 COMMENT 'Amount of output tokens received',
 
+    ADD COLUMN IF NOT EXISTS decoder_version LowCardinality(String) DEFAULT '',
     ADD COLUMN IF NOT EXISTS event_id String COMMENT 'signature:AMM invocation:transfer position',
     ADD COLUMN IF NOT EXISTS source_instruction_index UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,

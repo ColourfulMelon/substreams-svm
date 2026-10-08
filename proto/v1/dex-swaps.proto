@@ -28,6 +28,8 @@ enum Protocol {
 
 message Events {
   repeated Transaction transactions = 1;
+  uint64 parent_slot = 2;
+  string parent_hash = 3;
 }
 
 message Transaction {
