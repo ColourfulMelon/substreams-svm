@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS state_ohlc_prices (
         'heaven' = 44,
         'stabble' = 45,
         'defituna' = 46,
-        'invariant' = 47, 'onedex' = 48, 'jupiter_rfq' = 49
+        'invariant' = 47, 'onedex' = 48, 'jupiter_rfq' = 49, 'phoenix' = 50
     ) COMMENT 'Protocol',
     program_id              LowCardinality(String),
     amm                     LowCardinality(String),
@@ -140,7 +140,7 @@ WITH
         '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'
     ] AS sol_mints,
     (
-        transfer_verified = 1 AND
+        (transfer_verified = 1 OR orderbook_fill_verified = 1) AND
         amount0 >= multiIf(mint0 IN stable_mints, 10000, mint0 IN sol_mints, 100000, 1)
         AND amount1 >= multiIf(mint1 IN stable_mints, 10000, mint1 IN sol_mints, 100000, 1)
     ) AS price_eligible,

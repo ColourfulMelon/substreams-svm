@@ -43,6 +43,7 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Invariant => "invariant",
         pb::Protocol::Onedex => "onedex",
         pb::Protocol::JupiterRfq => "jupiter_rfq",
+        pb::Protocol::Phoenix => "phoenix",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",
@@ -87,7 +88,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             }
             let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
             row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", "v0.5.2-pluto.9")
+                .set("decoder_version", "v0.5.2-pluto.10")
                 .set("transaction_proto_hex", raw);
             set_clock(&clock, row);
         }
@@ -104,17 +105,24 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
                 .set("transfer_count", candidate.transfer_count)
                 .set("reason", candidate.reason.clone())
-                .set("decoder_version", "v0.5.2-pluto.9");
+                .set("decoder_version", "v0.5.2-pluto.10");
             set_clock(&clock, row);
         }
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
-            let instruction_index = swap.source_transfer_index.map(|index| index as usize).unwrap_or(ordinal);
+            let instruction_index = swap
+                .source_transfer_index
+                .or(swap.source_event_index)
+                .map(|index| index as usize)
+                .unwrap_or(ordinal);
             if instruction_index >= 65536 {
                 return Err(Error::msg("instruction position exceeds order-key bounds"));
             }
             let key = common_key_v2(&clock, transaction_index, instruction_index);
-            let event_id = match (swap.source_index, swap.source_transfer_index) {
-                (Some(instruction), Some(transfer)) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
+            let event_id = match (swap.source_index, swap.source_transfer_index, swap.source_event_index) {
+                (Some(instruction), Some(transfer), _) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
+                (Some(instruction), None, Some(event)) if swap.orderbook_fill_verified => {
+                    format!("{}:{}:ledger:{}", base58::encode(&transaction.signature), instruction, event)
+                }
                 _ => String::new(),
             };
             let signers_raw = transaction.signers.iter().map(base58::encode).collect::<Vec<_>>().join(",");
@@ -129,9 +137,10 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.9")
+                .set("decoder_version", "v0.5.2-pluto.10")
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
                 .set("transfer_verified", u32::from(swap.transfer_verified))
+                .set("orderbook_fill_verified", u32::from(swap.orderbook_fill_verified))
                 // Swap
                 .set("protocol", protocol_slug(swap.protocol))
                 .set("amm", base58::encode(&swap.amm))
@@ -153,8 +162,11 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.9")
-        .set("verified_swaps", all_swaps.filter(|swap| swap.transfer_verified).count() as u32)
+        .set("decoder_version", "v0.5.2-pluto.10")
+        .set(
+            "verified_swaps",
+            all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
+        )
         .set(
             "coverage_candidates",
             swaps.transactions.iter().map(|tx| tx.coverage_candidates.len()).sum::<usize>() as u32,
@@ -235,6 +247,51 @@ mod tests {
         let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
         assert!(block.fields.iter().any(|field| field.name == "parent_slot" && field.value == "98"));
         assert!(block.fields.iter().any(|field| field.name == "duplicate_wrappers" && field.value == "1"));
+    }
+
+    #[test]
+    fn ledger_fills_keep_distinct_event_identity_and_count_as_verified_without_token_transfers() {
+        let clock = Clock {
+            number: 100,
+            id: "block".into(),
+            timestamp: Some(Default::default()),
+        };
+        let signature = vec![7; 64];
+        let changes = write_swaps(
+            clock,
+            pb::Events {
+                transactions: vec![pb::Transaction {
+                    signature: signature.clone(),
+                    source_index: Some(17),
+                    swaps: vec![pb::Swap {
+                        protocol: 50,
+                        source_index: Some(30),
+                        source_event_index: Some(34),
+                        orderbook_fill_verified: true,
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let row = changes.table_changes.iter().find(|row| row.table == "swaps").unwrap();
+        let Some(PrimaryKey::CompositePk(key)) = &row.primary_key else {
+            panic!("missing key")
+        };
+        assert_eq!(key.keys["instruction_index"], "34");
+        let event_id = format!("{}:30:ledger:34", base58::encode(signature));
+        for (name, value) in [
+            ("event_id", event_id.as_str()),
+            ("transfer_verified", "0"),
+            ("orderbook_fill_verified", "1"),
+            ("protocol", "phoenix"),
+        ] {
+            assert!(row.fields.iter().any(|field| field.name == name && field.value == value));
+        }
+        let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
+        assert!(block.fields.iter().any(|field| field.name == "verified_swaps" && field.value == "1"));
     }
 
     #[test]

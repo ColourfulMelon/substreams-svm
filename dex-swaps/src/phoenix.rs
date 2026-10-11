@@ -35,6 +35,54 @@ fn key_at(data: &[u8], offset: usize) -> Option<[u8; 32]> {
 }
 
 impl Market {
+    pub(crate) fn from_definition(address: &[u8], data: &[u8], mut decimals: impl FnMut(&[u8]) -> Option<u32>) -> Option<Self> {
+        if data.first() == Some(&0) {
+            return Self::from_owned_header(address, &PROGRAM_ID, &data[1..]);
+        }
+        if data.first() != Some(&1) || !matches!(data.len(), 212 | 216) {
+            return None;
+        }
+        let base_mint = &data[1..33];
+        let quote_mint = &data[33..65];
+        let params = &data[129..];
+        let quote_lots_per_unit = u64_at(params, 24)?;
+        let tick_lots_per_unit = u64_at(params, 32)?;
+        let base_lots_per_unit = u64_at(params, 40)?;
+        let raw_units = match (params.get(82)?, params.len()) {
+            (0, 83) => 1,
+            (1, 87) => u32::from_le_bytes(params[83..87].try_into().ok()?),
+            _ => return None,
+        };
+        let base_decimals = decimals(base_mint)?;
+        let quote_decimals = decimals(quote_mint)?;
+        let base_unit = 10u64.checked_pow(base_decimals)?.checked_mul(u64::from(raw_units))?;
+        let quote_unit = 10u64.checked_pow(quote_decimals)?;
+        if base_lots_per_unit == 0
+            || quote_lots_per_unit == 0
+            || base_unit % base_lots_per_unit != 0
+            || quote_unit % quote_lots_per_unit != 0
+            || u16::from_le_bytes(params[48..50].try_into().ok()?) > 10000
+        {
+            return None;
+        }
+        let base_lot = base_unit / base_lots_per_unit;
+        let quote_lot = quote_unit / quote_lots_per_unit;
+        let tick_atoms = quote_lot.checked_mul(tick_lots_per_unit)?;
+        let mut header = [0u8; 576];
+        header[..8].copy_from_slice(&MARKET_DISCRIMINANT.to_le_bytes());
+        header[40..44].copy_from_slice(&base_decimals.to_le_bytes());
+        header[48..80].copy_from_slice(base_mint);
+        header[80..112].copy_from_slice(&data[65..97]);
+        header[112..120].copy_from_slice(&base_lot.to_le_bytes());
+        header[120..124].copy_from_slice(&quote_decimals.to_le_bytes());
+        header[128..160].copy_from_slice(quote_mint);
+        header[160..192].copy_from_slice(&data[97..129]);
+        header[192..200].copy_from_slice(&quote_lot.to_le_bytes());
+        header[200..208].copy_from_slice(&tick_atoms.to_le_bytes());
+        header[312..316].copy_from_slice(&raw_units.to_le_bytes());
+        Self::from_owned_header(address, &PROGRAM_ID, &header)
+    }
+
     pub fn from_owned_header(address: &[u8], owner: &[u8], data: &[u8]) -> Option<Self> {
         if owner != PROGRAM_ID || data.len() != 576 || u64_at(data, 0)? != MARKET_DISCRIMINANT {
             return None;
@@ -443,7 +491,26 @@ mod tests {
             let address = base58::decode(fields[2]).unwrap();
             let header = std::fs::read(directory.join(format!("{}.header.bin", fields[2]))).unwrap();
             let market = Market::from_owned_header(&address, &PROGRAM_ID, &header).unwrap();
-            let fill = decode_fill(&tx, fields[1].parse().unwrap(), &market, None).unwrap();
+            let index = fields[1].parse().unwrap();
+            let fill = decode_fill(&tx, index, &market, None).unwrap();
+            let normalized = crate::process_transaction_with_phoenix(tx.clone(), Some(fill.slot), |address, position| {
+                if address == market.address && position == index as u32 {
+                    Some(market.clone())
+                } else {
+                    None
+                }
+            })
+            .unwrap();
+            let rows: Vec<_> = normalized
+                .swaps
+                .iter()
+                .filter(|swap| swap.protocol == 50 && swap.source_index == Some(index as u32))
+                .collect();
+            assert_eq!(rows.len(), 1);
+            assert!(rows[0].orderbook_fill_verified);
+            assert!(!rows[0].transfer_verified);
+            assert!(rows[0].source_transfer_index.is_none());
+            assert_eq!((rows[0].input_amount, rows[0].output_amount), (fill.input_amount, fill.output_amount));
             assert_eq!(base58::encode(fill.input_mint), fields[3]);
             assert_eq!(fill.input_amount.to_string(), fields[4]);
             assert_eq!(base58::encode(fill.output_mint), fields[5]);
@@ -600,6 +667,148 @@ mod tests {
             }
             assert!(decode_fill(&tx, 0, &market, Some(200)).is_none(), "invalid mode {mode}");
         }
+    }
+
+    fn initialize_tx(raw_units: Option<u32>) -> ConfirmedTransaction {
+        use substreams_solana::pb::sf::solana::r#type::v1::{TokenBalance, UiTokenAmount};
+        let mut data = vec![100];
+        for value in [1024u64, 1024, 1153, 100_000, 10_000, 10_000] {
+            data.extend_from_slice(&value.to_le_bytes());
+        }
+        data.extend_from_slice(&150u16.to_le_bytes());
+        data.extend_from_slice(&[50; 32]);
+        match raw_units {
+            None => data.push(0),
+            Some(value) => {
+                data.push(1);
+                data.extend_from_slice(&value.to_le_bytes());
+            }
+        }
+        let mut tx = make_tx(
+            PROGRAM_ID,
+            &[
+                PROGRAM_ID,
+                LOG_AUTHORITY,
+                [20; 32],
+                [21; 32],
+                [30; 32],
+                [31; 32],
+                [32; 32],
+                [33; 32],
+                [0; 32],
+                substreams_solana_idls::spl::token::PROGRAM_ID,
+            ],
+            data,
+        );
+        let meta = tx.meta.as_mut().unwrap();
+        meta.log_messages = vec![
+            format!("Program {} invoke [1]", base58::encode(PROGRAM_ID)),
+            format!("Program {} success", base58::encode(PROGRAM_ID)),
+        ];
+        for (index, mint) in [(8, [30; 32]), (9, [31; 32])] {
+            meta.post_token_balances.push(TokenBalance {
+                account_index: index,
+                mint: base58::encode(mint),
+                ui_token_amount: Some(UiTokenAmount {
+                    decimals: 6,
+                    amount: "0".into(),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+        }
+        tx
+    }
+
+    #[test]
+    fn snapshot_boundary_and_future_market_initialization_preserve_ordinal_metadata() {
+        use crate::phoenix_metadata::{ordinal, updates, SNAPSHOT_SLOT};
+        use substreams_solana::pb::sf::solana::r#type::v1::Block;
+        let first = Block {
+            slot: SNAPSHOT_SLOT + 5,
+            parent_slot: SNAPSHOT_SLOT,
+            ..Default::default()
+        };
+        let seeds = updates(&first);
+        assert_eq!(seeds.iter().filter(|(_, key, _)| key.starts_with("m:")).count(), 255);
+        assert_eq!(seeds.iter().filter(|(_, key, _)| key.starts_with("d:")).count(), 168);
+        for (_, key, value) in seeds.iter().filter(|(_, key, _)| key.starts_with("m:")) {
+            let address = base58::decode(&key[2..]).unwrap();
+            assert!(Market::from_definition(&address, value, |_| None).is_some());
+        }
+        assert!(updates(&Block {
+            slot: SNAPSHOT_SLOT + 6,
+            parent_slot: SNAPSHOT_SLOT + 5,
+            ..Default::default()
+        })
+        .is_empty());
+        let slot = SNAPSHOT_SLOT + 10;
+        let mut ledger = ledger_tx(0, false).0;
+        for event in &mut ledger.meta.as_mut().unwrap().inner_instructions[0].instructions {
+            event.data[19..27].copy_from_slice(&slot.to_le_bytes());
+        }
+        let mut block = Block {
+            slot,
+            parent_slot: SNAPSHOT_SLOT + 9,
+            transactions: vec![initialize_tx(None), ledger, initialize_tx(Some(100))],
+            ..Default::default()
+        };
+        let changes = updates(&block);
+        let at = |ord: u64, key: &str| {
+            changes
+                .iter()
+                .rev()
+                .find(|(position, k, _)| *position <= ord && k == key)
+                .map(|(_, _, value)| value.clone())
+        };
+        let key = format!("m:{}", base58::encode([20; 32]));
+        let market_at = |ord| {
+            Market::from_definition(&[20; 32], &at(ord, &key)?, |mint| {
+                Some(u32::from_le_bytes(at(ord, &format!("d:{}", base58::encode(mint)))?.as_slice().try_into().ok()?))
+            })
+        };
+        assert!(market_at(0).is_none());
+        let current = market_at(ordinal(1, 0)).unwrap();
+        let next = market_at(ordinal(2, 0)).unwrap();
+        assert_eq!(current.base_lot_atoms, 100);
+        assert_eq!(next.base_lot_atoms, 10_000);
+        let decoded = crate::process_transaction_with_phoenix(block.transactions[1].clone(), Some(slot), |_, _| Some(current.clone())).unwrap();
+        assert_eq!(decoded.swaps.len(), 1);
+        assert_eq!((decoded.swaps[0].input_amount, decoded.swaps[0].output_amount), (2030, 2000));
+        assert!(decoded.swaps[0].orderbook_fill_verified);
+        assert!(!decoded.swaps[0].transfer_verified);
+        assert!(decoded.coverage_candidates.is_empty());
+        // A caught, rolled-back initialization never replaces a valid market.
+        *block.transactions[2].meta.as_mut().unwrap().log_messages.last_mut().unwrap() =
+            format!("Program {} failed: custom program error: 0x1", base58::encode(PROGRAM_ID));
+        assert_eq!(updates(&block).iter().filter(|(_, key, _)| key.starts_with("m:")).count(), 1);
+    }
+
+    #[test]
+    fn missing_mint_metadata_keeps_future_fills_replayable_until_a_deposit_supplies_it() {
+        use crate::phoenix_metadata::{updates, SNAPSHOT_SLOT};
+        use substreams_solana::pb::sf::solana::r#type::v1::Block;
+        let mut init = initialize_tx(None);
+        init.meta.as_mut().unwrap().post_token_balances.clear();
+        let changes = updates(&Block {
+            slot: SNAPSHOT_SLOT + 10,
+            parent_slot: SNAPSHOT_SLOT + 9,
+            transactions: vec![init],
+            ..Default::default()
+        });
+        let definition = &changes.iter().find(|(_, key, _)| key.starts_with("m:")).unwrap().2;
+        assert!(Market::from_definition(&[20; 32], definition, |_| None).is_none());
+        let ledger = ledger_tx(0, true).0;
+        let diagnostic = crate::process_transaction_with_phoenix(ledger.clone(), Some(200), |_, _| None).unwrap();
+        assert!(diagnostic.swaps.is_empty());
+        assert!(!diagnostic.coverage_transaction.is_empty());
+        assert_eq!(diagnostic.coverage_candidates.len(), 1);
+        let market = Market::from_definition(&[20; 32], definition, |_| Some(6)).unwrap();
+        let decoded = crate::process_transaction_with_phoenix(ledger, Some(200), |_, _| Some(market.clone())).unwrap();
+        assert_eq!(decoded.swaps.len(), 1);
+        assert!(decoded.swaps[0].orderbook_fill_verified);
+        assert!(decoded.swaps[0].source_transfer_index.is_none());
+        assert!(decoded.swaps[0].source_event_index.is_some());
     }
 
     #[test]

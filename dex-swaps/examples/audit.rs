@@ -49,7 +49,15 @@ fn main() {
                 }
             }
         }
-        let decoded = dex_swaps::process_transaction(tx);
+        let decoded = if let Some(directory) = &phoenix_headers {
+            dex_swaps::process_transaction_with_phoenix(tx, None, |address, _| {
+                let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(address)));
+                let header = std::fs::read(path).ok()?;
+                dex_swaps::phoenix::Market::from_owned_header(address, &dex_swaps::phoenix::PROGRAM_ID, &header)
+            })
+        } else {
+            dex_swaps::process_transaction(tx)
+        };
         println!(
             "TX\t{}\t{}\t{}",
             signature,
@@ -85,7 +93,7 @@ fn main() {
                     signature,
                     swap.protocol,
                     swap.source_index.unwrap(),
-                    swap.source_transfer_index.unwrap(),
+                    swap.source_transfer_index.or(swap.source_event_index).unwrap(),
                     base58::encode(swap.amm),
                     base58::encode(swap.amm_pool),
                     base58::encode(swap.user),

@@ -87,6 +87,13 @@ pub struct Swap {
     pub transfer_verified: bool,
     #[prost(string, tag="14")]
     pub verification_failure: ::prost::alloc::string::String,
+    /// Actual fills proven by signed orderbook events plus market lot metadata.
+    /// Such fills may settle exchange balances without an SPL token transfer.
+    #[prost(bool, tag="15")]
+    pub orderbook_fill_verified: bool,
+    /// Position of the signed event-log instruction, separate from Token CPIs.
+    #[prost(uint32, optional, tag="16")]
+    pub source_event_index: ::core::option::Option<u32>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -141,6 +148,7 @@ pub enum Protocol {
     Invariant = 47,
     Onedex = 48,
     JupiterRfq = 49,
+    Phoenix = 50,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -199,6 +207,7 @@ impl Protocol {
             Protocol::Invariant => "PROTOCOL_INVARIANT",
             Protocol::Onedex => "PROTOCOL_ONEDEX",
             Protocol::JupiterRfq => "PROTOCOL_JUPITER_RFQ",
+            Protocol::Phoenix => "PROTOCOL_PHOENIX",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -254,6 +263,7 @@ impl Protocol {
             "PROTOCOL_INVARIANT" => Some(Self::Invariant),
             "PROTOCOL_ONEDEX" => Some(Self::Onedex),
             "PROTOCOL_JUPITER_RFQ" => Some(Self::JupiterRfq),
+            "PROTOCOL_PHOENIX" => Some(Self::Phoenix),
             _ => None,
         }
     }

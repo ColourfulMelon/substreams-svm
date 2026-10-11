@@ -35,9 +35,10 @@ See [`swap-coverage-2026-10-11.md`](swap-coverage-2026-10-11.md) for finalized
 replay results, newer instruction variants, net-receipt verification and gaps
 that still require investigation. Standalone package availability does not
 imply coverage in the normalized pricing stream.
-Phoenix lot/fee accounting is in `dex-swaps/src/phoenix.rs`; it is currently
-offline support with original fixture evidence, pending live metadata and
-ledger-verification integration. Do not treat it as deployed pricing coverage.
+Phoenix lot/fee accounting is in `dex-swaps/src/phoenix.rs`, with its bounded
+current/future market registry in `phoenix_metadata.rs`. The pluto.10 candidate
+adds signed ledger evidence separately from SPL transfer evidence; check release
+and deployment state before treating it as live coverage.
 
 For standalone protocol packages:
 

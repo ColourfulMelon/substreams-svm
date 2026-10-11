@@ -188,7 +188,7 @@ except 17 independently proven Launchpad gross-input corrections. It adds
 242 raw candidate transactions remain diagnostic. Historical live rows and
 aggregates are not changed by deploying this release.
 
-## Phoenix settlement accounting (source only, after pluto.9)
+## Phoenix settlement accounting (pluto.10 candidate)
 
 `dex-swaps/src/phoenix.rs` now decodes signed Phoenix self-CPI audit batches
 against owner-verified 576-byte market headers. It supports IOC Swap /
@@ -213,12 +213,38 @@ ledger-only fill was observed. Deposited-fund fills, marketable limit fills,
 both directions, split event batches and rolled-back/malformed evidence have
 core synthetic tests; those tests are not on-chain sampling evidence.
 
-This is currently **offline accounting support**, accessible through the audit
-CLI's optional second argument (a directory of `<market>.bin` owner-verified
-headers). The live normalized pricing stream is unchanged. Wiring requires a
-bounded current/future market metadata registry and a distinct ledger-settlement
-verification flag; a fill without SPL transfers must not set `transfer_verified`.
-A later account snapshot alone cannot prove a historical market incarnation;
-the current historical samples are independently bound to exact wallet CPIs.
-All 388 existing raw transaction audits remain byte-identical (962 financial
-legs, 185 diagnostics). Published pluto.9 assets are immutable and unchanged.
+The pluto.10 candidate wires this accounting into normalized swaps as protocol
+`phoenix` (50), with `orderbook_fill_verified` and `source_event_index`. Ledger
+fills keep `transfer_verified` false and use distinct `signature:instruction:ledger:log`
+identities. Missing metadata preserves the original replayable diagnostic.
+An already verified wrapper for the same native invocation is not counted twice.
+Raw and aggregate price eligibility accepts either proven settlement type.
+
+The bounded registry starts after finalized snapshot slot 455747960, with 255
+owner/PDA-verified markets and 168 mint decimal records. The packed snapshot and
+its public provenance are under `dex-swaps/fixtures/phoenix/market-registry-*`.
+Successful InitializeMarket instructions update market definitions, including
+new addresses or reinitialized markets. Legacy mint decimals are captured from
+Phoenix transaction balance metadata; unresolved definitions wait for that
+metadata instead of assuming decimals. Reads use transaction/instruction
+ordinals, so a later initialization cannot alter an earlier fill in the same
+block. A snapshot marker is mandatory before the map emits any block.
+
+All 106 core Rust tests pass, including initialization ordering, rolled-back
+initialization, missing metadata, truthful ledger flags and sink event identity.
+An actual Substreams replay after the boundary passes the registry guard.
+A second runtime replay of finalized slots 455754000–455754049 preserves all
+5,134 previous financial rows and event identities exactly, with 261 candidates
+and 219 raw candidate transactions. Isolated ClickHouse checks all eight enum
+columns, 41,072 candle trades, 5,134 pool trades and 10,268 mint trades. Nine
+price assertions include ledger-only prices and candles. All three Go readiness
+checks and eleven read-only application price tests pass. All 388 existing raw
+transaction audits remain byte-identical (962 financial legs, 185 diagnostics).
+
+The registry does not establish historical market incarnations before the
+snapshot. Historical wallet examples are independently bound to exact SPL CPIs;
+ledger-only historical recovery needs initialization/account-state evidence.
+The new release remains a tested candidate until its immutable artifacts are
+published and the single writer is upgraded. Published pluto.9 assets remain
+unchanged. This does not complete OpenBook, DefiTuna two-hop, 1DEX exact-output,
+new/proprietary native programs or the other remaining coverage gaps.

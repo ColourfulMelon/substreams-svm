@@ -53,6 +53,7 @@ enum Protocol {
   PROTOCOL_INVARIANT = 47;
   PROTOCOL_ONEDEX = 48;
   PROTOCOL_JUPITER_RFQ = 49;
+  PROTOCOL_PHOENIX = 50;
 }
 
 message Events {
@@ -106,4 +107,9 @@ message Swap {
   optional uint32 source_transfer_index = 12;
   bool transfer_verified = 13;
   string verification_failure = 14;
+  // Actual fills proven by signed orderbook events plus market lot metadata.
+  // Such fills may settle exchange balances without an SPL token transfer.
+  bool orderbook_fill_verified = 15;
+  // Position of the signed event-log instruction, separate from Token CPIs.
+  optional uint32 source_event_index = 16;
 }

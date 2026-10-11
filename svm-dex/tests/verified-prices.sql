@@ -32,3 +32,15 @@ FROM verified_usd_price_candidates WHERE mint = 'LEAF';
 SELECT 'no diagnostic storage', throwIf(count() != 0)
 FROM system.tables WHERE database = currentDatabase()
   AND name IN ('swap_diagnostics', 'canonical_diagnostics');
+
+-- Orderbook fills settle exchange balances and need no SPL transfer flag.
+INSERT INTO swaps (block_num, block_hash, timestamp, transaction_index, instruction_index,
+    event_id, protocol, transfer_verified, orderbook_fill_verified, amm_pool,
+    input_mint, output_mint, input_amount, output_amount)
+VALUES (454558265, 'block', now(), 8, 8, 'ledger-fill', 'phoenix', 0, 1,
+    'phoenix-market', 'BOOK', 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB', 1000000, 1500000);
+SELECT 'ledger-only fill is price evidence', throwIf(count() != 1 OR any(raw_price) != 1.5)
+FROM verified_recent_pairs WHERE amm_pool = 'phoenix-market';
+SELECT 'ledger-only fill reaches candles', throwIf(count() != 1 OR any(close) != 1.5)
+FROM (SELECT argMaxMerge(close0) AS close FROM state_ohlc_prices
+      WHERE amm_pool = 'phoenix-market' AND interval_min = 1);

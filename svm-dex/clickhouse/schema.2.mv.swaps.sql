@@ -50,7 +50,7 @@ ALTER TABLE swaps
         'plasma' = 42,
         'bonkswap' = 43,
         'heaven' = 44,
-        'stabble' = 45, 'defituna' = 46, 'invariant' = 47, 'onedex' = 48, 'jupiter_rfq' = 49
+        'stabble' = 45, 'defituna' = 46, 'invariant' = 47, 'onedex' = 48, 'jupiter_rfq' = 49, 'phoenix' = 50
     ) COMMENT 'Protocol',
     ADD COLUMN IF NOT EXISTS amm                         String COMMENT 'AMM protocol (Raydium Liquidity Pool V4)',
     ADD COLUMN IF NOT EXISTS amm_pool                    String COMMENT 'AMM market (Raydium "WSOL-USDT" Market)',
@@ -64,6 +64,7 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS event_id String COMMENT 'signature:AMM invocation:transfer position',
     ADD COLUMN IF NOT EXISTS source_instruction_index UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS orderbook_fill_verified UInt8 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) MATERIALIZED '',
 
     -- indexes --

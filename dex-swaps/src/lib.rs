@@ -15,6 +15,7 @@ mod okx;
 mod orca_whirlpool;
 mod pancakeswap;
 pub mod phoenix;
+mod phoenix_metadata;
 mod pumpfun;
 mod pumpfun_amm;
 mod quality;
@@ -31,7 +32,11 @@ use std::collections::VecDeque;
 
 use common::solana::{get_fee_payer, get_signers};
 use proto::pb::dex::swaps::v1 as pb;
-use substreams::{errors::Error, log};
+use substreams::{
+    errors::Error,
+    log,
+    store::{StoreGet, StoreGetRaw, StoreNew, StoreSet, StoreSetRaw},
+};
 use substreams_solana::{
     base58,
     pb::sf::solana::r#type::v1::{Block, ConfirmedTransaction},
@@ -41,8 +46,19 @@ pub(crate) const SOL_MINT: [u8; 32] = [
     6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1,
 ]; // So11111111111111111111111111111111111111111
 
+#[substreams::handlers::store]
+fn store_phoenix_markets(block: Block, output: StoreSetRaw) {
+    for (ordinal, key, value) in phoenix_metadata::updates(&block) {
+        output.set(ordinal, key, &value);
+    }
+}
+
 #[substreams::handlers::map]
-fn map_events(block: Block) -> Result<pb::Events, Error> {
+fn map_events(block: Block, markets: StoreGetRaw) -> Result<pb::Events, Error> {
+    if markets.get_last("__phoenix_snapshot").as_deref() != Some(&phoenix_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
+        return Err(Error::msg("Phoenix registry snapshot missing or mismatched"));
+    }
+    let slot = block.slot;
     Ok(pb::Events {
         parent_slot: block.parent_slot,
         parent_hash: block.previous_blockhash,
@@ -54,7 +70,14 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
                 if !tx.is_successful() {
                     return None;
                 }
-                let mut transaction = process_transaction(tx)?;
+                let mut transaction = process_transaction_with_phoenix(tx, Some(slot), |address, instruction_index| {
+                    let ordinal = phoenix_metadata::ordinal(index, instruction_index);
+                    let definition = markets.get_at(ordinal, format!("m:{}", base58::encode(address)))?;
+                    phoenix::Market::from_definition(address, &definition, |mint| {
+                        let value = markets.get_at(ordinal, format!("d:{}", base58::encode(mint)))?;
+                        Some(u32::from_le_bytes(value.as_slice().try_into().ok()?))
+                    })
+                })?;
                 transaction.source_index = Some(index as u32);
                 Some(transaction)
             })
@@ -64,6 +87,16 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 
 /// Decode one successful transaction for both streaming and offline coverage audits.
 pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
+    process_transaction_with_phoenix(tx, None, |_, _| None)
+}
+
+/// Supply market metadata at the actual instruction ordinal. Missing metadata
+/// leaves the original transaction replayable and never guesses lot sizes.
+pub fn process_transaction_with_phoenix(
+    tx: ConfirmedTransaction,
+    expected_slot: Option<u64>,
+    mut market_lookup: impl FnMut(&[u8], u32) -> Option<phoenix::Market>,
+) -> Option<pb::Transaction> {
     if !tx.is_successful() {
         return None;
     }
@@ -169,6 +202,43 @@ pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> 
     }
 
     let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps, true);
+    for (index, ix) in instructions.iter().enumerate() {
+        if ix.program_id().0.as_slice() != phoenix::PROGRAM_ID || !matches!(ix.data().first(), Some(0 | 1 | 2 | 3)) {
+            continue;
+        }
+        let accounts = ix.accounts();
+        let Some(address) = accounts.get(2) else {
+            continue;
+        };
+        let Some(market) = market_lookup(address.0, index as u32) else {
+            continue;
+        };
+        let Some(fill) = phoenix::decode_fill(&tx, index, &market, expected_slot) else {
+            continue;
+        };
+        // Another decoder may already have a verified wrapper for this exact
+        // invocation. Never add a second financial row for the same fill.
+        if swaps.iter().any(|swap| swap.source_index == Some(fill.instruction_index)) {
+            continue;
+        }
+        swaps.push(pb::Swap {
+            protocol: pb::Protocol::Phoenix as i32,
+            program_id: phoenix::PROGRAM_ID.to_vec(),
+            stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+            amm: phoenix::PROGRAM_ID.to_vec(),
+            amm_pool: fill.market.to_vec(),
+            user: fill.trader.to_vec(),
+            input_mint: fill.input_mint.to_vec(),
+            input_amount: fill.input_amount,
+            output_mint: fill.output_mint.to_vec(),
+            output_amount: fill.output_amount,
+            source_index: Some(fill.instruction_index),
+            source_event_index: Some(fill.log_instruction_index),
+            orderbook_fill_verified: true,
+            ..Default::default()
+        });
+    }
+    swaps.sort_by_key(|swap| (swap.source_index, swap.source_transfer_index.or(swap.source_event_index)));
     let coverage_candidates = coverage::candidates(&tx, &token_mints, &swaps);
     if swaps.is_empty() && rejected_swaps.is_empty() && coverage_candidates.is_empty() {
         return None;

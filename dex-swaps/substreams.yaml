@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: dex_swaps
-  version: v0.5.2-pluto.9
+  version: v0.5.2-pluto.10
   url: https://github.com/ColourfulMelon/substreams-svm
   description: Normalized swap events across Solana DEX protocols.
   image: ../image.png
@@ -21,10 +21,19 @@ protobuf:
     - ../proto
 
 modules:
+  - name: store_phoenix_markets
+    kind: store
+    initialBlock: 455747961
+    updatePolicy: set
+    valueType: bytes
+    inputs:
+      - source: sf.solana.type.v1.Block
   - name: map_events
     kind: map
     inputs:
       - source: sf.solana.type.v1.Block
+      - store: store_phoenix_markets
+        mode: get
     output:
       type: proto:dex.swaps.v1.Events
 

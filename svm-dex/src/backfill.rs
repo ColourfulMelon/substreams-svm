@@ -38,6 +38,8 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.source_index = None;
             identity.source_transfer_index = None;
             identity.transfer_verified = false;
+            identity.orderbook_fill_verified = false;
+            identity.source_event_index = None;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
@@ -68,6 +70,8 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.source_index = None;
             identity.source_transfer_index = None;
             identity.transfer_verified = false;
+            identity.orderbook_fill_verified = false;
+            identity.source_event_index = None;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
@@ -246,8 +250,10 @@ fn db_archive(
     changes.table_changes.retain(|change| matches!(change.table.as_str(), "swaps" | "blocks"));
     for change in &mut changes.table_changes {
         change.table = match change.table.as_str() {
-            "blocks" => "canonical_blocks", _ => "canonical_swaps",
-        }.into();
+            "blocks" => "canonical_blocks",
+            _ => "canonical_swaps",
+        }
+        .into();
     }
     Ok(changes)
 }

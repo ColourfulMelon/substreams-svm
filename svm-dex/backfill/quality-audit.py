@@ -26,7 +26,7 @@ for line in open(args.replay):
             assert slot not in blocks, f'duplicate block {slot}'
             blocks[slot] = fields
         elif table == 'swaps':
-            assert fields['transfer_verified'] == '1', 'unverified financial event'
+            assert fields['transfer_verified'] == '1' or fields.get('orderbook_fill_verified') == '1', 'unverified financial event'
             assert fields['decoder_version'] == args.decoder_version, 'mixed decoder versions'
             assert fields['event_id'], 'missing immutable event identity'
             identity = (fields['block_hash'], fields['event_id'])
