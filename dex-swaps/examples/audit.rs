@@ -3,7 +3,8 @@ use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction
 
 fn main() {
     let directory = std::env::args().nth(1).expect("fixture directory required");
-    let phoenix_headers = std::env::args().nth(2);
+    let phoenix_headers = std::env::args().nth(2).filter(|value| value != "-");
+    let openbook_headers = std::env::args().nth(3);
     let mut files: Vec<_> = std::fs::read_dir(directory)
         .unwrap()
         .map(|entry| entry.unwrap().path())
@@ -49,15 +50,22 @@ fn main() {
                 }
             }
         }
-        let decoded = if let Some(directory) = &phoenix_headers {
-            dex_swaps::process_transaction_with_phoenix(tx, None, |address, _| {
+        let decoded = dex_swaps::process_transaction_with_markets(
+            tx,
+            None,
+            |address, _| {
+                let directory = phoenix_headers.as_ref()?;
                 let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(address)));
                 let header = std::fs::read(path).ok()?;
                 dex_swaps::phoenix::Market::from_owned_header(address, &dex_swaps::phoenix::PROGRAM_ID, &header)
-            })
-        } else {
-            dex_swaps::process_transaction(tx)
-        };
+            },
+            |address, _| {
+                let directory = openbook_headers.as_ref()?;
+                let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(address)));
+                let header = std::fs::read(path).ok()?;
+                dex_swaps::openbook::Market::from_owned_header(address, &dex_swaps::openbook::PROGRAM_ID, &header)
+            },
+        );
         println!(
             "TX\t{}\t{}\t{}",
             signature,
@@ -93,7 +101,7 @@ fn main() {
                     signature,
                     swap.protocol,
                     swap.source_index.unwrap(),
-                    swap.source_transfer_index.or(swap.source_event_index).unwrap(),
+                    swap.source_transfer_index.or(swap.source_event_index).or(swap.source_log_index).unwrap(),
                     base58::encode(swap.amm),
                     base58::encode(swap.amm_pool),
                     base58::encode(swap.user),

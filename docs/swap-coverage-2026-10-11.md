@@ -274,8 +274,46 @@ sample. Core Rust validation now has 107 passing tests.
 Primary contract: [OpenBook v1.7 at 796a470](https://github.com/openbook-dex/openbook-v2/tree/796a470033bc556c1d1a1f76709394fc50c63bf7).
 Public transaction provenance is in `dex-swaps/fixtures/openbook/evidence.json`.
 
-This candidate has not been packaged or deployed. Published pluto.10 assets
-remain unchanged. Deposited-balance orders, batch/edit/pegged order accounting
-and deferred maker fills still need additional support and evidence. For
-ledger orders, self-trade decrements must not be confused with economic fills;
-`TotalOrderFillEvent` alone does not distinguish all such cases.
+This native candidate was published as source commit f02de5f, before the
+ledger integration below. Published pluto.10 assets remain unchanged.
+
+## OpenBook ledger accounting after the immediate-fill candidate
+
+The next source revision adds completed taker accounting for `place_order`,
+`place_orders`, `cancel_all_and_place_orders`, `edit_order`,
+`place_order_pegged` and `edit_order_pegged`. Runtime `TotalOrderFillEvent`
+amounts represent atoms actually paid and received, including taker fees.
+They are scoped to the exact native invocation and only admitted after that
+call and its entire ancestor chain complete successfully. Batch summaries
+remain individual fills with separate runtime-log identities; their positions
+use the upper half of the existing instruction key to avoid collisions with
+compiled Token CPIs and signed Phoenix event instructions. Existing financial
+IDs are unchanged.
+
+A finalized owner-verified snapshot at slot 455779697 supplies 283 market
+headers. All market authority and both vault PDAs, positive lot sizes, fee
+constraints and mint pairs were independently checked. The registry captures
+future successful creations using their signed native metadata self-CPI,
+and invalidates closed markets at their exact execution ordinal. Snapshot
+records and reconstructed creation fields have separate type tags. Both the
+Phoenix and OpenBook snapshot guards must pass before any financial output.
+
+The 116 passing core tests cover actual-amount accounting in both directions for all six
+ledger order families, malformed and foreign events, failed/truncated ancestor
+chains, batch multiplicity, closed/recreated markets and non-colliding sink
+identities. A further finalized sample of 161 successful transactions contains
+157 immediate takes, two unfilled batch placements, one consume-events call
+and one closure. The retained batch/closure fixtures publish no swap prices.
+This sample does **not** contain a real ledger-only taker fill; positive ledger
+accounting is validated against the primary contract and synthetic core cases.
+
+Maker event consumption realizes a fill already executed and reported by the
+original taker; it must not create a second financial swap. The primary contract
+also defines DecrementTake self-matches as normal matches without fees on that
+component. The decoder preserves those reported matches, but the summary does
+not identify the self-matched component for a separate price-quality filter.
+
+This revision remains unpublished as a package and undeployed until immutable
+artifact validation and controlled cursor migration succeed. It does not close
+DefiTuna two-hop, 1DEX exact-output, Jupiter v4 attribution, proprietary/new
+programs or the other remaining coverage gaps.

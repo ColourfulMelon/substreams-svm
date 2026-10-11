@@ -87,13 +87,16 @@ pub struct Swap {
     pub transfer_verified: bool,
     #[prost(string, tag="14")]
     pub verification_failure: ::prost::alloc::string::String,
-    /// Actual fills proven by signed orderbook events plus market lot metadata.
+    /// Actual fills proven by completed native orderbook events and market metadata.
     /// Such fills may settle exchange balances without an SPL token transfer.
     #[prost(bool, tag="15")]
     pub orderbook_fill_verified: bool,
     /// Position of the signed event-log instruction, separate from Token CPIs.
     #[prost(uint32, optional, tag="16")]
     pub source_event_index: ::core::option::Option<u32>,
+    /// Position in runtime log_messages; distinct from compiled instruction positions.
+    #[prost(uint32, optional, tag="17")]
+    pub source_log_index: ::core::option::Option<u32>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]

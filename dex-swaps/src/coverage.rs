@@ -88,8 +88,9 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
         // CPI. Retain swap/marketable-order intents for event/lot accounting,
         // while excluding post-only placements and cancel/deposit/withdraw.
         // This is diagnostic coverage, never evidence for a financial price.
-        let orderbook_swap = program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
-            && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
+        let orderbook_swap = crate::openbook::market_index(ix).is_some()
+            || program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
+                && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
         let known_swap = crate::native_venues::layout(ix).is_some() || crate::rfq::layout(ix).is_some() || fixed.is_some() || orderbook_swap;
         if exchange_mints.len() < 2 && !known_swap {
             continue;

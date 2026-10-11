@@ -89,7 +89,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             }
             let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
             row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", "v0.5.2-pluto.10")
+                .set("decoder_version", "v0.5.2-pluto.11")
                 .set("transaction_proto_hex", raw);
             set_clock(&clock, row);
         }
@@ -106,23 +106,42 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
                 .set("transfer_count", candidate.transfer_count)
                 .set("reason", candidate.reason.clone())
-                .set("decoder_version", "v0.5.2-pluto.10");
+                .set("decoder_version", "v0.5.2-pluto.11");
             set_clock(&clock, row);
         }
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
-            let instruction_index = swap
-                .source_transfer_index
-                .or(swap.source_event_index)
-                .map(|index| index as usize)
-                .unwrap_or(ordinal);
-            if instruction_index >= 65536 {
-                return Err(Error::msg("instruction position exceeds order-key bounds"));
-            }
+            // Runtime log positions and compiled instruction positions are
+            // different coordinate systems. Reserve the upper half of the
+            // existing UInt16 key for logs; legacy transfer/event IDs stay exact.
+            let instruction_index = if let Some(log) = swap.source_log_index {
+                if log >= 32768
+                    || !swap.orderbook_fill_verified
+                    || swap.source_index.is_none()
+                    || swap.source_transfer_index.is_some()
+                    || swap.source_event_index.is_some()
+                {
+                    return Err(Error::msg("invalid runtime fill proof or log position"));
+                }
+                32768 + log as usize
+            } else {
+                let compiled = swap
+                    .source_transfer_index
+                    .or(swap.source_event_index)
+                    .map(|index| index as usize)
+                    .unwrap_or(ordinal);
+                if compiled >= 32768 {
+                    return Err(Error::msg("instruction position exceeds reserved order-key bounds"));
+                }
+                compiled
+            };
             let key = common_key_v2(&clock, transaction_index, instruction_index);
-            let event_id = match (swap.source_index, swap.source_transfer_index, swap.source_event_index) {
-                (Some(instruction), Some(transfer), _) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
-                (Some(instruction), None, Some(event)) if swap.orderbook_fill_verified => {
+            let event_id = match (swap.source_index, swap.source_transfer_index, swap.source_event_index, swap.source_log_index) {
+                (Some(instruction), Some(transfer), _, None) => format!("{}:{}:{}", base58::encode(&transaction.signature), instruction, transfer),
+                (Some(instruction), None, Some(event), None) if swap.orderbook_fill_verified => {
                     format!("{}:{}:ledger:{}", base58::encode(&transaction.signature), instruction, event)
+                }
+                (Some(instruction), None, None, Some(log)) if swap.orderbook_fill_verified => {
+                    format!("{}:{}:log:{}", base58::encode(&transaction.signature), instruction, log)
                 }
                 _ => String::new(),
             };
@@ -138,7 +157,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.10")
+                .set("decoder_version", "v0.5.2-pluto.11")
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
                 .set("transfer_verified", u32::from(swap.transfer_verified))
                 .set("orderbook_fill_verified", u32::from(swap.orderbook_fill_verified))
@@ -163,7 +182,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.10")
+        .set("decoder_version", "v0.5.2-pluto.11")
         .set(
             "verified_swaps",
             all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
@@ -293,6 +312,74 @@ mod tests {
         }
         let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
         assert!(block.fields.iter().any(|field| field.name == "verified_swaps" && field.value == "1"));
+    }
+
+    #[test]
+    fn runtime_fill_keys_do_not_collide_with_compiled_instruction_positions() {
+        let clock = Clock {
+            number: 100,
+            id: "block".into(),
+            timestamp: Some(Default::default()),
+        };
+        let runtime = pb::Swap {
+            protocol: 51,
+            source_index: Some(30),
+            source_log_index: Some(34),
+            orderbook_fill_verified: true,
+            ..Default::default()
+        };
+        let events = pb::Events {
+            transactions: vec![pb::Transaction {
+                signature: vec![7; 64],
+                source_index: Some(17),
+                swaps: vec![
+                    pb::Swap {
+                        source_index: Some(30),
+                        source_transfer_index: Some(34),
+                        transfer_verified: true,
+                        ..Default::default()
+                    },
+                    runtime.clone(),
+                    pb::Swap {
+                        source_log_index: Some(35),
+                        ..runtime.clone()
+                    },
+                ],
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        let changes = write_swaps(clock.clone(), events.clone()).unwrap();
+        let rows: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swaps").collect();
+        let keys: Vec<_> = rows
+            .iter()
+            .map(|row| {
+                let Some(PrimaryKey::CompositePk(key)) = &row.primary_key else {
+                    panic!("key")
+                };
+                key.keys["instruction_index"].clone()
+            })
+            .collect();
+        assert_eq!(keys, vec!["34", "32802", "32803"]);
+        for (row, suffix) in rows.iter().zip([":30:34", ":30:log:34", ":30:log:35"]) {
+            assert!(row.fields.iter().any(|field| field.name == "event_id" && field.value.ends_with(suffix)));
+        }
+        for variant in 0..6 {
+            let mut invalid = events.clone();
+            let swap = &mut invalid.transactions[0].swaps[1];
+            match variant {
+                0 => swap.source_log_index = Some(32768),
+                1 => swap.source_transfer_index = Some(34),
+                2 => swap.source_event_index = Some(34),
+                3 => swap.source_index = None,
+                4 => swap.orderbook_fill_verified = false,
+                _ => {
+                    swap.source_log_index = None;
+                    swap.source_transfer_index = Some(32768);
+                }
+            }
+            assert!(write_swaps(clock.clone(), invalid).is_err(), "variant {variant}");
+        }
     }
 
     #[test]

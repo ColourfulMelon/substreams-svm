@@ -12,6 +12,8 @@ mod meteora_dlmm;
 mod moonshot;
 mod native_venues;
 mod okx;
+pub mod openbook;
+mod openbook_metadata;
 mod orca_whirlpool;
 mod pancakeswap;
 pub mod phoenix;
@@ -53,10 +55,20 @@ fn store_phoenix_markets(block: Block, output: StoreSetRaw) {
     }
 }
 
+#[substreams::handlers::store]
+fn store_openbook_markets(block: Block, output: StoreSetRaw) {
+    for (ordinal, key, value) in openbook_metadata::updates(&block) {
+        output.set(ordinal, key, &value);
+    }
+}
+
 #[substreams::handlers::map]
-fn map_events(block: Block, markets: StoreGetRaw) -> Result<pb::Events, Error> {
+fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw) -> Result<pb::Events, Error> {
     if markets.get_last("__phoenix_snapshot").as_deref() != Some(&phoenix_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
         return Err(Error::msg("Phoenix registry snapshot missing or mismatched"));
+    }
+    if openbook_markets.get_last("__openbook_snapshot").as_deref() != Some(&openbook_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
+        return Err(Error::msg("OpenBook registry snapshot missing or mismatched"));
     }
     let slot = block.slot;
     Ok(pb::Events {
@@ -70,14 +82,28 @@ fn map_events(block: Block, markets: StoreGetRaw) -> Result<pb::Events, Error> {
                 if !tx.is_successful() {
                     return None;
                 }
-                let mut transaction = process_transaction_with_phoenix(tx, Some(slot), |address, instruction_index| {
-                    let ordinal = phoenix_metadata::ordinal(index, instruction_index);
-                    let definition = markets.get_at(ordinal, format!("m:{}", base58::encode(address)))?;
-                    phoenix::Market::from_definition(address, &definition, |mint| {
-                        let value = markets.get_at(ordinal, format!("d:{}", base58::encode(mint)))?;
-                        Some(u32::from_le_bytes(value.as_slice().try_into().ok()?))
-                    })
-                })?;
+                let mut transaction = process_transaction_with_markets(
+                    tx,
+                    Some(slot),
+                    |address, instruction_index| {
+                        let ordinal = phoenix_metadata::ordinal(index, instruction_index);
+                        let definition = markets.get_at(ordinal, format!("m:{}", base58::encode(address)))?;
+                        phoenix::Market::from_definition(address, &definition, |mint| {
+                            let value = markets.get_at(ordinal, format!("d:{}", base58::encode(mint)))?;
+                            Some(u32::from_le_bytes(value.as_slice().try_into().ok()?))
+                        })
+                    },
+                    |address, instruction_index| {
+                        let ordinal = phoenix_metadata::ordinal(index, instruction_index);
+                        let definition = openbook_markets.get_at(ordinal, format!("m:{}", base58::encode(address)))?;
+                        // 0 is the owned snapshot, 1 contains fields proven by a
+                        // completed creation and signed metadata. Empty is closed.
+                        if !matches!(definition.first(), Some(0 | 1)) {
+                            return None;
+                        }
+                        openbook::Market::from_owned_header(address, &openbook::PROGRAM_ID, &definition[1..])
+                    },
+                )?;
                 transaction.source_index = Some(index as u32);
                 Some(transaction)
             })
@@ -95,7 +121,18 @@ pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> 
 pub fn process_transaction_with_phoenix(
     tx: ConfirmedTransaction,
     expected_slot: Option<u64>,
+    market_lookup: impl FnMut(&[u8], u32) -> Option<phoenix::Market>,
+) -> Option<pb::Transaction> {
+    process_transaction_with_markets(tx, expected_slot, market_lookup, |_, _| None)
+}
+
+/// Resolve each exchange's metadata at the instruction's execution ordinal.
+/// Runtime ledger events and wallet transfers retain separate proof identities.
+pub fn process_transaction_with_markets(
+    tx: ConfirmedTransaction,
+    expected_slot: Option<u64>,
     mut market_lookup: impl FnMut(&[u8], u32) -> Option<phoenix::Market>,
+    mut openbook_lookup: impl FnMut(&[u8], u32) -> Option<openbook::Market>,
 ) -> Option<pb::Transaction> {
     if !tx.is_successful() {
         return None;
@@ -238,7 +275,40 @@ pub fn process_transaction_with_phoenix(
             ..Default::default()
         });
     }
-    swaps.sort_by_key(|swap| (swap.source_index, swap.source_transfer_index.or(swap.source_event_index)));
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some(pool) = openbook::market_index(ix) else {
+            continue;
+        };
+        let accounts = ix.accounts();
+        let Some(address) = accounts.get(pool) else {
+            continue;
+        };
+        let Some(market) = openbook_lookup(address.0, index as u32) else {
+            continue;
+        };
+        let Some(fills) = openbook::decode_fills(&tx, index, &market) else {
+            continue;
+        };
+        for fill in fills {
+            swaps.push(pb::Swap {
+                protocol: pb::Protocol::OpenbookV2 as i32,
+                program_id: openbook::PROGRAM_ID.to_vec(),
+                stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+                amm: openbook::PROGRAM_ID.to_vec(),
+                amm_pool: fill.market.to_vec(),
+                user: fill.trader.to_vec(),
+                input_mint: fill.input_mint.to_vec(),
+                input_amount: fill.input_amount,
+                output_mint: fill.output_mint.to_vec(),
+                output_amount: fill.output_amount,
+                source_index: Some(fill.instruction_index),
+                source_log_index: Some(fill.log_index),
+                orderbook_fill_verified: true,
+                ..Default::default()
+            });
+        }
+    }
+    swaps.sort_by_key(|swap| (swap.source_index, swap.source_transfer_index.or(swap.source_event_index), swap.source_log_index));
     let coverage_candidates = coverage::candidates(&tx, &token_mints, &swaps);
     if swaps.is_empty() && rejected_swaps.is_empty() && coverage_candidates.is_empty() {
         return None;

@@ -8,7 +8,7 @@
   "asks": 43,
   "markets": 1,
   "rebatedWalletFillsObserved": 0,
-  "scope": "Native immediate wallet settlement only. Ledger orders, batch orders, deferred consumption and rebates need further real coverage.",
+  "scope": "Immediate wallet settlement independently verified against exact SPL CPIs. The additional ledger sample contains two unfilled batch placements and a closure, without observed ledger taker fills.",
   "transactions": [
     {
       "signature": "1beCQ4Z4zyhgzbUFKtnMN3wNqP4ArqfFWTswhvY3KT6WTs9e4cXdba8TPsxV8zbFEhtdnbh3nHCZ32CnU2TNxVh",
@@ -292,5 +292,29 @@
       "version": 1,
       "sha256": "edffeb1e9ec2ba4a6339397b5e14b7bdf837ace5bc0af6613db90a220dbd9c90"
     }
-  ]
+  ],
+  "ledgerSample": {
+    "sampledTransactions": 161,
+    "callCounts": {
+      "place_take_order": 157,
+      "consume_events": 1,
+      "cancel_all_and_place_orders": 2,
+      "close_market": 1
+    },
+    "observedLedgerTakerFills": 0,
+    "fixtures": "ledger/unfilled.tsv",
+    "slotRange": [
+      455635264,
+      455735367
+    ]
+  },
+  "marketRegistry": {
+    "slot": 455779697,
+    "ownedMarkets": 283,
+    "headerBytes": 848,
+    "seedSha256": "1c7d6c88274ee5645e91e816fd1e842e7c77b2d74eac49659c42464e1adf7de2",
+    "authorityAndVaultPdasVerified": 283,
+    "positiveAccountingUnitsVerified": 283,
+    "owner": "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb"
+  }
 }

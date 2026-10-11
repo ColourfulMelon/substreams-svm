@@ -40,6 +40,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.transfer_verified = false;
             identity.orderbook_fill_verified = false;
             identity.source_event_index = None;
+            identity.source_log_index = None;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
@@ -72,6 +73,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.transfer_verified = false;
             identity.orderbook_fill_verified = false;
             identity.source_event_index = None;
+            identity.source_log_index = None;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
