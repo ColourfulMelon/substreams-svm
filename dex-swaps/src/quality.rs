@@ -322,6 +322,29 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::Onedex {
+                    // The only other direct transfers are optional fees from
+                    // the input vault to the two declared recipients. They
+                    // already belong to the user's gross input, and must not
+                    // be added again or mistaken for output liquidity.
+                    let fees: Vec<_> = scoped.iter().filter(|t| t.index != input.index && t.index != output.index).collect();
+                    if output.authority.as_slice() != accounts[2].0.as_slice()
+                        || fees.len() > 2
+                        || fees.iter().any(|t| {
+                            t.source != input.destination
+                                || t.mint != input.mint
+                                || t.authority.as_slice() != accounts[2].0.as_slice()
+                                || (t.destination.as_slice() != accounts[8].0.as_slice() && t.destination.as_slice() != accounts[9].0.as_slice())
+                        })
+                        || (fees.len() == 2 && fees[0].destination == fees[1].destination)
+                        || fees
+                            .iter()
+                            .try_fold(0u64, |total, t| total.checked_add(t.amounts[0]))
+                            .map_or(true, |total| total >= input.amounts[0])
+                    {
+                        continue;
+                    }
+                }
                 let input_amount = if layout.protocol == pb::Protocol::Invariant {
                     // Its optional referral is paid directly from the same
                     // user account. Include that debit in the user's price,

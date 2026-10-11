@@ -41,6 +41,7 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Stabble => "stabble",
         pb::Protocol::Defituna => "defituna",
         pb::Protocol::Invariant => "invariant",
+        pb::Protocol::Onedex => "onedex",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",

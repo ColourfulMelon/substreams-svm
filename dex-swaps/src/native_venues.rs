@@ -41,6 +41,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Stabble, substreams_solana_idls::stabble::PROGRAM_ID),
     (Protocol::Defituna, b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9")),
     (Protocol::Invariant, b58!("HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt")),
+    (Protocol::Onedex, b58!("DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm")),
 ];
 
 pub(crate) struct Layout {
@@ -144,6 +145,33 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             input_limit: true,
             input_first: true,
             fixed_users: true,
+        });
+    }
+    if protocol == Protocol::Onedex {
+        // 1INTRO's audited swap_exact_amount_in, confirmed against raw
+        // executed CPIs and owner-verified PoolState mint/vault identities.
+        // Users and vaults are declared in input/output order. Fees are
+        // paid from the input vault, after the full user input arrives.
+        // Exact-output remains unsupported until independently sampled.
+        if ix.accounts().len() != 11
+            || data.len() != 24
+            || data[..8] != [8, 151, 245, 76, 172, 203, 144, 39]
+            || ix.accounts()[10].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID
+        {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 1,
+            authority: 5,
+            users: [6, 7],
+            vaults: [3, 4],
+            amount: u64::from_le_bytes(data[8..16].try_into().ok()?),
+            exact_input: true,
+            input_limit: false,
+            input_first: true,
+            fixed_users: true,
+            minimum_output: u64::from_le_bytes(data[16..24].try_into().ok()?),
         });
     }
     if protocol == Protocol::Invariant {
@@ -572,6 +600,82 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn onedex_uses_gross_user_input_and_only_declared_vault_paid_fees() {
+        use substreams_solana::pb::sf::solana::r#type::v1::{InnerInstruction, InnerInstructions, TokenBalance, UiTokenAmount};
+        use substreams_solana_idls::spl::token;
+        let program = b58!("DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm");
+        let mut accounts: Vec<_> = (1..=11).map(|i| [i; 32]).collect();
+        accounts[10] = token::PROGRAM_ID;
+        let mut data = vec![8, 151, 245, 76, 172, 203, 144, 39];
+        data.extend_from_slice(&100u64.to_le_bytes());
+        data.extend_from_slice(&200u64.to_le_bytes());
+        let mut tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
+        let transfer = |amount: u64, accounts: Vec<u8>| {
+            let mut data = vec![3];
+            data.extend_from_slice(&amount.to_le_bytes());
+            InnerInstruction {
+                program_id_index: 12,
+                accounts,
+                data,
+                stack_height: Some(2),
+            }
+        };
+        let meta = tx.meta.as_mut().unwrap();
+        meta.inner_instructions = vec![InnerInstructions {
+            index: 0,
+            instructions: vec![
+                transfer(100, vec![8, 5, 7]),
+                transfer(1, vec![5, 10, 4]),
+                transfer(2, vec![5, 11, 4]),
+                transfer(200, vec![6, 9, 4]),
+            ],
+        }];
+        for (index, mint) in [(8, [31; 32]), (5, [31; 32]), (10, [31; 32]), (11, [31; 32]), (6, [32; 32]), (9, [32; 32])] {
+            meta.pre_token_balances.push(TokenBalance {
+                account_index: index,
+                mint: base58::encode(mint),
+                ui_token_amount: Some(UiTokenAmount {
+                    amount: "1000".into(),
+                    decimals: 6,
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+        }
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        assert_eq!(decoded.swaps.len(), 1);
+        assert_eq!((decoded.swaps[0].input_amount, decoded.swaps[0].output_amount), (100, 200));
+        assert_eq!(decoded.swaps[0].amm_pool, accounts[1]);
+        assert!(decoded.swaps[0].transfer_verified);
+        let mut no_fees = tx.clone();
+        no_fees.meta.as_mut().unwrap().inner_instructions[0].instructions.drain(1..3);
+        assert_eq!(crate::process_transaction(no_fees).unwrap().swaps[0].input_amount, 100);
+        for mode in 0..10 {
+            let mut wrong = tx.clone();
+            match mode {
+                0 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[1] = 99,
+                1 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[1] = 9,
+                2 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[0] = 8,
+                3 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[3].accounts[2] = 7,
+                4 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10,
+                5 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].data[1] = 98,
+                6 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[16] = 201,
+                7 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0),
+                8 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0]
+                    .accounts
+                    .truncate(10),
+                9 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[..8]
+                    .copy_from_slice(&[250, 23, 49, 134, 38, 84, 219, 125]),
+                _ => unreachable!(),
+            }
+            assert!(
+                crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.is_empty()),
+                "unproved 1DEX mode {mode}"
+            );
+        }
+    }
 
     #[test]
     fn invariant_referral_debits_are_part_of_the_users_swap_price() {

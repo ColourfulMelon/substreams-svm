@@ -1,0 +1,1459 @@
+{
+  "verified": [
+    {
+      "signature": "agzxmVLhKJ2AYDZT7io1sWhboh3mQnEnJmEVHxYXuxgDtmkfRpNqt6EvfEQXFacQmtCmdQJrTxPFw5fJhdcqQYR",
+      "block_num": 455714791,
+      "instruction_index": 25,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "1MDZqsS76Pio2q12qtpbTH5jg3jUUGDstnkxjuYKcAg",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "431817",
+      "outputAmount": "48098",
+      "vaultPaidFees": [
+        {
+          "index": 27,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "4"
+        },
+        {
+          "index": 28,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "4"
+        }
+      ],
+      "expected": "48:25:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:1MDZqsS76Pio2q12qtpbTH5jg3jUUGDstnkxjuYKcAg:So11111111111111111111111111111111111111112:431817:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:48098",
+      "fixture": "207.transaction.pb",
+      "rawSha256": "8ff4c69bd69437a9c205ef26e3e69c27b603330ed5c5f002b2670485a7db79d5"
+    },
+    {
+      "signature": "3ucdRtMEFr2tM3d9LUEzuKJuWg6mDiLxrjD2kLroZJVt1TG7Kgav5CzwMAzuzqZGP5kFtntypcEgo8MqRzDvrD3h",
+      "block_num": 455714778,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "Bj4iUG4uYnVUr9k95EJWjCDU3QBD53fVMybXQFTrjGE4",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "10642802",
+      "outputAmount": "1185555",
+      "vaultPaidFees": [
+        {
+          "index": 17,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "106"
+        },
+        {
+          "index": 18,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "106"
+        }
+      ],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:Bj4iUG4uYnVUr9k95EJWjCDU3QBD53fVMybXQFTrjGE4:So11111111111111111111111111111111111111112:10642802:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1185555",
+      "fixture": "208.transaction.pb",
+      "rawSha256": "4166a1e3368b44f6822b24f1ea106f5b4144a93339ac9d1f594f219062e504fd"
+    },
+    {
+      "signature": "2AZbDpbsatViKG4CQNRMZfXqbqzewZtzvz18gx2ZcFTVGJUpEsCYBqD6Ehwi5evViqXngdGRxnYuxUgRPNi5C7ZJ",
+      "block_num": 455714778,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "3A1GMaacQnGHQKgcCuPxGhkCr46koLYMnUk79XewFiDj",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "2373439",
+      "outputAmount": "264379",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "23"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "23"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:3A1GMaacQnGHQKgcCuPxGhkCr46koLYMnUk79XewFiDj:So11111111111111111111111111111111111111112:2373439:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:264379",
+      "fixture": "209.transaction.pb",
+      "rawSha256": "8cae1705cbd76e1440e2cfddabef08f90d36e1f0f4d93d561aadee12ccffea0b"
+    },
+    {
+      "signature": "4bFRKXwC2ayMxQEU9R2CrKVwz9rzkcwbJwArtqh6ZP98JTuPPwWwwnZPKRMA57MKLfr1DZxBtosdhGyvYqJ7C6PY",
+      "block_num": 455714778,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "A7Vr3uf4KfqwzkQUZAJ42oxDZp8Uopciy7qoeXBkpcaC",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "5044688",
+      "outputAmount": "561919",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "50"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "50"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:A7Vr3uf4KfqwzkQUZAJ42oxDZp8Uopciy7qoeXBkpcaC:So11111111111111111111111111111111111111112:5044688:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:561919",
+      "fixture": "210.transaction.pb",
+      "rawSha256": "5b654024bb582ac46e551db7a2cf3514fe81c5521e36bfcbbd7a2a9813d52be5"
+    },
+    {
+      "signature": "3FzbnNV6PJVjw535DaNwd81hY1TqTZSbmVmF1uSQtYC3wRs5F5MrLpszaHzN6SEjZmausAEjZvqbaKM7YozDoewD",
+      "block_num": 455714776,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "97CYEkddPd7R2c9xXdVeQBEd3fTXy3jmYrLZZ4VoZwfa",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "3269214",
+      "outputAmount": "364189",
+      "vaultPaidFees": [
+        {
+          "index": 17,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "32"
+        },
+        {
+          "index": 18,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "32"
+        }
+      ],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:97CYEkddPd7R2c9xXdVeQBEd3fTXy3jmYrLZZ4VoZwfa:So11111111111111111111111111111111111111112:3269214:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:364189",
+      "fixture": "211.transaction.pb",
+      "rawSha256": "366ebbbc6df0998386db98e17facf8071925dffcafb880cfb6db8d62efc72d90"
+    },
+    {
+      "signature": "5zfXWwb7LQN1Tvbsf6vuU4mKfCj5vxkUhsqDwLtrwrDsNn23MPbzncZjMkGWV8hF8sQAk6AKoNpjbFhzyWcotRMn",
+      "block_num": 455714766,
+      "instruction_index": 10,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "B4VmMBXTpbiMf37rgfr37eL4VpBknBxvuYPAgYETof2U",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1687320",
+      "outputAmount": "15144052",
+      "vaultPaidFees": [
+        {
+          "index": 12,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "16"
+        },
+        {
+          "index": 13,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "16"
+        }
+      ],
+      "expected": "48:10:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:B4VmMBXTpbiMf37rgfr37eL4VpBknBxvuYPAgYETof2U:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1687320:So11111111111111111111111111111111111111112:15144052",
+      "fixture": "212.transaction.pb",
+      "rawSha256": "7e6701b584b9aa429abf566195125314758cb4b69c34e2b53882b6304d19b1af"
+    },
+    {
+      "signature": "nu76KPvf6cputrcYWS6Tvu4rAR7tXrPe7tqw1iDCQMVtP9tABDFgeu556DjcBnAbeGcA2jgBeJJFqjCKBbfr5fL",
+      "block_num": 455714763,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "9Bp1Uo2U8rVyZmg6iCp4ouhKrrgJWuRa7rGpc53nHt3H",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1120400",
+      "outputAmount": "10056585",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "11"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "11"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:9Bp1Uo2U8rVyZmg6iCp4ouhKrrgJWuRa7rGpc53nHt3H:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1120400:So11111111111111111111111111111111111111112:10056585",
+      "fixture": "213.transaction.pb",
+      "rawSha256": "ad552910d3dc27cbd6d5272e0d7188a2c76440d6b38e8c3b4cdc9bd5d743deb7"
+    },
+    {
+      "signature": "3qqsxtJ2zXSsoskcYRqmpz1hqhFnfEJtfZL5SaHhFX2p62dUESnVeXTQoiTwk7bGzmvcjx9M4PB8ZXbCY7RKuqvB",
+      "block_num": 455714763,
+      "instruction_index": 24,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "19989",
+      "outputAmount": "179422",
+      "vaultPaidFees": [],
+      "expected": "48:24:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:19989:So11111111111111111111111111111111111111112:179422",
+      "fixture": "214.transaction.pb",
+      "rawSha256": "087bbdd8f22625fde370642c2d1f84368c004289e475f4c01f6abf94cbb97216"
+    },
+    {
+      "signature": "59H79qfvLKAkW4xHRvHeJ3f2nS5oWF2k45UMLcFb2nBURcZFgV2gM7mFb1p5WBPAdaDfCwGMnXVnFhbPBKZ4rJwL",
+      "block_num": 455714761,
+      "instruction_index": 9,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "jbpXQzsarPBfj8AmDaAwWyQYCUniP3fYgXLqCvmX2vE",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1750000",
+      "outputAmount": "15709005",
+      "vaultPaidFees": [
+        {
+          "index": 11,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "17"
+        },
+        {
+          "index": 12,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "17"
+        }
+      ],
+      "expected": "48:9:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:jbpXQzsarPBfj8AmDaAwWyQYCUniP3fYgXLqCvmX2vE:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1750000:So11111111111111111111111111111111111111112:15709005",
+      "fixture": "215.transaction.pb",
+      "rawSha256": "541b35a0b33f73736b5f60bdbba30b425bfa42050b30f07c702cb0a93462832e"
+    },
+    {
+      "signature": "44hCJWbxYC2fPmBt69SkfXZACaUEuBCDbaXsgENSTQ2PaynA28UxzADB8d8e3G1nhR8GhMvaV5TSSUjUPLyfYNzm",
+      "block_num": 455714757,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "Fx34S77PK3KJfNLLWw8AB3VYC8NpR96vuwC4YwnxdUaP",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "278186",
+      "outputAmount": "2497299",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "2"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "2"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:Fx34S77PK3KJfNLLWw8AB3VYC8NpR96vuwC4YwnxdUaP:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:278186:So11111111111111111111111111111111111111112:2497299",
+      "fixture": "216.transaction.pb",
+      "rawSha256": "01e92475ebc7d9893dd94c34196ddd945a3185c045aadaa7be60fa1cea42179e"
+    },
+    {
+      "signature": "5CmKidHySC6Ern2hvme69auVmXvujoY2dGL2YTFGZmXX9koVmZHoKzErXYa8WScWMCD6hvAWxGSyy1rP3gvYAMEN",
+      "block_num": 455714754,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "2MXX4quRJvGzHiUGzi6JKUx7iV5NihNQkqN8xvmociac",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "205818",
+      "outputAmount": "1847669",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "2"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "2"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:2MXX4quRJvGzHiUGzi6JKUx7iV5NihNQkqN8xvmociac:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:205818:So11111111111111111111111111111111111111112:1847669",
+      "fixture": "217.transaction.pb",
+      "rawSha256": "b58451677ef3f3e0fb3c8ef606affee13e2da76b1e0add1f72288ab5f80ca59c"
+    },
+    {
+      "signature": "63xBEBNZJAK4Y1Ayr2H2bZTfgySEf1tbnnLRACnUpoioapQqjBpUSEQUTaZUoTeZVaTd5omWyRmLGhESEVAZToX",
+      "block_num": 455714746,
+      "instruction_index": 9,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "Et5SqeXSBD3aP37sszNqPXbkauH5hGCujB7fzbreo4Ub",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "580000",
+      "outputAmount": "5206870",
+      "vaultPaidFees": [
+        {
+          "index": 11,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "5"
+        },
+        {
+          "index": 12,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "5"
+        }
+      ],
+      "expected": "48:9:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:Et5SqeXSBD3aP37sszNqPXbkauH5hGCujB7fzbreo4Ub:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:580000:So11111111111111111111111111111111111111112:5206870",
+      "fixture": "218.transaction.pb",
+      "rawSha256": "9018f5119f6748ea9efea534101d37d6e73fa763f8387f4408ac3b77b2a62b73"
+    },
+    {
+      "signature": "5kgVUT7eMia2JNynfMgrUDwaGmPRudaFiYP2ez4z73yEmbUUtHWw3SyRC3o3rs9yAYfzJq4bhhQy4PPBDEhHesNs",
+      "block_num": 455714691,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "5d7txkrE4tEhorY1e5ZiuncqBNY2tpFVKPoUtDAZHgfn",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "17200",
+      "outputAmount": "154419",
+      "vaultPaidFees": [],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:5d7txkrE4tEhorY1e5ZiuncqBNY2tpFVKPoUtDAZHgfn:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:17200:So11111111111111111111111111111111111111112:154419",
+      "fixture": "219.transaction.pb",
+      "rawSha256": "409b57c0149dbb286ae39a8b5897dcbd2dca0407a0f5814f946abfa9c0a116e5"
+    },
+    {
+      "signature": "3hzumqeTwhykqfKL8h562gs5CBdzRQ4nhsvjxc3QA3Q8v8f8eP3fvDHNbkMKLnkCW5Sa7QQwBRHsS4YPhUA94TB",
+      "block_num": 455714688,
+      "instruction_index": 16,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "712959",
+      "outputAmount": "79400",
+      "vaultPaidFees": [
+        {
+          "index": 18,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "7"
+        },
+        {
+          "index": 19,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "7"
+        }
+      ],
+      "expected": "48:16:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8:So11111111111111111111111111111111111111112:712959:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:79400",
+      "fixture": "220.transaction.pb",
+      "rawSha256": "3e9893498e06d06c35c36a116c8cce93be6bcb03ca80f88742812cffc541fe06"
+    },
+    {
+      "signature": "e2ddTGzQWmpkGNAg4abkqNEcSMsibK9NREgX1rMhRoNg5A96wVY6TnWh2jW33q81RhsHuv4k2RqMfXhrzrjBfPZ",
+      "block_num": 455714663,
+      "instruction_index": 22,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "134731",
+      "outputAmount": "1209552",
+      "vaultPaidFees": [
+        {
+          "index": 24,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "1"
+        },
+        {
+          "index": 25,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "1"
+        }
+      ],
+      "expected": "48:22:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:134731:So11111111111111111111111111111111111111112:1209552",
+      "fixture": "221.transaction.pb",
+      "rawSha256": "0ea96f1636f90f259b5b6d73b1f3c33739f1fa96abdc2a3c00a4ea95890daf9e"
+    },
+    {
+      "signature": "2ZYPi8VdaGBobsvh89C4BfcyXczaYfoEf3otnSPeGzbqDJdBgspwz3zgF5nDrBFbfUu1cM77uF5HW9vTNfLPu8Cf",
+      "block_num": 455714653,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "HFhrjggyJ5jLjmGzfKtqfWR4eV3envBf2N1yQzi6gF7B",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "9852",
+      "outputAmount": "88455",
+      "vaultPaidFees": [],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:HFhrjggyJ5jLjmGzfKtqfWR4eV3envBf2N1yQzi6gF7B:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:9852:So11111111111111111111111111111111111111112:88455",
+      "fixture": "222.transaction.pb",
+      "rawSha256": "4bf6fc60285093c6b18125977bdae244f23983cad852660aa39b7f169889906c"
+    },
+    {
+      "signature": "35zaJpAWmQE7fNyVsEJdq1i57ivtaC3uJ2r5j1r4MWkqyzYj1nsUjbqke5p7dpHLNgEfw1KzpBr6YszPGRKq8em6",
+      "block_num": 455714632,
+      "instruction_index": 25,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "8932580",
+      "outputAmount": "994819",
+      "vaultPaidFees": [
+        {
+          "index": 27,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "89"
+        },
+        {
+          "index": 28,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "89"
+        }
+      ],
+      "expected": "48:25:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8:So11111111111111111111111111111111111111112:8932580:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:994819",
+      "fixture": "223.transaction.pb",
+      "rawSha256": "ee0380e1cbfe4bd92f52c450044355353f2eb000d505648ba4ba28cb9be52609"
+    },
+    {
+      "signature": "2k73Mmtob28boo8DLTDB1vm4fmup2p7fkxc7rwqaNwqtdfunrcPUKewAVzkE6a9Fq9pSRCgXqnwxTyXn3DqxQmpb",
+      "block_num": 455714631,
+      "instruction_index": 33,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "EikwW2R5a9j2g5jXjrcmXBgPK5driH5tJ2nHdoz6GrRT",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "20569424",
+      "outputAmount": "2291012",
+      "vaultPaidFees": [
+        {
+          "index": 35,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "205"
+        },
+        {
+          "index": 36,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "205"
+        }
+      ],
+      "expected": "48:33:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:EikwW2R5a9j2g5jXjrcmXBgPK5driH5tJ2nHdoz6GrRT:So11111111111111111111111111111111111111112:20569424:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:2291012",
+      "fixture": "224.transaction.pb",
+      "rawSha256": "948ebb218d2ddf285248c8f486e9c81e2d9468e815d90aa0f13a8ef70bbe104a"
+    },
+    {
+      "signature": "2nP3GwQWJVUREvXt1FDFHA1tkSAZi6rPCsm2jHnwdYUN629khE5RcRyVVxizh2ZKTrMzRTwGVKy3HAJtfyX33nst",
+      "block_num": 455714630,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "4QUx3dVnvjAZs344eASPKvU7eZAZ3amv3cjBiFzJm8cz",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "21236655",
+      "outputAmount": "2365621",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "212"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "212"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:4QUx3dVnvjAZs344eASPKvU7eZAZ3amv3cjBiFzJm8cz:So11111111111111111111111111111111111111112:21236655:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:2365621",
+      "fixture": "225.transaction.pb",
+      "rawSha256": "63ddc621a3c6c7d89b110a24b838e0414aaade0d0160461a9d5ba6c13e8c2849"
+    },
+    {
+      "signature": "5UV5MxMbiGUrQZ643n2CntE7U36LuNysYbpcqSfbv2xs9wQHP9F6vCAR1pWwqdqYHwMyB4vGrvj6gcjcUYeiSqBo",
+      "block_num": 455714629,
+      "instruction_index": 22,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "YRCpuABmtrNTouhsw8PY2uZJNNiPZ7pmuJxrfXEpuQp",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "21752622",
+      "outputAmount": "2423405",
+      "vaultPaidFees": [
+        {
+          "index": 24,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "217"
+        },
+        {
+          "index": 25,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "217"
+        }
+      ],
+      "expected": "48:22:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:YRCpuABmtrNTouhsw8PY2uZJNNiPZ7pmuJxrfXEpuQp:So11111111111111111111111111111111111111112:21752622:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:2423405",
+      "fixture": "226.transaction.pb",
+      "rawSha256": "2dfcb6d2e6c59440e62d44c0f6ab6c1f14194ca5fc8a917de511010384522dc4"
+    },
+    {
+      "signature": "3SAqGtrTSkJbnUipCmbawEojkV36zHTtPfSHqvaKaQYyNbUt8Vv5QMuEBtERdEHBKV4WtmWVXQnKQC9c9QdabrLz",
+      "block_num": 455714624,
+      "instruction_index": 12,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "EEPdC3yfcpeny79DbyBJ4oSgJ4NfSt3RXdKdUHrDdciA",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "4972739",
+      "outputAmount": "554044",
+      "vaultPaidFees": [
+        {
+          "index": 14,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "49"
+        },
+        {
+          "index": 15,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "49"
+        }
+      ],
+      "expected": "48:12:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:EEPdC3yfcpeny79DbyBJ4oSgJ4NfSt3RXdKdUHrDdciA:So11111111111111111111111111111111111111112:4972739:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:554044",
+      "fixture": "227.transaction.pb",
+      "rawSha256": "e69c90078a40f5fcb36c930334d69c8f586d47611a6c1f6c4c1438110ba445e4"
+    },
+    {
+      "signature": "5ZcCQS2xj5wdgkb8RZRMFweYvgDxJFSmHSFNGoRTBYtNsvRzFJLk1XY4hDdFdSmYjXevP88o4QcZuJenRxEArtbE",
+      "block_num": 455714612,
+      "instruction_index": 16,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "3857098",
+      "outputAmount": "429755",
+      "vaultPaidFees": [
+        {
+          "index": 18,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "38"
+        },
+        {
+          "index": 19,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "38"
+        }
+      ],
+      "expected": "48:16:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ:So11111111111111111111111111111111111111112:3857098:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:429755",
+      "fixture": "228.transaction.pb",
+      "rawSha256": "0b3044627cd51f984ca0f49f6e8c08ad8171d3b9e7dc08169b0e08b36ae0b610"
+    },
+    {
+      "signature": "3yzUqpVi4dVHxCWez8Dwek5hFmMdqr4sQfDNjXZNmWWxGYXHr316zQTbJFqXxLzUrZtxs7U3zoQAXxTSQa4RxKDG",
+      "block_num": 455714608,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "EAsVVtpGWfjQjC9y7k7dmc7CRSwzvAZDh4S9nmVWs7RM",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "43325150",
+      "outputAmount": "4827717",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "433"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "433"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:EAsVVtpGWfjQjC9y7k7dmc7CRSwzvAZDh4S9nmVWs7RM:So11111111111111111111111111111111111111112:43325150:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:4827717",
+      "fixture": "229.transaction.pb",
+      "rawSha256": "ffc474695170e6ad0acb82b0c92c173b118855bb3b4afc6fbdd06c1f72d5b35e"
+    },
+    {
+      "signature": "5yKpptkSEkfqh8s8GCfELJtDLy8v1odmkvjEqA1Jqsin7raz15VchwPkyZB4XP1RviWEYRdpWH2TA18CF34dKxXJ",
+      "block_num": 455714608,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "HUHeGPZXz1UK19LzcF2cejXthBSPLakiSvnkFYuvHa1b",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "6959550",
+      "outputAmount": "62447812",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "69"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "69"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:HUHeGPZXz1UK19LzcF2cejXthBSPLakiSvnkFYuvHa1b:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:6959550:So11111111111111111111111111111111111111112:62447812",
+      "fixture": "230.transaction.pb",
+      "rawSha256": "fed143e02efec42a6d50044385e7686cb061ceb055d474168b046350ce834595"
+    },
+    {
+      "signature": "29yqy3jFgRtnpP19yyk2DMBixdFL3VMButZdXjHiTdnUVHERdmCTCwzqHDDgWXZc2Z9gV6DioUza2pvuafEknZpE",
+      "block_num": 455714608,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "E4kkSSCeoxLAadqv5J9uJfjGe94uidPzBirff6ts9jpm",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "839700",
+      "outputAmount": "7534980",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "8"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "8"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:E4kkSSCeoxLAadqv5J9uJfjGe94uidPzBirff6ts9jpm:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:839700:So11111111111111111111111111111111111111112:7534980",
+      "fixture": "231.transaction.pb",
+      "rawSha256": "b4e7028b5ab39f523a59a40eb1b84e11cb2f19f9c1fd833a89f0a4f7630eec8e"
+    },
+    {
+      "signature": "LquR1V3CVPjyjXbtiPbsEqZHCkwog4uDm51ksdjbWjqzbnkw4zHBH914KkHDCyVqay5GPBfctB3uHAkDY4d3uC8",
+      "block_num": 455714607,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "96JquTyiBvqhKj2vHJn9VjnLm6YMP161baMTPaQsAVYC",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "880602",
+      "outputAmount": "7903262",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "8"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "8"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:96JquTyiBvqhKj2vHJn9VjnLm6YMP161baMTPaQsAVYC:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:880602:So11111111111111111111111111111111111111112:7903262",
+      "fixture": "232.transaction.pb",
+      "rawSha256": "b2d34ffb0d73ab6e515c9638b3727ad475f7a70fa5bb080d927fea8ef0ecb0dd"
+    },
+    {
+      "signature": "5kD1VCgk8GNBefWYxfB8x8AhuBSW2tZpWpnpuzo4gcXQ1xRWK1dxjecS9DmMw7pBBYzKfUJeUQT9SbYrdYQs87Df",
+      "block_num": 455714606,
+      "instruction_index": 8,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "6779119",
+      "outputAmount": "60853933",
+      "vaultPaidFees": [
+        {
+          "index": 10,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "67"
+        },
+        {
+          "index": 11,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "67"
+        }
+      ],
+      "expected": "48:8:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:6779119:So11111111111111111111111111111111111111112:60853933",
+      "fixture": "233.transaction.pb",
+      "rawSha256": "d6f5c50d17173dcd75a32c624ea58162a11a252c959fd535fa379bf8c7585f84"
+    },
+    {
+      "signature": "3QXrXjTYkPvw4pY5yG2eta3MStaqhPGjkw8fnWipwheQHZFA3CewfUp7kG3DrqWjgReuY1JfCMvBR29x5KMKhjSP",
+      "block_num": 455714606,
+      "instruction_index": 12,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "16031009",
+      "outputAmount": "1785257",
+      "vaultPaidFees": [
+        {
+          "index": 14,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "160"
+        },
+        {
+          "index": 15,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "160"
+        }
+      ],
+      "expected": "48:12:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx:So11111111111111111111111111111111111111112:16031009:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1785257",
+      "fixture": "234.transaction.pb",
+      "rawSha256": "507768a832199285cb11faa6c3f3662211a49e45f4ec1f241abc6456d6442a0a"
+    },
+    {
+      "signature": "2XpfYMxoLPdwep6bMGbjKB1dKcwY8jNscpoEQxR9p7KAp3ecKhngt3StzUxdew56Kgric6iVxAsMkCb35QQzwxYm",
+      "block_num": 455714605,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "Bduzax1G9VRdZiQtWGrZLB69VkTRaqp9RdnKFX3P6Zrm",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "47185143",
+      "outputAmount": "5255778",
+      "vaultPaidFees": [
+        {
+          "index": 17,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "471"
+        },
+        {
+          "index": 18,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "471"
+        }
+      ],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:Bduzax1G9VRdZiQtWGrZLB69VkTRaqp9RdnKFX3P6Zrm:So11111111111111111111111111111111111111112:47185143:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:5255778",
+      "fixture": "235.transaction.pb",
+      "rawSha256": "92f5291ad6efdfe1bc85c30039e2751ab22302bbffd0828dc37a08012785933b"
+    },
+    {
+      "signature": "V2e4s8xR5G51bBxxeXvNv56WFp9mtHzZ3VCjbujdjAsBxXhGoj848nWqQ8aFvcdpqx2iaortYTWHcyjeyLCY7i1",
+      "block_num": 455714605,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "4wDzrHP48dWWBXdWyaWfkHozhyNMXj6MJX82uVLGVp8p",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "31794958",
+      "outputAmount": "3541277",
+      "vaultPaidFees": [
+        {
+          "index": 17,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "317"
+        },
+        {
+          "index": 18,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "317"
+        }
+      ],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:4wDzrHP48dWWBXdWyaWfkHozhyNMXj6MJX82uVLGVp8p:So11111111111111111111111111111111111111112:31794958:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:3541277",
+      "fixture": "236.transaction.pb",
+      "rawSha256": "2b39b8431af7059d97f55fbecd150a73a6f44151df37f46c82f935828758b8b2"
+    },
+    {
+      "signature": "3ytwKaoHFAtp7oikJwqXZbSLG2D3CvvqNyYrH73B7DipUUu5mJNFitEaoxtMzVdpmFHPX6gtk3xf5gSdLrPPw4Ku",
+      "block_num": 455714605,
+      "instruction_index": 10,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "3098707",
+      "outputAmount": "27815507",
+      "vaultPaidFees": [
+        {
+          "index": 12,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "30"
+        },
+        {
+          "index": 13,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "30"
+        }
+      ],
+      "expected": "48:10:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:3098707:So11111111111111111111111111111111111111112:27815507",
+      "fixture": "237.transaction.pb",
+      "rawSha256": "9a31ce94eb0c0911895a6b841e0a2eddc260607c53ea3b1cdd85afb93e00ab11"
+    },
+    {
+      "signature": "58Ln7yGwoRZ7W15CB2LW16PKpX9rLwJ4vREAAkoLH4jekgDz2e3LYsfRLthimgV9MFnfKYEgUtHynGMSD1qLzHth",
+      "block_num": 455714604,
+      "instruction_index": 12,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1983074",
+      "outputAmount": "17790979",
+      "vaultPaidFees": [
+        {
+          "index": 14,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "19"
+        },
+        {
+          "index": 15,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "19"
+        }
+      ],
+      "expected": "48:12:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1983074:So11111111111111111111111111111111111111112:17790979",
+      "fixture": "238.transaction.pb",
+      "rawSha256": "728ebcc6391a17f99c81b9e3acf24390f749170e5ef636b0d6ab07618b541452"
+    },
+    {
+      "signature": "2NiniK2pZsJ8jAXreDu9w2Wog1va8BrxhLpkpRvRZFNVb21Kb8sYSKcV1h1BKUTyJeuya37dRbMa13ySQmbxd2cm",
+      "block_num": 455714604,
+      "instruction_index": 17,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "70833195",
+      "outputAmount": "7892611",
+      "vaultPaidFees": [
+        {
+          "index": 19,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "708"
+        },
+        {
+          "index": 20,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "708"
+        }
+      ],
+      "expected": "48:17:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx:So11111111111111111111111111111111111111112:70833195:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:7892611",
+      "fixture": "239.transaction.pb",
+      "rawSha256": "c8727329d22246e41a78e4fcdbc4f81e8a0fd3be064197273e9841bd396b2534"
+    },
+    {
+      "signature": "2jxLRXxZndNci8z4XY2qShWJu9DjKX3a79FFAFS7SsYNrNS4HLX9REVwL7AJa2grUB3PzigNnsPJtWBm3c1neFfc",
+      "block_num": 455714603,
+      "instruction_index": 12,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "15959756",
+      "outputAmount": "1778591",
+      "vaultPaidFees": [
+        {
+          "index": 14,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "159"
+        },
+        {
+          "index": 15,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "159"
+        }
+      ],
+      "expected": "48:12:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV:So11111111111111111111111111111111111111112:15959756:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1778591",
+      "fixture": "240.transaction.pb",
+      "rawSha256": "ceddb95c8cbcd171668847c7011d133975179560d25aba4af6c8d322abb1f4d6"
+    },
+    {
+      "signature": "2gsckeNweSEmza3By5hwLRvv7yd4u6QrYGVva6xafwngunPp2ZfU343gw5UUoyH4xXPdgoBj9viCoDxKpb9w4Hud",
+      "block_num": 455714599,
+      "instruction_index": 23,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "8nPfm4FGEUxoH22TgNS5xAtzCvEtdHA7AvcnnbCwv66J",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "25260445",
+      "outputAmount": "2815425",
+      "vaultPaidFees": [
+        {
+          "index": 25,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "252"
+        },
+        {
+          "index": 26,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "252"
+        }
+      ],
+      "expected": "48:23:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:8nPfm4FGEUxoH22TgNS5xAtzCvEtdHA7AvcnnbCwv66J:So11111111111111111111111111111111111111112:25260445:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:2815425",
+      "fixture": "241.transaction.pb",
+      "rawSha256": "7b1d60dba7a52ea3a9a83528defd4491c9014dcba903e62face7cd2384fa14b5"
+    },
+    {
+      "signature": "3zWTchY57BPrxDXB1K5JQCuYdRCzJjxuHyZssXN1ZaQ11QsRdSNnjNyBcRApsCoD738fzGFwUhNkh9yrkMC3AWXy",
+      "block_num": 455714597,
+      "instruction_index": 9,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "7hM9StZVeDjqkb8z8DEoHLFM1qExn95mSEF5WBxVL7zH",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "3120000",
+      "outputAmount": "27987764",
+      "vaultPaidFees": [
+        {
+          "index": 11,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "31"
+        },
+        {
+          "index": 12,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "31"
+        }
+      ],
+      "expected": "48:9:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:7hM9StZVeDjqkb8z8DEoHLFM1qExn95mSEF5WBxVL7zH:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:3120000:So11111111111111111111111111111111111111112:27987764",
+      "fixture": "242.transaction.pb",
+      "rawSha256": "ab8ade1726c6baf27b8ef200759558baa01427053de4962bb9ad460163394635"
+    },
+    {
+      "signature": "5TwRyw5s4baZciKFktE3oe3dcrukCUKxyDJcRMoWo899DvTWKcdwfoNe33a3Hjet4ggR4mw6vGd18xFDGCUVzWKM",
+      "block_num": 455714596,
+      "instruction_index": 14,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "22tw3PXHKaqjetXdst7fjVho5qseJJE74iSZ1cPCTdz9",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "35419020",
+      "outputAmount": "3947713",
+      "vaultPaidFees": [
+        {
+          "index": 16,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "354"
+        },
+        {
+          "index": 17,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "354"
+        }
+      ],
+      "expected": "48:14:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:22tw3PXHKaqjetXdst7fjVho5qseJJE74iSZ1cPCTdz9:So11111111111111111111111111111111111111112:35419020:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:3947713",
+      "fixture": "243.transaction.pb",
+      "rawSha256": "5a26e7f9a3947a8d1c0da9b3d263459cce143124b84e22a0445fffb116e006c1"
+    },
+    {
+      "signature": "dfeHoUj5t1RoJvvF1zCghUbCYVFptasVNTKNr6yL5eDEkrt7CEbug1rRLBtX4QPz7gQc5gp2JnLB79UzKezbnMe",
+      "block_num": 455714592,
+      "instruction_index": 15,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "HCCBFn2VNQ2hvgJmQi783SsvmsR7mKM9ZGpLKXyEtZyX",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "34134571",
+      "outputAmount": "3805337",
+      "vaultPaidFees": [
+        {
+          "index": 17,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "341"
+        },
+        {
+          "index": 18,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "341"
+        }
+      ],
+      "expected": "48:15:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:HCCBFn2VNQ2hvgJmQi783SsvmsR7mKM9ZGpLKXyEtZyX:So11111111111111111111111111111111111111112:34134571:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:3805337",
+      "fixture": "244.transaction.pb",
+      "rawSha256": "194558e5af2c4b5eb8b4e05b145596eaeed1a4573430ab663b753384136db0e2"
+    },
+    {
+      "signature": "38ESfAKqV9LZrG2Q7XaoEbzjoXpMDRBBxhE4FKdVo8EXLwxS6Pz679vdrBQvSGKiBSv8KfbBiqodF6uNjLe2hara",
+      "block_num": 455714591,
+      "instruction_index": 12,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "6ETa3agwkoeGbhSzbDp7fy7sHfq2jKHnB4basSx5dNWx",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4960412",
+      "outputAmount": "44495384",
+      "vaultPaidFees": [
+        {
+          "index": 14,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "49"
+        },
+        {
+          "index": 15,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "49"
+        }
+      ],
+      "expected": "48:12:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:6ETa3agwkoeGbhSzbDp7fy7sHfq2jKHnB4basSx5dNWx:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:4960412:So11111111111111111111111111111111111111112:44495384",
+      "fixture": "245.transaction.pb",
+      "rawSha256": "10dd413109c7fd68902eb685f722e154b4e391caa6a31c5dd2e27f47747eb51d"
+    },
+    {
+      "signature": "8KzYbzDrMmJ9Ppe4MkEUxp8gVd2cvKy8RTkNKHVqoxmzqii4yf5eCYET23xmFXikc5kWpD82Lt9SpeAaGiCHN9r",
+      "block_num": 455714591,
+      "instruction_index": 7,
+      "program_id": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "instruction_tag": "0897f54caccb9027",
+      "reason": "token_exchange_unclassified",
+      "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "user": "3mCkFSMQhG3Pyn8LE9poeBSben5jc1Q5XS4z8iTG8qn9",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4265500",
+      "outputAmount": "38252559",
+      "vaultPaidFees": [
+        {
+          "index": 9,
+          "positions": [
+            3,
+            8,
+            2
+          ],
+          "amount": "42"
+        },
+        {
+          "index": 10,
+          "positions": [
+            3,
+            9,
+            2
+          ],
+          "amount": "42"
+        }
+      ],
+      "expected": "48:7:DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2:3mCkFSMQhG3Pyn8LE9poeBSben5jc1Q5XS4z8iTG8qn9:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:4265500:So11111111111111111111111111111111111111112:38252559",
+      "fixture": "246.transaction.pb",
+      "rawSha256": "fed539fe46fc169755cc06daea3b6ddb96499cd5b2281e6f096ee2928a9c04f4"
+    }
+  ],
+  "ownerVerifiedPoolStates": [
+    {
+      "address": "5nmAbnjJfW1skrPvYjLTBNdhoKzJfznnbvDcM8G2U7Ki",
+      "owner": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "size": 232,
+      "discriminator": "4a44edbd2dbec315",
+      "possibleAnchorType": [],
+      "dataBase64": "SkTtvS2+wxW0E81ef/ZTHVkmwN227CPJn6IucPji3NbY7WVQVzEKHv+Ml1tEHlGfTN/wDQD/gEj0qaG4MatvlYHSZEcz1ioXdv6ghgEAAAAAAEANAwAAAAAAgBoGAAAAAAAgoQcAAAAAAABqGAAAAAAAwMYtAAAAAACAlpgAAAAAAAAtMQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADh9QUAAAAAAOH1BQAAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "address": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+      "owner": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+      "size": 432,
+      "discriminator": "f7ede3f5d7c3de46",
+      "possibleAnchorType": [
+        "PoolState"
+      ],
+      "dataBase64": "9+3j9dfD3kbM1sFM7RkPlMHRkQFprJPobMU3+xklKEy8GjxLaFpwkv/3sAqLv9yOQKpVju2Nv6FgO1LsZMzhR60A4i30XBliJ+mE840XAAAAAgAAAAAAAADG+nrzvtutOj1l82qryXQxsbvkwtL24OR8pgIDRS9dYYnif5pJDmoFCEZLLM1jDQoBxbAzIjAnxzfida8KF8loScRmvQgAAAAAdDukCwAAAAabiFf+q4GE+2h/Y0YYwDXaxDncGus7VZig8AAAAAAB9fJvij+ef7p3Rw8UE+ZQpngRVksq5ZjmYhxu6tmLviJskb1vTgAAAAB0O6QLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADodkgXAAAAoIYBAAAAAAAAAAAAAAAA"
+    },
+    {
+      "address": "Enc6rB84ZwGxZU8aqAF41dRJxg3yesiJgD7uJFVhMraM",
+      "missing": true
+    }
+  ],
+  "contractEvidence": {
+    "program": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+    "typedPoolState": "Anchor PoolState, program-owned, 432 bytes; authority at 8, asset mint/vault pairs at 89/121 and 169/201",
+    "instruction": "Anchor swap_exact_amount_in, 24 bytes; amount in at 8, minimum out at 16",
+    "publicAudit": "https://files.1intro.com/public/SecurityCodeReview1DEX.pdf",
+    "auditedSourceCommit": "41a82354f27b49a1befcdddbb0f4628e3d167e8e",
+    "limitation": "Public audit identifies the private instruction source, but exact-output has not been sampled or enabled. All samples are one owner-verified pool in both directions."
+  }
+}

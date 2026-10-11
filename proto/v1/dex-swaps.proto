@@ -51,6 +51,7 @@ enum Protocol {
   PROTOCOL_STABBLE = 45;
   PROTOCOL_DEFITUNA = 46;
   PROTOCOL_INVARIANT = 47;
+  PROTOCOL_ONEDEX = 48;
 }
 
 message Events {
