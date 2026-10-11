@@ -275,3 +275,18 @@ impl Protocol {
     }
 }
 // @@protoc_insertion_point(module)
+
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TokenFeeUpdates {
+    #[prost(message, repeated, tag="1")]
+    pub changes: ::prost::alloc::vec::Vec<TokenFeeUpdate>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TokenFeeUpdate {
+    #[prost(uint64, tag="1")]
+    pub ordinal: u64,
+    #[prost(bytes="vec", tag="2")]
+    pub mint: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="3")]
+    pub change: ::prost::alloc::vec::Vec<u8>,
+}

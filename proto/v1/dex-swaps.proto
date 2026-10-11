@@ -116,3 +116,14 @@ message Swap {
   // Position in runtime log_messages; distinct from compiled instruction positions.
   optional uint32 source_log_index = 17;
 }
+
+// Deterministic mint metadata, separate from financial swap events.
+message TokenFeeUpdates {
+  repeated TokenFeeUpdate changes = 1;
+}
+
+message TokenFeeUpdate {
+  uint64 ordinal = 1;
+  bytes mint = 2;
+  bytes change = 3;
+}

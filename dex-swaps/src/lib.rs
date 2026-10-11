@@ -38,7 +38,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams::{
     errors::Error,
     log,
-    store::{StoreGet, StoreGetRaw, StoreNew, StoreSet, StoreSetRaw},
+    store::{Appender, StoreAppend, StoreGet, StoreGetRaw, StoreNew, StoreSet, StoreSetRaw},
 };
 use substreams_solana::{
     base58,
@@ -60,6 +60,56 @@ fn store_phoenix_markets(block: Block, output: StoreSetRaw) {
 fn store_openbook_markets(block: Block, output: StoreSetRaw) {
     for (ordinal, key, value) in openbook_metadata::updates(&block) {
         output.set(ordinal, key, &value);
+    }
+}
+
+#[substreams::handlers::map]
+fn map_token_fee_updates(block: Block) -> Result<pb::TokenFeeUpdates, Error> {
+    // Mainnet's owned EpochSchedule is retained with the fee fixtures: no
+    // warmup, firstNormalEpoch/Slot=0, slotsPerEpoch=432000. This package is
+    // pinned to network solana; other schedules require a different package.
+    let epoch = block.slot / 432_000;
+    Ok(pb::TokenFeeUpdates {
+        changes: token_fees::native_changes(&block, epoch)
+            .into_iter()
+            .map(|(ordinal, mint, change)| pb::TokenFeeUpdate {
+                ordinal,
+                mint,
+                change: change.encode(),
+            })
+            .collect(),
+    })
+}
+
+#[substreams::handlers::store]
+fn store_token_fee_mints(updates: pb::TokenFeeUpdates, output: StoreSetRaw) {
+    for update in updates.changes {
+        if matches!(
+            token_fees::Change::decode(&update.change),
+            Some(
+                token_fees::Change::Snapshot { .. }
+                    | token_fees::Change::InitializeFee(_)
+                    | token_fees::Change::SetFee(_)
+                    | token_fees::Change::UnknownInitializeFee
+                    | token_fees::Change::UnknownSetFee
+            )
+        ) {
+            output.set(update.ordinal, base58::encode(&update.mint), &[1]);
+        }
+    }
+}
+
+#[substreams::handlers::store]
+fn store_token_fee_history(updates: pb::TokenFeeUpdates, mints: StoreGetRaw, output: StoreAppend<String>) {
+    for update in updates.changes {
+        let key = base58::encode(&update.mint);
+        // Account initialization/closure is retained only for addresses that
+        // have ever carried a fee configuration, keeping token-account churn
+        // out of the registry. An unknown mutation keeps the address tracked.
+        if mints.get_at(update.ordinal, &key).is_none() {
+            continue;
+        }
+        output.append(update.ordinal, key, update.change.iter().map(|byte| format!("{byte:02x}")).collect::<String>());
     }
 }
 

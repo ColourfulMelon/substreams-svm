@@ -33,7 +33,9 @@ See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
 See [`swap-coverage-2026-10-11.md`](swap-coverage-2026-10-11.md) for finalized
 replay results, newer instruction variants, net-receipt verification and gaps
-that still require investigation. Standalone package availability does not
+that still require investigation. See [`token-transfer-fee-registry.md`](token-transfer-fee-registry.md)
+for the staged fee accounting core, finalized receipt fixtures and required
+streaming integration. Standalone package availability does not
 imply coverage in the normalized pricing stream.
 Phoenix lot/fee accounting is in `dex-swaps/src/phoenix.rs`, with its bounded
 current/future market registry in `phoenix_metadata.rs`. The pluto.10 candidate
