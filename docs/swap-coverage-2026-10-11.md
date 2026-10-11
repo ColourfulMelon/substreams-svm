@@ -110,7 +110,30 @@ router fees and lending conversions also appear. They never enter price views.
 Pure orderbook fills without token transfers still need event-specific decoding.
 Create the additive coverage tables and columns before starting this writer.
 
-No decoder changes from this audit have been deployed yet. Historical recovery
+The `.7` package was deployed on 2026-10-11 and resumed at finalized slot
+455702177, immediately after the previous writer's durable slot 455702176.
+Strict module-hash checking was restored. By 15:59 UTC it was four seconds behind,
+and retained candidate counts matched completed block counters exactly.
+Production API service and disabled custom limit-order execution were preserved.
+
+The `.8` decoder passes 90 core Rust tests and independently restores a further 78 legs: 38 DefiTuna
+FusionAMM swaps across eight program-owned pools and 40 Invariant swaps across
+two program-owned pools, with both directions represented. Actual token atoms,
+accounts, user authorities, temporary WSOL mint initialization and Token-2022
+net receipts were checked independently. Invariant referral inputs are additionally
+covered by a financial test; no real referral was present in the 40-swap sample.
+The raw evidence files preserve source revisions, hashes and exact identities.
+Phoenix intents now remain diagnostic candidates even without token transfers,
+while post-only placement, cancel, deposit and withdrawal are excluded from
+that classification. They still require full fill and market-lot accounting.
+DefiTuna two-hop swaps also require their own per-pool decoder and real fixtures.
+
+Primary new references:
+
+- https://github.com/DefiTuna/fusionamm-sdk/tree/683c52d6e9f29b7a696877f798c8bb2bfb439893
+- https://github.com/invariant-labs/protocol/blob/a30e3b6d86a34400fae202299dba969daff36359/programs/invariant/src/instructions/swap.rs
+
+ Historical recovery
 must use a separate canonical archive/replacement; live OHLC tables cannot
 safely receive appended historical replays. A live package upgrade must retain
 the saved cursor and adopt its new module hash deliberately.

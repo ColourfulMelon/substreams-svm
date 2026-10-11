@@ -53,7 +53,9 @@ CREATE TABLE IF NOT EXISTS state_pools_aggregating_by_pool (
         'plasma' = 42,
         'bonkswap' = 43,
         'heaven' = 44,
-        'stabble' = 45
+        'stabble' = 45,
+        'defituna' = 46,
+        'invariant' = 47
     ) COMMENT 'Protocol',
     program_id              LowCardinality(String),
     amm                     LowCardinality(String),
