@@ -39,6 +39,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Bonkswap, substreams_solana_idls::bonkswap::PROGRAM_ID),
     (Protocol::Heaven, substreams_solana_idls::heaven::PROGRAM_ID),
     (Protocol::Stabble, substreams_solana_idls::stabble::PROGRAM_ID),
+    (Protocol::Defituna, b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9")),
 ];
 
 pub(crate) struct Layout {
@@ -94,6 +95,54 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             input_limit: true,
             input_first: false,
             fixed_users: false,
+        });
+    }
+    if protocol == Protocol::Defituna {
+        // FusionAMM 1.1.4's owner-verified on-chain IDL. The optional
+        // remaining-account slices are bounded, fully decoded Borsh; never
+        // infer a swap from a liquidity instruction or an unknown trailer.
+        if ix.accounts().len() < 14 || data.len() < 43 || data[..8] != [248, 198, 158, 145, 225, 117, 135, 200] || data[40] > 1 || data[41] > 1 {
+            return None;
+        }
+        match data[42] {
+            0 if data.len() == 43 => {}
+            1 if data.len() >= 47 => {
+                let count = u32::from_le_bytes(data[43..47].try_into().ok()?) as usize;
+                if count > 3 || data.len() != 47 + 2 * count {
+                    return None;
+                }
+                let mut used = [false; 8];
+                let mut remaining = 0usize;
+                for slice in data[47..].chunks_exact(2) {
+                    let kind = slice[0] as usize;
+                    if !matches!(kind, 0 | 1 | 5) || used[kind] {
+                        return None;
+                    }
+                    used[kind] = true;
+                    remaining += slice[1] as usize;
+                }
+                if ix.accounts().len() < 14 + remaining {
+                    return None;
+                }
+            }
+            _ => return None,
+        }
+        let amount = u64::from_le_bytes(data[8..16].try_into().ok()?);
+        let threshold = u64::from_le_bytes(data[16..24].try_into().ok()?);
+        let exact_input = data[40] == 1;
+        let forward = data[41] == 1;
+        return Some(Layout {
+            protocol,
+            pool: 4,
+            authority: 3,
+            users: if forward { [7, 8] } else { [8, 7] },
+            vaults: if forward { [9, 10] } else { [10, 9] },
+            amount: if exact_input { amount } else { threshold },
+            minimum_output: if exact_input { threshold } else { amount },
+            exact_input,
+            input_limit: true,
+            input_first: true,
+            fixed_users: true,
         });
     }
     if protocol == Protocol::RaydiumClmm {
@@ -499,6 +548,42 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn fusion_swap_direction_amounts_and_remaining_slices_are_strict() {
+        let program = b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9");
+        let accounts: Vec<_> = (1..=16).map(|i| [i; 32]).collect();
+        for exact_input in [false, true] {
+            for forward in [false, true] {
+                let mut data = vec![248, 198, 158, 145, 225, 117, 135, 200];
+                data.extend_from_slice(&100u64.to_le_bytes());
+                data.extend_from_slice(&200u64.to_le_bytes());
+                data.extend_from_slice(&0u128.to_le_bytes());
+                data.extend_from_slice(&[u8::from(exact_input), u8::from(forward), 1]);
+                data.extend_from_slice(&1u32.to_le_bytes());
+                data.extend_from_slice(&[5, 2]);
+                let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data.clone());
+                let decoded = layout(&tx.walk_instructions().next().unwrap()).unwrap();
+                assert_eq!(decoded.amount, if exact_input { 100 } else { 200 });
+                assert_eq!(decoded.minimum_output, if exact_input { 200 } else { 100 });
+                assert_eq!(decoded.vaults, if forward { [9, 10] } else { [10, 9] });
+                assert_eq!(decoded.users, if forward { [7, 8] } else { [8, 7] });
+                for (position, invalid) in [(40, 2), (41, 2), (42, 2), (43, 255), (47, 8), (47, 2), (48, 3), (0, 0)] {
+                    let mut malformed = data.clone();
+                    malformed[position] = invalid;
+                    let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, malformed);
+                    assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                }
+                for count in [13, 14, 15] {
+                    let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts[..count], data.clone());
+                    assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                }
+                data.push(0);
+                let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
+                assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+            }
+        }
+    }
 
     #[test]
     fn dbc_modes_and_hook_slices_have_strict_amount_and_account_layouts() {

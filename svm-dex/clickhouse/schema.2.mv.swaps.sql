@@ -50,7 +50,7 @@ ALTER TABLE swaps
         'plasma' = 42,
         'bonkswap' = 43,
         'heaven' = 44,
-        'stabble' = 45
+        'stabble' = 45, 'defituna' = 46
     ) COMMENT 'Protocol',
     ADD COLUMN IF NOT EXISTS amm                         String COMMENT 'AMM protocol (Raydium Liquidity Pool V4)',
     ADD COLUMN IF NOT EXISTS amm_pool                    String COMMENT 'AMM market (Raydium "WSOL-USDT" Market)',

@@ -49,6 +49,7 @@ enum Protocol {
   PROTOCOL_BONKSWAP = 43;
   PROTOCOL_HEAVEN = 44;
   PROTOCOL_STABBLE = 45;
+  PROTOCOL_DEFITUNA = 46;
 }
 
 message Events {

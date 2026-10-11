@@ -328,6 +328,8 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     || mints.mint_for(vault_out).as_ref() != Some(&output.mint)
                     || mints.mint_for(source).as_ref() != Some(&input.mint)
                     || mints.mint_for(destination).as_ref() != Some(&output.mint)
+                    || (layout.protocol == pb::Protocol::Defituna
+                        && (mints.mint_for(accounts[9].0).as_ref() != Some(accounts[5].0) || mints.mint_for(accounts[10].0).as_ref() != Some(accounts[6].0)))
                     || (layout.exact_input && !layout.input_limit && input.amounts[0] != layout.amount)
                     || ((!layout.exact_input || layout.input_limit) && input.amounts[0] > layout.amount)
                     || *output.amounts.iter().min().unwrap() < layout.minimum_output

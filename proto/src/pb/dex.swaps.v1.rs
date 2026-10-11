@@ -137,6 +137,7 @@ pub enum Protocol {
     Bonkswap = 43,
     Heaven = 44,
     Stabble = 45,
+    Defituna = 46,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -191,6 +192,7 @@ impl Protocol {
             Protocol::Bonkswap => "PROTOCOL_BONKSWAP",
             Protocol::Heaven => "PROTOCOL_HEAVEN",
             Protocol::Stabble => "PROTOCOL_STABBLE",
+            Protocol::Defituna => "PROTOCOL_DEFITUNA",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -242,6 +244,7 @@ impl Protocol {
             "PROTOCOL_BONKSWAP" => Some(Self::Bonkswap),
             "PROTOCOL_HEAVEN" => Some(Self::Heaven),
             "PROTOCOL_STABBLE" => Some(Self::Stabble),
+            "PROTOCOL_DEFITUNA" => Some(Self::Defituna),
             _ => None,
         }
     }
