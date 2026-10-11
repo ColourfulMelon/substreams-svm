@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS state_verified_pairs (
 ORDER BY (minute, mint0, mint1, amm_pool)
 TTL minute + INTERVAL 1 DAY;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS mv_state_verified_pairs TO state_verified_pairs AS
+CREATE OR REPLACE MATERIALIZED VIEW mv_state_verified_pairs TO state_verified_pairs AS
 WITH
     input_mint <= output_mint AS dir,
     if(dir, input_mint, output_mint) AS mint0,

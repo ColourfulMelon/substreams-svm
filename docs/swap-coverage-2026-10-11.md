@@ -345,3 +345,18 @@ chronology, adds the same independently verified OpenBook wallet fill, and
 explicitly supplies positions on all 5,524 rows. Isolated ClickHouse validation
 passes fifteen price assertions, including mixed ledger/wallet execution across
 insert batches and all eight candle intervals. Its temporary database was removed.
+
+## Existing-view upgrade companion
+
+The production metadata check found that `IF NOT EXISTS` retained the previous
+recent-pair insert-view definition on an existing installation. Fresh isolated
+schemas had the correct execution-position definition, but the upgrade needed
+to replace it explicitly. The startup schema now replaces that materialized
+view while retaining its aggregate table, types and prior observations.
+An isolated existing-view upgrade preserves a pre-upgrade price and passes
+sixteen price assertions, including subsequent mixed wallet/ledger execution
+across batches and all eight candle intervals. Production metadata confirms
+both price insert views use execution positions. No reordered runtime-fill row
+had reached the live view when its definition was refreshed atomically.
+The published pluto.12 decoder package is unchanged; existing installations
+must apply this companion migration before admitting mixed runtime fills.
