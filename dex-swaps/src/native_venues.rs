@@ -33,6 +33,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Denali, b58!("DNL1tgEj3nJovHw9jtyCCQD3arssCJzkmpDizknwzey4")),
     (Protocol::SolfiV2, substreams_solana_idls::solfi::v2::PROGRAM_ID),
     (Protocol::Saros, substreams_solana_idls::saros::PROGRAM_ID),
+    (Protocol::RaydiumLaunchpad, substreams_solana_idls::raydium::launchpad::PROGRAM_ID),
     (Protocol::RaydiumCpmm, substreams_solana_idls::raydium::cpmm::PROGRAM_ID),
     (Protocol::MeteoraDaam, substreams_solana_idls::meteora::daam::PROGRAM_ID),
     (Protocol::Plasma, substreams_solana_idls::plasma::PROGRAM_ID),
@@ -97,6 +98,32 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             input_limit: true,
             input_first: false,
             fixed_users: false,
+        });
+    }
+    if protocol == Protocol::RaydiumLaunchpad {
+        use substreams_solana_idls::raydium::launchpad::instructions::{unpack, RaydiumLaunchpadInstruction};
+        let (buy, exact_input, amount, minimum_output) = match unpack(&data).ok()? {
+            RaydiumLaunchpadInstruction::BuyExactIn(x) => (true, true, x.amount_in, x.minimum_amount_out),
+            RaydiumLaunchpadInstruction::BuyExactOut(x) => (true, false, x.maximum_amount_in, x.amount_out),
+            RaydiumLaunchpadInstruction::SellExactIn(x) => (false, true, x.amount_in, x.minimum_amount_out),
+            RaydiumLaunchpadInstruction::SellExactOut(x) => (false, false, x.maximum_amount_in, x.amount_out),
+            _ => return None,
+        };
+        if ix.accounts().len() < 15 || ix.accounts()[14].0 != &substreams_solana_idls::raydium::launchpad::PROGRAM_ID {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 4,
+            authority: 0,
+            users: if buy { [6, 5] } else { [5, 6] },
+            vaults: if buy { [8, 7] } else { [7, 8] },
+            amount,
+            minimum_output,
+            exact_input,
+            input_limit: false,
+            input_first: true,
+            fixed_users: true,
         });
     }
     if protocol == Protocol::Defituna {
@@ -600,6 +627,90 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn launchpad_native_user_receipts_do_not_depend_on_event_version() {
+        use substreams_solana::pb::sf::solana::r#type::v1::{InnerInstruction, InnerInstructions, TokenBalance, UiTokenAmount};
+        use substreams_solana_idls::{raydium::launchpad, spl::token};
+        for (buy, exact_input, tag) in [
+            (true, true, launchpad::instructions::BUY_EXACT_IN),
+            (true, false, launchpad::instructions::BUY_EXACT_OUT),
+            (false, true, launchpad::instructions::SELL_EXACT_IN),
+            (false, false, launchpad::instructions::SELL_EXACT_OUT),
+        ] {
+            let mut accounts: Vec<_> = (1..=15).map(|i| [i; 32]).collect();
+            accounts[9] = [31; 32];
+            accounts[10] = [32; 32];
+            accounts[11] = token::PROGRAM_ID;
+            accounts[12] = token::PROGRAM_ID;
+            accounts[14] = launchpad::PROGRAM_ID;
+            let mut data = tag.to_vec();
+            data.extend_from_slice(&(if exact_input { 100u64 } else { 200 }).to_le_bytes());
+            data.extend_from_slice(&(if exact_input { 190u64 } else { 105 }).to_le_bytes());
+            data.extend_from_slice(&0u64.to_le_bytes());
+            let mut tx = crate::routed_pool::test_fixture::make_tx(launchpad::PROGRAM_ID, &accounts, data);
+            let mut input = vec![3];
+            input.extend_from_slice(&100u64.to_le_bytes());
+            let mut output = vec![3];
+            output.extend_from_slice(&200u64.to_le_bytes());
+            let meta = tx.meta.as_mut().unwrap();
+            meta.inner_instructions = vec![InnerInstructions {
+                index: 0,
+                instructions: vec![
+                    InnerInstruction {
+                        program_id_index: 13,
+                        accounts: if buy { vec![8, 10, 2] } else { vec![7, 9, 2] },
+                        data: input,
+                        stack_height: Some(2),
+                    },
+                    InnerInstruction {
+                        program_id_index: 13,
+                        accounts: if buy { vec![9, 7, 3] } else { vec![10, 8, 3] },
+                        data: output,
+                        stack_height: Some(2),
+                    },
+                ],
+            }];
+            for (position, mint) in [(5, [31; 32]), (7, [31; 32]), (6, [32; 32]), (8, [32; 32])] {
+                meta.pre_token_balances.push(TokenBalance {
+                    account_index: position + 2,
+                    mint: base58::encode(mint),
+                    ui_token_amount: Some(UiTokenAmount {
+                        amount: "1000".into(),
+                        decimals: 6,
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                });
+            }
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            assert_eq!(decoded.swaps.len(), 1);
+            let swap = &decoded.swaps[0];
+            assert_eq!(swap.protocol, Protocol::RaydiumLaunchpad as i32);
+            assert_eq!((swap.input_amount, swap.output_amount), (100, 200));
+            assert_eq!(swap.amm_pool, accounts[4]);
+            assert_eq!(swap.input_mint, accounts[if buy { 10 } else { 9 }]);
+            assert!(swap.transfer_verified);
+            for mode in 0..7 {
+                let mut wrong = tx.clone();
+                match mode {
+                    0 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].accounts[2] = 3,
+                    1 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[2] = 2,
+                    2 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[9] = 12,
+                    3 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[11] = 2,
+                    4 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[8..16]
+                        .copy_from_slice(&(if exact_input { 99u64 } else { 201 }).to_le_bytes()),
+                    5 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0),
+                    6 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].stack_height = Some(3),
+                    _ => unreachable!(),
+                }
+                assert!(
+                    crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.is_empty()),
+                    "unproved Launchpad buy={buy} exact_input={exact_input} mode={mode}"
+                );
+            }
+        }
+    }
 
     #[test]
     fn onedex_uses_gross_user_input_and_only_declared_vault_paid_fees() {

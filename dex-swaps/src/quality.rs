@@ -322,6 +322,21 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::RaydiumLaunchpad {
+                    // The IDL pins base/quote vaults, mint roles and pool PDA.
+                    // New event versions must not prevent exact native CPIs
+                    // from contributing to mint pricing or routed deduplication.
+                    if output.authority.as_slice() != accounts[1].0.as_slice()
+                        || mints.mint_for(accounts[7].0).as_ref() != Some(accounts[9].0)
+                        || mints.mint_for(accounts[8].0).as_ref() != Some(accounts[10].0)
+                        || ![token::PROGRAM_ID.as_slice(), token_2022::PROGRAM_ID.as_slice()].contains(&accounts[11].0.as_slice())
+                        || ![token::PROGRAM_ID.as_slice(), token_2022::PROGRAM_ID.as_slice()].contains(&accounts[12].0.as_slice())
+                        || instructions[input.index as usize].program_id().0 != accounts[if layout.users[0] == 5 { 11 } else { 12 }].0
+                        || instructions[output.index as usize].program_id().0 != accounts[if layout.users[1] == 5 { 11 } else { 12 }].0
+                    {
+                        continue;
+                    }
+                }
                 if layout.protocol == pb::Protocol::Onedex {
                     // The only other direct transfers are optional fees from
                     // the input vault to the two declared recipients. They
