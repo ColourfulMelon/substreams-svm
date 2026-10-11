@@ -38,7 +38,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams::{
     errors::Error,
     log,
-    store::{Appender, StoreAppend, StoreGet, StoreGetRaw, StoreNew, StoreSet, StoreSetRaw},
+    store::{Appender, StoreAdd, StoreAddInt64, StoreAppend, StoreGet, StoreGetRaw, StoreGetString, StoreNew, StoreSet, StoreSetRaw},
 };
 use substreams_solana::{
     base58,
@@ -102,6 +102,11 @@ fn store_token_fee_mints(updates: pb::TokenFeeUpdates, output: StoreSetRaw) {
 #[substreams::handlers::store]
 fn store_token_fee_history(updates: pb::TokenFeeUpdates, mints: StoreGetRaw, output: StoreAppend<String>) {
     for update in updates.changes {
+        if update.mint.is_empty() {
+            let slot = u64::from_le_bytes(update.change.as_slice().try_into().expect("invalid fee snapshot marker"));
+            output.append(update.ordinal, "__token22_snapshot", slot.to_string());
+            continue;
+        }
         let key = base58::encode(&update.mint);
         // Account initialization/closure is retained only for addresses that
         // have ever carried a fee configuration, keeping token-account churn
@@ -110,6 +115,29 @@ fn store_token_fee_history(updates: pb::TokenFeeUpdates, mints: StoreGetRaw, out
             continue;
         }
         output.append(update.ordinal, key, update.change.iter().map(|byte| format!("{byte:02x}")).collect::<String>());
+    }
+}
+
+#[substreams::handlers::store]
+fn store_token_fee_seed_count(updates: pb::TokenFeeUpdates, output: StoreAddInt64) {
+    for update in updates.changes {
+        if matches!(token_fees::Change::decode(&update.change), Some(token_fees::Change::Snapshot { .. })) {
+            output.add(update.ordinal, "__token22_seeds", 1);
+        }
+    }
+}
+
+#[substreams::handlers::store]
+fn store_token_fee_state(updates: pb::TokenFeeUpdates, history: StoreGetString, output: StoreSetRaw) {
+    for update in updates.changes {
+        if update.mint.is_empty() {
+            output.set(update.ordinal, "__token22_snapshot", &update.change);
+            continue;
+        }
+        let key = base58::encode(&update.mint);
+        let Some(records) = history.get_at(update.ordinal, &key) else { continue };
+        let state = token_fees::State::from_history(&records).expect("invalid native Token-2022 fee history");
+        output.set(update.ordinal, key, &state.encode());
     }
 }
 

@@ -1,10 +1,20 @@
-//! Replay unmodified public transaction fixtures through the deployed decoder.
+//! Replay unmodified public transaction fixtures through the built decoder.
 use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 
 fn main() {
     let directory = std::env::args().nth(1).expect("fixture directory required");
     let phoenix_headers = std::env::args().nth(2).filter(|value| value != "-");
-    let openbook_headers = std::env::args().nth(3);
+    let openbook_headers = std::env::args().nth(3).filter(|value| value != "-");
+    // Fee files must come from an independently owner/epoch-verified read.
+    // The audit never treats absent files as proof of zero transfer fees.
+    let fee_mints = std::env::args().nth(4).filter(|value| value != "-");
+    let fee_epoch = fee_mints.as_ref().map(|_| {
+        std::env::args()
+            .nth(5)
+            .expect("explicit transaction epoch required for fee audit")
+            .parse::<u64>()
+            .expect("invalid fee audit epoch")
+    });
     let mut files: Vec<_> = std::fs::read_dir(directory)
         .unwrap()
         .map(|entry| entry.unwrap().path())
@@ -50,7 +60,7 @@ fn main() {
                 }
             }
         }
-        let decoded = dex_swaps::process_transaction_with_markets(
+        let decoded = dex_swaps::process_transaction_with_metadata(
             tx,
             None,
             |address, _| {
@@ -64,6 +74,16 @@ fn main() {
                 let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(address)));
                 let header = std::fs::read(path).ok()?;
                 dex_swaps::openbook::Market::from_owned_header(address, &dex_swaps::openbook::PROGRAM_ID, &header)
+            },
+            |mint, _| {
+                let directory = fee_mints.as_ref()?;
+                let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(mint)));
+                let bytes = std::fs::read(path).ok()?;
+                let (schedule, initialized) = dex_swaps::token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, &bytes)?;
+                if !initialized {
+                    return None;
+                }
+                schedule.at(fee_epoch?)
             },
         );
         println!(

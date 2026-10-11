@@ -44,7 +44,7 @@ The business logic tests include rounding/caps/u64 maximum amounts,
 epoch-delayed fee changes, superseded pending changes, mint close/re-creation,
 unproven calls, malformed owned mint data, history corruption, real repeated
 receipts, deliberately incorrect fee settings and successful children rolled
-back by failed ancestors. All 113 decoder tests and 12 SQL mapper tests pass;
+back by failed ancestors. All 115 decoder tests and 12 SQL mapper tests pass;
 the staged source also compiles for wasm32-unknown-unknown with Rust 1.85.1.
 
 ## Rules and source
@@ -79,9 +79,30 @@ pages do not prove completion. Keep pagination keys local and private.
 
 The staged handlers collect native changes, track addresses ever carrying a
 fee config, and append their history. Close/InitializeMint events are retained
-only for tracked addresses, avoiding ordinary token-account churn. Missing or
-truncated runtime completion marks the affected state unknown. Calls with a
-proven failed ancestor are ignored because their changes rolled back.
+only for tracked addresses, avoiding ordinary token-account churn. Successful
+transactions prove root metadata calls committed, including when logs are
+missing. CPI mutations require a completed successful ancestor chain; missing
+or truncated proof marks their affected state unknown. Proven rolled-back
+mutations are ignored.
+
+Context seeding uses sorted 80-byte records and binary-searches each block
+window. Compact state retains known, pending and unknown configurations in
+at most 40 bytes. A seed-count store supplements the completion marker: both
+the exact expected count and marker must be checked before treating an absent
+mint as fee-free. The history remains available to reconstruct state at each
+mutation ordinal.
+
+`scripts/gen-token-fee-snapshot.py` refuses incomplete scans and verifies all
+retained raw mint bytes against the declared owner, fee fields, read contexts,
+record SHA-256 and owned mainnet EpochSchedule. It produces `mint-fees.bin`,
+`proof.json` and `snapshot.rs` only after the complete input validates. The
+scan integrity digest is an audit record, not a cryptographic ownership proof.
+
+```sh
+python3 scripts/gen-token-fee-snapshot.py FINALIZED_SCAN_DIRECTORY \
+  --epoch-proof OWNED_EPOCH_SCHEDULE_RPC_JSON \
+  --output dex-swaps/fixtures/token-fees/registry
+```
 
 Before deployment:
 
@@ -96,7 +117,7 @@ Before deployment:
    An absent mint key proves zero fees only after this marker and complete
    mutation replay. A known-but-unproven mint never defaults to zero fees.
 4. Wire the new map/store modules into the manifests and resolve history at
-   each actual transfer ordinal. Set map_events initialBlock after the maximum
+   each actual transfer ordinal using compact state. Set map_events initialBlock after the maximum
    snapshot context. No network calls belong in WASM.
 5. Verify comprehensive old/new financial parity and a finalized streaming
    window, including pending initialization, closures, epoch boundaries and

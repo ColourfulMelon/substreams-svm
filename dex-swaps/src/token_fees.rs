@@ -27,13 +27,13 @@ pub(crate) struct EpochFee {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(crate) struct Schedule {
-    pub older: Option<EpochFee>,
-    pub newer: Option<EpochFee>,
+pub struct Schedule {
+    pub(crate) older: Option<EpochFee>,
+    pub(crate) newer: Option<EpochFee>,
 }
 
 impl Schedule {
-    pub(crate) fn at(self, epoch: u64) -> Option<TransferFee> {
+    pub fn at(self, epoch: u64) -> Option<TransferFee> {
         let applicable = match self.newer {
             Some(newer) if newer.epoch <= epoch => Some(newer),
             _ => self.older.filter(|fee| fee.epoch <= epoch),
@@ -44,7 +44,7 @@ impl Schedule {
 
 /// Validate the owned mint, not token-account bytes or an untrusted event.
 /// Unextended Token-2022 mints cannot contain a transfer fee configuration.
-pub(crate) fn owned_mint(owner: &[u8], data: &[u8]) -> Option<(Schedule, bool)> {
+pub fn owned_mint(owner: &[u8], data: &[u8]) -> Option<(Schedule, bool)> {
     if owner != token_2022::PROGRAM_ID
         || data.len() < 82
         || data.len() == 355
@@ -383,21 +383,102 @@ pub(crate) fn native_changes(block: &substreams_solana::pb::sf::solana::r#type::
         let candidates: Vec<_> = tx
             .walk_instructions()
             .enumerate()
-            .filter_map(|(index, ix)| instruction_change(&ix, epoch).map(|(mint, change)| (index as u32, mint, change)))
+            .filter_map(|(index, ix)| instruction_change(&ix, epoch).map(|(mint, change)| (index as u32, mint, change, ix.is_root())))
             .collect();
         if candidates.is_empty() {
             continue;
         }
         let outcomes = crate::logs::invocation_outcomes(tx);
-        for (index, mint, change) in candidates {
+        for (index, mint, change, root) in candidates {
             if outcomes.rolled_back.contains(&index) {
                 continue;
             }
-            let change = if outcomes.completed.contains(&index) { change } else { change.unproven() };
+            // A successful Solana transaction proves every root instruction
+            // committed, even if runtime logs are truncated. CPI mutations
+            // still require a complete successful ancestor chain.
+            let change = if root || outcomes.completed.contains(&index) {
+                change
+            } else {
+                change.unproven()
+            };
             changes.push((crate::phoenix_metadata::ordinal(transaction_index, index), mint, change));
         }
     }
     changes
+}
+
+/// Compact owned seeds are context:u64, mint:[u8;32], older/newer:[u8;18],
+/// initialized:u8, reserved:[u8;3]. The generator validates all ownership/TLV
+/// proofs, uniqueness and context ordering before producing this file.
+/// Binary-search the read-context window to avoid scanning the entire registry
+/// for every block. Context seeds describe end-of-block state and override any
+/// earlier native changes in that same block.
+pub(crate) fn updates(
+    block: &substreams_solana::pb::sf::solana::r#type::v1::Block,
+    seed: &[u8],
+    anchor: u64,
+    complete_at: u64,
+) -> Result<proto::pb::dex::swaps::v1::TokenFeeUpdates, substreams::errors::Error> {
+    use proto::pb::dex::swaps::v1::{TokenFeeUpdate, TokenFeeUpdates};
+    use substreams::errors::Error;
+    if seed.len() % 80 != 0 || anchor > complete_at || block.slot < anchor || block.parent_slot >= block.slot {
+        return Err(Error::msg("invalid Token-2022 snapshot bounds"));
+    }
+    let mut bounds = [0, 0];
+    for (position, boundary) in [block.parent_slot, block.slot].into_iter().enumerate() {
+        let (mut lower, mut upper) = (0, seed.len() / 80);
+        while lower < upper {
+            let middle = lower + (upper - lower) / 2;
+            let context = u64::from_le_bytes(seed[middle * 80..middle * 80 + 8].try_into().unwrap());
+            if context <= boundary {
+                lower = middle + 1;
+            } else {
+                upper = middle;
+            }
+        }
+        bounds[position] = lower;
+    }
+    if bounds[0] > bounds[1] {
+        return Err(Error::msg("invalid Token-2022 parent slot"));
+    }
+    let mut changes: Vec<_> = native_changes(block, block.slot / 432_000)
+        .into_iter()
+        .map(|(ordinal, mint, change)| TokenFeeUpdate {
+            ordinal,
+            mint,
+            change: change.encode(),
+        })
+        .collect();
+    for row in seed[bounds[0] * 80..bounds[1] * 80].chunks_exact(80) {
+        let context = u64::from_le_bytes(row[..8].try_into().unwrap());
+        let older = EpochFee::decode(&row[40..58]).ok_or_else(|| Error::msg("invalid older mint fee"))?;
+        let newer = EpochFee::decode(&row[58..76]).ok_or_else(|| Error::msg("invalid newer mint fee"))?;
+        if context < anchor || context > complete_at || older.epoch > newer.epoch || !matches!(row[76], 0 | 1) || row[77..].iter().any(|byte| *byte != 0) {
+            return Err(Error::msg("invalid owned Token-2022 seed"));
+        }
+        changes.push(TokenFeeUpdate {
+            ordinal: i64::MAX as u64,
+            mint: row[8..40].to_vec(),
+            change: Change::Snapshot {
+                schedule: Schedule {
+                    older: Some(older),
+                    newer: Some(newer),
+                },
+                initialized: row[76] == 1,
+            }
+            .encode(),
+        });
+    }
+    if block.slot > complete_at && block.parent_slot <= complete_at {
+        // Empty mint is exclusively a completion marker, never a mint key.
+        changes.push(TokenFeeUpdate {
+            ordinal: 0,
+            mint: Vec::new(),
+            change: complete_at.to_le_bytes().to_vec(),
+        });
+    }
+    changes.sort_by_key(|update| update.ordinal);
+    Ok(TokenFeeUpdates { changes })
 }
 
 /// Append-store records are hex-encoded native changes, separated by `;` by
@@ -413,25 +494,62 @@ pub(crate) fn fee_at(history: Option<&str>, snapshot_complete: bool, epoch: u64)
             maximum_fee: 0,
         });
     };
-    if history.is_empty() || !history.ends_with(';') {
-        return None;
-    }
-    let mut state = State::default();
-    for record in history[..history.len() - 1].split(';') {
-        if record.len() % 2 != 0 || record.is_empty() {
+    State::from_history(history)?.at(epoch)
+}
+
+impl State {
+    pub(crate) fn from_history(history: &str) -> Option<Self> {
+        if history.is_empty() || !history.ends_with(';') {
             return None;
         }
-        let bytes: Option<Vec<u8>> = record
-            .as_bytes()
-            .chunks_exact(2)
-            .map(|pair| {
-                let text = std::str::from_utf8(pair).ok()?;
-                u8::from_str_radix(text, 16).ok()
-            })
-            .collect();
-        state.apply(Change::decode(&bytes?)?);
+        let mut state = Self::default();
+        for record in history[..history.len() - 1].split(';') {
+            if record.len() % 2 != 0 || record.is_empty() {
+                return None;
+            }
+            let bytes: Option<Vec<u8>> = record
+                .as_bytes()
+                .chunks_exact(2)
+                .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).ok()?, 16).ok())
+                .collect();
+            state.apply(Change::decode(&bytes?)?);
+        }
+        Some(state)
     }
-    state.at(epoch)
+
+    // Active and pending-known state reuse the canonical snapshot encoding.
+    // Distinct unknown states preserve whether a later initialization may
+    // prove a fee-free re-creation or must retain an unknown pending config.
+    pub(crate) fn encode(self) -> Vec<u8> {
+        if let Some(schedule) = self.active {
+            Change::Snapshot { schedule, initialized: true }.encode()
+        } else {
+            match self.pending {
+                Pending::Known(schedule) => Change::Snapshot { schedule, initialized: false }.encode(),
+                Pending::Absent => vec![9],
+                Pending::Unknown => vec![10],
+            }
+        }
+    }
+
+    pub(crate) fn decode(bytes: &[u8]) -> Option<Self> {
+        match bytes {
+            [9] => Some(Self::default()),
+            [10] => Some(Self {
+                active: None,
+                pending: Pending::Unknown,
+            }),
+            _ => {
+                let change = Change::decode(bytes)?;
+                if !matches!(change, Change::Snapshot { .. }) {
+                    return None;
+                }
+                let mut state = Self::default();
+                state.apply(change);
+                Some(state)
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -801,9 +919,46 @@ mod tests {
         assert!(matches!(changes[2].2, Change::SetFee(_)));
         assert_eq!(changes[3].2, Change::Close);
         assert!(changes.windows(2).all(|pair| pair[0].0 < pair[1].0));
-        block.transactions[0].meta.as_mut().unwrap().log_messages[5] = format!("Program {program} failed: caught");
+        block.transactions[0].meta.as_mut().unwrap().log_messages.clear();
+        assert_eq!(
+            native_changes(&block, 100),
+            changes,
+            "confirmed transaction success proves root metadata changes"
+        );
+        // A wrapper can catch a failed CPI; move the same calls under it so
+        // rollback and truncated-log tests reflect actual Solana semantics.
+        let message = block.transactions[0].transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let originals = std::mem::take(&mut message.instructions);
+        let wrapper_index = message.account_keys.len() as u32;
+        message.account_keys.push(vec![9; 32]);
+        message.instructions.push(CompiledInstruction {
+            program_id_index: wrapper_index,
+            accounts: vec![],
+            data: vec![],
+        });
+        let meta = block.transactions[0].meta.as_mut().unwrap();
+        meta.inner_instructions = vec![substreams_solana::pb::sf::solana::r#type::v1::InnerInstructions {
+            index: 0,
+            instructions: originals
+                .into_iter()
+                .map(|ix| substreams_solana::pb::sf::solana::r#type::v1::InnerInstruction {
+                    program_id_index: ix.program_id_index,
+                    accounts: ix.accounts,
+                    data: ix.data,
+                    stack_height: Some(2),
+                })
+                .collect(),
+        }];
+        let wrapper = base58::encode([9; 32]);
+        meta.log_messages = vec![format!("Program {wrapper} invoke [1]")];
+        for _ in 0..4 {
+            meta.log_messages
+                .extend([format!("Program {program} invoke [2]"), format!("Program {program} success")]);
+        }
+        meta.log_messages.push(format!("Program {wrapper} success"));
+        meta.log_messages[6] = format!("Program {program} failed: caught");
         assert_eq!(native_changes(&block, 100).len(), 3);
-        block.transactions[0].meta.as_mut().unwrap().log_messages.truncate(5);
+        block.transactions[0].meta.as_mut().unwrap().log_messages.truncate(6);
         let changes = native_changes(&block, 100);
         assert_eq!(changes[2].2, Change::UnknownSetFee);
         assert_eq!(changes[3].2, Change::UnknownClose);
@@ -824,4 +979,218 @@ mod tests {
         assert_eq!(u64::from_le_bytes(data[25..33].try_into().unwrap()), 0);
         assert_eq!(455_808_433u64 / 432_000, 1055);
     }
+
+    #[test]
+    fn compact_state_retains_pending_unknowns_and_epoch_activation() {
+        let fee = EpochFee {
+            epoch: 0,
+            fee: TransferFee {
+                basis_points: 100,
+                maximum_fee: 100,
+            },
+        };
+        let mut state = State::default();
+        for change in [
+            Change::InitializeFee(fee),
+            Change::UnknownInitializeMint,
+            Change::InitializeMint,
+            Change::SetFee(EpochFee {
+                epoch: 1,
+                fee: TransferFee {
+                    basis_points: 200,
+                    maximum_fee: 200,
+                },
+            }),
+            Change::UnknownClose,
+            Change::InitializeMint,
+            Change::Close,
+            Change::InitializeMint,
+        ] {
+            state.apply(change);
+            let encoded = state.encode();
+            assert!(encoded.len() <= 40);
+            let restored = State::decode(&encoded).unwrap();
+            assert_eq!(restored.pending, state.pending);
+            assert_eq!(restored.active, state.active);
+            for epoch in [0, 1, 2, 3, u64::MAX] {
+                assert_eq!(restored.at(epoch), state.at(epoch));
+            }
+        }
+        for bytes in [vec![], vec![1], vec![3], vec![9, 0], vec![10, 0]] {
+            assert!(State::decode(&bytes).is_none());
+        }
+    }
+
+    #[test]
+    fn context_seeds_follow_native_changes_and_complete_after_all_read_slots() {
+        use substreams_solana::{
+            base58,
+            pb::sf::solana::r#type::v1::{Block, CompiledInstruction, ConfirmedTransaction, Message, Transaction, TransactionStatusMeta},
+        };
+        let older = EpochFee {
+            epoch: 0,
+            fee: TransferFee {
+                basis_points: 100,
+                maximum_fee: 100,
+            },
+        };
+        let newer = EpochFee {
+            epoch: 2,
+            fee: TransferFee {
+                basis_points: 200,
+                maximum_fee: 200,
+            },
+        };
+        let mut seed = Vec::new();
+        for (slot, mint, initialized) in [(100u64, 7u8, true), (102, 8, false), (104, 9, true)] {
+            seed.extend_from_slice(&slot.to_le_bytes());
+            seed.extend_from_slice(&[mint; 32]);
+            older.encode(&mut seed);
+            newer.encode(&mut seed);
+            seed.extend_from_slice(&[u8::from(initialized), 0, 0, 0]);
+        }
+        let mut data = vec![26, 5];
+        data.extend_from_slice(&200u16.to_le_bytes());
+        data.extend_from_slice(&200u64.to_le_bytes());
+        let program = base58::encode(token_2022::PROGRAM_ID);
+        let tx = ConfirmedTransaction {
+            transaction: Some(Transaction {
+                message: Some(Message {
+                    account_keys: vec![vec![7; 32], vec![8; 32], token_2022::PROGRAM_ID.to_vec()],
+                    instructions: vec![CompiledInstruction {
+                        program_id_index: 2,
+                        accounts: vec![0, 1],
+                        data,
+                    }],
+                    ..Default::default()
+                }),
+                ..Default::default()
+            }),
+            meta: Some(TransactionStatusMeta {
+                log_messages: vec![format!("Program {program} invoke [1]"), format!("Program {program} success")],
+                ..Default::default()
+            }),
+        };
+        let first = updates(
+            &Block {
+                slot: 100,
+                parent_slot: 99,
+                transactions: vec![tx],
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104,
+        )
+        .unwrap();
+        assert_eq!(first.changes.len(), 2);
+        assert_eq!(first.changes[1].ordinal, i64::MAX as u64);
+        assert!(first.changes.iter().all(|item| !item.mint.is_empty()));
+        let mut state = State::default();
+        for update in first.changes {
+            state.apply(Change::decode(&update.change).unwrap());
+        }
+        assert_eq!(state.at(1), Some(older.fee));
+        assert_eq!(state.at(2), Some(newer.fee));
+        let second = updates(
+            &Block {
+                slot: 102,
+                parent_slot: 100,
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104,
+        )
+        .unwrap();
+        assert_eq!(second.changes.len(), 1);
+        assert_eq!(second.changes[0].mint, vec![8; 32]);
+        let mut pending = State::default();
+        pending.apply(Change::decode(&second.changes[0].change).unwrap());
+        assert_eq!(pending.at(1), None);
+        pending.apply(Change::InitializeMint);
+        assert_eq!(pending.at(1), Some(older.fee));
+        let third = updates(
+            &Block {
+                slot: 104,
+                parent_slot: 102,
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104,
+        )
+        .unwrap();
+        assert_eq!(third.changes.len(), 1);
+        assert_eq!(third.changes[0].mint, vec![9; 32]);
+        let marker = updates(
+            &Block {
+                slot: 107,
+                parent_slot: 104,
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104,
+        )
+        .unwrap();
+        assert_eq!(marker.changes.len(), 1);
+        assert_eq!(marker.changes[0].ordinal, 0);
+        assert!(marker.changes[0].mint.is_empty());
+        assert_eq!(marker.changes[0].change, 104u64.to_le_bytes());
+        assert!(updates(
+            &Block {
+                slot: 108,
+                parent_slot: 107,
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104
+        )
+        .unwrap()
+        .changes
+        .is_empty());
+        for position in [56, 76, 77] {
+            let mut invalid = seed.clone();
+            invalid[position] = if position == 56 { 0xff } else { 2 };
+            if position == 56 {
+                invalid[57] = 0xff;
+            }
+            assert!(updates(
+                &Block {
+                    slot: 100,
+                    parent_slot: 99,
+                    ..Default::default()
+                },
+                &invalid,
+                100,
+                104
+            )
+            .is_err());
+        }
+        assert!(updates(
+            &Block {
+                slot: 100,
+                parent_slot: 99,
+                ..Default::default()
+            },
+            &seed[..seed.len() - 1],
+            100,
+            104
+        )
+        .is_err());
+        assert!(updates(
+            &Block {
+                slot: 100,
+                parent_slot: 100,
+                ..Default::default()
+            },
+            &seed,
+            100,
+            104
+        )
+        .is_err());
+    }
+
 }
