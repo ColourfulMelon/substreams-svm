@@ -52,6 +52,7 @@ enum Protocol {
   PROTOCOL_DEFITUNA = 46;
   PROTOCOL_INVARIANT = 47;
   PROTOCOL_ONEDEX = 48;
+  PROTOCOL_JUPITER_RFQ = 49;
 }
 
 message Events {
@@ -91,6 +92,9 @@ message Swap {
   bytes program_id = 2;
   uint32 stack_height = 3;
   bytes amm = 4;
+  // Actual AMM pool, orderbook market, or RFQ maker account.
+  // RFQ maker identities are distinguished by PROTOCOL_JUPITER_RFQ; each
+  // token pair remains separate in price aggregates.
   bytes amm_pool = 5;
   bytes user = 6;
   bytes input_mint = 7;

@@ -82,6 +82,8 @@ Native support means swaps are decoded directly from on-chain program instructio
 | ByReal CLMM | REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2 |
 | Jupiter Aggregator V4 | JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB |
 | Jupiter Aggregator V6 | JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 |
+| 1DEX | DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm |
+| JupiterZ RFQ Order Engine | 61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH |
 | GoonFi V2 | goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE |
 | BisonFi | BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi |
 | Manifest | MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms |
@@ -100,6 +102,14 @@ The additional native venues are normalized in `dex-swaps/src/native_venues.rs`.
 Only recognized swap instruction variants with exact scoped token-flow evidence
 are emitted. See [the Helius validation notes](docs/native-venue-validation.md)
 for verified variants, fixtures and exclusions.
+
+JupiterZ RFQ fills are normalized in `dex-swaps/src/rfq.rs` and the transfer
+verification pass. The legacy `amm_pool` field contains the actual maker account
+for protocol `jupiter_rfq` (49); it is an RFQ liquidity source, not an AMM reserve
+address. Price aggregates retain the asset pair alongside that identity. Native
+SOL wrapping/unwrapping and Token-2022 receipts require independent settlement
+evidence. The 40 finalized contract-audited fixtures and receipt proofs are in
+`dex-swaps/fixtures/swap-coverage/rfq-evidence.json`.
 
 ## Quick Build
 

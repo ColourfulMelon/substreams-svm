@@ -140,6 +140,7 @@ pub enum Protocol {
     Defituna = 46,
     Invariant = 47,
     Onedex = 48,
+    JupiterRfq = 49,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -197,6 +198,7 @@ impl Protocol {
             Protocol::Defituna => "PROTOCOL_DEFITUNA",
             Protocol::Invariant => "PROTOCOL_INVARIANT",
             Protocol::Onedex => "PROTOCOL_ONEDEX",
+            Protocol::JupiterRfq => "PROTOCOL_JUPITER_RFQ",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -251,6 +253,7 @@ impl Protocol {
             "PROTOCOL_DEFITUNA" => Some(Self::Defituna),
             "PROTOCOL_INVARIANT" => Some(Self::Invariant),
             "PROTOCOL_ONEDEX" => Some(Self::Onedex),
+            "PROTOCOL_JUPITER_RFQ" => Some(Self::JupiterRfq),
             _ => None,
         }
     }

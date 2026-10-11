@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS state_pools_aggregating_by_mint (
         'heaven' = 44,
         'stabble' = 45,
         'defituna' = 46,
-        'invariant' = 47, 'onedex' = 48
+        'invariant' = 47, 'onedex' = 48, 'jupiter_rfq' = 49
     ) COMMENT 'Protocol',
     program_id              LowCardinality(String),
     amm                     LowCardinality(String),

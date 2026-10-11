@@ -137,3 +137,37 @@ Primary new references:
 must use a separate canonical archive/replacement; live OHLC tables cannot
 safely receive appended historical replays. A live package upgrade must retain
 the saved cursor and adopt its new module hash deliberately.
+
+## Pending `.9` additions
+
+1DEX exact-input swaps (protocol 48) have 40 finalized transaction fixtures
+with both directions through one owner-verified pool. Gross taker input already
+includes optional vault-paid fees. Exact-output remains disabled pending its
+own contract and transaction evidence. See `onedex-evidence.json`.
+
+Jupiter v6 now decodes the on-chain IDL's singular `SwapEvent` and plural
+`SwapsEvent` formats. A 78-transaction sample contains 56 singular events and
+53 vectors with 147 records, including 17 repeated-program vectors. Pool
+attribution follows the exact parent route and native invocation occurrence.
+All 213 previously normalized financial legs in this sample are unchanged;
+these event records are not counted again as additional trades.
+
+JupiterZ RFQ fills (protocol 49) use the actual maker identity and declared
+taker accounts. Forty finalized transactions across seven makers independently
+match exact token/SOL debits and receipts, including ten native input wraps,
+four native output unwraps and two balance-proven Token-2022 outputs. Rent is
+excluded from swap atoms. All eight public native settlement combinations have
+core synthetic regressions; native input unwrap and native maker wallet paths
+have no finalized sample in this corpus. Evidence, source revision, IDL hash
+and raw transaction hashes are in `rfq-evidence.json`. The legacy `amm_pool`
+field denotes the real RFQ maker for this protocol; pair columns distinguish
+its separate asset markets. Consumers must not treat that address as AMM
+reserve state.
+
+The core suite passes 97 tests. These additions do not resolve Phoenix or
+OpenBook fills from existing exchange balances, DefiTuna two-hop swaps, 1DEX
+exact-output, Jupiter v4 log attribution or unknown/new program variants.
+Unsupported candidates remain diagnostic and never become guessed prices.
+
+Primary RFQ reference:
+https://github.com/jup-ag/rfq-webhook-toolkit/tree/3aa4fce515d4b5827ee2d48f08041ea706d911cd/programs/order-engine

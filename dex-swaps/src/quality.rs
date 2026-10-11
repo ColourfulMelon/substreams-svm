@@ -420,6 +420,158 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
             }
         }
 
+        // RFQ fills identify a taker and maker, not reserve-vault liquidity.
+        // Verify their exact user debit/receipt, including native SOL paths.
+        for (index, ix) in instructions.iter().enumerate() {
+            if caught_failure && !successful_invocations.contains(&(index as u32)) {
+                continue;
+            }
+            let Some(fill) = crate::rfq::layout(ix) else { continue };
+            let accounts = ix.accounts();
+            let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+            if depth == 0 {
+                continue;
+            }
+            let end = instructions
+                .iter()
+                .enumerate()
+                .skip(index + 1)
+                .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
+                .map_or(instructions.len(), |(end, _)| end);
+            let scoped: Vec<_> = transfers
+                .iter()
+                .filter(|t| t.index > index as u32 && (t.index as usize) < end && t.depth == depth + 1)
+                .collect();
+            let input_mint = accounts[6].0;
+            let output_mint = accounts[8].0;
+            let source = accounts[fill.input_source].0;
+            let destination = accounts[fill.output_destination].0;
+            let inputs: Vec<_> = scoped.iter().filter(|t| &t.source == source && &t.mint == input_mint).collect();
+            let outputs: Vec<_> = scoped.iter().filter(|t| &t.destination == destination && &t.mint == output_mint).collect();
+            if input_mint == output_mint || inputs.len() != 1 || outputs.len() != 1 {
+                continue;
+            }
+            let (input, output) = (inputs[0], outputs[0]);
+            if input.amounts[0] != fill.input_amount
+                || output.amounts[0] != fill.output_amount
+                || instructions[input.index as usize].program_id().0 != accounts[if fill.input_source == 0 { 10 } else { 7 }].0
+                || instructions[output.index as usize].program_id().0 != accounts[if fill.output_source == 1 { 10 } else { 9 }].0
+                || input.destination.as_slice() != accounts[fill.input_destination].0.as_slice()
+                || output.source.as_slice() != accounts[fill.output_source].0.as_slice()
+                || (!instructions[input.index as usize].program_id().0.iter().all(|byte| *byte == 0) && input.authority.as_slice() != accounts[0].0.as_slice())
+                || (!instructions[output.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                    && output.authority.as_slice() != accounts[1].0.as_slice())
+                || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified)
+                || [2, 3].iter().any(|position| {
+                    accounts[*position].0.as_slice() != crate::rfq::PROGRAM_ID && mints.mint_for(accounts[*position].0).as_ref() != Some(input_mint)
+                })
+                || [4, 5].iter().any(|position| {
+                    accounts[*position].0.as_slice() != crate::rfq::PROGRAM_ID && mints.mint_for(accounts[*position].0).as_ref() != Some(output_mint)
+                })
+            {
+                continue;
+            }
+            let child_instructions: Vec<_> = instructions[index + 1..end]
+                .iter()
+                .enumerate()
+                .filter(|(offset, child)| {
+                    child.stack_height() == depth + 1 && (!caught_failure || successful_invocations.contains(&((index + 1 + offset) as u32)))
+                })
+                .map(|(offset, child)| (index + 1 + offset, child))
+                .collect();
+            let mut native_proven = true;
+            for transfer in [input, output] {
+                // Native SOL credited to a WSOL account must be synced by the
+                // declared contract, rather than reporting an unsynced balance.
+                let token_destination = if transfer.index == input.index {
+                    fill.input_destination
+                } else {
+                    fill.output_destination
+                };
+                if instructions[transfer.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                    && !matches!(token_destination, 0 | 1)
+                    && child_instructions
+                        .iter()
+                        .filter(|(position, child)| {
+                            *position > transfer.index as usize
+                                && child.program_id().0 == &token::PROGRAM_ID
+                                && child.data().as_slice() == [17]
+                                && child.accounts().first().is_some_and(|a| a.0 == accounts[token_destination].0)
+                        })
+                        .count()
+                        != 1
+                {
+                    native_proven = false;
+                }
+            }
+            if fill.unwrap_input || fill.unwrap_output {
+                let temporary = accounts[11].0;
+                let initializes: Vec<_> = child_instructions
+                    .iter()
+                    .filter(|(_, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID
+                            && child.data().len() == 33
+                            && child.data()[0] == 18
+                            && child.data()[1..] == accounts[1].0[..]
+                            && child.accounts().len() >= 2
+                            && child.accounts()[0].0 == temporary
+                            && child.accounts()[1].0.as_slice() == crate::SOL_MINT
+                    })
+                    .collect();
+                let closes: Vec<_> = child_instructions
+                    .iter()
+                    .filter(|(_, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID
+                            && child.data().as_slice() == [9]
+                            && child.accounts().len() >= 3
+                            && child.accounts()[0].0 == temporary
+                            && child.accounts()[1].0 == accounts[1].0
+                            && child.accounts()[2].0 == accounts[1].0
+                    })
+                    .collect();
+                let unwraps: Vec<_> = scoped
+                    .iter()
+                    .filter(|t| {
+                        t.destination.as_slice() == temporary.as_slice()
+                            && instructions[t.index as usize].program_id().0 == &token::PROGRAM_ID
+                            && t.mint == crate::SOL_MINT
+                            && t.source.as_slice() == accounts[if fill.unwrap_input { 2 } else { 5 }].0.as_slice()
+                            && t.authority.as_slice() == accounts[if fill.unwrap_input { 0 } else { 1 }].0.as_slice()
+                            && t.amounts[0] == if fill.unwrap_input { fill.input_amount } else { fill.output_amount }
+                    })
+                    .collect();
+                if initializes.len() != 1
+                    || closes.len() != 1
+                    || unwraps.len() != 1
+                    || initializes[0].0 >= unwraps[0].index as usize
+                    || closes[0].0 <= unwraps[0].index as usize
+                    || (fill.unwrap_output && closes[0].0 >= output.index as usize)
+                {
+                    native_proven = false;
+                }
+            }
+            if !native_proven {
+                continue;
+            }
+            swaps.push(pb::Swap {
+                protocol: pb::Protocol::JupiterRfq as i32,
+                program_id: crate::rfq::PROGRAM_ID.to_vec(),
+                amm: crate::rfq::PROGRAM_ID.to_vec(),
+                // Real maker identity; protocol explicitly marks an RFQ source.
+                // Pair columns keep its different asset markets separate.
+                amm_pool: accounts[1].0.clone(),
+                user: accounts[0].0.clone(),
+                input_mint: input_mint.clone(),
+                input_amount: input.amounts[0],
+                output_mint: output_mint.clone(),
+                output_amount: *output.amounts.iter().min().unwrap(),
+                stack_height: depth,
+                source_index: Some(index as u32),
+                source_transfer_index: Some(input.index.min(output.index)),
+                ..Default::default()
+            });
+        }
+
         // Pump's multi-hop instructions expose five accounts per real venue.
         // Intermediate coins travel vault-to-vault, bypassing user ATAs. Preserve
         // every pool leg, including transfers executed by the next curve's CPI.
@@ -741,6 +893,8 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                             (quote.0.clone(), base.0.clone())
                         }
                     })
+                } else if swap.protocol == pb::Protocol::JupiterRfq as i32 {
+                    crate::rfq::layout(ix).map(|fill| (accounts[fill.input_source].0.clone(), accounts[fill.output_destination].0.clone()))
                 } else {
                     None
                 };

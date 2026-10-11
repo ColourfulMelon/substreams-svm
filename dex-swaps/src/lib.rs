@@ -21,6 +21,7 @@ mod raydium_amm_v4;
 mod raydium_clmm;
 mod raydium_cpmm;
 mod raydium_launchpad;
+mod rfq;
 mod routed_pool;
 mod spl_token_swap;
 mod token_mints;
