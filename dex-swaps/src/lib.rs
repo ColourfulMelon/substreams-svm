@@ -14,6 +14,7 @@ mod native_venues;
 mod okx;
 mod orca_whirlpool;
 mod pancakeswap;
+pub mod phoenix;
 mod pumpfun;
 mod pumpfun_amm;
 mod quality;

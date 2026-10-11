@@ -3,6 +3,7 @@ use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction
 
 fn main() {
     let directory = std::env::args().nth(1).expect("fixture directory required");
+    let phoenix_headers = std::env::args().nth(2);
     let mut files: Vec<_> = std::fs::read_dir(directory)
         .unwrap()
         .map(|entry| entry.unwrap().path())
@@ -13,6 +14,41 @@ fn main() {
         let bytes = std::fs::read(&path).unwrap();
         let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
         let signature = base58::encode(tx.hash());
+        if let Some(directory) = &phoenix_headers {
+            for (index, ix) in tx.walk_instructions().enumerate() {
+                if ix.program_id().0.as_slice() != dex_swaps::phoenix::PROGRAM_ID {
+                    continue;
+                }
+                let accounts = ix.accounts();
+                if accounts.len() < 4 {
+                    continue;
+                }
+                let path = std::path::Path::new(directory).join(format!("{}.bin", base58::encode(accounts[2].0)));
+                let Ok(header) = std::fs::read(path) else {
+                    continue;
+                };
+                let Some(market) = dex_swaps::phoenix::Market::from_owned_header(accounts[2].0, &dex_swaps::phoenix::PROGRAM_ID, &header) else {
+                    continue;
+                };
+                if let Some(fill) = dex_swaps::phoenix::decode_fill(&tx, index, &market, None) {
+                    println!(
+                        "PHOENIX\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                        signature,
+                        fill.instruction_index,
+                        fill.log_instruction_index,
+                        fill.summary_event_index,
+                        fill.slot,
+                        base58::encode(fill.market),
+                        base58::encode(fill.trader),
+                        base58::encode(fill.input_mint),
+                        fill.input_amount,
+                        base58::encode(fill.output_mint),
+                        fill.output_amount,
+                        fill.fee_quote_atoms
+                    );
+                }
+            }
+        }
         let decoded = dex_swaps::process_transaction(tx);
         println!(
             "TX\t{}\t{}\t{}",

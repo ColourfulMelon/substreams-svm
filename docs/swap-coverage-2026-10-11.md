@@ -187,3 +187,38 @@ except 17 independently proven Launchpad gross-input corrections. It adds
 12 Launchpad, two 1DEX and three RFQ legs; 277 candidate instructions and
 242 raw candidate transactions remain diagnostic. Historical live rows and
 aggregates are not changed by deploying this release.
+
+## Phoenix settlement accounting (source only, after pluto.9)
+
+`dex-swaps/src/phoenix.rs` now decodes signed Phoenix self-CPI audit batches
+against owner-verified 576-byte market headers. It supports IOC Swap /
+SwapWithFreeFunds and marketable Limit / LimitWithFreeFunds packets. Each fill
+requires a complete successful invocation chain, correct log authority, parent
+instruction/market/trader identity, contiguous event indices, complete batches,
+and a single matching FillSummary. The summary's client ID, base lots and quote
+lots must agree with the typed order and maker fill events. Lot multiplication
+uses checked arithmetic. Buy quote amounts include the taker fee; sell quote
+receipts subtract it, as the official matching engine does. Deposits, posted
+order sizes, zero-fill summaries and incomplete evidence never become trades.
+
+The public contract is pinned to
+[Ellipsis-Labs/phoenix-v1 at 6ae54af](https://github.com/Ellipsis-Labs/phoenix-v1/tree/6ae54af5f07f4d0ae8430b08cbe81d10432cd34c).
+The 74-transaction finalized RPC sample contains 17 filled swaps and 57
+unfilled marketable orders. All 17 decoded settlements match an independent
+maker-fill/fee calculation and exact scoped Tokenkeg transfers, with both trade
+directions represented across two markets. The committed subset contains all
+17 fills and three unfilled orders; details, raw hashes and market-header
+provenance are in `dex-swaps/fixtures/phoenix/evidence.json`. No finalized
+ledger-only fill was observed. Deposited-fund fills, marketable limit fills,
+both directions, split event batches and rolled-back/malformed evidence have
+core synthetic tests; those tests are not on-chain sampling evidence.
+
+This is currently **offline accounting support**, accessible through the audit
+CLI's optional second argument (a directory of `<market>.bin` owner-verified
+headers). The live normalized pricing stream is unchanged. Wiring requires a
+bounded current/future market metadata registry and a distinct ledger-settlement
+verification flag; a fill without SPL transfers must not set `transfer_verified`.
+A later account snapshot alone cannot prove a historical market incarnation;
+the current historical samples are independently bound to exact wallet CPIs.
+All 388 existing raw transaction audits remain byte-identical (962 financial
+legs, 185 diagnostics). Published pluto.9 assets are immutable and unchanged.
