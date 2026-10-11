@@ -87,11 +87,10 @@ pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> 
     let mut routed_pools = routed_pool::Tracker::new();
     let token_mints = token_mints::TokenMintLookup::new(&tx, tx_meta);
 
-    for instruction in tx.walk_instructions() {
-        routed_pools.observe(&instruction);
-        if let Some(swap) = jupiter_v6::decode_instruction(&tx, &instruction, &routed_pools) {
-            swaps.push(swap);
-        }
+    let instructions: Vec<_> = tx.walk_instructions().collect();
+    for (index, instruction) in instructions.iter().enumerate() {
+        routed_pools.observe(instruction);
+        swaps.extend(jupiter_v6::decode_instruction(&tx, index, &instructions));
         byreal_state.handle_instruction(&instruction, &token_mints);
         if let Some(swap) = pumpfun::handle_instruction(&mut pumpfun_pending, &instruction) {
             swaps.push(swap);

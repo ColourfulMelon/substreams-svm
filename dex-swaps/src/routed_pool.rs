@@ -1,31 +1,10 @@
-//! Pool-account lookup for AMMs reached via Jupiter CPI.
+//! Pool-account lookup for routed AMM invocations.
 //!
-//! Jupiter v4/v6 Swap events carry the routed AMM program but not the pool
-//! account. As we walk a transaction's instructions, [Tracker::observe] feeds
-//! each non-Jupiter ix to the per-AMM `extract_pool` helper and remembers the
-//! pool keyed by program id; Jupiter handlers later look it up via
-//! [Tracker::lookup] when emitting their swap row.
-//!
-//! The dispatch list mirrors which AMMs have per-AMM pool decoders in this
-//! crate. Add new AMMs as their decoders land.
-//!
-//! ## Per-program latest-wins
-//!
-//! `Tracker` stores a single pool per program id; `observe` overwrites prior
-//! observations. This is correct for **Jupiter v6**: each Swap event self-CPI
-//! is emitted immediately after the routed AMM's inner CPI in DFS walk order,
-//! so by the time the v6 handler does `lookup` the latest pool for `event.amm`
-//! is the right one — even across multi-hop routes that revisit the same AMM
-//! program (e.g. Raydium → Orca → Raydium).
-//!
-//! **Jupiter v4** is more fragile: its Swap log lines are processed in a
-//! second pass over `log_messages` after the walk completes, so a direct
-//! same-program swap occurring later in the same tx than a v4-routed CPI can
-//! overwrite the entry the v4 row should reference, causing misattribution.
-//! Jupiter v4 traffic is two orders of magnitude smaller than v6 and rarely
-//! interleaves with same-AMM direct activity, so this gap is documented but
-//! not yet fixed; the proper fix is per-instruction history rather than a
-//! per-program latest-wins map.
+//! Jupiter v6 binds each legacy or plural event record to instruction-scoped
+//! history through `extract_pool`, including repeated visits to one program.
+//! This legacy latest-wins tracker remains for the v4 second-pass log handler;
+//! its interleaved same-program routes still require per-instruction log
+//! attribution. The dispatch list covers recognized native swap layouts.
 
 use std::collections::HashMap;
 
@@ -44,7 +23,7 @@ impl Tracker {
         let Ok(program_id) = TryInto::<[u8; 32]>::try_into(ix.program_id().0.as_slice()) else {
             return;
         };
-        if let Some(pool) = dispatch(ix) {
+        if let Some(pool) = extract_pool(ix) {
             self.pools.insert(program_id, pool);
         }
     }
@@ -54,7 +33,7 @@ impl Tracker {
     }
 }
 
-fn dispatch(ix: &InstructionView) -> Option<Vec<u8>> {
+pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
     crate::byreal::extract_pool(ix)
         .or_else(|| crate::pancakeswap::extract_pool(ix))
         .or_else(|| crate::pumpfun_amm::extract_pool(ix))
@@ -80,8 +59,7 @@ pub(crate) mod test_fixture {
     //! gets its own account_keys slot). The instruction's `accounts` list
     //! references those by index.
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction,
-        TransactionStatusMeta,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
 
     /// Fee payer placeholder — `account_keys[0]` in real Solana txs is the
@@ -242,7 +220,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 0, 15);
         let mut data = METEORA_AMM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // in_amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_out_amount
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_out_amount
         let tx = test_fixture::make_tx(meteora::amm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -259,7 +237,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 1, 14);
         let mut data = METEORA_DAAM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
         let tx = test_fixture::make_tx(meteora::daam::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -276,9 +254,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 13);
         let mut data = BYREAL_SWAP_V2.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(byreal::clmm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -295,9 +273,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 10);
         let mut data = PANCAKESWAP_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(pancakeswap::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -314,9 +292,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 14);
         let mut data = RAYDIUM_CLMM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(raydium::clmm::v3::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -333,7 +311,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 3, 14);
         let mut data = RAYDIUM_CPMM_SWAP_BASE_INPUT.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
         let tx = test_fixture::make_tx(raydium::cpmm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -351,10 +329,10 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 14);
         let mut data = ORCA_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit
-        data.push(1);                                      // amount_specified_is_input
-        data.push(1);                                      // a_to_b
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit
+        data.push(1); // amount_specified_is_input
+        data.push(1); // a_to_b
         let tx = test_fixture::make_tx(orca::whirlpool::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -373,8 +351,8 @@ mod tests {
         let accounts = accounts_with_pool(pool, 4, 18);
         let mut data = LAUNCHPAD_BUY_EXACT_IN.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
-        data.extend_from_slice(&0u64.to_le_bytes());       // share_fee_rate
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
+        data.extend_from_slice(&0u64.to_le_bytes()); // share_fee_rate
         let tx = test_fixture::make_tx(raydium::launchpad::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {

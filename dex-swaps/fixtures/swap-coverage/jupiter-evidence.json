@@ -1,0 +1,3041 @@
+{
+  "ownerVerifiedIdl": {
+    "program": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+    "owner": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+    "sha256": "068a705a24074aecfb2a165910cfed946e8ac5998286320066004ee6babeed74",
+    "events": [
+      {
+        "name": "SwapEvent",
+        "discriminator": [
+          64,
+          198,
+          205,
+          232,
+          38,
+          8,
+          113,
+          226
+        ]
+      },
+      {
+        "name": "SwapsEvent",
+        "discriminator": [
+          152,
+          47,
+          78,
+          235,
+          192,
+          96,
+          110,
+          106
+        ]
+      }
+    ],
+    "types": [
+      {
+        "name": "SwapEvent",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "amm",
+              "type": "pubkey"
+            },
+            {
+              "name": "input_mint",
+              "type": "pubkey"
+            },
+            {
+              "name": "input_amount",
+              "type": "u64"
+            },
+            {
+              "name": "output_mint",
+              "type": "pubkey"
+            },
+            {
+              "name": "output_amount",
+              "type": "u64"
+            }
+          ]
+        }
+      },
+      {
+        "name": "SwapEventV2",
+        "docs": [
+          "Changing these fields breaks downstream IDL users and Ultra, which parses",
+          "this event by hardcoded byte offset. Ship the matching `parseSwapEvents`",
+          "change in jup-ag/swap-api first."
+        ],
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "input_mint",
+              "type": "pubkey"
+            },
+            {
+              "name": "input_amount",
+              "type": "u64"
+            },
+            {
+              "name": "output_mint",
+              "type": "pubkey"
+            },
+            {
+              "name": "output_amount",
+              "type": "u64"
+            },
+            {
+              "name": "amm",
+              "type": "pubkey"
+            }
+          ]
+        }
+      },
+      {
+        "name": "SwapsEvent",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "swap_events",
+              "type": {
+                "vec": {
+                  "defined": {
+                    "name": "SwapEventV2"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "routeAuthorities": [
+      {
+        "name": "exact_out_route",
+        "discriminator": [
+          208,
+          51,
+          239,
+          151,
+          123,
+          43,
+          237,
+          92
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "route",
+        "discriminator": [
+          229,
+          23,
+          203,
+          151,
+          122,
+          227,
+          173,
+          42
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "route_with_token_ledger",
+        "discriminator": [
+          150,
+          86,
+          71,
+          116,
+          167,
+          93,
+          14,
+          104
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "shared_accounts_exact_out_route",
+        "discriminator": [
+          176,
+          209,
+          105,
+          168,
+          154,
+          125,
+          69,
+          62
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "shared_accounts_route",
+        "discriminator": [
+          193,
+          32,
+          155,
+          51,
+          65,
+          214,
+          156,
+          129
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "shared_accounts_route_with_token_ledger",
+        "discriminator": [
+          230,
+          121,
+          143,
+          80,
+          119,
+          159,
+          106,
+          170
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 2
+          }
+        ]
+      },
+      {
+        "name": "exact_out_route_v2",
+        "discriminator": [
+          157,
+          138,
+          184,
+          82,
+          21,
+          244,
+          243,
+          36
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 0
+          }
+        ]
+      },
+      {
+        "name": "route_v2",
+        "discriminator": [
+          187,
+          100,
+          250,
+          204,
+          49,
+          196,
+          175,
+          20
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 0
+          }
+        ]
+      },
+      {
+        "name": "shared_accounts_exact_out_route_v2",
+        "discriminator": [
+          53,
+          96,
+          229,
+          202,
+          216,
+          187,
+          250,
+          24
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 1
+          }
+        ]
+      },
+      {
+        "name": "shared_accounts_route_v2",
+        "discriminator": [
+          209,
+          152,
+          83,
+          147,
+          124,
+          254,
+          216,
+          233
+        ],
+        "accounts": [
+          {
+            "name": "user_transfer_authority",
+            "position": 1
+          }
+        ]
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "signature": "26JoNkcwsfCRbGLVbda1d8c5vcvbauFtKX4tpEJmkReo8LVFNMPEbdQRFMKBEKTd8B8dxYJMyj6x78JhcmYJpU58",
+      "events": [
+        {
+          "index": 32,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "3iUTyNYW6xKv5kZUjtbrEDTsuJTrSVwvB3bQtxkLpump",
+              "inputAmount": "500000000000",
+              "outputMint": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3",
+              "outputAmount": "373081"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "SKHYhSjuRWHgikq8eRKbtBbpABgJSkd7ytQV14i9EQ3",
+              "inputAmount": "373081",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "570853190"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "570853190",
+              "outputMint": "Gyk9Z93Ri2JUjqES9HTpc7pxCJTLD7vhBhEjBhyApump",
+              "outputAmount": "249429904668"
+            }
+          ]
+        }
+      ],
+      "fixture": "247.transaction.pb",
+      "rawSha256": "f2d2978d42efb1076f1aa1a93c85a60b5904e2b086052b30ed1a7f5a547e2959"
+    },
+    {
+      "signature": "28t1f4MaFuBSDRDA79RLF2oVXzHhWMkPhwtRUyjof8oFxoWFcGTpMSMWKQUHdiwHEgrYnRmNNQYA5JzZ6VyFWuSh",
+      "events": [
+        {
+          "index": 18,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "1900719",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "1902497"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "1902497",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "16949280"
+            }
+          ]
+        }
+      ],
+      "fixture": "248.transaction.pb",
+      "rawSha256": "f1262682c2217bbe452ab97e5216320aa5245f575bd8303bdad2efbdd3d3090c"
+    },
+    {
+      "signature": "2AR8vufrACEvNq3EthUdm6dVbEYvVNAPumA6yaqMYkVkYF6h88EXM6UchWXXjEBHDGh76utKRxXL2yDroTpHgHWz",
+      "events": [
+        {
+          "index": 7,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "100700000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "100607915"
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "100607915",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "231225088"
+            }
+          ]
+        },
+        {
+          "index": 18,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "231225088",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "20254270630"
+            }
+          ]
+        }
+      ],
+      "fixture": "249.transaction.pb",
+      "rawSha256": "4ca95aad80a94109a681a5f01a6619710fdc7aeb8550c398e13c94c861fcc4ae"
+    },
+    {
+      "signature": "2BHuFJCEMPth2V9nGd6svxsQzuVMLPzgnF3HhvY8o2EUbJ7xcmv2jRc2mGLwC1H29Zupipz3k1M69GrsGR7JfyXV",
+      "events": [
+        {
+          "index": 10,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "99890000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "99798650"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "99798650",
+              "outputMint": "3ZLekZYq2qkZiSpnSvabjit34tUkjSwD1JFuW9as9wBG",
+              "outputAmount": "17357322358"
+            }
+          ]
+        }
+      ],
+      "fixture": "250.transaction.pb",
+      "rawSha256": "51763cbfe6a0c913982e95437d69a03d7a5c2f28eb30ec4689066f4661c1869d"
+    },
+    {
+      "signature": "2CiH2YRJpsLKSmm8ZeiJbEiJnfC6FEQdni9ncKw6iPa1SMtm4RDYFwazXTjFmkUwGEpnhUJSrHVEUBf5Xxq5PQsE",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+              "inputAmount": "4163012",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "90675482"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "90675482",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10165506"
+            }
+          ]
+        }
+      ],
+      "fixture": "251.transaction.pb",
+      "rawSha256": "79681b1b448348ceafc7f94048e7005f60d189207dca8e11d03720bf2b600e52"
+    },
+    {
+      "signature": "2JDVQdcUKHFUTFE8kpYT4envwe6KYESaS21421aHtLmjNBSjp5hv1uCpSPe4ahc5ACVkAitYncLecPNsrBjZM1pA",
+      "events": [
+        {
+          "index": 26,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "DoVAVzViX8Bjy3r15nwikSaSbzE6dV4ovd28aWpJpump",
+              "inputAmount": "48036590806",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "526691023"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "526691023",
+              "outputMint": "HsprHxBRgiVaQdRf3TnKNuZZtaX9JUSPgMFdAkk6pump",
+              "outputAmount": "32063896020"
+            }
+          ]
+        }
+      ],
+      "fixture": "252.transaction.pb",
+      "rawSha256": "efb5efd4720d94bec20fcdd4dfeb0d564609c570180e4fe1ceadd8dc3c1d2e0d"
+    },
+    {
+      "signature": "2PKckhMuAaBJYnmWUMXgqg3NGEiNvr3bwuQRHhSz3wGBq6R7wXoJVA7bEmmbiWH6kpoxRjCxXVSvnjVVKSKLN1AC",
+      "events": [
+        {
+          "index": 27,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "8758486",
+              "outputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+              "outputAmount": "28169777"
+            },
+            {
+              "amm": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+              "inputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+              "inputAmount": "28169777",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "34170245"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "6713139",
+              "outputMint": "gCMY7ydkBAfAdG3FQsMacdXFU3e5UPBuchxRm4JAVEN",
+              "outputAmount": "14669433551892"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "gCMY7ydkBAfAdG3FQsMacdXFU3e5UPBuchxRm4JAVEN",
+              "inputAmount": "14669433551892",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "26195787"
+            }
+          ]
+        }
+      ],
+      "fixture": "253.transaction.pb",
+      "rawSha256": "3f8fb35283ef44dd72a7412c92b688d1b8e6d5a0372b92595331b108f61709b1"
+    },
+    {
+      "signature": "2Rud76Cvpta7ji6vRc82gDStSk4jSrMuM52Z9Nog5656xihGBT49hfBccuCEi6jJFiDkAF7HxenfCXMM82sx5NEM",
+      "events": [
+        {
+          "index": 18,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "446954217",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "50125190"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "50125190",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "8645255260"
+            }
+          ]
+        }
+      ],
+      "fixture": "254.transaction.pb",
+      "rawSha256": "9ac0fb93ebbc944f339a59c5be58fe587653c2975c152d3b1819d5e1e6d1efea"
+    },
+    {
+      "signature": "2SVuWUPg7QfTbGM6fFUcd6wT8HjE587LoZRKizvPo7q9owBRB4QbHASE7aE56pSt1jG7sPg1VQFekc2LzK1eQ2Jf",
+      "events": [
+        {
+          "index": 11,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+              "inputAmount": "2572471482481",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "89980226"
+            }
+          ]
+        },
+        {
+          "index": 15,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "89980226",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "90064403"
+            }
+          ]
+        }
+      ],
+      "fixture": "255.transaction.pb",
+      "rawSha256": "d42bf512f3c74c4f68f39b3ad5e3845a7bbd2d327e2b9c894fc62d4234a88461"
+    },
+    {
+      "signature": "2Und2aMuu5Was4FfuJqy4TUyoAhUf5PyEtaqsjJLcz2ovUvX7B1287XT45Yr6eUL2eJPeAMaE3c1XG43sAsAH135",
+      "events": [
+        {
+          "index": 24,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "4077166",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "36372599"
+            },
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "2407908",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "2410116"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "2410116",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "21477129"
+            }
+          ]
+        }
+      ],
+      "fixture": "256.transaction.pb",
+      "rawSha256": "6abaf4019766af070085cf42229d83a59a3ab34f7af462dfa86e27ee2247e9c0"
+    },
+    {
+      "signature": "2V2xikHbfQL329Ab2KBTXQgmP3MbP5zebHPMJi8TSK3qfRfLJ2Ldf9n3S2MU3sjwsAG8xXRXMUAevAvaj6wqDM6y",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9",
+              "inputMint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+              "inputAmount": "18801383",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "20000976"
+            }
+          ]
+        }
+      ],
+      "fixture": "257.transaction.pb",
+      "rawSha256": "768a616fe254d3d5398c66ae2bd19c65cf168017060aa99b9a7e6e73b88a50b3"
+    },
+    {
+      "signature": "2cAyerFtXTGWA6PVdMyzeg5wDxavZczv6ZA92hXz3KB7JjwsUKJwE8ZBTEDBg7CzUB2wqe2iLu2BZbMtRrAfrzr8",
+      "events": [
+        {
+          "index": 9,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+              "inputMint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+              "inputAmount": "59211570",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "10256800"
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "10256800",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10246656"
+            }
+          ]
+        }
+      ],
+      "fixture": "258.transaction.pb",
+      "rawSha256": "c576ec09f3609999a3bbda53530634983a67099701ca567ee6e19b2301bd12eb"
+    },
+    {
+      "signature": "2eZ2s8XQ5B6BPTWMh5UtPPXabYTKTWnqf9LhbQZJsuFcf8EhPfv6MHTFmn6PdK8MjDJaPdiYnwjpicVm6vTzNyQZ",
+      "events": [
+        {
+          "index": 24,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "26303142",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "2951772"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "2951772",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2949047"
+            },
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "295644747",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "33128541"
+            }
+          ]
+        }
+      ],
+      "fixture": "259.transaction.pb",
+      "rawSha256": "8d5569aef1011f7f176a804a331ae660bdf37ef7e78e39166ea79926783714b3"
+    },
+    {
+      "signature": "2fBaXYZjjPo6csdYW7N2STgetTpeMKnFE2zYqedry52hY5RLdqUMPd41zmYm32hgR7xi7ME7ZfeHYU6X2fQFg93T",
+      "events": [
+        {
+          "index": 7,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "49999963",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "114923940"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "114923940",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "10040029419"
+            }
+          ]
+        }
+      ],
+      "fixture": "260.transaction.pb",
+      "rawSha256": "166a0b91d40454b2eed003e736f4321b4cdccac56e2f0c9d4c43af8350f6c798"
+    },
+    {
+      "signature": "2kyXYcVqe4oUXwtJBcv18nn9XbPfCL3Vm7ivaYtuQazfmZWJ1nd37WBN6hbRjSKA3g4hiRrjNGL3qKjmssLZW5t1",
+      "events": [
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "8wXtPeU6557ETkp9WHFY1n1EcU6NxDvbAggHGsMYiHsB",
+              "inputAmount": "1613808775179",
+              "outputMint": "EHmZM5QD7NFpu6hm3o8yYSA6EhYYunHL21fzN2ucpump",
+              "outputAmount": "596249565"
+            },
+            {
+              "amm": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+              "inputMint": "EHmZM5QD7NFpu6hm3o8yYSA6EhYYunHL21fzN2ucpump",
+              "inputAmount": "596249565",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "7129056"
+            },
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "7129056",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "799382"
+            }
+          ]
+        }
+      ],
+      "fixture": "261.transaction.pb",
+      "rawSha256": "56d3e5dd88d94382a7760393fcc6adaabec10499d4c3a70c2f00cc503c399d8a"
+    },
+    {
+      "signature": "2opyvjdj5Kz37K49cZK68fA8htJLLzKHdjeBa6ge8k24nCxHMJCAsLhqTM61nteq1xzh9azZdGb9a6Cj3A7qLpo9",
+      "events": [
+        {
+          "index": 22,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2560365",
+              "outputMint": "VaXJrKcbLXkAst8nZ1a9QKeaYJ5PSoArJGu2jehpump",
+              "outputAmount": "359384243140402"
+            }
+          ]
+        }
+      ],
+      "fixture": "262.transaction.pb",
+      "rawSha256": "cffceb7c1d2f203e03cbf9eb07326655c762156354afb1fb1bdcec9906d0ade8"
+    },
+    {
+      "signature": "318q2q54wCvVESA3XVkD8H84cKEbNSq6EesAzHqmanrvvGEPGMfsFmzTfRXiyj5U2YBjThrNXAYyGd6VsH4bAagb",
+      "events": [
+        {
+          "index": 22,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "96043151",
+              "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+              "outputAmount": "10763184"
+            },
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+              "inputAmount": "10763184",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10765212"
+            }
+          ]
+        }
+      ],
+      "fixture": "263.transaction.pb",
+      "rawSha256": "a934bab9bdb76bc8aec650f3f23002978e7fff1dba6ac002c54a7ca8dc244e67"
+    },
+    {
+      "signature": "31zzLRya9TcQCJuooLK8soNWMFxihB8HJqyTv8qvShVTqUKf7dYHx75MmjQfr1Fy8t5naYfDnXZc4h9thKspQ5US",
+      "events": [
+        {
+          "index": 29,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "E447xHwXKMLUhqriexGwmjmMPn7YSsvyRKv9L2Tdpump",
+              "inputAmount": "731670846885",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "581007281"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "581007281",
+              "outputMint": "CcMe3FqX9zrAX72uzT1dEb9kRiQXwuyvcb5TPi6Hpump",
+              "outputAmount": "1186305362294"
+            }
+          ]
+        }
+      ],
+      "fixture": "264.transaction.pb",
+      "rawSha256": "df33a4fbd7c9f44ce97e2cb4964a97cd4c737324efb816d8a1dfcc9cec5af107"
+    },
+    {
+      "signature": "33pJV28drzEGc5Tf6nhixqFN2JyTV4onAs1pvu8nFhdtRGoydBG2dqkHANtAwdbPeiTahwGsCvvEX867z4Xcssuq",
+      "events": [
+        {
+          "index": 20,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "6Mix12LiHrQFojaQEnfPUC65Qkwd6X4Y5Qg93oFbordr",
+              "inputAmount": "17389213922",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "30565567"
+            },
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "30565567",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "272511671"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "6Mix12LiHrQFojaQEnfPUC65Qkwd6X4Y5Qg93oFbordr",
+              "inputAmount": "507964681004",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "7914111460"
+            }
+          ]
+        }
+      ],
+      "fixture": "265.transaction.pb",
+      "rawSha256": "c9c7c586b8f72a94faf97ab5aac7b0756cd25bf1251f96c0c9e5a692e52e1477"
+    },
+    {
+      "signature": "37dGcdwzMJkw42e3LCNF4U2GfwjSfcZBLBAWmVNmNvNrDZHUbGfiMNPydyLdVCPVJP83o7UPgF9zjyZnd5f4X6WU",
+      "events": [
+        {
+          "index": 9,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "1139661436",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "10165980087"
+            }
+          ]
+        },
+        {
+          "index": 16,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "10165980087",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "1139686117"
+            }
+          ]
+        }
+      ],
+      "fixture": "266.transaction.pb",
+      "rawSha256": "f77201faba9207f5002f3a6da569fd871aec1a21c45b66a2d0970f1a116482e7"
+    },
+    {
+      "signature": "3BKvVpWoqP4x6Vcyg2ewiHGkJv93SHtu9rq9SZfDwKEruZZ8uAbdPnXRJhQnR9r3VSVbTePPEcprge2uP5tq1ynW",
+      "events": [
+        {
+          "index": 25,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1538009054",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "172455247"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "172455247",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "29813141504"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "inputAmount": "29813141504",
+              "outputMint": "DzMwArmdzPqcqgvyqAmTxy79XdA9NwK9mMteqWLJpump",
+              "outputAmount": "196670425959"
+            }
+          ]
+        }
+      ],
+      "fixture": "267.transaction.pb",
+      "rawSha256": "29198d481579886bc3d01890d37371da380706957e0d7980a0fe9b07ee98c592"
+    },
+    {
+      "signature": "3CYvSZSqCuUC7gmUToHhP5HDqBywQcpDCBcjwuq5XzxwCzJHXZyK33wSt1h7UHpQncd53iKNL4QaPjCsHNzrUrJZ",
+      "events": [
+        {
+          "index": 23,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "Bz5N9wrcxDw2YTf8tQkG8PJzdbUW89ZNWLWbdqA2pump",
+              "inputAmount": "493456673825",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "123958002"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "123958002",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "13893281"
+            },
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "13893281",
+              "outputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+              "outputAmount": "13897505"
+            }
+          ]
+        }
+      ],
+      "fixture": "268.transaction.pb",
+      "rawSha256": "d9e5f434e6119a72a328ac7f50a5c80d0afdec1d97793fe100dbeb27686851a5"
+    },
+    {
+      "signature": "3DxMgHgNADYwYjbqTGWWfsCHEXXiPRNUtvvTkWM9apNCkaQH8q24mJ5zLjUNSpEze1wkvZbAVtCZ3ALTU4uXQP8U",
+      "events": [
+        {
+          "index": 15,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "31749715",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "283168166"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "283168166",
+              "outputMint": "DuMbhu7mvQvqQHGcnikDgb4XegXJRyhUBfdU22uELiZA",
+              "outputAmount": "65430241397954"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "3243909",
+              "outputMint": "DuMbhu7mvQvqQHGcnikDgb4XegXJRyhUBfdU22uELiZA",
+              "outputAmount": "6684043976971"
+            }
+          ]
+        }
+      ],
+      "fixture": "269.transaction.pb",
+      "rawSha256": "9208bf0065b67bb8e8ac68b31c8ca38f711be5980ad17e7f25900641c43b2231"
+    },
+    {
+      "signature": "3PZkGgHcPKMR7UJRF7iZ6LWhGKRtLQJHfWpJgkdbyPnaiFHe3hT6EEowXZG8Ai4nnASy1EE1BHguUW9ztWqwkAJN",
+      "events": [
+        {
+          "index": 36,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "5729941",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "642360"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "19075002",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "2140767"
+            },
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "2140767",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2138747"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "2781107",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "480744511"
+            }
+          ]
+        }
+      ],
+      "fixture": "270.transaction.pb",
+      "rawSha256": "a5df3098f7f3386eaaa4ba0dae8e0dc1332cfe0bbe9946b8cd12e63c1540d762"
+    },
+    {
+      "signature": "3bUagXSqnZzM36aao5HoNDPCD3iPsMMynZepXmCNcrgcZyGcwCyftzSjNYvFK3pCFV2LUawegW2HsBLLBungqPuR",
+      "events": [
+        {
+          "index": 15,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "27933915",
+              "outputMint": "DuMbhu7mvQvqQHGcnikDgb4XegXJRyhUBfdU22uELiZA",
+              "outputAmount": "58233559736293"
+            },
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "9906664",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "88280598"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "88280598",
+              "outputMint": "DuMbhu7mvQvqQHGcnikDgb4XegXJRyhUBfdU22uELiZA",
+              "outputAmount": "20433301661676"
+            }
+          ]
+        }
+      ],
+      "fixture": "271.transaction.pb",
+      "rawSha256": "ca280399a1888e824e1fb91bf2f78d2dd7d811b021df4712e9bd5e92b4497bed"
+    },
+    {
+      "signature": "3cSD8SJTpoAUjKMxh9heQhjBBDVY5XaHhrgQmBG9dB7BzFdHuehnm61eryfL47DQptPGeCN8iNkLSK3hD3i8kAZu",
+      "events": [
+        {
+          "index": 22,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "102142521",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "11443419"
+            },
+            {
+              "amm": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "3850902",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "431715"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "11875134",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "2053443424"
+            },
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "27718479",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "537352003"
+            }
+          ]
+        }
+      ],
+      "fixture": "272.transaction.pb",
+      "rawSha256": "a03eb6225c76aeb9c32d1111d3d6fc8fec113224c1449b54fdfdde2d89859bd7"
+    },
+    {
+      "signature": "3cZSBtFd9hn1kWUnxREZGKtEwRPWEeLJDh4aDPQ62aFiX2qa94kJMziJf95VjatWs2TMcjy4FsKLKPatkibtB5yF",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+              "inputAmount": "4163011",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "90675260"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "90675260",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10162474"
+            }
+          ]
+        }
+      ],
+      "fixture": "273.transaction.pb",
+      "rawSha256": "7841cd3859cf3ae731bd2cf8fd4366ecf3616ee617cbac39f44b2338f4add0dd"
+    },
+    {
+      "signature": "3fp89VCw6sDr8jWi7rDE8ywDZpfhmYurWCx2bc7pKcBxHhajdFBSBRd9dxoiLpDdXnLs1DBwHJ1H3Q9J9GiCgb5t",
+      "events": [
+        {
+          "index": 17,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "8975172",
+              "outputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "outputAmount": "898623"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "inputAmount": "898623",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "1006224"
+            }
+          ]
+        }
+      ],
+      "fixture": "274.transaction.pb",
+      "rawSha256": "5f7411b4de8e27185236580b3fce3425068aa0fc3101c93a18bd58ced7a8b69b"
+    },
+    {
+      "signature": "3oFCpf5V8hrzFaCMnwTcpKhpDXajeFUmCuHK7BFi9Z9BnQdqys5RrphiUUk1zc1iQUAmtTVzh49UMnf7P3Dy9ajV",
+      "events": [
+        {
+          "index": 7,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "49999963",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "445833009"
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "445833009",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "114136662"
+            }
+          ]
+        },
+        {
+          "index": 16,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "114136662",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "10024894927"
+            }
+          ]
+        }
+      ],
+      "fixture": "275.transaction.pb",
+      "rawSha256": "86d707253de384b0517af8ba9dad7ec42d04479855c6227791531719b6560ce3"
+    },
+    {
+      "signature": "3viS2uctQpYbJ5N63ePSAuKwiWrEgC3hTpWqD5dPimRSHm4M9YwUwFhXLxCdWFJ2597eSQPcf27SdA8QMuB6xH3d",
+      "events": [
+        {
+          "index": 13,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "3847849",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "1674142"
+            }
+          ]
+        },
+        {
+          "index": 17,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "1674142",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "14920446"
+            }
+          ]
+        },
+        {
+          "index": 21,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "14920446",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "1672776"
+            }
+          ]
+        }
+      ],
+      "fixture": "276.transaction.pb",
+      "rawSha256": "7b150d64a9d0df921127d6f0d6875ec2a9f5479c126fd8274b0a40a2a2eadf8a"
+    },
+    {
+      "signature": "3zKK1rrzgrdTqdwpyQciMdAYfS1D1AptPnN8XqUQwUwaYK4726np7i9f3LoZEoyopJ397FHeeAsQAYBt8jHJqRh4",
+      "events": [
+        {
+          "index": 13,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "1447618",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "630035"
+            }
+          ]
+        },
+        {
+          "index": 17,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "630035",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "630624"
+            }
+          ]
+        },
+        {
+          "index": 23,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "630624",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "5616845"
+            }
+          ]
+        }
+      ],
+      "fixture": "277.transaction.pb",
+      "rawSha256": "4555f9ec80d13c2e87895d92e520e8f5d80210fbaa18821b14fc718c9433718b"
+    },
+    {
+      "signature": "41qEXYZMCgDCh4jbijdewT2frDAFNojwTNx2AZSP4Mtt8AFuqyYAXs8ZGi3mZuDjargBq27UeCYZB4x4LzoXJY3w",
+      "events": [
+        {
+          "index": 19,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "715372165",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "80129837"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "80129837",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "13856019387"
+            },
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "23801389",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "461339161"
+            }
+          ]
+        }
+      ],
+      "fixture": "278.transaction.pb",
+      "rawSha256": "1138d87139b4fe5475db380d05a4cbd67a8b387a7f3bff46b5b81da1d3729a35"
+    },
+    {
+      "signature": "45PLxUsjFXUkncaiUPU2YR44Togmy9fC3tNawgse7XzawE35raVZTn1TxJXXdsXqCTEw5rCvNR8aspHVabvCnDiu",
+      "events": [
+        {
+          "index": 15,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "392943",
+              "outputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+              "outputAmount": "1257198"
+            }
+          ]
+        },
+        {
+          "index": 19,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+              "inputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+              "inputAmount": "1257198",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "1524994"
+            }
+          ]
+        },
+        {
+          "index": 23,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1524994",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "170960"
+            }
+          ]
+        }
+      ],
+      "fixture": "279.transaction.pb",
+      "rawSha256": "a9bb897726ae1ea39873bf99235b3c5613a6aeed2021cddd87e64289ba87f8e7"
+    },
+    {
+      "signature": "45ziFd5srLwuGHW9cgUZHxLTgwXyqWQkH7YZPik4tNroQAd3v9PFC8x6xYPW6f83bBQ3hqoKNbhxHDVSucn5CvWe",
+      "events": [
+        {
+          "index": 10,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+              "inputMint": "GJfqiiW6wFQEPs3jMEDfMkvZg7VN8YTL6E4sfjoapump",
+              "inputAmount": "68509649912",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "19721349"
+            }
+          ]
+        },
+        {
+          "index": 14,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "19721349",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2210253"
+            }
+          ]
+        }
+      ],
+      "fixture": "280.transaction.pb",
+      "rawSha256": "55afb82f7b03cfbc33955ca7cd76beec7d867b8d7b90ac732af107ac0b5bb857"
+    },
+    {
+      "signature": "46Y3MmrpnRzdqfUZSLFaXjndyAanSupxBbNVkUHyG9zcJhEqh5hq6rG9C9X7Px3CRArLNyfJ4jpUDrcmQd87Fvcp",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "J3NKxxXZcnNiMjKw9hYb2K4LUxgwB6t1FtPtQVsv3KFr",
+              "inputAmount": "4337171300",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "147034293"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "147034293",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "16487349"
+            }
+          ]
+        }
+      ],
+      "fixture": "281.transaction.pb",
+      "rawSha256": "8acb582f9cfac14bae0c60673aa277c1cb3571f95080397886d398b20e117b15"
+    },
+    {
+      "signature": "487unhrSwmAcauDsYN5qid5VxGwBYQvoneXkaTpLjAmJyA3oWAG7rhwrRnzZAkZ4V1nrHLjxPkFqKQhP9kKQbAY4",
+      "events": [
+        {
+          "index": 26,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "872121179",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "97710150"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "19618268",
+              "outputMint": "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+              "outputAmount": "466840"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+              "inputAmount": "466840",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2198048"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "99908198",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "17273723217"
+            }
+          ]
+        }
+      ],
+      "fixture": "282.transaction.pb",
+      "rawSha256": "d7b5745cbcd9f296163ed6b09c70319e4ee9c9f3436e9368f2c1455278263883"
+    },
+    {
+      "signature": "48NzqE4AubNrBmPynusMKR2yNuHjnzWoaz19Y6duLL2zjHKxhBERtwWWxZm54jHR8zZNrobZ45mjcEYeh4s3RoWS",
+      "events": [
+        {
+          "index": 16,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2229348617",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "249806124"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "249806124",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "43144408290"
+            }
+          ]
+        }
+      ],
+      "fixture": "283.transaction.pb",
+      "rawSha256": "18bdcbefa41c97030691999d3b9557043d70b0866ad88295a6080a14e9f5bce3"
+    },
+    {
+      "signature": "4ArFS6t5gUU9Y3t2DQTcqK2DESeEH1iHfcoBahc99Da8gUmUuEELYVbSxD374kRQNsq1mnoA1cgp9qz7nm2L8nrj",
+      "events": [
+        {
+          "index": 20,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "64000000",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "570084381"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "424427821",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "108644512"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "145656560",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "37278070"
+            },
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "145922582",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "12802767538"
+            }
+          ]
+        }
+      ],
+      "fixture": "284.transaction.pb",
+      "rawSha256": "74774a4df219565d4de9e8a04a57103eba34696e107e902238ce4e9922fffb8f"
+    },
+    {
+      "signature": "4Ergtbe3bP2sqxTB1BbzMhdau88P3QKA4QcQhmK4FEquanQwUdNzyE9LumHmRz4o2QSnK21yAji37EAYa8DwEK2S",
+      "events": [
+        {
+          "index": 27,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "15062182",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "1690813"
+            },
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "1690813",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "1690837"
+            },
+            {
+              "amm": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "48733593",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "5465151"
+            },
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "5465151",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "5470270"
+            },
+            {
+              "amm": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "7161107",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "1237000000"
+            }
+          ]
+        }
+      ],
+      "fixture": "285.transaction.pb",
+      "rawSha256": "b59e8d7eb514e61f5c8e54bdba91689dab0cdf160561ebc3af9952904c3aa824"
+    },
+    {
+      "signature": "4KX5den3nFza8EX2vL3nnRh2bPqFz24ceJ8cC5wjjky886zwJm9VJYiQiLP6aFf8T9KQkqEKZE62LmeevcswxGBk",
+      "events": [
+        {
+          "index": 25,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2759567",
+              "outputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "outputAmount": "276330"
+            },
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "inputAmount": "276330",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "309445"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "369281",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "41415"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1336472",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "149828"
+            }
+          ]
+        }
+      ],
+      "fixture": "286.transaction.pb",
+      "rawSha256": "23eb2db6668dc957698710cc6be463626e93aefb53ef390b768b586f139fe76d"
+    },
+    {
+      "signature": "4KXSq9xrwY6wRfab3Nq8Etuzh1ZLr4EmC172pWjVbksbxHZcSGHqW17v6xZ8miNFaXxU3fjCNZ4z8mJ7nwsvxfGV",
+      "events": [
+        {
+          "index": 14,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "DzMwArmdzPqcqgvyqAmTxy79XdA9NwK9mMteqWLJpump",
+              "inputAmount": "204856139",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "152432"
+            }
+          ]
+        },
+        {
+          "index": 23,
+          "depth": 3,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1168873",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "131026"
+            }
+          ]
+        }
+      ],
+      "fixture": "287.transaction.pb",
+      "rawSha256": "b7c8a8dd2896830b235bbe25bf12ec824000b9c2206de810a4a81ef5915445e0"
+    },
+    {
+      "signature": "4PARzFHPND7wHCBP2n9qNddUCWMDgex1vJoxcgYiKqXbaKaiZBFBVUwn5GEVz9ACRq5wfFsEXRpAZ4TVRWk2jtch",
+      "events": [
+        {
+          "index": 25,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "ALoNmPYp9HxW5Gi4QHGRomXoBuwepwZWcygtvdEXzfBH",
+              "inputAmount": "115209536193",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "1674007556"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "inputAmount": "1674007556",
+              "outputMint": "DzMwArmdzPqcqgvyqAmTxy79XdA9NwK9mMteqWLJpump",
+              "outputAmount": "10553014074"
+            }
+          ]
+        }
+      ],
+      "fixture": "288.transaction.pb",
+      "rawSha256": "57e2a69cc229c1a44b2fc05cb174d4dd131d5629b827fbb5782b23a66d328cca"
+    },
+    {
+      "signature": "4TP52Zk9TvptcxLXUdNYsvkKBT7wqX7sQnaYR8is6NF8B2Zxdi2Xeq81otrLXAcawAdjFYaEoAp8TKrqLzNfPGKo",
+      "events": [
+        {
+          "index": 19,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "210000000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "23541530"
+            }
+          ]
+        },
+        {
+          "index": 23,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "23541530",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "4070816185"
+            }
+          ]
+        }
+      ],
+      "fixture": "289.transaction.pb",
+      "rawSha256": "f92b62ac499ad6ced96e3a7d2f9cbdaa740eaff8d825bb599ac74e92237d6179"
+    },
+    {
+      "signature": "4dKxvvVemAjvRKTNokXBfnWzQquJasYsuZnhNDRzeAEocvXJJETmSAHn7oyf3SvrhodAPBTQWTZ4JUbAB6wcRJjw",
+      "events": [
+        {
+          "index": 9,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+              "inputMint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+              "inputAmount": "118423141",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "20513700"
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "20513700",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "20494950"
+            }
+          ]
+        }
+      ],
+      "fixture": "290.transaction.pb",
+      "rawSha256": "a909cafd38c2c4960a28554cabc27b6eaa973aaa341b0e96acf684869541dbfa"
+    },
+    {
+      "signature": "4hkQcCRCpcD5wyGunjGHfMLL4dMABLHk38zyGhN6GB7BD7kNUjmgs7jx3kfNPhCLX884TxqGgL9iVs98wmPEAwRD",
+      "events": [
+        {
+          "index": 18,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "LinkhB3afbBKb2EQQu7s7umdZceV3wcvAUJhQAfQ23L",
+              "inputAmount": "6150483600",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "732350732"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "LinkhB3afbBKb2EQQu7s7umdZceV3wcvAUJhQAfQ23L",
+              "inputAmount": "2755516400",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "36752246"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "36752246",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "327722682"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1060073414",
+              "outputMint": "BPxxfRCXkUVhig4HS1Lh7kZqV6SPJhzfEk4x6fVBjPCy",
+              "outputAmount": "100663291224"
+            }
+          ]
+        }
+      ],
+      "fixture": "291.transaction.pb",
+      "rawSha256": "33678d1e9814e3ed4c36b8ef5eed6abfd85081bdfe85e79a73a2c82081eabd0e"
+    },
+    {
+      "signature": "4iig47EfgcCjKhjj9oNb4Lm6wVPua9PeDyhSMgFmBpQsNHH9gnAUdVebatdssmhHoFCXdBNfWwpsMhc8honaYwXb",
+      "events": [
+        {
+          "index": 20,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "58000000",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "516774116"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "200663389",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "51719383"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "316110727",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "81472269"
+            },
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "133191652",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "11643901620"
+            }
+          ]
+        }
+      ],
+      "fixture": "292.transaction.pb",
+      "rawSha256": "a01def1de3f57ba2be1a6c84d399925e2480fb3f1fb54701dc90347b31e8cf2e"
+    },
+    {
+      "signature": "4kTuSkNq3dN47Q3TmEUyPLAHJmMqR3E4LDEhe87qZqbdV28sQ8QGeTgLERSPDF7oQWX6jWnixRCnw9ZW84BBqkQm",
+      "events": [
+        {
+          "index": 14,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "21405362",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2399723"
+            }
+          ]
+        },
+        {
+          "index": 19,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "2399723",
+              "outputMint": "ARENA551cbiMFSFzXv1V1RDxufZEw9Q2Kbd5uD7FrFeR",
+              "outputAmount": "407738202"
+            }
+          ]
+        }
+      ],
+      "fixture": "293.transaction.pb",
+      "rawSha256": "84329e1735823d0ec9acfb218bcaddfc4ceac4e7e39605e0388ee5bdc666f7ad"
+    },
+    {
+      "signature": "4peCrjNYs39diSwKjX4cGknqR4f8155budyB2qpyPwUxATXetcBDthKBzjKm31bjgoAckXYY4MmRvX51hwq8TKsr",
+      "events": [
+        {
+          "index": 26,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "3000000000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "336198908"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "336198908",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "58119903156"
+            }
+          ]
+        }
+      ],
+      "fixture": "294.transaction.pb",
+      "rawSha256": "e3d41a42e27dd3d94076d48feae1b28e0916437ba6bb08a69aadb21dfc5898cc"
+    },
+    {
+      "signature": "4sgh8KRbNj1z95UisiwBu5GkDpUgVsik9Ay4R2toNYHpTbnuuYLt8Ch5Evs4vtZzPtrH5AxndVvkjxs6BahvHN1C",
+      "events": [
+        {
+          "index": 9,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+              "inputMint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+              "inputAmount": "59211571",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "10256800"
+            }
+          ]
+        },
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "10256800",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "91375976"
+            }
+          ]
+        },
+        {
+          "index": 17,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "91375976",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10244035"
+            }
+          ]
+        }
+      ],
+      "fixture": "295.transaction.pb",
+      "rawSha256": "0b8303f113837f16bad722a79130c42d115f47792fc6ea535a3aec52feca3225"
+    },
+    {
+      "signature": "4xDiJaxhxcZ79Susy2BKwCLTPZtYRMbQHyNAsGxAUYV7Hg7e21GcYkAJ8ZkhxeUXTGGKGg8Ltx5TeWc2HGhgUTgZ",
+      "events": [
+        {
+          "index": 16,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "124797775",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "13978468"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "13978468",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "2415494729"
+            }
+          ]
+        }
+      ],
+      "fixture": "296.transaction.pb",
+      "rawSha256": "0db5caf3195f79871c09e8b43a042870d4195e7cd614f64c7131c1b9d22adfb5"
+    },
+    {
+      "signature": "4xP8otzELRtNLQyULkBKNeWCZq16sd5sjLfyPFSzfsUudFfgXV2TfJbtYgY8NAq9LhD58VKGGCxvccZDkoumnLJt",
+      "events": [
+        {
+          "index": 7,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "49999963",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "114937689"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "114937689",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "10034872105"
+            }
+          ]
+        }
+      ],
+      "fixture": "297.transaction.pb",
+      "rawSha256": "a8cffd5f0d84f4d66abd2ac401fa79995f6eb32fd9cec1a8a78ad53c51d39c4e"
+    },
+    {
+      "signature": "528xgiqQfB86BW5GsgWMkhS19Ygz5uPW1rfhJxtBrrkaJst79DqEQg2xTX2FUZ95pB4u3L5kHxe5vRu1e2sJW6SP",
+      "events": [
+        {
+          "index": 20,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "442457100",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "442052469"
+            },
+            {
+              "amm": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "442052469",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "3941409336"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1590752808",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "406955810"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2350656528",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "601424307"
+            }
+          ]
+        }
+      ],
+      "fixture": "298.transaction.pb",
+      "rawSha256": "a992e15e179713ccf29b66a9e2861cd589b62a059e329db066792ef21a40cfe3"
+    },
+    {
+      "signature": "5CZ8yD4D3gjfecR2yHJV29JLSh5MbUGrxYQFjKYZvukfabkKzW9tUPdvwgR7g7UQzowTeeczKua4uPtBr8FR3J4n",
+      "events": [
+        {
+          "index": 22,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "1496400",
+              "outputMint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+              "outputAmount": "1061791"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+              "inputAmount": "1061791",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "167794"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "167794",
+              "outputMint": "7K52aYQW9rWGjwZmQ7o2d1P6E7bji6hSMsqaLy5EcxLh",
+              "outputAmount": "440698116"
+            }
+          ]
+        }
+      ],
+      "fixture": "299.transaction.pb",
+      "rawSha256": "7b809de38d82a1a21b16a424c4ede5f29f529eedef3f7f38327ded3272519f2c"
+    },
+    {
+      "signature": "5GWr3MFdGch8LbXFbokCCDZiBJGAHF6mJXTz7FhfXVgXs1DQGxr8EDD4DVccqXHyA9pMoG1KoVBS6fXatnadzRPg",
+      "events": [
+        {
+          "index": 19,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "138011",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "138140"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "138140",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "1230115"
+            },
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "101925",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "909243"
+            }
+          ]
+        }
+      ],
+      "fixture": "300.transaction.pb",
+      "rawSha256": "2c05bdf11a510ce565d3d559654c97114d8ee6930282136d21a71950c3fcdc89"
+    },
+    {
+      "signature": "5ZteyFgqtYUMu6bLz21kNQsK7SBhCxGvfDqkCo7vGu2zJAFnCbPGpuErK28V5CfEBBMwVvB1pdehvE7o58Qt3VoD",
+      "events": [
+        {
+          "index": 14,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "10702681",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "1198385"
+            }
+          ]
+        },
+        {
+          "index": 19,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "1198385",
+              "outputMint": "ARENA551cbiMFSFzXv1V1RDxufZEw9Q2Kbd5uD7FrFeR",
+              "outputAmount": "203611443"
+            }
+          ]
+        }
+      ],
+      "fixture": "301.transaction.pb",
+      "rawSha256": "6120c361e1cb99e68756654a10f21d0e6925054f4265652a5e7337e61ee63303"
+    },
+    {
+      "signature": "5dVppFjaJen5yYEbV66dmM1hvmrEPANPcfvDev7p6NnpbkYCcDjaB1KSNmuhszjX72BkX9hX7RPC2yK1aumg63aJ",
+      "events": [
+        {
+          "index": 26,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "445767350",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "49933203"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "49933203",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "8628512700"
+            }
+          ]
+        }
+      ],
+      "fixture": "302.transaction.pb",
+      "rawSha256": "a9b61a2caed3c416f4927980321ffbea22c5571c9e7150db777444f635e47503"
+    },
+    {
+      "signature": "5m4A8vUCKwGg1KTkb8FmZ7ekmSzDzHmwdE37a1zM8wfiatALbb5QBcLkrLbyhsvUaSoY42gxYZa7AdMCb3C2Q1m3",
+      "events": [
+        {
+          "index": 13,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "HsRpHQn6VbyMs5b5j5SV6xQ2VvpvvCCzu19GjytVSCoz",
+              "inputAmount": "112275240549",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "13470364"
+            },
+            {
+              "amm": "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "13470364",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "120102902"
+            }
+          ]
+        }
+      ],
+      "fixture": "303.transaction.pb",
+      "rawSha256": "8850f36f51263c30d9985a7f3cdc4745462f2657f0b9184cb8a51f17bfeb5ff6"
+    },
+    {
+      "signature": "5ttRZ8Rt1Ci5GMAcngqCPB68aT8c8JgnXAyW5csPQmz1F5Ax8LFQYtA4Sf96ZhyfqvmpnqCEponyTWgY8dWGD4F8",
+      "events": [
+        {
+          "index": 20,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "64000000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "63941504"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "10691019",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "24404905"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "53250485",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "121246178"
+            },
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "145651083",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "12807427087"
+            }
+          ]
+        }
+      ],
+      "fixture": "304.transaction.pb",
+      "rawSha256": "e48ea83a8cbeaba281cba317c104f936b2b9bcf60e220267cc32e1bd3c1cbeac"
+    },
+    {
+      "signature": "5vN2pXkR3ivx4wdfTfa5nfNNjRkHxHg8xZHW9BxNWteEph1Pz7Qfs12TfX4xVf2mz74uax6JdfSTVDJNcAobVsge",
+      "events": [
+        {
+          "index": 18,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2683253528",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "300800510"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "300800510",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "52023609477"
+            }
+          ]
+        }
+      ],
+      "fixture": "305.transaction.pb",
+      "rawSha256": "f137edcffca1231d2049a873b2df9d2bc05a7913395d6765897167fe5084f958"
+    },
+    {
+      "signature": "5vt8mM8DigvqneR4M99uGCSoh2R9XBYYENveSUPSyKEvnFd7GXiwbNEK32zWE3qJngY7Bdsy1WYopFMeNchx87eA",
+      "events": [
+        {
+          "index": 7,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "24195427",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "215712889"
+            }
+          ]
+        }
+      ],
+      "fixture": "306.transaction.pb",
+      "rawSha256": "f68284665ebe5222b448b58426054394c33b210ff080ce68a430e776043801a1"
+    },
+    {
+      "signature": "6Q5r5dgoVma8b437vv3PCYAYawxopKdE9WWNa1bq7LykWCMVhr5bYYCGxAgQ8dknkVDEyZsVcwtBJUpVWTa1qtd",
+      "events": [
+        {
+          "index": 25,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "276264891",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "30959009"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "30959009",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "5351600518"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "inputAmount": "5351600518",
+              "outputMint": "DzMwArmdzPqcqgvyqAmTxy79XdA9NwK9mMteqWLJpump",
+              "outputAmount": "35247381483"
+            }
+          ]
+        }
+      ],
+      "fixture": "307.transaction.pb",
+      "rawSha256": "68ab8224a0e84ef7fbbc84925c070911c3b9a13a8dd581e28129d6672232a882"
+    },
+    {
+      "signature": "77v98MSRFrcxgozAgQx237ccDEHcL42y9rH1GNkCkgHyx8wz7AjsJqxDU2Ctq1Ay27uUWEvHFdr6V5r7Y19uBdJ",
+      "events": [
+        {
+          "index": 29,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP",
+              "inputAmount": "9990000000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "274189722"
+            },
+            {
+              "amm": "ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "274189722",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "2444862578"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2444862578",
+              "outputMint": "DoVAVzViX8Bjy3r15nwikSaSbzE6dV4ovd28aWpJpump",
+              "outputAmount": "218863783323"
+            }
+          ]
+        }
+      ],
+      "fixture": "308.transaction.pb",
+      "rawSha256": "0339fbd03ab21f2a469abefa39c37219503772c30af35cf0b13d0dc584c49704"
+    },
+    {
+      "signature": "8RFKcsZBnbZSwDgjmSCBbVLr4unbZRbfSBvH2MfWsCR9WSSWvezcnko8RvBLBp6hsJVbavPNpTqgmsjDv9rJS7t",
+      "events": [
+        {
+          "index": 32,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "2560365",
+              "outputMint": "VaXJrKcbLXkAst8nZ1a9QKeaYJ5PSoArJGu2jehpump",
+              "outputAmount": "224485081446564"
+            }
+          ]
+        }
+      ],
+      "fixture": "309.transaction.pb",
+      "rawSha256": "8cb0a2927991e8536cd7503f72e414f9cae5170fd990e67bd3b2417686834f20"
+    },
+    {
+      "signature": "ASc1nvZ4SNPEuZnBJ6HUEfrwfqf8CbVPr6aXMjdab3gW8HXvohQBdFYaAh3V4MHTgyY2m38qu339Y2mbiqnhQZy",
+      "events": [
+        {
+          "index": 11,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "2000000",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "17832135"
+            },
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "17832135",
+              "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+              "outputAmount": "345722900"
+            }
+          ]
+        }
+      ],
+      "fixture": "310.transaction.pb",
+      "rawSha256": "219a6d5bbba2427810ca651ce4f9f2403eb13d466ff979664a9ab22851c2c63f"
+    },
+    {
+      "signature": "DvKvpZvZDmz7x1S9UrCEw8k5S3KpEzdVPqh1FkHUXxURh1NBxcTp5Ete4bhugvANL1wccvrPb42BBaJESSexZAp",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "J3NKxxXZcnNiMjKw9hYb2K4LUxgwB6t1FtPtQVsv3KFr",
+              "inputAmount": "4337171300",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "147068531"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "147068531",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "16493822"
+            }
+          ]
+        }
+      ],
+      "fixture": "311.transaction.pb",
+      "rawSha256": "430c6cc2139cf7f6946ad1f5c75a17665359ea91994376eff05e1f7f9f4f7a17"
+    },
+    {
+      "signature": "G2JpVmv5JcsqV7hoQTNsUASxJuCPQ44zCWoBLBDzqS3hXVCtc4XCQUnSZyKVdeir6vXsWPbeUSEh66J9hRyjyEk",
+      "events": [
+        {
+          "index": 9,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "49999963",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "114813303"
+            }
+          ]
+        },
+        {
+          "index": 14,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "114813303",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "10046260478"
+            }
+          ]
+        }
+      ],
+      "fixture": "312.transaction.pb",
+      "rawSha256": "cf5f9f68d231105cdde94390fa08047a90e66b022b9541916718c2d9c0197cc1"
+    },
+    {
+      "signature": "NMvpSBJBVVbWk5z3o288todtbp6Niv8HR3dhogCBW1omURpjWJDLQswRvCrna1viCrsF4p3fcPN2ttoZa4D34iY",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "29836613",
+              "outputMint": "9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump",
+              "outputAmount": "212251279"
+            }
+          ]
+        }
+      ],
+      "fixture": "313.transaction.pb",
+      "rawSha256": "a0426da25156823ecfa14986bc19b23c20dfca78cca07cb71893caca0ead7930"
+    },
+    {
+      "signature": "QghPQ6AivStUmCCCPecCkDvrH4LVgpvgnhQBp4ZFeVQm8SUcJkwcDQwxoUM3QtR6v3pnLoQnceJh4PqFgjUKu1v",
+      "events": [
+        {
+          "index": 24,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "2386597",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "2388785"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "2388785",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "21285085"
+            },
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "6257364",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "55820390"
+            }
+          ]
+        }
+      ],
+      "fixture": "314.transaction.pb",
+      "rawSha256": "4c71fae2894b4f93d435a69b0e5965d2263bc94a9c0ce99d978927c3d2636449"
+    },
+    {
+      "signature": "SF4xHRbxim4De3fRYDtwHytPMtbUmQiXEgxfvusXS73wX8PG97AyDPxzLworYqtZYJWPqnEzFc3CtaJ43nDv4G9",
+      "events": [
+        {
+          "index": 27,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "30000000",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "29972565"
+            },
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "29972565",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "267353834"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "267353834",
+              "outputMint": "Gyk9Z93Ri2JUjqES9HTpc7pxCJTLD7vhBhEjBhyApump",
+              "outputAmount": "115739976822"
+            }
+          ]
+        }
+      ],
+      "fixture": "315.transaction.pb",
+      "rawSha256": "72c57368f0aa49a3803907554575cc87d55573bd9e3dd8cf5e0286ad2cb921b7"
+    },
+    {
+      "signature": "Y8fqX5t9r9tWUwbHH1uMquxKKAmW8WyDpDK2QbgnEGPRPjqEHfYVh7sx6SnjsEXo7ybYMGzkyiRA2qew591ozHo",
+      "events": [
+        {
+          "index": 6,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "29483254",
+              "outputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "outputAmount": "67724343"
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+              "inputMint": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL",
+              "inputAmount": "67724343",
+              "outputMint": "5dvXTZ5qwgafnHtwu3Ls3QrWx1U4LQsFeCuJgkk4QEC6",
+              "outputAmount": "5909831105"
+            }
+          ]
+        }
+      ],
+      "fixture": "316.transaction.pb",
+      "rawSha256": "cd23486cb3589a6e114cdb88b6ae09115626f2be3a6cd1a26882cd2bf7e6d585"
+    },
+    {
+      "signature": "asqdfcXK4fW53TnfkgkHnY344E8mPzwabZK2pNfroPjEcvXd4qqVG77uSdTMmuBmpYXTSu2aUnTw3VdBBmSYVtW",
+      "events": [
+        {
+          "index": 27,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "93941994",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "837753114"
+            },
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "837753114",
+              "outputMint": "DELL2aRKQz7DMq5DrKLtkn47ZCnbxXPZXrSGbkmd13wy",
+              "outputAmount": "160744"
+            },
+            {
+              "amm": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+              "inputMint": "DELL2aRKQz7DMq5DrKLtkn47ZCnbxXPZXrSGbkmd13wy",
+              "inputAmount": "160744",
+              "outputMint": "6UZ9uHigCZ7MVmpYczdxQ2GFUF7eyY9eYJWMvHUZpump",
+              "outputAmount": "3395573881821"
+            }
+          ]
+        }
+      ],
+      "fixture": "317.transaction.pb",
+      "rawSha256": "82ff43571a2155d9ca5d8262d58066c7044d4e85434c70fa485f8985ebf38355"
+    },
+    {
+      "signature": "ayR65jXk9KDzQJXETEhKgh9JPuGqjRkNLrFDWMYCk61TtXi2ZqYsgx46m5BMsPugx9w2jnWokuWw52mL4DBitmb",
+      "events": [
+        {
+          "index": 18,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "1000000",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "1000935"
+            },
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "1000935",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "8913201"
+            }
+          ]
+        }
+      ],
+      "fixture": "318.transaction.pb",
+      "rawSha256": "ecf4068552694bc498cb3547a4d1985f40d62fd05cb715befb1de26b0fde8d68"
+    },
+    {
+      "signature": "iBacCzSgvnysiMLndNd13KRtKeo9XS1Zo4oaD3C126M9RzyjcqnCALhULJWcWfhi7F7hdnXFWNSFnGqTRvSLucU",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+              "inputMint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+              "inputAmount": "4163012",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "90675081"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "90675081",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "10162453"
+            }
+          ]
+        }
+      ],
+      "fixture": "319.transaction.pb",
+      "rawSha256": "701e502ac7a5a75e464a1255a170b65a16ae66fc48ce89c366a938e0f72e6a9c"
+    },
+    {
+      "signature": "kGRTXxJuUSPGvf2Se3A9mqVgESTAcC8YkH1hWhTEQLuekRi7dFiiNP1XKc9JKfi9A4LN8PQdghroVC5a8uViqiQ",
+      "events": [
+        {
+          "index": 32,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+              "inputMint": "j1jA5fjbm9nzu85LZZ3LNFcatyZiqAkwhPXG1URdark",
+              "inputAmount": "1255757027383",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "152166921"
+            },
+            {
+              "amm": "HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "152166921",
+              "outputMint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+              "outputAmount": "669080"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+              "inputAmount": "669080",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "17057558"
+            }
+          ]
+        }
+      ],
+      "fixture": "320.transaction.pb",
+      "rawSha256": "80e87230ee7ce36805533645a059819eccef1a48ee4efc55908de6f0dbb4026c"
+    },
+    {
+      "signature": "mGMFDYDHUZ4GZSWyxH6eYq2P8K4fTbQwNjuarziF4QGPfvw8LjV4gpiVxcbRNw2h8Es1cXvUHNMrbE2rhFGtQWR",
+      "events": [
+        {
+          "index": 8,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "J3NKxxXZcnNiMjKw9hYb2K4LUxgwB6t1FtPtQVsv3KFr",
+              "inputAmount": "4337171300",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "147051410"
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "depth": 2,
+          "plural": false,
+          "records": [
+            {
+              "amm": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "147051410",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "16491902"
+            }
+          ]
+        }
+      ],
+      "fixture": "321.transaction.pb",
+      "rawSha256": "05878c576736140067bb934e9cbe479083f90999faf10e4e05387d596cfdcb34"
+    },
+    {
+      "signature": "rGbNdbcgu7vLdu4M8jVAjX41H4fmzhQUAUwkHhrSq4wx5HBgkVDxAZpQr5pk1kXmJ1ueRKsdjUd3Nye5eQvDqGF",
+      "events": [
+        {
+          "index": 17,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "223370194",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "1991627749"
+            },
+            {
+              "amm": "ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA",
+              "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "inputAmount": "229346050",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "229555520"
+            },
+            {
+              "amm": "SCoRcH8c2dpjvcJD6FiPbCSQyQgu3PcUAWj2Xxx3mqn",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "229555520",
+              "outputMint": "So11111111111111111111111111111111111111112",
+              "outputAmount": "2044970000"
+            }
+          ]
+        }
+      ],
+      "fixture": "322.transaction.pb",
+      "rawSha256": "d45bfcc1cadd03af56af700535a312eae42bde334064b9d565062e32dc29e0da"
+    },
+    {
+      "signature": "vavUEw4DfzUnrgGA2iEjcX4GPAPKaF9TZAVjUSUW84s5eBntwMYTvGtxgG2vWGcfjXUyrpMAnFyUMHN2YghJBbd",
+      "events": [
+        {
+          "index": 27,
+          "depth": 2,
+          "plural": true,
+          "records": [
+            {
+              "amm": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "5519135",
+              "outputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "outputAmount": "618779"
+            },
+            {
+              "amm": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+              "inputMint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+              "inputAmount": "618779",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "618769"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "618769",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "618204"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "3411505",
+              "outputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "outputAmount": "341526"
+            },
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+              "inputAmount": "341526",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "382419"
+            }
+          ]
+        }
+      ],
+      "fixture": "323.transaction.pb",
+      "rawSha256": "c9bce4bf9921d3b5b6b4b500b5f09e719d32f123720ba9e9de1461eaf0558860"
+    },
+    {
+      "signature": "yeijqU31BCc5BYXdNJwFACXpk5W9fiLSCDSwfFE27Ftg3gMGeJEa3mgZC5V3r2yBRkoYcryx1h1c3FaEs7xgtjC",
+      "events": [
+        {
+          "index": 26,
+          "depth": 3,
+          "plural": true,
+          "records": [
+            {
+              "amm": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "31861746",
+              "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "outputAmount": "3575117"
+            },
+            {
+              "amm": "goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE",
+              "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+              "inputAmount": "3575117",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "3571817"
+            },
+            {
+              "amm": "DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm",
+              "inputMint": "So11111111111111111111111111111111111111112",
+              "inputAmount": "19619505",
+              "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "outputAmount": "2199710"
+            }
+          ]
+        }
+      ],
+      "fixture": "324.transaction.pb",
+      "rawSha256": "99500ff5375f4e670602210264acae0af20851a278312f9946e6384110721fbc"
+    }
+  ],
+  "baselineNativeSwapsPreserved": 213
+}

@@ -20,7 +20,7 @@ Notes:
 - `amm` is the protocol program ID as raw bytes.
 - `amm_pool` is the stable pool or market identifier when the protocol exposes one.
 - Pricing rows require a resolved pool or market identifier and verified realized token flows. Unsupported exchange candidates are retained separately for replay.
-- Jupiter currently uses `fee_payer` as the best available user-level identity from the decoded event stream.
+- Jupiter v6 uses its enclosing route's declared transfer authority as trader identity, including sponsored transactions.
 - Native adapters resolve actual token mints from account balances or validated initialization instructions, then verify scoped user/vault transfers.
 
 Current coverage:
@@ -73,3 +73,23 @@ checks their declared recipients and authority without adding them again.
 Three samples have no fee CPIs. Exact-output swaps, other pools and future
 instruction variants still need independent sampling. This source change
 is not included in the immutable pluto.8 release packages.
+
+## Jupiter v6 legacy and plural events
+
+The program-owned on-chain IDL describes both `SwapEvent` and `SwapsEvent`.
+The latter contains a Borsh vector of `SwapEventV2` records; its mint and AMM
+field order differs from the legacy event. Both the Anchor self-CPI prefix
+and event discriminator, full payload length and vector count are checked.
+Pool attribution uses completed native invocations inside the same enclosing
+route, bounded by the preceding sibling swap event. Repeated AMM programs
+consume their corresponding occurrences, rather than reusing the last pool.
+Unresolved counts, unknown formats and unacknowledged caught failures cannot
+supply a pricing pool. Actual token-flow verification and native CPI
+identity deduplication still gate every financial row.
+
+The independent event-field corpus contains 78 unmodified finalized
+transactions: 56 legacy events and 53 plural events with 147 vector records,
+including 17 vectors that revisit the same DEX program. All 213 previously
+normalized swaps remain identical. See `fixtures/swap-coverage/jupiter-events.tsv`
+and `jupiter-evidence.json` for event expectations, raw hashes and IDL schema.
+This source change follows the immutable pluto.8 packages.
