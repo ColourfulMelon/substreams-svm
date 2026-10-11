@@ -43,6 +43,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Defituna, b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9")),
     (Protocol::Invariant, b58!("HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt")),
     (Protocol::Onedex, b58!("DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm")),
+    (Protocol::OpenbookV2, b58!("opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb")),
 ];
 
 pub(crate) struct Layout {
@@ -73,6 +74,32 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             let position = (i / 8) as u16;
             *byte ^= key[i % 8] ^ position.to_le_bytes()[i % 2];
         }
+    }
+    if protocol == Protocol::OpenbookV2 {
+        // Deployed v1.7: global:place_take_order (snake_case). The old
+        // OpenBook IDL hashes camelCase and does not match on-chain calls.
+        // Limits are LOTS, not token atoms; executed wallet flows supply
+        // amounts. Market metadata is required for deposited-balance fills.
+        let accounts = ix.accounts();
+        if data.len() != 35
+            || data[..8] != [3, 44, 71, 3, 26, 199, 203, 85]
+            || data[8] > 1
+            || !matches!(data[33], 1 | 3)
+            || [9, 17, 25].iter().any(|offset| i64::from_le_bytes(data[*offset..*offset + 8].try_into().unwrap()) <= 0)
+            || accounts.len() < 16
+            || accounts[13].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID
+            || accounts[14].0.iter().any(|byte| *byte != 0)
+        {
+            return None;
+        }
+        let bid = data[8] == 0;
+        return Some(Layout {
+            protocol, pool: 2, authority: 0,
+            users: if bid { [10, 9] } else { [9, 10] },
+            vaults: if bid { [7, 6] } else { [6, 7] },
+            amount: u64::MAX, exact_input: false, input_limit: true,
+            input_first: true, fixed_users: true, minimum_output: 0,
+        });
     }
     // Existing IDLs pin these swap variants and reject other token-moving
     // instructions. Native CPIs remain usable when an event is absent.
@@ -960,6 +987,42 @@ mod tests {
             assert_eq!(actual.join("|"), fields[3], "Helius mismatch in {}", fields[0]);
         }
         assert_eq!(protocols.len(), 13, "every original venue requires a real validated swap");
+    }
+
+    #[test]
+    fn finalized_openbook_immediate_fills_match_wallet_cpis_and_reject_wrong_roles() {
+        let mut count = 0;
+        for line in include_str!("../fixtures/openbook/cases.tsv").lines().filter(|line| !line.starts_with('#')) {
+            let f: Vec<_> = line.split('\t').collect();
+            let bytes = std::fs::read(format!("{}/fixtures/openbook/{}", env!("CARGO_MANIFEST_DIR"), f[0])).unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+            assert_eq!(base58::encode(tx.hash()), f[1]);
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let fills: Vec<_> = decoded.swaps.iter().filter(|x| x.protocol == Protocol::OpenbookV2 as i32).collect();
+            assert_eq!(fills.len(), 1, "{}", f[1]);
+            let fill = fills[0];
+            assert!(fill.transfer_verified && !fill.orderbook_fill_verified);
+            assert_eq!(fill.source_index.unwrap().to_string(), f[2]);
+            assert_eq!(fill.source_transfer_index.unwrap().to_string(), f[3]);
+            assert_eq!([base58::encode(&fill.amm_pool), base58::encode(&fill.user), base58::encode(&fill.input_mint),
+                fill.input_amount.to_string(), base58::encode(&fill.output_mint), fill.output_amount.to_string()], f[4..10]);
+            // Wrong instruction type, vault authority or declared Token program
+            // must not borrow matching amounts elsewhere in a routed transaction.
+            for variant in 0..3 {
+                let mut wrong = tx.clone();
+                let meta = wrong.meta.as_mut().unwrap();
+                let native = meta.inner_instructions.iter_mut().flat_map(|x| &mut x.instructions)
+                    .find(|x| x.data.starts_with(&[3,44,71,3,26,199,203,85])).unwrap();
+                match variant {
+                    0 => native.data[33] = 0,
+                    1 => native.accounts[3] = native.accounts[0],
+                    _ => native.accounts[13] = native.accounts[14],
+                }
+                assert!(crate::process_transaction(wrong).map_or(true, |x| x.swaps.iter().all(|s| s.protocol != Protocol::OpenbookV2 as i32)));
+            }
+            count += 1;
+        }
+        assert_eq!(count, 47);
     }
 
     #[test]

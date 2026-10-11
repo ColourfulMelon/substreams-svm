@@ -54,6 +54,7 @@ enum Protocol {
   PROTOCOL_ONEDEX = 48;
   PROTOCOL_JUPITER_RFQ = 49;
   PROTOCOL_PHOENIX = 50;
+  PROTOCOL_OPENBOOK_V2 = 51;
 }
 
 message Events {

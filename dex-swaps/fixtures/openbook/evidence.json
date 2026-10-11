@@ -1,0 +1,296 @@
+{
+  "sourceCommit": "796a470033bc556c1d1a1f76709394fc50c63bf7",
+  "sourceTag": "v1.7",
+  "program": "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+  "sourceMethod": "Helius finalized getTransaction JSON normalized to Firehose protobuf; untouched instruction bytes, keys, runtime logs and token balances",
+  "verifiedFills": 47,
+  "bids": 4,
+  "asks": 43,
+  "markets": 1,
+  "rebatedWalletFillsObserved": 0,
+  "scope": "Native immediate wallet settlement only. Ledger orders, batch orders, deferred consumption and rebates need further real coverage.",
+  "transactions": [
+    {
+      "signature": "1beCQ4Z4zyhgzbUFKtnMN3wNqP4ArqfFWTswhvY3KT6WTs9e4cXdba8TPsxV8zbFEhtdnbh3nHCZ32CnU2TNxVh",
+      "slot": 455770491,
+      "version": 1,
+      "sha256": "b786f26f4d6d95e7e94d2354e06d3a03eb785eb1d90d3da27aff943806a7cb7e"
+    },
+    {
+      "signature": "2A8oHeMWLBD2Dthgz6CVHyp8ykV9BtiMPk5Y7mHaQ6Ad8AN5pBma2MN4W1DgGCNPrZEBBGStBk6YPBJSfadc9oe3",
+      "slot": 455755784,
+      "version": 1,
+      "sha256": "b077ea701c34fdbc7218d31761b0b614a134b1c771db2cfcd0ee82d3b6debdbb"
+    },
+    {
+      "signature": "2D4eUp1HKmJqV12jbArEJgQ4VQxgHPZkpoL3uvuZPfwxhjg6unzYP7jrfuDfgHg5877EPacftjzzmverhpmiFiZ2",
+      "slot": 455746510,
+      "version": 0,
+      "sha256": "024961b4eac137f6cc7d2a7629b41db9edb3df76e2c74fe76ef423092ca3bfc7"
+    },
+    {
+      "signature": "2H2mezSr1gB2rjS25fM9A5a1xoNALrvCoiRLMNkRo5nsM5XwkcGbL5n7uBNVCAPGNb2zFaR7n5kcxsM1xZLjSRDB",
+      "slot": 455755783,
+      "version": 1,
+      "sha256": "532a5496aadb9f1f66bb7ef8f423db15d6d3187fce9e146ab0f8f0736016d709"
+    },
+    {
+      "signature": "2KDkhxna3G2uD5B1AxxFnBB9mcbArrkFEBGUs4Tp5c9PcfkSNRcHKXHPkXvYHs9ZvAzFvYvoTpEV1Q97PNx5covs",
+      "slot": 455736358,
+      "version": 1,
+      "sha256": "781ca5356393b19cd394fd5c7b7159aeeba17d24401d0b114948b4bd9ec76166"
+    },
+    {
+      "signature": "2L1jXq5ufoPoryi4UABVnJjRTfg18m5tMf2rk6o8C9hzXxhBPwWNMgFuTmMvYucxMsQF3DVd1bRFv2CT7s8MkRu7",
+      "slot": 455768931,
+      "version": 0,
+      "sha256": "373615c2514f8220aa82f8f4d0bdadb94a7bba9b8f58678b0a535763b8c39f0e"
+    },
+    {
+      "signature": "2SYmnjJUgPXU89Y8P4WLCGhB14PKKkZpZFpHSkFbS2LRS2Egan9AW9rNDCD8HuHbAYMaK6xHFP3iQB3aDjCGRjET",
+      "slot": 455755692,
+      "version": 1,
+      "sha256": "4400d121518f36f4e2cd6d62cb566d727ed9930bbaa4f04ddd08979e793067b5"
+    },
+    {
+      "signature": "2YNYFvKLoJzVhH8WH1SUDuKScz9uBAaBXUAcxgTrunVEvwyjHkyToBXceVhmHRL4UMHjucPkrrSFDFzPYRrNBkuy",
+      "slot": 455735366,
+      "version": 1,
+      "sha256": "1c6f24258e4e78153808b8a0115e9b343adfec4ccc585a001e72b5dbf6eff146"
+    },
+    {
+      "signature": "2x9wcxZF4TZ1vSUXCYjFu4BEw895VHA2evDpyVUZ4iXhGUCTEJDNmBZbJbP4jpCm1a7Us74eKNVufzH12Gd5BZJY",
+      "slot": 455755070,
+      "version": 1,
+      "sha256": "e9b27715bf6d012e6537c3f7fb1a8ca136b93cb0beea3a1474039577fe12500c"
+    },
+    {
+      "signature": "36b4DMZMgNqcj6ZUNnEQr7PgypMeZXY7e8S1JVhqwthR3yyj5x5cGXRAsFvGfF85aSf9Vofn3dhPiURdbBy7gdqS",
+      "slot": 455735118,
+      "version": 1,
+      "sha256": "ea78dfd61b8efc4650975fd9693ffe3360889a6301cda0dc02ed8c8776c03dad"
+    },
+    {
+      "signature": "3C7FDGg2m4d9NSYv5ijysn8CER33xVsNa2cmfRm3iFTUM9SLq77i5xEyR2m7ApxKybhNwtuJAkYitDPKYMVVfeEx",
+      "slot": 455737838,
+      "version": 1,
+      "sha256": "fb78f997f5e7d454d4efbdae8bad1de60462da03291933a49d82f8f69123d73c"
+    },
+    {
+      "signature": "3HoMajCya4QKb1Jb3D8pe2itrkXxXaQyCWGLqytPYZtamwZ5TWSQiWSjD8nRKg6qCsUvLmo751CRXFncNr1vvhmT",
+      "slot": 455735349,
+      "version": 0,
+      "sha256": "079fb1d82f0f5406173516d80954a700bd85a36ca21998b6786c9b4092502345"
+    },
+    {
+      "signature": "3WHhXGJJRZNcMHXumfi1wbiNWZoQfuDoARaUqqg2T4Bc2jJ733PZa4mq7edMFGnkWRPiKpqTbMKWsDtwkyv2fFLa",
+      "slot": 455757376,
+      "version": 1,
+      "sha256": "21d75c80d4d9ad18f87cb520e09c054a89ef70e64573f873783d2635677126e9"
+    },
+    {
+      "signature": "3gZE7U2oqgrTtt7YzN3NdHh5YhRu2YopvhuABRtsBY8KHPJpZLnLKJeXwrw9MFcXNdYb2LSTBQt2qK6Za3zzsA4V",
+      "slot": 455737889,
+      "version": 1,
+      "sha256": "39a2c629a699a330255cf171dbb38e48074f53361c7eeca66bcf91b94c49f860"
+    },
+    {
+      "signature": "3vyDAEo2ePPs8MKV9UmcaBjtSPsssZRRHLYMrxZ7zk3ArexJStVycGPeNoofukCKXPpyK6VHFuTH3fmF9HUaVuZj",
+      "slot": 455734994,
+      "version": 1,
+      "sha256": "cd2afbf52bc3fc6c40d3298342f56112ed2c8f30417fc4bdde1e8c6ac08a04f2"
+    },
+    {
+      "signature": "3ypAxWTydw1QS2kFkuRdjvWPr95KGhYedXanvCAjQjpuQTUQ1BMhLXhbmLM4HepMBpdGXcBEoBb5BB1mf8RTR7Jo",
+      "slot": 455731108,
+      "version": 1,
+      "sha256": "e4da5252ddcb85fbc05781acedcce9c1df0b77a7290b7bb74c2ce78637bb16c2"
+    },
+    {
+      "signature": "44tmufeiBmSdCEYfU6XcsS5e3RyvwUUt1LUfqwBHba9dsUcFkrX454mTyLQf84mhuAcmZRJzdSmUowtFKfJPUDRh",
+      "slot": 455734815,
+      "version": 1,
+      "sha256": "604418318f39647c4b8a4ca7def062d2c5b1b84c3d41653c0e4067675491d546"
+    },
+    {
+      "signature": "4C9jWGhz3uMk3roVynfpenQLgmPpgbbNeNHcAnWtkmouWy3A1Zqr2bEE5d8MxBroF8X1TKF7mggQYx9NbPDTm7Cj",
+      "slot": 455747688,
+      "version": 0,
+      "sha256": "53ec2f89b4373e42750215b07ec58aa5db37cf8b2bbe9d310646f9c77c34e9ed"
+    },
+    {
+      "signature": "4CVwdArpf1RBH9eggQGyySahUNZR7pHSJoaz4sJcc475be36uJdiiTaAh4J3ieMDaqRymvX1LCHcPvv6UrkBkjPp",
+      "slot": 455735346,
+      "version": 0,
+      "sha256": "51e090182668fb3b07298e913840832273d21188e0f2cdd38461fe33cb7a40ae"
+    },
+    {
+      "signature": "4E1gHsQLeL4oV2NfBHJR1Atv1xpeLwTou2hpuXoSQpeHKbmrgr3nMNBf8iceLeF9tkjSuc4t6mt2SAKnrtzNu1Wj",
+      "slot": 455735349,
+      "version": 1,
+      "sha256": "efe80ea241347a1c1ca1e492c6a56e7ea079c10641fb2d092471b521510a01c5"
+    },
+    {
+      "signature": "4Jr95urBy2F6xsifFn3FshcUyNKPdwwQoynEnHSejX99BnT6QXppYX1ECoHdwHbwqqtR7su5xkbvs9zE1xofigZ1",
+      "slot": 455755344,
+      "version": 1,
+      "sha256": "ace47ff372833a63299b02534adaff14f7c4b86d911556fa89760e8261111893"
+    },
+    {
+      "signature": "4LQ9SpuP4EAh3VSbmYapXyypqYhMTujdgjViV6huARdo2LosqT76Hv5HvEynYF8eYSYKHJeQsih1Q41GTjKdkD3p",
+      "slot": 455763198,
+      "version": 1,
+      "sha256": "b5e22aee58114b8149d98ef473ee69dae08df5c382ac20e05080c723f07eef40"
+    },
+    {
+      "signature": "4McgGYmLfAWadhwJ6d5b2MnMS4xFjUM5R7eNxbW3yoYeMBoLqzGE97RQxix5QJXVWfoGUh7LafdVMFSwRbDaSBoy",
+      "slot": 455729779,
+      "version": 0,
+      "sha256": "249a647f2635ea2942bace503d28b9029341caa66cb4986f7678b1e0d5f22985"
+    },
+    {
+      "signature": "4MddQb2tsiz33m9BmSjTy9zgsyaLqCcpzgHGgvD6UdD5V1H9mxDVdZ5xPfZLuRuVYmBG8oiK6hpybyS9H8W6b8xQ",
+      "slot": 455737118,
+      "version": 1,
+      "sha256": "f682188f695fd5c5de015ad8767535be3d9a704e475506b331087b5920330666"
+    },
+    {
+      "signature": "4QkXWdN111DgZZefMTxERf1k2S9pboPUsDX2S4rpneZDu4Tr81GsCcCw8kkC2GcWr9YzveLe176Z1e2up6uB1C83",
+      "slot": 455742518,
+      "version": 1,
+      "sha256": "86265daf6375de488425667976566bb3fb84643b1487d9f83b5c8f117cec94f1"
+    },
+    {
+      "signature": "4hG58htrxQRu3ZpwVM6rihtjxZuwBxos57HK91r66hTP73XP2dXchX6ztrjh8MkR47bq9sh6TYxgPAv8bSx5A5UR",
+      "slot": 455762339,
+      "version": 1,
+      "sha256": "19b44b56aaba7aec3da37c77a79b0da8c88467fcb9b8c5cf18cf556b1544ca81"
+    },
+    {
+      "signature": "4rZsqCU47VbpKegD9b9ii7jPTUMjUHCGhe8t2Yi5PRYYjzjgu7MkEgaJsWA4iDn21ptBYBNSjNwxH8SgpGFvhKkt",
+      "slot": 455746202,
+      "version": 1,
+      "sha256": "14ac71d80c17b87b6590e62e3ae27a270d0ed9b25a36afe878f40b7a2206b4be"
+    },
+    {
+      "signature": "4uv2opE1wmGBMSq2WKUh28EpRbHPA5sRXqmg9M419vKudPa76XeML5mFy6qX7pdBHjXPrRzPB4bNRy8g6WwZgdLC",
+      "slot": 455742573,
+      "version": 1,
+      "sha256": "9e3002a53a98fb02e12093987e38a62fd4da7791f1957b9270657f3f00797e4c"
+    },
+    {
+      "signature": "52qQLEZVnt43thzhnLoqxWdhYwFba7Ffm7PSLomPCiizYKFTZf1Z9QD48XDdEf2TWbVYUdtoDqeFq2CUiamhUDZa",
+      "slot": 455773052,
+      "version": 1,
+      "sha256": "c79a8295672b73dc23aecda5e3e5cee9f5313c44aeb7c3138314817f1354c58f"
+    },
+    {
+      "signature": "546nHoPe5WvGh3bkvERMYC4D5ZotTsgyucFUHNbrzSU4d64ZF3RirE6b9dHokZTjguHRtuGxiqA44gaCVmXkHKog",
+      "slot": 455737334,
+      "version": 0,
+      "sha256": "9c315dad4c5aae3fef94388e4f65271ece91bc2ceae5d791430eb6dd67b12380"
+    },
+    {
+      "signature": "5KozWLdp9AjHVETS3mSbFoPqubjz5E65wTsHdhKb83aKK2DuqUcG5VufWf1HKAfBrk6cQfTXezbK2PMum2kGs3uK",
+      "slot": 455735557,
+      "version": 1,
+      "sha256": "a0a3c312e4a3ce0817d99e84af89cf0c266d1fb9df3fdf467e8ce65595e8f60f"
+    },
+    {
+      "signature": "5LGejheqhsErDGKD6Jbp843Y3GYQSWcyzZz5zpaoiE26EeER6hBsA1ax77XYStcZHY9zawHdoJbeUjdML4QX45a7",
+      "slot": 455761730,
+      "version": 0,
+      "sha256": "5e1c31ee5b0079c40ed1bceddfff40d59421e1a4512edd5f8460200fbdadf2a4"
+    },
+    {
+      "signature": "5PZ47Wu59KJzepta4Lr9gKKiGBrnVNVBcuLmcSuZKkXxEytfrWtChP6WY4Pyh2Ze2A12tTFKQWZArJiCvXPeHsws",
+      "slot": 455743522,
+      "version": 1,
+      "sha256": "6630dd6d49b74a1f2df888573d8bab56248b64e15515ff4711f24a1537d57b3e"
+    },
+    {
+      "signature": "5Pfbd4M7VmJcbf4C6zurhumirHjSZRrUG2T2QSkFqXKSkgEPS1TFKbVKTGKzAD4JspCJKmjSmQjWBaJTqQjQB57U",
+      "slot": 455729073,
+      "version": 1,
+      "sha256": "4c2ae88d24ff8ae69bbf62d6f6b57b9abcc2a1198e136a8a32ce9d1d773b9092"
+    },
+    {
+      "signature": "5TLZVEE6LSTddhbAdRxkSAQ2THCrTZg37mvgH9nqQ5hGYkLMjBxs5aQcqPuUgU5qFpBBqHAXGEvEEEtAZPHDvE3z",
+      "slot": 455735346,
+      "version": 0,
+      "sha256": "995c12de491f12563872ee647dfc9109d3be70f8a5f86882e8513e06f129ed1a"
+    },
+    {
+      "signature": "5gBMmpQNbKdZiVtzxA4hCRFsbDWcqvPtEcx9oTVuc1hSvcpbRvXiFysvRG7YMba3V1ugMiEpGV5RYKLQRo9KmTSt",
+      "slot": 455742614,
+      "version": 1,
+      "sha256": "d6d4784a44d0984b559fb655e14268d6c0e224161baf2851382ea00ac5efef2a"
+    },
+    {
+      "signature": "5hNffZ4wxfRv2fTPux2PYWWAHj7zCtur8YsHeRr3nFhr1NdKaUFpjvzvxaoyXhCej1846qPXTfD1XfRK64h8Q18q",
+      "slot": 455736312,
+      "version": 0,
+      "sha256": "a57e27eceb8e9e168f4351a3bf809f6d5da2e7e65dbb8d5b102e65c403a586d6"
+    },
+    {
+      "signature": "5k2uh2fVewAFfvS7A8uBokB7sn61jtSoyRhsnFParHCDcpdjA9qCCkgNMH8eibCfimdeMQi9wqABd2LXSpCRJfLQ",
+      "slot": 455755071,
+      "version": 0,
+      "sha256": "e56372c60a945c9685b7b6ffa3a39fa9c210100272edd4e379abf78d5efeb354"
+    },
+    {
+      "signature": "5xssqNhTLQwLg8FJGkk8jAb1XN6kDTjkZXeaFvEQeskSrD2ke8qt35haXoAwNqs35KbAbtxUJiLdCMnNWveynZcm",
+      "slot": 455735109,
+      "version": 0,
+      "sha256": "97ca35779a7ae4b12fad3a66290f0e76128615866891f0fd4991afb7be30f311"
+    },
+    {
+      "signature": "CxHmCBmtNXkeSbQME5PhxsipaATgMoUinjGHd8JkE5p5xCcrqoJMZ1BMaoHgUS9JohrSDjgus6TvFq6GdHssTgN",
+      "slot": 455755287,
+      "version": 0,
+      "sha256": "a082ed3a3b3e172558ef58425e05a376af255e5cf211bdf2e5b02fc7058924a1"
+    },
+    {
+      "signature": "WNBaZUXaGMmWpqUJAqimhAN5MWk5EjyuPVjf44cTrVkt8zFDLmTC1g3sVc1ZR6JyMAoQhfjq3AjozuZ98kXJFkf",
+      "slot": 455746510,
+      "version": 0,
+      "sha256": "34607c78ac2fa7535cc7e9e42216c79a9f5cc574fe98540f78be71add8152f32"
+    },
+    {
+      "signature": "Xt7TPSwhsY37XK4bNHZHTp8GeSGzei1mc4cvgiDEUaKxgLjj6aDHuP64VvYSyTrGmiYXjUBpQhp4HNeJ8XpbDmc",
+      "slot": 455735630,
+      "version": 0,
+      "sha256": "50d048269e21066773b226b4c12b99fd63b79fe9a2035caea676bf9f20999d7e"
+    },
+    {
+      "signature": "fpos4PjHXNmgmciM4DmorVJnVg9oizTmLHnZSKo9To7jJoYdCEnxL2eFqEfDmQHhzoYusef1X9L8UN9buVbWjXm",
+      "slot": 455735347,
+      "version": 0,
+      "sha256": "aa80845766f1ea277a9fe9004d734da4ae0205ccf2c195cd4dbaada38d640f0b"
+    },
+    {
+      "signature": "hgPoHK7iuBEDmwQRJUgbQ4s2Fsb9UCov2adurj9kHhrD3zR6M4gjawg8TS3rx6LstRZYCShzjE7UniDYDBx2nFv",
+      "slot": 455735346,
+      "version": 0,
+      "sha256": "068c446ae09607d76d7ada119de0a3eaff8cf66d236339b8ef47b23619ea89f4"
+    },
+    {
+      "signature": "rrWEFE8s4bSNqmUQRz4bw7N4YoU49Bqz6eLxdwdyHbY1htfSMjnMVTHwTAyCGQUgTfchiLLmNCpRWCmgvxakxe2",
+      "slot": 455753980,
+      "version": 1,
+      "sha256": "d672cf14fedcb7de4e043859b031447dfc2b001f8365d18cd88a05d0abd58285"
+    },
+    {
+      "signature": "yTd5692cnYvcrqwTTs8A5iERpkKZSqkeYZak2YGWbf1AdZYY488a8ricdxahmEoua6F3ah8ba2SRizPMHaVAAEF",
+      "slot": 455738195,
+      "version": 1,
+      "sha256": "ac37fc33b72fa58cbfb8892ec51316ec1870089540734498f45b58d2d2a7b57e"
+    },
+    {
+      "signature": "zFZiwEfKoV89uNpo2afSTnwfnMzSmHU8PuB8aXjE9UDcqAvvYVYNekrZAWCM4ssa6yRpnfqKkAnxFY6rirwg44Q",
+      "slot": 455745146,
+      "version": 1,
+      "sha256": "edffeb1e9ec2ba4a6339397b5e14b7bdf837ace5bc0af6613db90a220dbd9c90"
+    }
+  ]
+}

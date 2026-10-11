@@ -322,6 +322,13 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::OpenbookV2
+                    && (output.authority != *accounts[3].0
+                        || instructions[input.index as usize].program_id().0 != accounts[13].0
+                        || instructions[output.index as usize].program_id().0 != accounts[13].0)
+                {
+                    continue;
+                }
                 if layout.protocol == pb::Protocol::RaydiumLaunchpad {
                     // The IDL pins base/quote vaults, mint roles and pool PDA.
                     // New event versions must not prevent exact native CPIs

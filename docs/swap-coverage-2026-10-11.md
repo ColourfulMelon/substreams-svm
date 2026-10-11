@@ -248,3 +248,34 @@ The new release remains a tested candidate until its immutable artifacts are
 published and the single writer is upgraded. Published pluto.9 assets remain
 unchanged. This does not complete OpenBook, DefiTuna two-hop, 1DEX exact-output,
 new/proprietary native programs or the other remaining coverage gaps.
+
+
+## OpenBook immediate-fill candidate after pluto.10
+
+The next source candidate recognizes OpenBook v2 `place_take_order` for IOC
+and market orders using the deployed v1.7 snake_case Anchor discriminator
+`032c47031ac7cb55`. The old OpenBook IDL instruction constants hash camelCase
+names and are not evidence for the actual instruction format.
+
+The native path validates the exact typed payload, base/quote direction, Token
+and System program roles, immediate user/vault transfer scope, input authority
+and the market's output authority. Prices use actual wallet token debits and
+receipts, rather than the lot-denominated order limits or a fill summary that
+can include referrer rebates. Protocol 51 identifies the real OpenBook market.
+
+Independent finalized RPC evidence contains 47 fills (four bids, 43 asks)
+across one market, nested at depths two and three. All 47 actual CPI identities,
+pools, users, mints and atom amounts agree with the candidate; the sample's
+127 previously normalized financial rows are unchanged. Fixtures cover both
+v0 and v1 transactions and reject wrong order types, declared Token programs
+and output authorities. There are no observed rebated wallet fills in this
+sample. Core Rust validation now has 107 passing tests.
+
+Primary contract: [OpenBook v1.7 at 796a470](https://github.com/openbook-dex/openbook-v2/tree/796a470033bc556c1d1a1f76709394fc50c63bf7).
+Public transaction provenance is in `dex-swaps/fixtures/openbook/evidence.json`.
+
+This candidate has not been packaged or deployed. Published pluto.10 assets
+remain unchanged. Deposited-balance orders, batch/edit/pegged order accounting
+and deferred maker fills still need additional support and evidence. For
+ledger orders, self-trade decrements must not be confused with economic fills;
+`TotalOrderFillEvent` alone does not distinguish all such cases.
