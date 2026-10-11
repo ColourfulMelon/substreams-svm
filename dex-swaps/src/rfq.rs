@@ -17,12 +17,14 @@ pub(crate) struct Fill {
 }
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Fill> {
+    if ix.program_id().0.as_slice() != PROGRAM_ID {
+        return None;
+    }
     let data = ix.data();
     let accounts = ix.accounts();
     // Anchor consumes the 32-byte typed prefix. The contract deliberately
     // ignores appended off-chain fee/exact-out metadata (35-byte documented / 37-byte observed payloads).
-    if ix.program_id().0.as_slice() != PROGRAM_ID
-        || data.len() < 32
+    if data.len() < 32
         || data[..8] != [168, 96, 183, 163, 92, 10, 40, 160]
         || accounts.len() < 11
         || accounts[10].0.iter().any(|byte| *byte != 0)

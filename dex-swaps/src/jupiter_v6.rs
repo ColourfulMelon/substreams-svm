@@ -12,8 +12,11 @@ const SWAPS: [u8; 8] = [152, 47, 78, 235, 192, 96, 110, 106];
 
 pub(crate) fn decode_instruction(tx: &ConfirmedTransaction, index: usize, instructions: &[InstructionView]) -> Vec<pb::Swap> {
     let instruction = &instructions[index];
+    if instruction.program_id().0 != &jupiter::v6::PROGRAM_ID {
+        return Vec::new();
+    }
     let data = instruction.data();
-    if instruction.program_id().0 != &jupiter::v6::PROGRAM_ID || data.len() < 16 || data[..8] != EVENT_CPI {
+    if data.len() < 16 || data[..8] != EVENT_CPI {
         return Vec::new();
     }
     let (records, plural) = if data[8..16] == SWAP && data.len() == 128 {
