@@ -166,8 +166,10 @@ reserve state.
 
 Raydium Launchpad now normalizes its four typed buy/sell exact-input/output
 variants from scoped user/vault transfers even when its event version is unknown.
-Five additional finalized BuyExactIn fixtures independently prove Token-2022
-receipts across two program-owned pools. These legs use native protocol 14,
+29 finalized BuyExactIn/SellExactIn fixtures independently prove transfers
+across six program-owned pools, including 12 Token-2022 output receipts.
+Seventeen existing input amounts are corrected from the pool's post-fee
+receipt to the gross user debit. These legs use native protocol 14,
 are deduplicated against Jupiter and contribute to mint pricing. Unknown
 instruction opcodes remain excluded. See `launchpad-evidence.json`.
 
@@ -178,3 +180,10 @@ Unsupported candidates remain diagnostic and never become guessed prices.
 
 Primary RFQ reference:
 https://github.com/jup-ag/rfq-webhook-toolkit/tree/3aa4fce515d4b5827ee2d48f08041ea706d911cd/programs/order-engine
+
+The `.9` packaged 50-slot replay emits 6,591 unique swaps versus 6,574 live
+`.8` rows. It preserves every existing event identity and all financial fields
+except 17 independently proven Launchpad gross-input corrections. It adds
+12 Launchpad, two 1DEX and three RFQ legs; 277 candidate instructions and
+242 raw candidate transactions remain diagnostic. Historical live rows and
+aggregates are not changed by deploying this release.
