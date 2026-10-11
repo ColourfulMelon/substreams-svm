@@ -84,7 +84,13 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
         if !missing_hop && swaps.iter().any(|swap| swap.source_index == Some(index as u32)) {
             continue;
         }
-        let known_swap = crate::native_venues::layout(ix).is_some() || fixed.is_some();
+        // Phoenix can fill from already deposited balances without a Token
+        // CPI. Retain swap/marketable-order intents for event/lot accounting,
+        // while excluding post-only placements and cancel/deposit/withdraw.
+        // This is diagnostic coverage, never evidence for a financial price.
+        let orderbook_swap = program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
+            && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
+        let known_swap = crate::native_venues::layout(ix).is_some() || fixed.is_some() || orderbook_swap;
         if exchange_mints.len() < 2 && !known_swap {
             continue;
         }
@@ -97,6 +103,8 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             transfer_count,
             reason: if missing_hop {
                 "multihop_without_all_verified_pools"
+            } else if orderbook_swap {
+                "orderbook_swap_requires_fill_accounting"
             } else if known_swap {
                 "recognized_swap_without_verified_flows"
             } else if conversion {

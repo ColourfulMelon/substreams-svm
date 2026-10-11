@@ -251,6 +251,39 @@ mod tests {
     }
 
     #[test]
+    fn phoenix_swaps_without_wallet_transfers_remain_replayable() {
+        let program = substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY");
+        for fixture in [
+            include_bytes!("../fixtures/phoenix-immediate-1.transaction.pb").as_slice(),
+            include_bytes!("../fixtures/phoenix-immediate-2.transaction.pb").as_slice(),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            for without_transfers in [false, true] {
+                let mut tx = tx.clone();
+                if without_transfers {
+                    let programs = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect::<Vec<_>>();
+                    for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+                        group.instructions.retain(|ix| programs[ix.program_id_index as usize].as_slice() == program);
+                    }
+                }
+                let decoded = process_transaction(tx).unwrap();
+                let candidates: Vec<_> = decoded.coverage_candidates.iter().filter(|c| c.program_id.as_slice() == program).collect();
+                assert_eq!(candidates.len(), 1);
+                assert_eq!(candidates[0].reason, "orderbook_swap_requires_fill_accounting");
+                if without_transfers {
+                    assert_eq!(candidates[0].transfer_count, 0);
+                }
+                assert!(!decoded.coverage_transaction.is_empty());
+                assert!(decoded.swaps.iter().all(|swap| swap.amm.as_slice() != program));
+            }
+        }
+        for data in [vec![2, 0], vec![3, 0], vec![10], vec![12], vec![13]] {
+            let tx = crate::routed_pool::test_fixture::make_tx(program, &[[1; 32], [2; 32]], data);
+            assert!(process_transaction(tx).map_or(true, |decoded| decoded.coverage_candidates.is_empty()));
+        }
+    }
+
+    #[test]
     fn finalized_swap_variants_preserve_independently_audited_legs() {
         for line in include_str!("../fixtures/swap-coverage/cases.tsv")
             .lines()
