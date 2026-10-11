@@ -5,10 +5,16 @@ use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::meteora::dlmm;
 
 pub(crate) struct PendingSwap {
-    user: Vec<u8>,
-    lb_pair: Vec<u8>,
-    token_x_mint: Vec<u8>,
-    token_y_mint: Vec<u8>,
+    pub(crate) user: Vec<u8>,
+    pub(crate) lb_pair: Vec<u8>,
+    pub(crate) token_x_mint: Vec<u8>,
+    pub(crate) token_y_mint: Vec<u8>,
+    pub(crate) user_token_in: Vec<u8>,
+    pub(crate) user_token_out: Vec<u8>,
+    pub(crate) reserve_x: Vec<u8>,
+    pub(crate) reserve_y: Vec<u8>,
+    pub(crate) token_x_program: Vec<u8>,
+    pub(crate) token_y_program: Vec<u8>,
 }
 
 struct SwapEvent {
@@ -62,7 +68,7 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
     decode_swap_instruction(ix).map(|s| s.lb_pair)
 }
 
-fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
+pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
     // Meteora DLMM ships six swap-flavour instructions. Each carries the same
     // (lb_pair, user, token_x_mint, token_y_mint) in different positions of
     // its account list and emits the same anchor CPI `Swap` event with a
@@ -79,6 +85,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         Ok(dlmm::instructions::MeteoraDlmmInstruction::Swap2(_)) => {
@@ -88,6 +100,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapExactOut(_)) => {
@@ -97,6 +115,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapExactOut2(_)) => {
@@ -106,6 +130,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapWithPriceImpact(_)) => {
@@ -115,6 +145,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapWithPriceImpact2(_)) => {
@@ -124,6 +160,12 @@ fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwap> {
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
                 token_y_mint: a.token_y_mint.to_bytes().to_vec(),
+                user_token_in: a.user_token_in.to_bytes().to_vec(),
+                user_token_out: a.user_token_out.to_bytes().to_vec(),
+                reserve_x: a.reserve_x.to_bytes().to_vec(),
+                reserve_y: a.reserve_y.to_bytes().to_vec(),
+                token_x_program: a.token_x_program.to_bytes().to_vec(),
+                token_y_program: a.token_y_program.to_bytes().to_vec(),
             })
         }
         _ => None,

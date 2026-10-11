@@ -28,6 +28,7 @@ mod raydium_launchpad;
 mod rfq;
 mod routed_pool;
 mod spl_token_swap;
+pub mod token_fees;
 mod token_mints;
 
 use std::collections::VecDeque;
@@ -131,8 +132,20 @@ pub fn process_transaction_with_phoenix(
 pub fn process_transaction_with_markets(
     tx: ConfirmedTransaction,
     expected_slot: Option<u64>,
+    market_lookup: impl FnMut(&[u8], u32) -> Option<phoenix::Market>,
+    openbook_lookup: impl FnMut(&[u8], u32) -> Option<openbook::Market>,
+) -> Option<pb::Transaction> {
+    process_transaction_with_metadata(tx, expected_slot, market_lookup, openbook_lookup, |_, _| None)
+}
+
+/// Fee metadata must describe the mint at this transfer's actual execution
+/// ordinal. Unknown metadata falls back only to independently proven receipts.
+pub fn process_transaction_with_metadata(
+    tx: ConfirmedTransaction,
+    expected_slot: Option<u64>,
     mut market_lookup: impl FnMut(&[u8], u32) -> Option<phoenix::Market>,
     mut openbook_lookup: impl FnMut(&[u8], u32) -> Option<openbook::Market>,
+    fee_lookup: impl FnMut(&[u8], u32) -> Option<token_fees::TransferFee>,
 ) -> Option<pb::Transaction> {
     if !tx.is_successful() {
         return None;
@@ -238,7 +251,7 @@ pub fn process_transaction_with_markets(
         }
     }
 
-    let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps, true);
+    let rejected_swaps = quality::verify_with_fees(&tx, &token_mints, &mut swaps, true, fee_lookup);
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0.as_slice() != phoenix::PROGRAM_ID || !matches!(ix.data().first(), Some(0 | 1 | 2 | 3)) {
             continue;

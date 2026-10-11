@@ -26,7 +26,18 @@ struct Transfer {
     net_verified: bool,
 }
 
+#[cfg(test)]
 pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swaps: &mut Vec<pb::Swap>, expand_native: bool) -> Vec<pb::Swap> {
+    verify_with_fees(tx, mints, swaps, expand_native, |_, _| None)
+}
+
+pub(crate) fn verify_with_fees(
+    tx: &ConfirmedTransaction,
+    mints: &TokenMintLookup,
+    swaps: &mut Vec<pb::Swap>,
+    expand_native: bool,
+    mut fee_lookup: impl FnMut(&[u8], u32) -> Option<crate::token_fees::TransferFee>,
+) -> Vec<pb::Swap> {
     let instructions: Vec<_> = tx.walk_instructions().collect();
     // A successful transaction may catch a failed CPI. Its completed inner
     // transfers roll back too, so require runtime success for all evidence
@@ -37,11 +48,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
             words.next() == Some("Program") && words.next().is_some() && words.next() == Some("failed:")
         })
     });
-    let successful_invocations = if caught_failure
-        || instructions
-            .iter()
-            .any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID && ix.data().starts_with(&[26, 3]))
-    {
+    let successful_invocations = if caught_failure || instructions.iter().any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID) {
         crate::logs::successful_invocations(tx)
     } else {
         HashSet::new()
@@ -122,6 +129,27 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                         }
                     }
                 }
+                let metadata_net = if program.0 == &token_2022::PROGRAM_ID {
+                    if let Some(fee) = fee_lookup(&mint, index as u32) {
+                        // Arithmetic is evidence only for a completed transfer
+                        // whose entire ancestor chain also committed.
+                        if !successful_invocations.contains(&(index as u32)) {
+                            continue;
+                        }
+                        let Some(net) = fee.received(amount) else { continue };
+                        if data.first() == Some(&26) && amounts.iter().min() != Some(&net) {
+                            continue;
+                        }
+                        if !amounts.contains(&net) {
+                            amounts.push(net);
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                };
                 transfers.push(Transfer {
                     index: index as u32,
                     depth: ix.stack_height(),
@@ -131,7 +159,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     destination: accounts[destination].0.clone(),
                     authority: accounts.get(destination + 1).map(|a| a.0.clone()).unwrap_or_default(),
                     fee_token: program.0 == &token_2022::PROGRAM_ID,
-                    net_verified: program.0 != &token_2022::PROGRAM_ID || data.first() == Some(&26),
+                    net_verified: program.0 != &token_2022::PROGRAM_ID || data.first() == Some(&26) || metadata_net,
                 });
             }
         }
@@ -880,6 +908,70 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                             }
                         }
                     }
+                }
+                // DLMM events report gross token transfers. Use only the
+                // declared native user/reserve legs to correct a fee receipt.
+                if swap.protocol == pb::Protocol::MeteoraDlmm as i32 {
+                    let Some(layout) = crate::meteora_dlmm::decode_swap_instruction(ix) else {
+                        continue;
+                    };
+                    if layout.lb_pair != swap.amm_pool || layout.user != swap.user {
+                        continue;
+                    }
+                    let (input_reserve, output_reserve, input_program, output_program) =
+                        if swap.input_mint == layout.token_x_mint && swap.output_mint == layout.token_y_mint {
+                            (&layout.reserve_x, &layout.reserve_y, &layout.token_x_program, &layout.token_y_program)
+                        } else if swap.input_mint == layout.token_y_mint && swap.output_mint == layout.token_x_mint {
+                            (&layout.reserve_y, &layout.reserve_x, &layout.token_y_program, &layout.token_x_program)
+                        } else {
+                            continue;
+                        };
+                    let inputs: Vec<_> = scoped
+                        .iter()
+                        .filter(|t| {
+                            t.depth == depth + 1
+                                && t.mint == swap.input_mint
+                                && t.source == layout.user_token_in
+                                && &t.destination == input_reserve
+                                && t.authority == layout.user
+                                && instructions[t.index as usize].program_id().0 == input_program
+                        })
+                        .collect();
+                    let outputs: Vec<_> = scoped
+                        .iter()
+                        .filter(|t| {
+                            t.depth == depth + 1
+                                && t.mint == swap.output_mint
+                                && &t.source == output_reserve
+                                && t.destination == layout.user_token_out
+                                && t.authority == layout.lb_pair
+                                && instructions[t.index as usize].program_id().0 == output_program
+                        })
+                        .collect();
+                    if inputs.len() != 1
+                        || outputs.len() != 1
+                        || !outputs[0].net_verified
+                        || inputs[0].amounts[0] != swap.input_amount
+                        || !outputs[0].amounts.contains(&swap.output_amount)
+                    {
+                        continue;
+                    }
+                    let (input, output) = (inputs[0], outputs[0]);
+                    let identity = (index as u32, input.index, output.index);
+                    if expected_transfer.is_some_and(|transfer| transfer != input.index.min(output.index)) || native_evidence.contains(&identity) {
+                        continue;
+                    }
+                    let net = *output.amounts.iter().min().unwrap();
+                    if swap.output_amount != net {
+                        let mut original = swap.clone();
+                        original.source_index = Some(index as u32);
+                        original.source_transfer_index = Some(input.index.min(output.index));
+                        original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                        rejected.push(original);
+                        swap.output_amount = net;
+                    }
+                    evidence = Some(identity);
+                    break 'candidate;
                 }
                 // Dynamic AMM v1 logs report vault-share conversions, which can
                 // differ from the transferred atoms. Its explicit user accounts

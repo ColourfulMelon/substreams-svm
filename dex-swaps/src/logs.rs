@@ -3,11 +3,11 @@ use common::solana::{is_failed, is_invoke, is_success, parse_invoke_depth, parse
 /// A successful transaction can catch a failed CPI. Only acknowledge an
 /// invocation after its entire ancestor chain returns successfully. Missing
 /// or truncated logs cannot prove success.
-pub(crate) fn successful_invocations(tx: &substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction) -> std::collections::HashSet<u32> {
+pub(crate) fn invocation_outcomes(tx: &substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction) -> InvocationOutcomes {
     let instructions: Vec<_> = tx.walk_instructions().collect();
     let mut cursor = 0;
     let mut stack: Vec<(String, Vec<u32>, bool)> = Vec::new();
-    let mut successful = std::collections::HashSet::new();
+    let mut outcomes = InvocationOutcomes::default();
     for log in tx.meta.as_ref().into_iter().flat_map(|meta| &meta.log_messages) {
         let words: Vec<_> = log.split_whitespace().collect();
         if words.first() != Some(&"Program") || words.len() < 3 {
@@ -43,12 +43,25 @@ pub(crate) fn successful_invocations(tx: &substreams_solana::pb::sf::solana::r#t
                 if let Some(parent) = stack.last_mut() {
                     parent.1.extend(descendants);
                 } else {
-                    successful.extend(descendants);
+                    outcomes.completed.extend(descendants);
                 }
+            } else if words[2] == "failed:" && valid {
+                // Completed children roll back with their failed ancestor.
+                outcomes.rolled_back.extend(descendants);
             }
         }
     }
-    successful
+    outcomes
+}
+
+#[derive(Default)]
+pub(crate) struct InvocationOutcomes {
+    pub completed: std::collections::HashSet<u32>,
+    pub rolled_back: std::collections::HashSet<u32>,
+}
+
+pub(crate) fn successful_invocations(tx: &substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction) -> std::collections::HashSet<u32> {
+    invocation_outcomes(tx).completed
 }
 
 pub(crate) enum ProgramLog<'a> {

@@ -1246,7 +1246,9 @@ mod tests {
             format!("Program {} success", programs[0]),
         ];
         tx.meta.as_mut().unwrap().log_messages = logs;
-        assert_eq!(crate::logs::successful_invocations(&tx), std::collections::HashSet::from([0]));
+        let outcomes = crate::logs::invocation_outcomes(&tx);
+        assert_eq!(outcomes.completed, std::collections::HashSet::from([0]));
+        assert_eq!(outcomes.rolled_back, std::collections::HashSet::from([1, 2, 3]));
         assert!(crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()));
     }
 
