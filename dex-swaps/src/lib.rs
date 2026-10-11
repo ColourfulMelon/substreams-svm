@@ -265,7 +265,7 @@ pub fn process_transaction_with_metadata(
         if let Some(swap) = meteora_daam::handle_instruction(&mut meteora_daam_pending, &instruction) {
             swaps.push(swap);
         }
-        if let Some(swap) = meteora_dlmm::handle_instruction(&mut meteora_dlmm_pending, &instruction) {
+        if let Some(swap) = meteora_dlmm::handle_instruction(&mut meteora_dlmm_pending, &instruction, index as u32) {
             swaps.push(swap);
         }
         okx_state.handle_instruction(&instruction);

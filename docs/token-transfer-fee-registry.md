@@ -44,8 +44,32 @@ The business logic tests include rounding/caps/u64 maximum amounts,
 epoch-delayed fee changes, superseded pending changes, mint close/re-creation,
 unproven calls, malformed owned mint data, history corruption, real repeated
 receipts, deliberately incorrect fee settings and successful children rolled
-back by failed ancestors. All 115 decoder tests and 12 SQL mapper tests pass;
+back by failed ancestors. All 116 decoder tests and 12 SQL mapper tests pass;
 the staged source also compiles for wasm32-unknown-unknown with Rust 1.85.1.
+
+## Native DLMM receipts
+
+All six typed DLMM swap variants can be verified from their completed native
+invocation and exact immediate user/reserve token transfers, even without the
+legacy event. This requires the native pool, user, mint pair, token programs
+and transfer authorities; unknown instruction types and additional user
+refund flows remain unverified. Events bind to the current pool/user invocation
+and cannot leak onto a later same-pool call. Repeated calls remain distinct.
+
+Normalized DLMM rows use the native invocation's stack height. Original gross
+events whose quantities differ from exact net receipts remain diagnostics.
+
+A broader independently finalized sample contains 40 formerly rejected DLMM
+instructions in 38 transactions. Fee-aware decoding preserves all 61 existing
+financial rows byte-for-byte and restores 79 additional financial legs,
+including 48 DLMM legs. Each added leg's amounts were checked against raw token
+CPI bytes and epoch-compatible owned mint fee settings. The native fallback
+preserves all 140 fee-aware financial payloads in this sample, including every
+identity, amount, depth, verification flag and execution-position field.
+Four transactions have logs truncated later, after the tested invocation had
+completed. Missing proof for an invocation still blocks its receipts.
+
+These are bounded sample results, not a claim of complete swap coverage.
 
 ## Rules and source
 

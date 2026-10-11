@@ -1193,4 +1193,57 @@ mod tests {
         .is_err());
     }
 
+    #[test]
+    fn typed_dlmm_swaps_survive_missing_legacy_events_without_duplicate_rows() {
+        use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+        let dew = base58::decode("DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP").unwrap();
+        let schedule = owned_mint(&token_2022::PROGRAM_ID, include_bytes!("../fixtures/token-fees/dew.bin")).unwrap().0;
+        for (fixture, expected) in [
+            (
+                include_bytes!("../fixtures/token-fees/two-receipts.transaction.pb").as_slice(),
+                vec![(17, 97_440_081_616), (23, 61_733_540_292)],
+            ),
+            (
+                include_bytes!("../fixtures/token-fees/three-receipts.transaction.pb").as_slice(),
+                vec![(13, 15_720_572_588), (19, 2_349_036_628), (25, 2_939_432_061)],
+            ),
+        ] {
+            let mut tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let mut hidden = 0;
+            for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+                for ix in &mut group.instructions {
+                    if ix.data.len() == 145 && ix.data[8..16] == [81, 108, 227, 190, 205, 208, 10, 196] {
+                        // Keep the actual CPI instruction position/runtime logs
+                        // and the modern Swap2Evt intact; hide only legacy data.
+                        ix.data[8..16].fill(0);
+                        hidden += 1;
+                    }
+                }
+            }
+            assert!(hidden >= expected.len());
+            let decoded = crate::process_transaction_with_metadata(
+                tx.clone(),
+                None,
+                |_, _| None,
+                |_, _| None,
+                |mint, _| (mint == dew).then(|| schedule.at(1055)).flatten(),
+            )
+            .unwrap();
+            for (index, amount) in &expected {
+                let rows: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(*index)).collect();
+                assert_eq!(rows.len(), 1);
+                assert_eq!(rows[0].output_amount, *amount);
+                assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDlmm as i32);
+                assert!(rows[0].transfer_verified);
+            }
+            tx.meta.as_mut().unwrap().log_messages.clear();
+            let unproven =
+                crate::process_transaction_with_metadata(tx, None, |_, _| None, |_, _| None, |mint, _| (mint == dew).then(|| schedule.at(1055)).flatten())
+                    .unwrap();
+            assert!(unproven
+                .swaps
+                .iter()
+                .all(|swap| !expected.iter().any(|(index, _)| swap.source_index == Some(*index))));
+        }
+    }
 }

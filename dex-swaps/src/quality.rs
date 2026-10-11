@@ -49,7 +49,11 @@ pub(crate) fn verify_with_fees(
             words.next() == Some("Program") && words.next().is_some() && words.next() == Some("failed:")
         })
     });
-    let successful_invocations = if caught_failure || instructions.iter().any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID) {
+    let successful_invocations = if caught_failure
+        || instructions
+            .iter()
+            .any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID)
+    {
         crate::logs::successful_invocations(tx)
     } else {
         HashSet::new()
@@ -493,6 +497,114 @@ pub(crate) fn verify_with_fees(
                 } else {
                     swaps.push(native);
                 }
+            }
+        }
+
+        // All six typed DLMM swap variants expose the native user/reserve
+        // accounts. A completed swap and its exact immediate token legs are
+        // sufficient even if its legacy event is absent or a new event format
+        // is emitted. Never infer a trade from an unrecognized instruction.
+        for (index, ix) in instructions.iter().enumerate() {
+            let Some(layout) = crate::meteora_dlmm::decode_swap_instruction(ix) else {
+                continue;
+            };
+            if !successful_invocations.contains(&(index as u32)) {
+                continue;
+            }
+            let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+            if depth == 0 {
+                continue;
+            }
+            let end = instructions
+                .iter()
+                .enumerate()
+                .skip(index + 1)
+                .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
+                .map_or(instructions.len() as u32, |(position, _)| position as u32);
+            let scoped: Vec<_> = transfers
+                .iter()
+                .filter(|t| t.index > index as u32 && t.index < end && t.depth == depth + 1 && successful_invocations.contains(&t.index))
+                .collect();
+            let inputs: Vec<_> = scoped
+                .iter()
+                .filter(|t| {
+                    t.source == layout.user_token_in
+                        && t.authority == layout.user
+                        && ((t.destination == layout.reserve_x
+                            && t.mint == layout.token_x_mint
+                            && instructions[t.index as usize].program_id().0 == &layout.token_x_program)
+                            || (t.destination == layout.reserve_y
+                                && t.mint == layout.token_y_mint
+                                && instructions[t.index as usize].program_id().0 == &layout.token_y_program))
+                })
+                .collect();
+            if inputs.len() != 1 {
+                continue;
+            }
+            let input = inputs[0];
+            let (reserve, mint, program) = if input.mint == layout.token_x_mint {
+                (&layout.reserve_y, &layout.token_y_mint, &layout.token_y_program)
+            } else {
+                (&layout.reserve_x, &layout.token_x_mint, &layout.token_x_program)
+            };
+            let outputs: Vec<_> = scoped
+                .iter()
+                .filter(|t| {
+                    t.source == *reserve
+                        && t.mint == *mint
+                        && t.destination == layout.user_token_out
+                        && t.authority == layout.lb_pair
+                        && instructions[t.index as usize].program_id().0 == program
+                        && t.net_verified
+                })
+                .collect();
+            if outputs.len() != 1 || input.mint.as_slice() == mint.as_slice() {
+                continue;
+            }
+            let output = outputs[0];
+            // Additional user flows (including refunds) need their own complete
+            // net-debit proof; do not silently ignore them when normalizing.
+            if scoped.iter().any(|t| {
+                t.index != input.index
+                    && t.index != output.index
+                    && [t.source.as_slice(), t.destination.as_slice()]
+                        .iter()
+                        .any(|account| *account == layout.user_token_in.as_slice() || *account == layout.user_token_out.as_slice())
+            }) {
+                continue;
+            }
+            let native = pb::Swap {
+                protocol: pb::Protocol::MeteoraDlmm as i32,
+                program_id: substreams_solana_idls::meteora::dlmm::PROGRAM_ID.to_vec(),
+                amm: substreams_solana_idls::meteora::dlmm::PROGRAM_ID.to_vec(),
+                stack_height: depth,
+                amm_pool: layout.lb_pair,
+                user: layout.user,
+                input_mint: input.mint.clone(),
+                input_amount: input.amounts[0],
+                output_mint: output.mint.clone(),
+                output_amount: *output.amounts.iter().min().unwrap(),
+                source_index: Some(index as u32),
+                source_transfer_index: Some(input.index.min(output.index)),
+                ..Default::default()
+            };
+            if let Some(existing) = swaps.iter_mut().find(|swap| {
+                swap.protocol == native.protocol
+                    && swap.source_index == native.source_index
+                    && swap.amm_pool == native.amm_pool
+                    && swap.user == native.user
+                    && swap.input_mint == native.input_mint
+                    && swap.output_mint == native.output_mint
+            }) {
+                if (existing.input_amount, existing.output_amount) != (native.input_amount, native.output_amount) {
+                    let mut original = existing.clone();
+                    original.source_transfer_index = native.source_transfer_index;
+                    original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                    rejected.push(original);
+                }
+                *existing = native;
+            } else {
+                swaps.push(native);
             }
         }
 

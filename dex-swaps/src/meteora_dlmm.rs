@@ -5,6 +5,8 @@ use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::meteora::dlmm;
 
 pub(crate) struct PendingSwap {
+    native_index: Option<u32>,
+    native_depth: u32,
     pub(crate) user: Vec<u8>,
     pub(crate) lb_pair: Vec<u8>,
     pub(crate) token_x_mint: Vec<u8>,
@@ -19,6 +21,7 @@ pub(crate) struct PendingSwap {
 
 struct SwapEvent {
     lb_pair: Vec<u8>,
+    user: Vec<u8>,
     amount_in: u64,
     amount_out: u64,
     swap_for_y: bool,
@@ -26,19 +29,26 @@ struct SwapEvent {
 
 /// Match the event's own pool. A missing instruction/event must never shift
 /// a later event onto another pool's mint pair.
-pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instruction: &InstructionView) -> Option<pb::Swap> {
+pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instruction: &InstructionView, index: u32) -> Option<pb::Swap> {
+    let depth = if instruction.is_root() { 1 } else { instruction.stack_height() };
+    // An invocation ends before the next instruction at its own depth or a
+    // shallower depth. Missing events never leak onto a later same-pool call.
+    pending.retain(|swap| swap.native_depth < depth);
     let program_id = instruction.program_id().0;
     if program_id != &dlmm::PROGRAM_ID {
         return None;
     }
 
-    if let Some(swap) = decode_swap_instruction(instruction) {
+    if let Some(mut swap) = decode_swap_instruction(instruction) {
+        swap.native_index = Some(index);
         pending.push_back(swap);
         return None;
     }
 
     let event = decode_swap_event(instruction)?;
-    let position = pending.iter().position(|swap| swap.lb_pair == event.lb_pair)?;
+    let position = pending
+        .iter()
+        .position(|swap| swap.lb_pair == event.lb_pair && swap.user == event.user && swap.native_depth + 1 == depth)?;
     let swap = pending.remove(position)?;
     let (input_mint, output_mint) = if event.swap_for_y {
         (swap.token_x_mint.clone(), swap.token_y_mint.clone())
@@ -57,6 +67,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
         input_amount: event.amount_in,
         output_mint,
         output_amount: event.amount_out,
+        source_index: swap.native_index,
         ..Default::default()
     })
 }
@@ -77,10 +88,13 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
     // Pre-v0.5.0 we matched only the original `Swap` instruction, silently
     // dropping ~5/6 of post-launch DLMM volume routed through the variants
     // below.
+    let depth = if ix.is_root() { 1 } else { ix.stack_height() };
     match dlmm::instructions::unpack(ix.data()) {
         Ok(dlmm::instructions::MeteoraDlmmInstruction::Swap(_)) => {
             let a = dlmm::accounts::get_swap_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -96,6 +110,8 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
         Ok(dlmm::instructions::MeteoraDlmmInstruction::Swap2(_)) => {
             let a = dlmm::accounts::get_swap2_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -111,6 +127,8 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapExactOut(_)) => {
             let a = dlmm::accounts::get_swap_exact_out_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -126,6 +144,8 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapExactOut2(_)) => {
             let a = dlmm::accounts::get_swap_exact_out2_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -141,6 +161,8 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapWithPriceImpact(_)) => {
             let a = dlmm::accounts::get_swap_with_price_impact_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -156,6 +178,8 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
         Ok(dlmm::instructions::MeteoraDlmmInstruction::SwapWithPriceImpact2(_)) => {
             let a = dlmm::accounts::get_swap_with_price_impact2_accounts(ix).ok()?;
             Some(PendingSwap {
+                native_index: None,
+                native_depth: depth,
                 user: a.user.to_bytes().to_vec(),
                 lb_pair: a.lb_pair.to_bytes().to_vec(),
                 token_x_mint: a.token_x_mint.to_bytes().to_vec(),
@@ -176,6 +200,7 @@ fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
     match dlmm::anchor_cpi_event::unpack(ix.data()) {
         Ok(dlmm::anchor_cpi_event::MeteoraDlmmAnchorCpiEvent::Swap(event)) => Some(SwapEvent {
             lb_pair: event.lb_pair.to_bytes().to_vec(),
+            user: event.from.to_bytes().to_vec(),
             amount_in: event.amount_in,
             amount_out: event.amount_out,
             swap_for_y: event.swap_for_y,
