@@ -43,6 +43,8 @@ enum Protocol {
   PROTOCOL_DENALI = 37;
   PROTOCOL_AQUIFER = 38;
   PROTOCOL_BISONFI_PREDICT = 39;
+  PROTOCOL_SOLFI_V2 = 40;
+  PROTOCOL_SAROS = 41;
 }
 
 message Events {
@@ -61,6 +63,20 @@ message Transaction {
   // Position in the source block, before filtering votes or unsuccessful txs.
   optional uint32 source_index = 7;
   repeated Swap rejected_swaps = 8;
+  // Diagnostic candidates are never financial swaps or pricing evidence.
+  repeated CoverageCandidate coverage_candidates = 9;
+  // Original successful transaction, retained only for diagnostic candidates.
+  bytes coverage_transaction = 10;
+}
+
+message CoverageCandidate {
+  bytes program_id = 1;
+  uint32 source_index = 2;
+  uint32 stack_height = 3;
+  bytes instruction_tag = 4;
+  repeated bytes mints = 5;
+  uint32 transfer_count = 6;
+  string reason = 7;
 }
 
 message Swap {

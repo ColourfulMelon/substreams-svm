@@ -33,6 +33,8 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Denali => "denali",
         pb::Protocol::Aquifer => "aquifer",
         pb::Protocol::BisonfiPredict => "bisonfi_predict",
+        pb::Protocol::SolfiV2 => "solfi_v2",
+        pb::Protocol::Saros => "saros",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",
@@ -65,6 +67,37 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         let transaction_index = transaction.source_index.map(|index| index as usize).unwrap_or(ordinal);
         if transaction_index >= 65536 {
             return Err(Error::msg("transaction position exceeds order-key bounds"));
+        }
+        if !transaction.coverage_candidates.is_empty() {
+            if transaction.coverage_transaction.is_empty() {
+                return Err(Error::msg("coverage candidates require original transaction bytes"));
+            }
+            use std::fmt::Write;
+            let mut raw = String::with_capacity(transaction.coverage_transaction.len() * 2);
+            for byte in &transaction.coverage_transaction {
+                write!(&mut raw, "{byte:02x}").unwrap();
+            }
+            let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
+            row.set("signature", base58::encode(&transaction.signature))
+                .set("decoder_version", "v0.5.2-pluto.5")
+                .set("transaction_proto_hex", raw);
+            set_clock(&clock, row);
+        }
+        for candidate in &transaction.coverage_candidates {
+            if candidate.source_index >= 65536 {
+                return Err(Error::msg("coverage instruction position exceeds order-key bounds"));
+            }
+            let row = tables.create_row("swap_coverage", common_key_v2(&clock, transaction_index, candidate.source_index as usize));
+            let tag = candidate.instruction_tag.iter().map(|byte| format!("{byte:02x}")).collect::<String>();
+            row.set("signature", base58::encode(&transaction.signature))
+                .set("program_id", base58::encode(&candidate.program_id))
+                .set("stack_height", candidate.stack_height)
+                .set("instruction_tag", tag)
+                .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
+                .set("transfer_count", candidate.transfer_count)
+                .set("reason", candidate.reason.clone())
+                .set("decoder_version", "v0.5.2-pluto.5");
+            set_clock(&clock, row);
         }
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
             let instruction_index = swap.source_transfer_index.map(|index| index as usize).unwrap_or(ordinal);
@@ -114,6 +147,14 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         .set("parent_hash", swaps.parent_hash)
         .set("decoder_version", "v0.5.2-pluto.5")
         .set("verified_swaps", all_swaps.filter(|swap| swap.transfer_verified).count() as u32)
+        .set(
+            "coverage_candidates",
+            swaps.transactions.iter().map(|tx| tx.coverage_candidates.len()).sum::<usize>() as u32,
+        )
+        .set(
+            "coverage_transactions",
+            swaps.transactions.iter().filter(|tx| !tx.coverage_candidates.is_empty()).count() as u32,
+        )
         .set(
             "quarantined_swaps",
             rejected
@@ -204,5 +245,68 @@ mod tests {
             ..Default::default()
         };
         assert!(write_swaps(clock, too_large).is_err());
+    }
+
+    #[test]
+    fn coverage_keeps_one_raw_transaction_and_each_candidate_out_of_price_rows() {
+        let clock = Clock {
+            number: 100,
+            id: "block".into(),
+            timestamp: Some(Default::default()),
+        };
+        let mut tx = pb::Transaction {
+            source_index: Some(17),
+            signature: vec![7; 64],
+            coverage_transaction: vec![0, 255, 128],
+            coverage_candidates: [3, 9]
+                .into_iter()
+                .map(|source_index| pb::CoverageCandidate {
+                    source_index,
+                    program_id: vec![8; 32],
+                    reason: "token_exchange_unclassified".into(),
+                    instruction_tag: vec![0, 255],
+                    ..Default::default()
+                })
+                .collect(),
+            ..Default::default()
+        };
+        let changes = write_swaps(
+            clock.clone(),
+            pb::Events {
+                transactions: vec![tx.clone()],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(changes.table_changes.iter().all(|row| row.table != "swaps"));
+        assert_eq!(changes.table_changes.iter().filter(|row| row.table == "swap_coverage").count(), 2);
+        let raw: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swap_coverage_transactions").collect();
+        assert_eq!(raw.len(), 1);
+        assert!(raw[0]
+            .fields
+            .iter()
+            .any(|field| field.name == "transaction_proto_hex" && field.value == "00ff80"));
+        let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
+        assert!(block.fields.iter().any(|field| field.name == "coverage_candidates" && field.value == "2"));
+        assert!(block.fields.iter().any(|field| field.name == "coverage_transactions" && field.value == "1"));
+        tx.coverage_transaction.clear();
+        assert!(write_swaps(
+            clock.clone(),
+            pb::Events {
+                transactions: vec![tx.clone()],
+                ..Default::default()
+            }
+        )
+        .is_err());
+        tx.coverage_transaction = vec![1];
+        tx.coverage_candidates[0].source_index = 65536;
+        assert!(write_swaps(
+            clock,
+            pb::Events {
+                transactions: vec![tx],
+                ..Default::default()
+            }
+        )
+        .is_err());
     }
 }

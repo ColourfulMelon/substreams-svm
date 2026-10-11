@@ -31,6 +31,10 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::BisonfiPredict, b58!("2DNbzPochEcyCcWMbL4d9S3u9QqQEj5bbe6cSZFvKsbh")),
     (Protocol::Aquifer, b58!("AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45")),
     (Protocol::Denali, b58!("DNL1tgEj3nJovHw9jtyCCQD3arssCJzkmpDizknwzey4")),
+    (Protocol::SolfiV2, substreams_solana_idls::solfi::v2::PROGRAM_ID),
+    (Protocol::Saros, substreams_solana_idls::saros::PROGRAM_ID),
+    (Protocol::RaydiumCpmm, substreams_solana_idls::raydium::cpmm::PROGRAM_ID),
+    (Protocol::MeteoraDaam, substreams_solana_idls::meteora::daam::PROGRAM_ID),
 ];
 
 pub(crate) struct Layout {
@@ -140,6 +144,59 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             fixed_users: true,
         });
     }
+    if protocol == Protocol::RaydiumCpmm {
+        use substreams_solana_idls::raydium::cpmm::instructions::{unpack, RaydiumCpmmInstruction};
+        let (amount, minimum_output, exact_input) = match unpack(&data).ok()? {
+            RaydiumCpmmInstruction::SwapBaseInput(x) => (x.amount_in, x.minimum_amount_out, true),
+            RaydiumCpmmInstruction::SwapBaseOutput(x) => (x.max_amount_in, x.amount_out, false),
+            _ => return None,
+        };
+        if ix.accounts().len() < 13 {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 3,
+            authority: 0,
+            users: [4, 5],
+            vaults: [6, 7],
+            amount,
+            minimum_output,
+            exact_input,
+            input_limit: false,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
+    if protocol == Protocol::MeteoraDaam {
+        use substreams_solana_idls::meteora::daam::instructions::{unpack, MeteoraDammInstruction};
+        let (amount, minimum_output, exact_input, input_limit) = match unpack(&data).ok()? {
+            MeteoraDammInstruction::Swap(x) => (x.params.amount_in, x.params.minimum_amount_out, true, false),
+            MeteoraDammInstruction::Swap2(x) if x.params.swap_mode <= 2 => (
+                if x.params.swap_mode == 2 { x.params.amount_1 } else { x.params.amount_0 },
+                if x.params.swap_mode == 2 { x.params.amount_0 } else { x.params.amount_1 },
+                x.params.swap_mode == 0,
+                x.params.swap_mode != 0,
+            ),
+            _ => return None,
+        };
+        if ix.accounts().len() < 14 {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 1,
+            authority: 8,
+            users: [2, 3],
+            vaults: [4, 5],
+            amount,
+            minimum_output,
+            exact_input,
+            input_limit,
+            input_first: false,
+            fixed_users: true,
+        });
+    }
     let tag = *data.first()?;
     let discriminator = data.get(..8);
     let dbc_legacy = discriminator == Some(&[248, 198, 158, 145, 225, 117, 135, 200]);
@@ -227,6 +284,8 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         Protocol::Denali if discriminator == Some(&[104, 104, 131, 86, 161, 189, 180, 216]) && data.len() == 25 && data[8] <= 1 => {
             (1, 0, [10, 11], [4, 5], 9, false)
         }
+        Protocol::SolfiV2 if tag == 7 && data.len() == 18 && data[17] <= 1 => (1, 0, [6, 7], [4, 5], 1, false),
+        Protocol::Saros if tag == 1 && data.len() == 17 => (0, 2, [3, 6], [4, 5], 1, true),
         _ => return None,
     };
     let count = ix.accounts().len();
@@ -275,6 +334,8 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             }
         }
         Protocol::Denali => 14,
+        Protocol::SolfiV2 => 13,
+        Protocol::Saros => 10,
         _ => return None,
     };
     if count < minimum_accounts {
@@ -297,6 +358,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         Protocol::PoseidonV2 => u64::from_le_bytes(data[10..18].try_into().ok()?),
         Protocol::BisonfiPredict => u64::from_le_bytes(data[12..20].try_into().ok()?),
         Protocol::Denali => u64::from_le_bytes(data[17..25].try_into().ok()?),
+        Protocol::SolfiV2 | Protocol::Saros => u64::from_le_bytes(data[9..17].try_into().ok()?),
         _ => 0,
     };
     if amount == 0 && exact_input {
@@ -310,8 +372,10 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         vaults,
         amount,
         exact_input,
-        input_limit: matches!(protocol, Protocol::Manifest | Protocol::OrcaV2 | Protocol::Byreal | Protocol::Pancakeswap)
-            || (protocol == Protocol::MeteoraDbc && !dbc_legacy && data[24] != 0),
+        input_limit: matches!(
+            protocol,
+            Protocol::Manifest | Protocol::OrcaV2 | Protocol::Byreal | Protocol::Pancakeswap | Protocol::Saros
+        ) || (protocol == Protocol::MeteoraDbc && !dbc_legacy && data[24] != 0),
         input_first,
         fixed_users: matches!(protocol, Protocol::MeteoraDbc | Protocol::Obsidian),
         minimum_output,
@@ -421,7 +485,7 @@ mod tests {
         let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
         assert!(layout(&tx.walk_instructions().next().unwrap()).is_some());
         // A recognized swap without token CPIs can never publish a price.
-        assert!(crate::process_transaction(tx).is_none());
+        assert!(crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()));
     }
 
     fn fee_fixture(explicit_fee: bool) -> ConfirmedTransaction {
@@ -498,7 +562,7 @@ mod tests {
         meta.post_token_balances.retain(|b| b.account_index != 5);
         // Checked transfer proves the mint, but cannot prove an implicit fee
         // without the recipient balance. Do not publish the gross output.
-        assert!(crate::process_transaction(unknown_receipt).is_none());
+        assert!(crate::process_transaction(unknown_receipt).map_or(true, |decoded| decoded.swaps.is_empty()));
     }
 
     #[test]
@@ -523,7 +587,10 @@ mod tests {
                     meta.inner_instructions[0].instructions.insert(1, duplicate);
                 }
             }
-            assert!(crate::process_transaction(tx).is_none(), "invalid evidence {field}");
+            assert!(
+                crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()),
+                "invalid evidence {field}"
+            );
         }
     }
 }

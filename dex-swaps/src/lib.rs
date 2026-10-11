@@ -1,5 +1,6 @@
 mod boop;
 mod byreal;
+mod coverage;
 mod darklake;
 mod dumpfun;
 mod jupiter_v4;
@@ -167,9 +168,15 @@ pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> 
     }
 
     let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps, true);
-    if swaps.is_empty() && rejected_swaps.is_empty() {
+    let coverage_candidates = coverage::candidates(&tx, &token_mints, &swaps);
+    if swaps.is_empty() && rejected_swaps.is_empty() && coverage_candidates.is_empty() {
         return None;
     }
+    let coverage_transaction = if coverage_candidates.is_empty() {
+        Vec::new()
+    } else {
+        substreams::proto::encode(&tx).expect("transaction encoding")
+    };
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
@@ -180,12 +187,68 @@ pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> 
         swaps,
         source_index: None,
         rejected_swaps,
+        coverage_candidates,
+        coverage_transaction,
     })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn unsupported_token_exchanges_and_zero_output_swaps_remain_replayable() {
+        for (fixture, program, reason) in [
+            (
+                include_bytes!("../fixtures/swap-coverage/78.transaction.pb").as_slice(),
+                "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9",
+                "mint_burn_exchange_unclassified",
+            ),
+            (
+                include_bytes!("../fixtures/swap-coverage/79.transaction.pb").as_slice(),
+                "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+                "recognized_swap_without_verified_flows",
+            ),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let decoded = process_transaction(tx.clone()).unwrap();
+            assert!(decoded.swaps.is_empty());
+            assert!(decoded
+                .coverage_candidates
+                .iter()
+                .any(|candidate| base58::encode(&candidate.program_id) == program && candidate.reason == reason));
+            assert_eq!(substreams::proto::decode::<ConfirmedTransaction>(&decoded.coverage_transaction).unwrap(), tx);
+        }
+        let mut tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/swap-coverage/76.transaction.pb").to_vec()).unwrap();
+        let keys = tx.resolved_accounts();
+        let program_index = keys
+            .iter()
+            .position(|key| key.as_slice() == substreams_solana_idls::solfi::v2::PROGRAM_ID)
+            .unwrap() as u32;
+        for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+            for instruction in &mut group.instructions {
+                if instruction.program_id_index == program_index {
+                    instruction.data[0] = 255;
+                }
+            }
+        }
+        let decoded = process_transaction(tx.clone()).unwrap();
+        let candidate = decoded.coverage_candidates.iter().find(|candidate| candidate.source_index == 23).unwrap();
+        assert_eq!(candidate.reason, "token_exchange_unclassified");
+        assert_eq!(candidate.transfer_count, 2);
+        assert_eq!(candidate.mints.len(), 2);
+        assert_eq!(candidate.instruction_tag[0], 255);
+        assert!(decoded.swaps.iter().all(|swap| swap.source_index != Some(23)));
+        assert_eq!(substreams::proto::decode::<ConfirmedTransaction>(&decoded.coverage_transaction).unwrap(), tx);
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/swap-coverage/62.transaction.pb").to_vec()).unwrap();
+        let decoded = process_transaction(tx.clone()).unwrap();
+        assert!(decoded.coverage_candidates.iter().all(|candidate| candidate.source_index != 8));
+        let partial: Vec<_> = decoded.swaps.into_iter().filter(|swap| swap.source_index != Some(12)).collect();
+        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        assert!(coverage::candidates(&tx, &mints, &partial)
+            .iter()
+            .any(|candidate| candidate.source_index == 8 && candidate.reason == "multihop_without_all_verified_pools"));
+    }
 
     #[test]
     fn finalized_swap_variants_preserve_independently_audited_legs() {

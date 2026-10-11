@@ -18,4 +18,6 @@ ALTER TABLE blocks
     ADD COLUMN IF NOT EXISTS verified_swaps UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS quarantined_swaps UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS duplicate_wrappers UInt32 DEFAULT 0,
-    ADD COLUMN IF NOT EXISTS corrected_events UInt32 DEFAULT 0;
+    ADD COLUMN IF NOT EXISTS corrected_events UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS coverage_candidates UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS coverage_transactions UInt32 DEFAULT 0;

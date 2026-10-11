@@ -30,6 +30,30 @@ pub struct Transaction {
     pub source_index: ::core::option::Option<u32>,
     #[prost(message, repeated, tag="8")]
     pub rejected_swaps: ::prost::alloc::vec::Vec<Swap>,
+    /// Diagnostic candidates are never financial swaps or pricing evidence.
+    #[prost(message, repeated, tag="9")]
+    pub coverage_candidates: ::prost::alloc::vec::Vec<CoverageCandidate>,
+    /// Original successful transaction, retained only for diagnostic candidates.
+    #[prost(bytes="vec", tag="10")]
+    pub coverage_transaction: ::prost::alloc::vec::Vec<u8>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CoverageCandidate {
+    #[prost(bytes="vec", tag="1")]
+    pub program_id: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint32, tag="2")]
+    pub source_index: u32,
+    #[prost(uint32, tag="3")]
+    pub stack_height: u32,
+    #[prost(bytes="vec", tag="4")]
+    pub instruction_tag: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", repeated, tag="5")]
+    pub mints: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+    #[prost(uint32, tag="6")]
+    pub transfer_count: u32,
+    #[prost(string, tag="7")]
+    pub reason: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -107,6 +131,8 @@ pub enum Protocol {
     Denali = 37,
     Aquifer = 38,
     BisonfiPredict = 39,
+    SolfiV2 = 40,
+    Saros = 41,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -155,6 +181,8 @@ impl Protocol {
             Protocol::Denali => "PROTOCOL_DENALI",
             Protocol::Aquifer => "PROTOCOL_AQUIFER",
             Protocol::BisonfiPredict => "PROTOCOL_BISONFI_PREDICT",
+            Protocol::SolfiV2 => "PROTOCOL_SOLFI_V2",
+            Protocol::Saros => "PROTOCOL_SAROS",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -200,6 +228,8 @@ impl Protocol {
             "PROTOCOL_DENALI" => Some(Self::Denali),
             "PROTOCOL_AQUIFER" => Some(Self::Aquifer),
             "PROTOCOL_BISONFI_PREDICT" => Some(Self::BisonfiPredict),
+            "PROTOCOL_SOLFI_V2" => Some(Self::SolfiV2),
+            "PROTOCOL_SAROS" => Some(Self::Saros),
             _ => None,
         }
     }

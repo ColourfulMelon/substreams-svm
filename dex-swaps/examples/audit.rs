@@ -21,6 +21,16 @@ fn main() {
             decoded.as_ref().map_or(0, |tx| tx.rejected_swaps.len())
         );
         if let Some(decoded) = decoded {
+            for candidate in &decoded.coverage_candidates {
+                println!(
+                    "COVERAGE\t{}\t{}\t{}\t{}\t{}",
+                    signature,
+                    candidate.source_index,
+                    base58::encode(&candidate.program_id),
+                    candidate.reason,
+                    candidate.transfer_count
+                );
+            }
             for swap in &decoded.rejected_swaps {
                 println!(
                     "REJECT\t{}\t{}\t{}\t{}\t{}\t{}\t{}",

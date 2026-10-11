@@ -37,11 +37,13 @@ The current fixes include:
   transaction, explicit burns, repeated zero-fee receipts and transfer fees.
   Unproven net receipts are excluded; gross event amounts cannot override them.
 - Physical CPI identity deduplication across native and router events.
+- SolFi V2 and Saros native exchanges, plus native fallbacks for Raydium CPMM
+  and Meteora DAMM v2 when emitted amounts do not reflect net receipts.
 
-Replay results: the original 1,677 legs in 1,481 transactions become 1,952 legs
+Replay results: the original 1,677 legs in 1,481 transactions become 1,961 legs
 in 1,598 transactions, with 117 additional transactions and no lost original
-transaction. An independent raw-RPC check verifies 297 new or corrected legs
-in 250 transactions with zero mismatches. Three additional finalized Bison
+transaction. An independent raw-RPC check verifies 312 new or corrected legs
+in 260 transactions with zero mismatches. Three additional finalized Bison
 prediction transactions separately verify YES/NO buys and a YES sell. These
 counts describe this sample, not global coverage.
 
@@ -69,11 +71,23 @@ cargo +1.85.1 run -p dex-swaps --example audit -- /path/to/raw/transaction/fixtu
 This sample does not establish support for every swap type. A Jupiter lending
 conversion and a zero-output Orca dust invocation are classified as swaps by
 Helius but do not prove a positive two-sided spot trade. Other programs and
-variants still require decoder coverage, including SolFi V2, Saros, native SOL
-multi-hop curves and some conversions and orderbook formats. The raw leg audit
+variants still require decoder coverage, including native SOL multi-hop curves
+and some conversions and orderbook formats. The raw leg audit
 also flags liquidity operations and router fee transfers: its candidates must
 be classified rather than blindly indexed as prices. The audit must expand to
 the current protocol inventory and retain unknown candidates for inspection.
+
+Unclassified two-mint immediate token flows, mint/burn exchanges and recognized
+swaps without verified receipts now emit `CoverageCandidate` diagnostics.
+Multi-hop calls report any declared pool without a verified leg, even if another
+hop in the same call succeeded. The original successful transaction protobuf
+is retained once per candidate transaction in `swap_coverage_transactions`;
+individual program/tag/source identities are in `swap_coverage`. Both tables
+have a seven-day TTL; block-level counters persist after payload expiration.
+These records are candidates, not proof that a swap was missed: liquidity,
+router fees and lending conversions also appear. They never enter price views.
+Pure orderbook fills without token transfers still need event-specific decoding.
+Create the additive coverage tables and columns before starting this writer.
 
 No decoder changes from this audit have been deployed yet. Historical recovery
 must use a separate canonical archive/replacement; live OHLC tables cannot
