@@ -89,7 +89,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             }
             let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
             row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", "v0.5.2-pluto.11")
+                .set("decoder_version", "v0.5.2-pluto.12")
                 .set("transaction_proto_hex", raw);
             set_clock(&clock, row);
         }
@@ -106,9 +106,35 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
                 .set("transfer_count", candidate.transfer_count)
                 .set("reason", candidate.reason.clone())
-                .set("decoder_version", "v0.5.2-pluto.11");
+                .set("decoder_version", "v0.5.2-pluto.12");
             set_clock(&clock, row);
         }
+        // Row identity positions live in two coordinate domains. For a
+        // transaction containing runtime fills, rank all financial events by
+        // their actual compiled invocation/transfer coordinate, then log order.
+        // Wallet-only transactions retain their original instruction positions.
+        let execution_positions = if transaction.swaps.iter().any(|swap| swap.source_log_index.is_some()) {
+            if transaction.swaps.len() > 65536 {
+                return Err(Error::msg("financial event count exceeds order-key bounds"));
+            }
+            let mut ordered: Vec<_> = transaction.swaps.iter().enumerate().collect();
+            ordered.sort_by_key(|(ordinal, swap)| {
+                (
+                    swap.source_transfer_index
+                        .or(swap.source_event_index)
+                        .or(swap.source_index)
+                        .unwrap_or(*ordinal as u32),
+                    swap.source_log_index,
+                )
+            });
+            let mut positions = vec![0u32; ordered.len()];
+            for (position, (ordinal, _)) in ordered.into_iter().enumerate() {
+                positions[ordinal] = position as u32;
+            }
+            Some(positions)
+        } else {
+            None
+        };
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
             // Runtime log positions and compiled instruction positions are
             // different coordinate systems. Reserve the upper half of the
@@ -157,8 +183,12 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.11")
+                .set("decoder_version", "v0.5.2-pluto.12")
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
+                .set(
+                    "execution_position",
+                    execution_positions.as_ref().map_or(instruction_index as u32, |positions| positions[ordinal]),
+                )
                 .set("transfer_verified", u32::from(swap.transfer_verified))
                 .set("orderbook_fill_verified", u32::from(swap.orderbook_fill_verified))
                 // Swap
@@ -182,7 +212,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.11")
+        .set("decoder_version", "v0.5.2-pluto.12")
         .set(
             "verified_swaps",
             all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
@@ -361,6 +391,9 @@ mod tests {
             })
             .collect();
         assert_eq!(keys, vec!["34", "32802", "32803"]);
+        for (row, position) in rows.iter().zip(["2", "0", "1"]) {
+            assert!(row.fields.iter().any(|field| field.name == "execution_position" && field.value == position));
+        }
         for (row, suffix) in rows.iter().zip([":30:34", ":30:log:34", ":30:log:35"]) {
             assert!(row.fields.iter().any(|field| field.name == "event_id" && field.value.ends_with(suffix)));
         }

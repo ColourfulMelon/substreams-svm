@@ -144,7 +144,7 @@ WITH
         amount0 >= multiIf(mint0 IN stable_mints, 10000, mint0 IN sol_mints, 100000, 1)
         AND amount1 >= multiIf(mint1 IN stable_mints, 10000, mint1 IN sol_mints, 100000, 1)
     ) AS price_eligible,
-    toUInt64(block_num) * 4294967296 + toUInt64(transaction_index) * 65536 + toUInt64(instruction_index) AS trade_position,
+    toUInt64(block_num) * 4294967296 + toUInt64(transaction_index) * 65536 + toUInt64(execution_position) AS trade_position,
     if(amount0 > 0, toFloat64(amount1) / amount0, 0.0) AS price,
     abs(amount0) AS gv0,
     abs(amount1) AS gv1,

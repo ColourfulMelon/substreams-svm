@@ -317,3 +317,31 @@ This revision remains unpublished as a package and undeployed until immutable
 artifact validation and controlled cursor migration succeed. It does not close
 DefiTuna two-hop, 1DEX exact-output, Jupiter v4 attribution, proprietary/new
 programs or the other remaining coverage gaps.
+
+
+## Chronological positions for mixed ledger/wallet transactions (pluto.12)
+
+Final pre-deployment review found that the pluto.11 candidate's reserved log
+identity keys sorted ledger fills after later wallet transfers in the same
+transaction. That release was never deployed and is marked unsuitable for
+rollout; its immutable assets remain unchanged.
+
+The successor keeps the same unique financial row identities and adds an
+independent `execution_position` on every new row. For transactions containing runtime fills,
+it ranks all fills by their actual compiled native/transfer/event coordinate,
+then by runtime log order within the same native call. Candles and recent-pair
+states use that chronological position. Wallet-only fills retain their original
+instruction position. Every new raw row supplies the position explicitly for the SQL sink, whose insert column list
+is fixed by the live schema. Legacy rows default to their old instruction
+position; existing financial amounts, pools and event IDs remain unchanged.
+No aggregate type, historical aggregate state or financial amount is rewritten.
+Mixed ledger/wallet and batch ordering are covered by core and real SQL tests
+before the corrected package can be deployed.
+
+The exact pluto.12 package passes 116 core Rust tests, three Go readiness tests
+and twelve application price tests. Production-mode finalized replay of slots
+455790670–455790719 preserves all 5,523 previous financial rows and their
+chronology, adds the same independently verified OpenBook wallet fill, and
+explicitly supplies positions on all 5,524 rows. Isolated ClickHouse validation
+passes fifteen price assertions, including mixed ledger/wallet execution across
+insert batches and all eight candle intervals. Its temporary database was removed.

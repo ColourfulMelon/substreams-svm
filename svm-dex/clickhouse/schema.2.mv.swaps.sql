@@ -63,6 +63,7 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS decoder_version LowCardinality(String) DEFAULT '',
     ADD COLUMN IF NOT EXISTS event_id String COMMENT 'signature:AMM invocation:transfer position',
     ADD COLUMN IF NOT EXISTS source_instruction_index UInt32 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS execution_position UInt32 DEFAULT instruction_index,
     ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS orderbook_fill_verified UInt8 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) MATERIALIZED '',

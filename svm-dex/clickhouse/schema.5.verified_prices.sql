@@ -26,7 +26,7 @@ WITH
      'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
      'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB'] AS stable_mints,
     'So11111111111111111111111111111111111111112' AS wsol,
-    toUInt64(block_num) * 4294967296 + toUInt64(transaction_index) * 65536 + toUInt64(instruction_index) AS position
+    toUInt64(block_num) * 4294967296 + toUInt64(transaction_index) * 65536 + toUInt64(execution_position) AS position
 SELECT
     toStartOfMinute(timestamp) AS minute, amm_pool, mint0, mint1,
     argMaxState(toFloat64(amount1) / amount0, position) AS close0,
