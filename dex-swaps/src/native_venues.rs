@@ -101,6 +101,46 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             input_first: true, fixed_users: true, minimum_output: 0,
         });
     }
+    if protocol == Protocol::Manifest {
+        // Bonasa-Tech/manifest 5718d3eed80fa7472a826f346c0668644ff32138:
+        // both Swap (4) and SwapV2 (13) call SwapContext::load. That loader
+        // accepts either a shared payer/owner or a separate owner. Opcode
+        // alone never selects the account layout. The required System program
+        // separates the market from the token-account prefix in each form.
+        let accounts = ix.accounts();
+        if data.len() != 19 || !matches!(data[0], 4 | 13) || data[17] > 1 || data[18] > 1 {
+            return None;
+        }
+        let separate_owner = match (accounts.get(2), accounts.get(3)) {
+            (Some(system), _) if system.0.as_slice() == [0; 32] => false,
+            (_, Some(system)) if system.0.as_slice() == [0; 32] => true,
+            _ => return None,
+        };
+        let shift = usize::from(separate_owner);
+        if accounts.len() < 8 + shift
+            || ![
+                substreams_solana_idls::spl::token::PROGRAM_ID.as_slice(),
+                substreams_solana_idls::spl::token_2022::PROGRAM_ID.as_slice(),
+            ]
+            .contains(&accounts[7 + shift].0.as_slice())
+        {
+            return None;
+        }
+        let base_in = data[17] == 1;
+        return Some(Layout {
+            protocol,
+            pool: 1 + shift,
+            authority: shift,
+            users: if base_in { [3 + shift, 4 + shift] } else { [4 + shift, 3 + shift] },
+            vaults: if base_in { [5 + shift, 6 + shift] } else { [6 + shift, 5 + shift] },
+            amount: u64::from_le_bytes(data[1..9].try_into().ok()?),
+            minimum_output: u64::from_le_bytes(data[9..17].try_into().ok()?),
+            exact_input: data[18] == 1,
+            input_limit: true,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
     // Existing IDLs pin these swap variants and reject other token-moving
     // instructions. Native CPIs remain usable when an event is absent.
     if protocol == Protocol::OrcaWhirlpool {
@@ -505,8 +545,6 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         Protocol::Bisonfi if (tag == 2 && data.len() == 18) || (tag == 7 && data.len() == 19) || (tag == 19 && data.len() == 153) => {
             (1, 0, [4, 5], [2, 3], 1, false)
         }
-        Protocol::Manifest if tag == 4 && data.len() == 19 && data[17] <= 1 && data[18] <= 1 => (1, 0, [3, 4], [5, 6], 1, false),
-        Protocol::Manifest if tag == 13 && data.len() == 19 && data[17] <= 1 && data[18] <= 1 => (2, 1, [4, 5], [6, 7], 1, false),
         Protocol::Humidifi if data.len() == 25 && matches!(data[24], 4 | 15 | 20) && u64::from_le_bytes(data[16..24].try_into().ok()?) <= 1 => {
             (1, 0, [4, 5], [2, 3], 8, false)
         }
@@ -943,6 +981,55 @@ mod tests {
         data[29] = 2;
         let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
         assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+    }
+
+    #[test]
+    fn manifest_opcodes_accept_both_owner_layouts_and_bind_direction() {
+        let program = b58!("MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms");
+        for opcode in [4, 13] {
+            for separate in [false, true] {
+                let shift = usize::from(separate);
+                let mut accounts: Vec<_> = (1..=9 + shift).map(|index| [index as u8; 32]).collect();
+                accounts[2 + shift] = [0; 32];
+                accounts[7 + shift] = substreams_solana_idls::spl::token::PROGRAM_ID;
+                for base_in in [false, true] {
+                    for exact_in in [false, true] {
+                        let mut data = vec![opcode];
+                        data.extend_from_slice(&100u64.to_le_bytes());
+                        data.extend_from_slice(&50u64.to_le_bytes());
+                        data.extend_from_slice(&[u8::from(base_in), u8::from(exact_in)]);
+                        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data.clone());
+                        let decoded = layout(&tx.walk_instructions().next().unwrap()).unwrap();
+                        assert_eq!(decoded.pool, 1 + shift);
+                        assert_eq!(decoded.authority, shift);
+                        assert_eq!(decoded.users, if base_in { [3 + shift, 4 + shift] } else { [4 + shift, 3 + shift] });
+                        assert_eq!(decoded.vaults, if base_in { [5 + shift, 6 + shift] } else { [6 + shift, 5 + shift] });
+                        assert_eq!(decoded.amount, 100);
+                        assert_eq!(decoded.minimum_output, 50);
+                        assert_eq!(decoded.exact_input, exact_in);
+                        assert!(decoded.input_limit && decoded.input_first && decoded.fixed_users);
+                        for position in [0, 17, 18] {
+                            let mut invalid = data.clone();
+                            invalid[position] = if position == 0 { 6 } else { 2 };
+                            let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, invalid);
+                            assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                        }
+                        let mut invalid = data.clone();
+                        invalid.push(0);
+                        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, invalid);
+                        assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                        for position in [2 + shift, 7 + shift] {
+                            let mut wrong = accounts.clone();
+                            wrong[position] = [99; 32];
+                            let tx = crate::routed_pool::test_fixture::make_tx(program, &wrong, data.clone());
+                            assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                        }
+                        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts[..7 + shift], data);
+                        assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+                    }
+                }
+            }
+        }
     }
 
     #[test]

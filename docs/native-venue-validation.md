@@ -95,6 +95,34 @@ Layout references were cross-checked against the
 [public native transaction samples](https://github.com/DefaultPerson/solana-dex-parser-go).
 Finalized token flows determine the amounts; parser labels alone are insufficient.
 
+## Manifest owner-layout correction (staged after pluto.12)
+
+The official program at
+[`5718d3eed80fa7472a826f346c0668644ff32138`](https://github.com/Bonasa-Tech/manifest/tree/5718d3eed80fa7472a826f346c0668644ff32138)
+uses the same `process_swap` and `SwapContext::load` for opcodes 4 and 13.
+Both accept either a shared payer/owner prefix or a separate-owner prefix.
+The required System-program position distinguishes the two prefixes; the
+opcode does not. The decoder binds the native direction, actual owner, token
+accounts and market from that validated prefix. Its amount is an input limit,
+and `out_atoms` is checked against the verified output receipt.
+
+A finalized sample exposes five opcode-4 separate-owner calls and one opcode-13
+shared-owner call that the earlier opcode-based layout missed. The correction
+recovers all six while preserving all 131 previously decoded financial legs
+in the 65-transaction sample. Together with owned fee metadata, that sample
+restores 60 financial legs beyond its original 77; each added amount pair was
+independently checked against the finalized raw token CPI bytes. These bounded
+results do not establish complete swap coverage.
+
+Two original protobuf fixtures and their finalized transfer/balance evidence
+are retained as `manifest-swap-separate-owner.transaction.pb`,
+`manifest-swapv2-shared-owner.transaction.pb` and
+`manifest-layout-proof.json` in the native venue corpus. The existing exact
+fixture test covers both; core layout tests exercise both opcodes, both owner
+forms, both directions, exact-in/exact-out and invalid payload/account prefixes.
+
+This source change has not yet been included in a live release.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains
