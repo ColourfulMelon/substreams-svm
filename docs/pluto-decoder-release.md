@@ -1,11 +1,13 @@
 # Pluto DEX decoder release
 
-`v0.5.2-pluto.8` extends the deployed `.7` normalized decoder with DefiTuna
-FusionAMM and Invariant swaps (protocol IDs 46–47). Exact native token flows,
-optional referral debits and verified recipient amounts determine prices.
-Phoenix swap/marketable-order intents remain replayable when funded from existing
-exchange balances without wallet token transfers; these diagnostics are not
-normalized fills or pricing evidence. See [the coverage audit](swap-coverage-2026-10-11.md)
+`v0.5.2-pluto.9` extends `.8` with 1DEX exact-input swaps (48), JupiterZ
+RFQ settlement (49), both Jupiter v6 singular/plural swap event formats and
+event-independent settlement for existing typed Raydium Launchpad swaps.
+Native transfers and independently proven recipient amounts determine prices.
+For RFQ, `amm_pool` is the actual maker liquidity-source identity; asset-pair
+columns keep its markets separate. Forty finalized 1DEX and forty RFQ fixtures
+match independent contract/transfer audits. The 78-transaction Jupiter corpus
+preserves all 213 existing financial legs. See [the coverage audit](swap-coverage-2026-10-11.md)
 for fixtures and remaining formats. This release does not establish universal
 support for every current or future swap program.
 
@@ -22,15 +24,21 @@ Build with Rust 1.85.1 and Substreams CLI 1.18.2, matching Pluto's SQL sink:
 ```sh
 cargo +1.85.1 test -p dex-swaps -p svm-dex --locked
 cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --target wasm32-unknown-unknown --release
-substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.8.spkg
-substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.8.spkg
+substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.9.spkg
+substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.9.spkg
 make -C svm-dex/clickhouse schema
-substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.8.spkg
+substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.9.spkg
 ```
 
-Stop the old writer before upgrading, preserve its cursor, and deliberately
-adopt the new module hash. Verify cursor advancement, swap quality and new-table
-writes before restoring strict module-hash checking. Historical recovery needs
+Stop the old writer gracefully before upgrading and preserve its exact durable
+cursor. For this validated stateless upgrade, copy that cursor row under the
+new output-module hash before starting the new writer. Keep strict module-hash
+checking enabled: the pinned sink selects an exact hash before considering any
+fallback. Check that the first actual new block is the old saved block plus
+one, then verify cursor advancement, swap quality and coverage-table writes.
+The adopted cursor row is a restart boundary, not evidence of newly processed
+blocks. Do not use this migration for an unvalidated stateful or historical
+replay change. Historical recovery needs
 a separate versioned canonical replay and full replacements: appending old
 swaps to live tables double-counts OHLC aggregates. The older history manifest
 remains pinned to its original decoder.

@@ -138,7 +138,7 @@ must use a separate canonical archive/replacement; live OHLC tables cannot
 safely receive appended historical replays. A live package upgrade must retain
 the saved cursor and adopt its new module hash deliberately.
 
-## Pending `.9` additions
+## `.9` additions
 
 1DEX exact-input swaps (protocol 48) have 40 finalized transaction fixtures
 with both directions through one owner-verified pool. Gross taker input already
@@ -164,7 +164,14 @@ field denotes the real RFQ maker for this protocol; pair columns distinguish
 its separate asset markets. Consumers must not treat that address as AMM
 reserve state.
 
-The core suite passes 97 tests. These additions do not resolve Phoenix or
+Raydium Launchpad now normalizes its four typed buy/sell exact-input/output
+variants from scoped user/vault transfers even when its event version is unknown.
+Five additional finalized BuyExactIn fixtures independently prove Token-2022
+receipts across two program-owned pools. These legs use native protocol 14,
+are deduplicated against Jupiter and contribute to mint pricing. Unknown
+instruction opcodes remain excluded. See `launchpad-evidence.json`.
+
+The core suite passes 98 tests. These additions do not resolve Phoenix or
 OpenBook fills from existing exchange balances, DefiTuna two-hop swaps, 1DEX
 exact-output, Jupiter v4 log attribution or unknown/new program variants.
 Unsupported candidates remain diagnostic and never become guessed prices.
