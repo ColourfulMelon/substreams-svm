@@ -39,6 +39,13 @@ The current fixes include:
 - Physical CPI identity deduplication across native and router events.
 - SolFi V2 and Saros native exchanges, plus native fallbacks for Raydium CPMM
   and Meteora DAMM v2 when emitted amounts do not reflect net receipts.
+- Plasma and BonkSwap native exchanges, Heaven buys/sells, and Stabble weighted
+  swap_v2/legacy layouts. Stabble's nested output must come from its declared
+  vault program's exact withdrawal instruction and vault/user token accounts.
+- Token-2022 self-harvest refunds prove the current transfer's gross amount is
+  returned; older withheld fees collected simultaneously are excluded. The
+  refund and all ancestors must return successfully. Caught invocation failures
+  also exclude rolled-back transfers and swaps from pricing evidence.
 
 Replay results: the original 1,677 legs in 1,481 transactions become 1,961 legs
 in 1,598 transactions, with 117 additional transactions and no lost original
@@ -46,6 +53,19 @@ transaction. An independent raw-RPC check verifies 312 new or corrected legs
 in 260 transactions with zero mismatches. Three additional finalized Bison
 prediction transactions separately verify YES/NO buys and a YES sell. These
 counts describe this sample, not global coverage.
+
+A separate current-program inventory sampled 71 finalized transactions. The
+new Plasma, BonkSwap, Heaven and Stabble adapters recover 42 legs in 40
+transactions across 17 program-owned pools. Independent RPC checks match exact
+accounts, mints, atom amounts and physical instruction identities with zero
+mismatches; Heaven Token-2022 receipts additionally verify self-harvest ordering,
+accounts and complete successful token-program logs. The original block corpus
+remains at 1,961 legs after these additions and caught-failure guards. There are
+87 passing core Rust tests and 121 positive raw transaction regression cases.
+Phoenix samples include order placement, cancel/withdraw and immediate swaps;
+they require event-specific handling rather than treating deposits as fills.
+Lifinity, Obric, GoonFi v1 and SolFi v1 sampling did not yield recent executed
+swaps, so account-address activity is not claimed as validated coverage.
 
 The committed raw fixtures in `dex-swaps/fixtures/swap-coverage` are unmodified
 public transactions. Expected restored legs were independently compared to
@@ -60,6 +80,7 @@ Primary instruction references:
 - https://github.com/byreal-git/byreal-titan-integration
 - https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/MULTI_HOP_SWAP.md
 - https://github.com/MeteoraAg/dlmm-sdk/blob/main/idls/dlmm.json
+- https://github.com/solana-program/token-2022/blob/main/program/src/extension/transfer_fee/processor.rs
 
 Run the core regressions and replay tool:
 

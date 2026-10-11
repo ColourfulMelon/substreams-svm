@@ -133,6 +133,10 @@ pub enum Protocol {
     BisonfiPredict = 39,
     SolfiV2 = 40,
     Saros = 41,
+    Plasma = 42,
+    Bonkswap = 43,
+    Heaven = 44,
+    Stabble = 45,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -183,6 +187,10 @@ impl Protocol {
             Protocol::BisonfiPredict => "PROTOCOL_BISONFI_PREDICT",
             Protocol::SolfiV2 => "PROTOCOL_SOLFI_V2",
             Protocol::Saros => "PROTOCOL_SAROS",
+            Protocol::Plasma => "PROTOCOL_PLASMA",
+            Protocol::Bonkswap => "PROTOCOL_BONKSWAP",
+            Protocol::Heaven => "PROTOCOL_HEAVEN",
+            Protocol::Stabble => "PROTOCOL_STABBLE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -230,6 +238,10 @@ impl Protocol {
             "PROTOCOL_BISONFI_PREDICT" => Some(Self::BisonfiPredict),
             "PROTOCOL_SOLFI_V2" => Some(Self::SolfiV2),
             "PROTOCOL_SAROS" => Some(Self::Saros),
+            "PROTOCOL_PLASMA" => Some(Self::Plasma),
+            "PROTOCOL_BONKSWAP" => Some(Self::Bonkswap),
+            "PROTOCOL_HEAVEN" => Some(Self::Heaven),
+            "PROTOCOL_STABBLE" => Some(Self::Stabble),
             _ => None,
         }
     }

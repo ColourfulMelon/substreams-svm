@@ -35,6 +35,10 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Saros, substreams_solana_idls::saros::PROGRAM_ID),
     (Protocol::RaydiumCpmm, substreams_solana_idls::raydium::cpmm::PROGRAM_ID),
     (Protocol::MeteoraDaam, substreams_solana_idls::meteora::daam::PROGRAM_ID),
+    (Protocol::Plasma, substreams_solana_idls::plasma::PROGRAM_ID),
+    (Protocol::Bonkswap, substreams_solana_idls::bonkswap::PROGRAM_ID),
+    (Protocol::Heaven, substreams_solana_idls::heaven::PROGRAM_ID),
+    (Protocol::Stabble, substreams_solana_idls::stabble::PROGRAM_ID),
 ];
 
 pub(crate) struct Layout {
@@ -198,7 +202,111 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         });
     }
     let tag = *data.first()?;
+    if protocol == Protocol::Plasma {
+        use substreams_solana_idls::plasma::instructions::{unpack, PlasmaInstruction, Side, SwapType};
+        let PlasmaInstruction::Swap(swap) = unpack(&data).ok()? else { return None };
+        let (amount, minimum_output, exact_input) = match swap.swap_type {
+            SwapType::ExactIn { amount_in, min_amount_out } => (amount_in, min_amount_out, true),
+            SwapType::ExactOut { amount_out, max_amount_in } => (max_amount_in, amount_out, false),
+        };
+        if ix.accounts().len() < 9 {
+            return None;
+        }
+        let buy = matches!(swap.side, Side::Buy);
+        return Some(Layout {
+            protocol,
+            pool: 2,
+            authority: 3,
+            users: if buy { [5, 4] } else { [4, 5] },
+            vaults: if buy { [7, 6] } else { [6, 7] },
+            amount,
+            minimum_output,
+            exact_input,
+            input_limit: false,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
+    if protocol == Protocol::Bonkswap {
+        use substreams_solana_idls::bonkswap::instructions::{unpack, BonkSwapInstruction};
+        let BonkSwapInstruction::Swap(swap) = unpack(&data).ok()? else { return None };
+        if ix.accounts().len() < 17 {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 1,
+            authority: 8,
+            users: if swap.x_to_y { [6, 7] } else { [7, 6] },
+            vaults: if swap.x_to_y { [4, 5] } else { [5, 4] },
+            amount: swap.delta_in.v,
+            minimum_output: 0,
+            exact_input: true,
+            input_limit: true,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
     let discriminator = data.get(..8);
+    if protocol == Protocol::Stabble {
+        let v2 = discriminator == Some(&[43, 4, 237, 11, 26, 201, 30, 98]);
+        let legacy = discriminator == Some(&substreams_solana_idls::stabble::instructions::SWAP);
+        if !v2 && !legacy {
+            return None;
+        }
+        let (amount, minimum_output, input_limit) = match data.get(8) {
+            Some(0) if data.len() == 17 => (u64::MAX, u64::from_le_bytes(data[9..17].try_into().ok()?), true),
+            Some(1) if data.len() == 25 => (
+                u64::from_le_bytes(data[9..17].try_into().ok()?),
+                u64::from_le_bytes(data[17..25].try_into().ok()?),
+                false,
+            ),
+            _ => return None,
+        };
+        if ix.accounts().len() < if v2 { 15 } else { 12 } {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: if v2 { 8 } else { 6 },
+            authority: 0,
+            users: if v2 { [3, 4] } else { [1, 2] },
+            vaults: if v2 { [5, 6] } else { [3, 4] },
+            amount,
+            minimum_output,
+            exact_input: true,
+            input_limit,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
+    if protocol == Protocol::Heaven {
+        let buy = discriminator == Some(&[102, 6, 61, 18, 1, 218, 235, 234]);
+        let sell = discriminator == Some(&[51, 230, 133, 164, 1, 127, 131, 173]);
+        if !buy && !sell {
+            return None;
+        }
+        // Current buy and sell share two u64 values and a Borsh String.
+        // Reject trailing bytes and malformed event data rather than accepting
+        // only the historical Sell variant or an arbitrary Anchor prefix.
+        let length = u32::from_le_bytes(data.get(24..28)?.try_into().ok()?) as usize;
+        if data.len() != 28 + length || std::str::from_utf8(&data[28..]).is_err() || ix.accounts().len() < 16 {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 4,
+            authority: 5,
+            users: if buy { [9, 8] } else { [8, 9] },
+            vaults: if buy { [11, 10] } else { [10, 11] },
+            amount: u64::from_le_bytes(data[8..16].try_into().ok()?),
+            minimum_output: u64::from_le_bytes(data[16..24].try_into().ok()?),
+            exact_input: true,
+            input_limit: false,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
     let dbc_legacy = discriminator == Some(&[248, 198, 158, 145, 225, 117, 135, 200]);
     let dbc_v2 = discriminator == Some(&[65, 75, 63, 76, 235, 91, 91, 136]);
     let dbc_hook = discriminator == Some(&[183, 93, 153, 40, 24, 230, 194, 151]);
@@ -563,6 +671,137 @@ mod tests {
         // Checked transfer proves the mint, but cannot prove an implicit fee
         // without the recipient balance. Do not publish the gross output.
         assert!(crate::process_transaction(unknown_receipt).map_or(true, |decoded| decoded.swaps.is_empty()));
+    }
+
+    #[test]
+    fn self_harvest_refunds_current_fees_without_pricing_older_collected_fees() {
+        use substreams_solana::pb::sf::solana::r#type::v1::InnerInstruction;
+        for (explicit, fee) in [(false, 6u64), (true, 6), (true, 200)] {
+            let mut tx = fee_fixture(explicit);
+            let meta = tx.meta.as_mut().unwrap();
+            if explicit {
+                meta.inner_instructions[0].instructions[1].data[11..19].copy_from_slice(&fee.to_le_bytes());
+            }
+            // 200 current tokens plus 9 older withheld fees. Only 200 belong
+            // to this swap, even when the aggregate account delta is 209.
+            meta.post_token_balances
+                .iter_mut()
+                .find(|balance| balance.account_index == 5)
+                .unwrap()
+                .ui_token_amount
+                .as_mut()
+                .unwrap()
+                .amount = "209".into();
+            meta.inner_instructions[0].instructions.push(InnerInstruction {
+                program_id_index: 14,
+                accounts: vec![9, 5, 3, 5],
+                data: vec![26, 3, 1],
+                stack_height: Some(2),
+            });
+            let root = base58::encode(tx.walk_instructions().next().unwrap().program_id().0);
+            let mut logs = vec![format!("Program {root} invoke [1]")];
+            for ix in tx.walk_instructions().skip(1) {
+                let program = base58::encode(ix.program_id().0);
+                logs.extend([format!("Program {program} invoke [2]"), format!("Program {program} success")]);
+            }
+            logs.push(format!("Program {root} success"));
+            tx.meta.as_mut().unwrap().log_messages = logs;
+            let decoded = crate::process_transaction(tx).unwrap();
+            assert_eq!(decoded.swaps.len(), 1);
+            assert_eq!(decoded.swaps[0].output_amount, 200);
+        }
+        for field in 0..7 {
+            let mut tx = fee_fixture(false);
+            let meta = tx.meta.as_mut().unwrap();
+            meta.pre_token_balances.retain(|balance| balance.account_index != 5);
+            meta.post_token_balances.retain(|balance| balance.account_index != 5);
+            let mut refund = InnerInstruction {
+                program_id_index: 14,
+                accounts: vec![9, 5, 3, 5],
+                data: vec![26, 3, 1],
+                stack_height: Some(2),
+            };
+            match field {
+                0 => refund.accounts[1] = 7,
+                1 => refund.accounts[3] = 7,
+                2 => refund.data[2] = 2,
+                3 => meta.inner_instructions[0].instructions.push(InnerInstruction {
+                    program_id_index: 14,
+                    accounts: vec![9, 5],
+                    data: vec![26, 4],
+                    stack_height: Some(2),
+                }),
+                4 => meta.inner_instructions[0].instructions.insert(1, refund.clone()),
+                _ => {}
+            }
+            if field != 4 {
+                meta.inner_instructions[0].instructions.push(refund);
+            }
+            let root = base58::encode(tx.walk_instructions().next().unwrap().program_id().0);
+            let calls: Vec<_> = tx.walk_instructions().skip(1).map(|ix| base58::encode(ix.program_id().0)).collect();
+            let mut logs = vec![format!("Program {root} invoke [1]")];
+            for (index, program) in calls.iter().enumerate() {
+                logs.push(format!("Program {program} invoke [2]"));
+                if field == 6 && index + 1 == calls.len() {
+                    break;
+                }
+                logs.push(if field == 5 && index + 1 == calls.len() {
+                    format!("Program {program} failed: caught refund failure")
+                } else {
+                    format!("Program {program} success")
+                });
+            }
+            if field != 6 {
+                logs.push(format!("Program {root} success"));
+            }
+            tx.meta.as_mut().unwrap().log_messages = logs;
+            assert!(
+                crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()),
+                "invalid refund {field}"
+            );
+        }
+    }
+
+    #[test]
+    fn caught_parent_failure_rolls_back_successful_transfer_evidence() {
+        use substreams_solana::pb::sf::solana::r#type::v1::{CompiledInstruction, InnerInstruction};
+        let mut tx = fee_fixture(true);
+        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let original = message.instructions[0].clone();
+        let parent_index = message.account_keys.len() as u32;
+        message.account_keys.push(vec![0xaa; 32]);
+        message.instructions[0] = CompiledInstruction {
+            program_id_index: parent_index,
+            accounts: original.accounts.clone(),
+            data: vec![],
+        };
+        let meta = tx.meta.as_mut().unwrap();
+        for call in &mut meta.inner_instructions[0].instructions {
+            call.stack_height = Some(3);
+        }
+        meta.inner_instructions[0].instructions.insert(
+            0,
+            InnerInstruction {
+                program_id_index: original.program_id_index,
+                accounts: original.accounts,
+                data: original.data,
+                stack_height: Some(2),
+            },
+        );
+        let programs: Vec<_> = tx.walk_instructions().map(|ix| base58::encode(ix.program_id().0)).collect();
+        let logs = vec![
+            format!("Program {} invoke [1]", programs[0]),
+            format!("Program {} invoke [2]", programs[1]),
+            format!("Program {} invoke [3]", programs[2]),
+            format!("Program {} success", programs[2]),
+            format!("Program {} invoke [3]", programs[3]),
+            format!("Program {} success", programs[3]),
+            format!("Program {} failed: caught swap failure", programs[1]),
+            format!("Program {} success", programs[0]),
+        ];
+        tx.meta.as_mut().unwrap().log_messages = logs;
+        assert_eq!(crate::logs::successful_invocations(&tx), std::collections::HashSet::from([0]));
+        assert!(crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()));
     }
 
     #[test]

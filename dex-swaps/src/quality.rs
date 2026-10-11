@@ -28,12 +28,33 @@ struct Transfer {
 
 pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swaps: &mut Vec<pb::Swap>, expand_native: bool) -> Vec<pb::Swap> {
     let instructions: Vec<_> = tx.walk_instructions().collect();
+    // A successful transaction may catch a failed CPI. Its completed inner
+    // transfers roll back too, so require runtime success for all evidence
+    // whenever the transaction contains a caught invocation failure.
+    let caught_failure = tx.meta.as_ref().is_some_and(|meta| {
+        meta.log_messages.iter().any(|log| {
+            let mut words = log.split_whitespace();
+            words.next() == Some("Program") && words.next().is_some() && words.next() == Some("failed:")
+        })
+    });
+    let successful_invocations = if caught_failure
+        || instructions
+            .iter()
+            .any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID && ix.data().starts_with(&[26, 3]))
+    {
+        crate::logs::successful_invocations(tx)
+    } else {
+        HashSet::new()
+    };
     let mut transfers = Vec::new();
     let mut other_token_operations = HashSet::new();
     let mut initializations = HashMap::<Vec<u8>, usize>::new();
     let mut closes = HashMap::<Vec<u8>, usize>::new();
     let mut burns = HashMap::<(Vec<u8>, Vec<u8>), i128>::new();
     for (index, ix) in instructions.iter().enumerate() {
+        if caught_failure && !successful_invocations.contains(&(index as u32)) {
+            continue;
+        }
         let program = ix.program_id();
         let accounts = ix.accounts();
         let data = ix.data();
@@ -92,10 +113,10 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 let mut amounts = vec![amount];
                 if program.0 == &token_2022::PROGRAM_ID && data.first() == Some(&26) {
                     let fee = u64::from_le_bytes(data[11..19].try_into().unwrap());
-                    if fee >= amount {
+                    if fee > amount {
                         continue;
                     }
-                    if let Some(net) = amount.checked_sub(fee).filter(|net| *net > 0) {
+                    if let Some(net) = amount.checked_sub(fee) {
                         if net != amount {
                             amounts.push(net);
                         }
@@ -113,6 +134,43 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     net_verified: program.0 != &token_2022::PROGRAM_ID || data.first() == Some(&26),
                 });
             }
+        }
+    }
+
+    // An authorized self-harvest credits this transfer's withheld fee back to
+    // its receiver. Its economic receipt is exactly the gross transfer, even
+    // if older withheld fees are collected too (those are not swap proceeds).
+    // A prior harvest, close or reinitialization can remove those fees first;
+    // require the first such operation to be the actual refund.
+    for transfer in &mut transfers {
+        if !transfer.fee_token {
+            continue;
+        }
+        let refund = instructions.iter().enumerate().skip(transfer.index as usize + 1).find(|(_, ix)| {
+            if ix.program_id().0 != &token_2022::PROGRAM_ID || !ix.accounts().iter().any(|account| account.0 == &transfer.destination) {
+                return false;
+            }
+            let data = ix.data();
+            (data.first() == Some(&26) && data.get(1) != Some(&1)) || matches!(data.first(), Some(1 | 9 | 16 | 18))
+        });
+        let refunded = refund.is_some_and(|(index, ix)| {
+            if !successful_invocations.contains(&(index as u32)) {
+                return false;
+            }
+            let data = ix.data();
+            let accounts = ix.accounts();
+            if data.len() != 3 || data[..2] != [26, 3] || data[2] == 0 || accounts.len() < 3 + data[2] as usize {
+                return false;
+            }
+            accounts[0].0 == &transfer.mint
+                && accounts[1].0 == &transfer.destination
+                && accounts[accounts.len() - data[2] as usize..]
+                    .iter()
+                    .any(|account| account.0 == &transfer.destination)
+        });
+        if refunded {
+            transfer.net_verified = true;
+            transfer.amounts.truncate(1);
         }
     }
 
@@ -193,6 +251,9 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         // and exact, immediate token CPIs. Never synthesize a trade from arbitrary
         // same-program transfers (deposit, withdraw, lending, quote update).
         for (index, ix) in instructions.iter().enumerate() {
+            if caught_failure && !successful_invocations.contains(&(index as u32)) {
+                continue;
+            }
             let Some(layout) = crate::native_venues::layout(ix) else {
                 continue;
             };
@@ -212,7 +273,31 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
             let user = accounts[layout.authority].0;
             let scoped: Vec<_> = transfers
                 .iter()
-                .filter(|t| t.index > index as u32 && t.index < end && t.depth == depth + 1)
+                .filter(|t| {
+                    if t.index <= index as u32 || t.index >= end {
+                        return false;
+                    }
+                    if t.depth == depth + 1 {
+                        return true;
+                    }
+                    // Stabble V2 pays output through its declared vault program.
+                    // Accept only that immediate withdrawal's Token CPI, with
+                    // the audited program/opcode, never arbitrary descendants.
+                    layout.protocol == pb::Protocol::Stabble
+                        && t.depth == depth + 2
+                        && accounts
+                            .get(12)
+                            .is_some_and(|program| program.0.as_slice() == substreams_solana::b58!("vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV"))
+                        && instructions[..t.index as usize]
+                            .iter()
+                            .rev()
+                            .find(|child| (if child.is_root() { 1 } else { child.stack_height() }) < t.depth)
+                            .is_some_and(|parent| {
+                                parent.program_id().0 == accounts[12].0
+                                    && parent.data().len() == 24
+                                    && parent.data().starts_with(&[242, 80, 163, 0, 196, 221, 194, 194])
+                            })
+                })
                 .collect();
             let mut candidates = Vec::new();
             for reverse in [false, true] {
@@ -294,6 +379,9 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
         // Intermediate coins travel vault-to-vault, bypassing user ATAs. Preserve
         // every pool leg, including transfers executed by the next curve's CPI.
         for (index, ix) in instructions.iter().enumerate() {
+            if caught_failure && !successful_invocations.contains(&(index as u32)) {
+                continue;
+            }
             let data = ix.data();
             let accounts = ix.accounts();
             let is_curve = ix.program_id().0 == &pumpfun::PROGRAM_ID && data.starts_with(&[225, 154, 117, 22, 215, 86, 246, 103]);
@@ -365,7 +453,10 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     && instructions[index + 1..end as usize].iter().any(|child| {
                         child.program_id().0 == &pumpfun::PROGRAM_ID
                             && child.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
-                            && child.accounts().get(13..).is_some_and(|groups| groups.chunks_exact(5).any(|accounts| accounts[2].0 == group[2].0))
+                            && child
+                                .accounts()
+                                .get(13..)
+                                .is_some_and(|groups| groups.chunks_exact(5).any(|accounts| accounts[2].0 == group[2].0))
                     })
                 {
                     continue;
@@ -438,6 +529,9 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
             && swap.amm_pool.len() == 32
         {
             'candidate: for (index, ix) in instructions.iter().enumerate() {
+                if caught_failure && !successful_invocations.contains(&(index as u32)) {
+                    continue;
+                }
                 if expected_source.is_some_and(|source| source != index as u32) {
                     continue;
                 }
@@ -687,14 +781,14 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                 swap.verification_failure = "duplicate_native_cpi".into();
                 rejected.push(swap);
             }
-            Some(identity) => {
+            Some(identity) if swap.input_amount > 0 && swap.output_amount > 0 => {
                 swap.source_index = Some(identity.0);
                 swap.source_transfer_index = Some(identity.1.min(identity.2));
                 swap.transfer_verified = true;
                 native_evidence.insert(identity);
                 verified.push(swap);
             }
-            None => {
+            _ => {
                 swap.verification_failure = "pool_mints_or_amounts_not_verified".into();
                 rejected.push(swap);
             }
