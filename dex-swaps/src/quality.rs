@@ -24,6 +24,7 @@ struct Transfer {
     authority: Vec<u8>,
     fee_token: bool,
     net_verified: bool,
+    metadata_net: bool,
 }
 
 #[cfg(test)]
@@ -160,6 +161,7 @@ pub(crate) fn verify_with_fees(
                     authority: accounts.get(destination + 1).map(|a| a.0.clone()).unwrap_or_default(),
                     fee_token: program.0 == &token_2022::PROGRAM_ID,
                     net_verified: program.0 != &token_2022::PROGRAM_ID || data.first() == Some(&26) || metadata_net,
+                    metadata_net: metadata_net && data.first() != Some(&26),
                 });
             }
         }
@@ -243,6 +245,30 @@ pub(crate) fn verify_with_fees(
             deltas.insert(account.clone(), 0);
         } else {
             other_token_operations.insert(account.clone());
+        }
+    }
+    // A complete destination ledger independently checks metadata arithmetic.
+    // Disagreement invalidates only the derived receipt; the established
+    // single-receipt conservation proof may still recover the actual amount.
+    let inconsistent: HashSet<_> = transfers
+        .iter()
+        .filter_map(|transfer| {
+            let key = (transfer.destination.clone(), transfer.mint.clone());
+            if !transfer.metadata_net || other_token_operations.contains(&transfer.destination) || receipt_counts.contains_key(&key) {
+                return None;
+            }
+            let observed = deltas.get(&transfer.destination)? + debits.get(&key).unwrap_or(&0);
+            (known_receipts.get(&key).copied() != Some(observed)).then_some(key)
+        })
+        .collect();
+    for transfer in &mut transfers {
+        let key = (transfer.destination.clone(), transfer.mint.clone());
+        if transfer.metadata_net && inconsistent.contains(&key) {
+            *known_receipts.entry(key.clone()).or_default() -= i128::from(*transfer.amounts.iter().min().unwrap());
+            *receipt_counts.entry(key.clone()).or_default() += 1;
+            *gross_receipts.entry(key).or_default() += i128::from(transfer.amounts[0]);
+            transfer.net_verified = false;
+            transfer.amounts.truncate(1);
         }
     }
     for transfer in &mut transfers {

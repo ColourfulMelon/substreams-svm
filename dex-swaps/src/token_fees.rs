@@ -587,6 +587,12 @@ mod tests {
         let (no_fee, _) = owned_mint(&token_2022::PROGRAM_ID, include_bytes!("../fixtures/token-fees/pump.bin")).unwrap();
         assert_eq!(no_fee.at(1055).unwrap().basis_points, 0);
         assert!(owned_mint(&[0; 32], data).is_none());
+        let mut reserved = vec![0; 355];
+        reserved[45] = 1;
+        reserved[165] = 1;
+        reserved[166..168].copy_from_slice(&1u16.to_le_bytes());
+        reserved[168..170].copy_from_slice(&108u16.to_le_bytes());
+        assert!(owned_mint(&token_2022::PROGRAM_ID, &reserved).is_none());
         for position in [0, 45, 46, 82, 165] {
             let mut changed = data.to_vec();
             changed[position] = 9;
@@ -663,6 +669,30 @@ mod tests {
             for old in baseline.swaps {
                 assert!(decoded.swaps.contains(&old), "existing financial row changed");
             }
+            let wrong_fee = crate::process_transaction_with_metadata(
+                tx.clone(),
+                None,
+                |_, _| None,
+                |_, _| None,
+                |mint, _| {
+                    if mint == dew {
+                        Some(TransferFee {
+                            basis_points: 101,
+                            maximum_fee: 1_000_000_000_000_000,
+                        })
+                    } else if mint == pump {
+                        pump_schedule.at(1055)
+                    } else {
+                        None
+                    }
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                wrong_fee.swaps.len(),
+                baseline_count,
+                "incorrect metadata must disagree with the finalized receipt ledger"
+            );
             let mut truncated = tx.clone();
             truncated.meta.as_mut().unwrap().log_messages.clear();
             let unproven = crate::process_transaction_with_metadata(
@@ -782,5 +812,16 @@ mod tests {
             instruction_change(&tx.walk_instructions().next().unwrap(), 100).unwrap().1,
             Change::UnknownInitializeFee
         );
+    }
+
+    #[test]
+    fn finalized_mainnet_epoch_schedule_matches_registry_epoch_arithmetic() {
+        let data = include_bytes!("../fixtures/token-fees/epoch-schedule.bin");
+        assert_eq!(u64::from_le_bytes(data[..8].try_into().unwrap()), 432_000);
+        assert_eq!(u64::from_le_bytes(data[8..16].try_into().unwrap()), 432_000);
+        assert_eq!(data[16], 0);
+        assert_eq!(u64::from_le_bytes(data[17..25].try_into().unwrap()), 0);
+        assert_eq!(u64::from_le_bytes(data[25..33].try_into().unwrap()), 0);
+        assert_eq!(455_808_433u64 / 432_000, 1055);
     }
 }
