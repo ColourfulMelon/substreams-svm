@@ -138,6 +138,7 @@ pub enum Protocol {
     Heaven = 44,
     Stabble = 45,
     Defituna = 46,
+    Invariant = 47,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -193,6 +194,7 @@ impl Protocol {
             Protocol::Heaven => "PROTOCOL_HEAVEN",
             Protocol::Stabble => "PROTOCOL_STABBLE",
             Protocol::Defituna => "PROTOCOL_DEFITUNA",
+            Protocol::Invariant => "PROTOCOL_INVARIANT",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -245,6 +247,7 @@ impl Protocol {
             "PROTOCOL_HEAVEN" => Some(Self::Heaven),
             "PROTOCOL_STABBLE" => Some(Self::Stabble),
             "PROTOCOL_DEFITUNA" => Some(Self::Defituna),
+            "PROTOCOL_INVARIANT" => Some(Self::Invariant),
             _ => None,
         }
     }

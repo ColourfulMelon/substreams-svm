@@ -40,6 +40,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Heaven, substreams_solana_idls::heaven::PROGRAM_ID),
     (Protocol::Stabble, substreams_solana_idls::stabble::PROGRAM_ID),
     (Protocol::Defituna, b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9")),
+    (Protocol::Invariant, b58!("HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt")),
 ];
 
 pub(crate) struct Layout {
@@ -141,6 +142,29 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             minimum_output: if exact_input { threshold } else { amount },
             exact_input,
             input_limit: true,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
+    if protocol == Protocol::Invariant {
+        // Invariant's published Swap contract: direction, amount, exact-input
+        // flag, sqrt-price limit. Referral fees are separate user debits.
+        if ix.accounts().len() < 10 || data.len() != 34 || data[..8] != [248, 198, 158, 145, 225, 117, 135, 200] || data[8] > 1 || data[17] > 1 {
+            return None;
+        }
+        let amount = u64::from_le_bytes(data[9..17].try_into().ok()?);
+        let exact_input = data[17] == 1;
+        let forward = data[8] == 1;
+        return Some(Layout {
+            protocol,
+            pool: 1,
+            authority: 7,
+            users: if forward { [3, 4] } else { [4, 3] },
+            vaults: if forward { [5, 6] } else { [6, 5] },
+            amount: if exact_input { amount } else { u64::MAX },
+            minimum_output: if exact_input { 0 } else { amount },
+            exact_input,
+            input_limit: false,
             input_first: true,
             fixed_users: true,
         });
@@ -548,6 +572,65 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn invariant_referral_debits_are_part_of_the_users_swap_price() {
+        use substreams_solana::pb::sf::solana::r#type::v1::{InnerInstruction, InnerInstructions, TokenBalance, UiTokenAmount};
+        use substreams_solana_idls::spl::token;
+        let program = b58!("HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt");
+        let mut accounts: Vec<_> = (1..=11).map(|i| [i; 32]).collect();
+        accounts[9] = token::PROGRAM_ID;
+        let mut data = vec![248, 198, 158, 145, 225, 117, 135, 200, 1];
+        data.extend_from_slice(&100u64.to_le_bytes());
+        data.push(1);
+        data.extend_from_slice(&0u128.to_le_bytes());
+        let mut tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
+        let transfer = |amount: u64, accounts: Vec<u8>| {
+            let mut data = vec![3];
+            data.extend_from_slice(&amount.to_le_bytes());
+            InnerInstruction {
+                program_id_index: 11,
+                accounts,
+                data,
+                stack_height: Some(2),
+            }
+        };
+        let meta = tx.meta.as_mut().unwrap();
+        meta.inner_instructions = vec![InnerInstructions {
+            index: 0,
+            instructions: vec![transfer(200, vec![8, 6, 10]), transfer(95, vec![5, 7, 9]), transfer(5, vec![5, 12, 9])],
+        }];
+        for (index, mint) in [(5, [31; 32]), (7, [31; 32]), (12, [31; 32]), (6, [32; 32]), (8, [32; 32])] {
+            meta.pre_token_balances.push(TokenBalance {
+                account_index: index,
+                mint: base58::encode(mint),
+                ui_token_amount: Some(UiTokenAmount {
+                    amount: "1000".into(),
+                    decimals: 6,
+                    ..Default::default()
+                }),
+                ..Default::default()
+            });
+        }
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        assert_eq!(decoded.swaps.len(), 1);
+        assert_eq!((decoded.swaps[0].input_amount, decoded.swaps[0].output_amount), (100, 200));
+        assert_eq!(decoded.swaps[0].amm_pool, accounts[1]);
+        assert!(decoded.swaps[0].transfer_verified);
+        let mut wrong_amount = tx.clone();
+        wrong_amount.meta.as_mut().unwrap().inner_instructions[0].instructions[2].data[1] = 6;
+        assert!(crate::process_transaction(wrong_amount).unwrap().swaps.is_empty());
+        let mut undeclared_recipient = tx.clone();
+        undeclared_recipient.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0]
+            .accounts
+            .truncate(10);
+        assert!(crate::process_transaction(undeclared_recipient).unwrap().swaps.is_empty());
+        let mut extra_debit = tx;
+        extra_debit.meta.as_mut().unwrap().inner_instructions[0]
+            .instructions
+            .push(transfer(1, vec![5, 12, 9]));
+        assert!(crate::process_transaction(extra_debit).unwrap().swaps.is_empty());
+    }
 
     #[test]
     fn fusion_swap_direction_amounts_and_remaining_slices_are_strict() {

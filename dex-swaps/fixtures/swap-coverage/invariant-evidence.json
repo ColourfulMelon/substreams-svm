@@ -1,0 +1,1057 @@
+{
+  "source": "https://github.com/invariant-labs/protocol/blob/a30e3b6d86a34400fae202299dba969daff36359/programs/invariant/src/instructions/swap.rs",
+  "pool_owners": [
+    {
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "owner": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "size": 400
+    },
+    {
+      "pool": "6rvpVhL9fxm2WLMefNRaLwv6aNdivZadMi56teWfSkuU",
+      "owner": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "size": 400
+    }
+  ],
+  "verified": [
+    {
+      "signature": "2ABX9pcpVtf8Bq2NseLSX7QYxY29Vp65xrJ5omua6vPzaNPRvgHLBSerETf6rujr4CfC27hXRsBpPXaJ2HrUQkCK",
+      "block_num": 455709971,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "BASweaQa3Fov6A3EbCq196yQ7VVkDN8neDHRFWrR6yjg",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "9350494",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "1044352",
+      "debits": [
+        {
+          "amount": "9350494",
+          "index": 16,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:BASweaQa3Fov6A3EbCq196yQ7VVkDN8neDHRFWrR6yjg:So11111111111111111111111111111111111111112:9350494:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1044352",
+      "fixture": "167.transaction.pb",
+      "sha256": "47ce1301d8c397c9354e29c9b56ad25bb7fd51cff0720fda4093f3e427fcdf3b"
+    },
+    {
+      "signature": "56XorrH3VHXZoBQGFjnBErDKFogwyyBp2GsBncZawuyrpmhTFbG84mLd7i2EJLE96hAKq2h4vcHxUyZ65EfNBfDS",
+      "block_num": 455709966,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "Gafpu1ruXcrGyQsVe9hPz9EhimQCE2paUkZyMEmVDgGf",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "559000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "5005068",
+      "debits": [
+        {
+          "amount": "559000",
+          "index": 16,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:Gafpu1ruXcrGyQsVe9hPz9EhimQCE2paUkZyMEmVDgGf:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:559000:So11111111111111111111111111111111111111112:5005068",
+      "fixture": "168.transaction.pb",
+      "sha256": "42cae6e0b664b07132474436e9fe9d7cd4da2634d8577ee321c0b6dbc8d75ffe"
+    },
+    {
+      "signature": "5AksEhmmiifueZH4peARV8e8Y1d9BVzG6VLaHvXe3Qxr8NpRDuTJhkUifMLkGUeFAj2zmCwiEcniqYYLdRV1piZn",
+      "block_num": 455709966,
+      "instruction_index": 13,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "738989",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "6614674",
+      "debits": [
+        {
+          "amount": "738989",
+          "index": 15,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:13:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:738989:So11111111111111111111111111111111111111112:6614674",
+      "fixture": "169.transaction.pb",
+      "sha256": "21c5ef4fec92677d952ca8b666e28a83e59039c2e0bdc09360f062ec57c4ce32"
+    },
+    {
+      "signature": "2wV7UBqMzxZnt6XizqZ1wv43LYXFW8cYbHTm2NQLWDqzgc464BYhc5WLBV6SPX12FzHkHzVdpG8bRkM4P7foHPFh",
+      "block_num": 455709960,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "GSSovK8VrVJHeNWMAPuHVnrpg1vm1VLfrC2L9uu9zH6j",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "970000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "8688015",
+      "debits": [
+        {
+          "amount": "970000",
+          "index": 11,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:GSSovK8VrVJHeNWMAPuHVnrpg1vm1VLfrC2L9uu9zH6j:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:970000:So11111111111111111111111111111111111111112:8688015",
+      "fixture": "170.transaction.pb",
+      "sha256": "f2d19f4cb8e29c770d275b44b78222b20d1db22fac1ae7d38325ac02e171509b"
+    },
+    {
+      "signature": "5ZCo8du82TnKf4tg4HVSGD52J3PiVcH9HdqPEAdnXavKrrodUmh44NdYERoA9sQhCBzUFwEVq9EdsBGtdNZDGpEi",
+      "block_num": 455709957,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "GSSovK8VrVJHeNWMAPuHVnrpg1vm1VLfrC2L9uu9zH6j",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "559000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "5008539",
+      "debits": [
+        {
+          "amount": "559000",
+          "index": 11,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:GSSovK8VrVJHeNWMAPuHVnrpg1vm1VLfrC2L9uu9zH6j:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:559000:So11111111111111111111111111111111111111112:5008539",
+      "fixture": "171.transaction.pb",
+      "sha256": "52fbf2b09f3d0a03e77b0ef124c0a5b53d9a6cf1129012ade38906ae2919ca1f"
+    },
+    {
+      "signature": "4eZCggtmz9i8r9QY1cESks28ToYGgfi2fTpnqSqDBF7jwfv2BMuY32mJH3jp18idoqypKVbrJwMdtFRN9xskj28C",
+      "block_num": 455709940,
+      "instruction_index": 17,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "31uzXaubX5m5nfnfVuuTjAZjT3kFBtL2EzweqCy7XaEm",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "208800",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1871135",
+      "debits": [
+        {
+          "amount": "208800",
+          "index": 19,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:17:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:31uzXaubX5m5nfnfVuuTjAZjT3kFBtL2EzweqCy7XaEm:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:208800:So11111111111111111111111111111111111111112:1871135",
+      "fixture": "172.transaction.pb",
+      "sha256": "3d7ce71f1419ac34445d4336aaf33f2a71c8b17e4bd119f6b60a8c0cfd6d342c"
+    },
+    {
+      "signature": "549Dgfc4ipC5AMGNQsSw3fV9eFi6qJrK63eAFY8GmhjYhoH67zGBzWCjGtQ7RAGb26saY8UsWbXWmoZMpsYqDtjY",
+      "block_num": 455709933,
+      "instruction_index": 6,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "J55U91DLy5jTQKQzCDxhExF1QciT7U9YJbnU3KN89hTC",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "995467",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "8923192",
+      "debits": [
+        {
+          "amount": "995467",
+          "index": 8,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:6:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:J55U91DLy5jTQKQzCDxhExF1QciT7U9YJbnU3KN89hTC:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:995467:So11111111111111111111111111111111111111112:8923192",
+      "fixture": "173.transaction.pb",
+      "sha256": "be207a99174ad9c32c8ed5b046e552966682f53ef5bdc4285f7a49932fa19ee3"
+    },
+    {
+      "signature": "2gZVbLqh2Y3dNUj36Tj8DWknDSqVfEt5gwafuMuuRBns636fDAMjpJpmz7qrPNw4Bwr6AZ6Bqm32zBwo9C8tnGxb",
+      "block_num": 455709929,
+      "instruction_index": 3,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "RustUSBDaDcRRbT8JRmJ8GpomiXiMdgt3iYwbA59xvB",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "1600000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "14350573",
+      "debits": [
+        {
+          "amount": "1600000",
+          "index": 5,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:3:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:RustUSBDaDcRRbT8JRmJ8GpomiXiMdgt3iYwbA59xvB:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1600000:So11111111111111111111111111111111111111112:14350573",
+      "fixture": "174.transaction.pb",
+      "sha256": "1947ee938f678ef96279db3e60602277a34d22825bfd09ee3a82dd40b2467d1b"
+    },
+    {
+      "signature": "22Jzo9LbXLoenZxLJr2xMoxhyZpaueCFQca2U5R7jjYwFAxKqQ7Yk1Y8cHZerSG9dxD9H38fEGFkJBJqBJt1Rzd3",
+      "block_num": 455709928,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "AWH7CPQQAqNJQTrUkfiSj4Y1sTfygGqMPPw4bYmdNuqu",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "11331658",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "1263060",
+      "debits": [
+        {
+          "amount": "11331658",
+          "index": 11,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:AWH7CPQQAqNJQTrUkfiSj4Y1sTfygGqMPPw4bYmdNuqu:So11111111111111111111111111111111111111112:11331658:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1263060",
+      "fixture": "175.transaction.pb",
+      "sha256": "32aa4d2713c6a19fa5abcddd270e5b9fab468641ecf55e93dae4a71ae3f36ffc"
+    },
+    {
+      "signature": "4nrKFQLZdBvjdaPC9oXM3s6NuxfKNZqsMgtsqrr8YhCK51fSg5LbeRrmsZgQHKKkDpbc8wT3MRRzyqzmZtPtGeX6",
+      "block_num": 455709927,
+      "instruction_index": 16,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "8636549",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "963498",
+      "debits": [
+        {
+          "amount": "8636549",
+          "index": 18,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:16:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB:So11111111111111111111111111111111111111112:8636549:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:963498",
+      "fixture": "176.transaction.pb",
+      "sha256": "983fbf6151503b420e4b9d0973a636114bfe224e40a7c146c77bfc4c3d563e10"
+    },
+    {
+      "signature": "43UwkrvK75WsGid2poc9FYQorNdTG821Xbquej9V9Ek57GXy88ePceTVsE2wSkb8JJoXmy3wUayZVaxx4zmJBEiB",
+      "block_num": 455709927,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "FcJSNwECJCf3ZNMuPsTHpWAJe291vp36kULGkDrQRLUZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "7322748",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "816600",
+      "debits": [
+        {
+          "amount": "7322748",
+          "index": 16,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:FcJSNwECJCf3ZNMuPsTHpWAJe291vp36kULGkDrQRLUZ:So11111111111111111111111111111111111111112:7322748:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:816600",
+      "fixture": "177.transaction.pb",
+      "sha256": "65b11b1091164a3f11aa8217df2cf0a2d17165f363ff6bfffc82a7d1624a7fae"
+    },
+    {
+      "signature": "5HypsRqNYcN7geoB2br7zPpHowvZ9iiC9CwnyEsg9NFmv1mvQ838pEDTHYNsee1XYdD83AWVr5LySc1YES9fgEgZ",
+      "block_num": 455709925,
+      "instruction_index": 18,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "3zdXwWm9GVGzSBmYEtWGBgP9E2A95TbUz7ccGavWMPL8",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "13444213",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "1500682",
+      "debits": [
+        {
+          "amount": "13444213",
+          "index": 20,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:18:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:3zdXwWm9GVGzSBmYEtWGBgP9E2A95TbUz7ccGavWMPL8:So11111111111111111111111111111111111111112:13444213:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:1500682",
+      "fixture": "178.transaction.pb",
+      "sha256": "3303cc772947b9a286829976092222756ca605687be3c181663d3c130251dd6d"
+    },
+    {
+      "signature": "hoGiuLRKppxbao5cRhFmyviLEgTzb7zMiz2vjP3681CKBsHkHERAkChuvBNjxJnd3wSeorZAyQ7khyPUeguNDb3",
+      "block_num": 455709914,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "DvUddY8kqx4QihV8wbEHtH2wwCqEVN2HFna1LByaLhFs",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4334469",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "484043",
+      "debits": [
+        {
+          "amount": "4334469",
+          "index": 16,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:DvUddY8kqx4QihV8wbEHtH2wwCqEVN2HFna1LByaLhFs:So11111111111111111111111111111111111111112:4334469:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:484043",
+      "fixture": "179.transaction.pb",
+      "sha256": "3bc2b0d82f17e839e7b425cde8cdeed47987be3b5018160772ca4fa7d57f033c"
+    },
+    {
+      "signature": "2FdV2ycBTQxLraRrkgVAAfE819ePERVaQjLzBJjgYxRQsuap9CWbFJtHbvY4eGtXuG5iuuiEWs6ZcGwnD5tMW6Cv",
+      "block_num": 455709885,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "203598",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1822672",
+      "debits": [
+        {
+          "amount": "203598",
+          "index": 16,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:203598:So11111111111111111111111111111111111111112:1822672",
+      "fixture": "180.transaction.pb",
+      "sha256": "aab23b87c35f4130bbffd45e77c296a49a1c3c9e8f88f30b1927a5aa541010fc"
+    },
+    {
+      "signature": "PYgrfAjVsb4CyUtd3N3tg8h6zXRu8wA7zuLyAhpx9HnA3zynQFmQphtCaD7JnPqTsL3diT1W9prBZME5rdSvXvy",
+      "block_num": 455709875,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "HuBMeYW3aDn8BH65fo8xxbP4oiexyup8udzKyccgi8Ga",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "193093",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1728783",
+      "debits": [
+        {
+          "amount": "193093",
+          "index": 11,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:HuBMeYW3aDn8BH65fo8xxbP4oiexyup8udzKyccgi8Ga:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:193093:So11111111111111111111111111111111111111112:1728783",
+      "fixture": "181.transaction.pb",
+      "sha256": "601a84c25b59a9211dbf4e3d83ac4bf977d7fa1c1d8aa594b9a1524e30286a55"
+    },
+    {
+      "signature": "4GeASrnL8XKSYZcxSBRfCBVkadwr9dXVDPADYy4UKWXJNWGj2SinHPxsrUSxeoUue36HB7kGeUSfexdbfUCiCCVz",
+      "block_num": 455709865,
+      "instruction_index": 12,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "190017",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1701388",
+      "debits": [
+        {
+          "amount": "190017",
+          "index": 14,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:12:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:190017:So11111111111111111111111111111111111111112:1701388",
+      "fixture": "182.transaction.pb",
+      "sha256": "418759778ae857857c1ca034d9f1be98efc4b0c3db6accbb158645e24b411a44"
+    },
+    {
+      "signature": "4ZuoQdQe36ggTrvd37hgAxrx9LsXSMutYRDKWKEaPME7yPapdeoUSDtidTQw4xuETEbEAJpjPU8sGoZLgCWTirD3",
+      "block_num": 455709856,
+      "instruction_index": 22,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "207584",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1858856",
+      "debits": [
+        {
+          "amount": "207584",
+          "index": 24,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:22:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:207584:So11111111111111111111111111111111111111112:1858856",
+      "fixture": "183.transaction.pb",
+      "sha256": "689979fd21aa62fe109c0d4dd78c096a7469e740144da58cbf25e1ad09c6b49a"
+    },
+    {
+      "signature": "ALV4Spcsoaj9QvVd1uczNAmQrbmwUE8GXEpSWczB5TSbXwbh2wRvFUVKyYW1XsBbdqbGkEMvY5EEiwLBXLrxQbK",
+      "block_num": 455709854,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "9LbnrcYSSf45d6t92J8poynCX4UcwYTsyQuk3tLwAmwG",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "311426",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "2789055",
+      "debits": [
+        {
+          "amount": "311426",
+          "index": 16,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:9LbnrcYSSf45d6t92J8poynCX4UcwYTsyQuk3tLwAmwG:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:311426:So11111111111111111111111111111111111111112:2789055",
+      "fixture": "184.transaction.pb",
+      "sha256": "562f7a6b168faa13539dd4ab649c1d70bde92d4408b22221bc3b8194b81b2222"
+    },
+    {
+      "signature": "eVsCBhAvCq2VDnSTJ9vJoQYQPC8UefKft1Nv74xvctT57bMSrKb4D29RoUuePKxaBDEbAK8TjctC6F3RWLf7eVD",
+      "block_num": 455709851,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "8c6yQnGHKizQ2tbnaJaENN8Ah2vQTYsfH45yX2m12czR",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "497700",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "4458108",
+      "debits": [
+        {
+          "amount": "497700",
+          "index": 16,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:8c6yQnGHKizQ2tbnaJaENN8Ah2vQTYsfH45yX2m12czR:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:497700:So11111111111111111111111111111111111111112:4458108",
+      "fixture": "185.transaction.pb",
+      "sha256": "d4e2170ed5168fe47b68d3f6d85aa40808d7006eee6576707c2367f740d52e26"
+    },
+    {
+      "signature": "5zJpwi2k3FQotpGwGANHQUTdJG3q6UYmYFz5UWSFsT33ZCQX1k2L2gijpakMLPkXPbhdpMbj8bZLyg4kRHYVg56R",
+      "block_num": 455709825,
+      "instruction_index": 12,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "2ksQ77e9e5SS6VA6poanRGWfkU3R4R5wZnptbJHb2nx9",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "439000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "3933143",
+      "debits": [
+        {
+          "amount": "439000",
+          "index": 14,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:12:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:2ksQ77e9e5SS6VA6poanRGWfkU3R4R5wZnptbJHb2nx9:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:439000:So11111111111111111111111111111111111111112:3933143",
+      "fixture": "186.transaction.pb",
+      "sha256": "dbd418947c708e15a3baf588221066b1b7329ee675e270a633b5d46f1a9862b8"
+    },
+    {
+      "signature": "5xQKNLLjBSzzJ99vHTus5vKkP5gQ8bGv4hcCmS6vK7CpwAjJoxc4iyxoUraxmPTSfqWZ332Vz5P4jczcax9QbwVQ",
+      "block_num": 455709820,
+      "instruction_index": 17,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "5014312",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "559578",
+      "debits": [
+        {
+          "amount": "5014312",
+          "index": 19,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:17:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps:So11111111111111111111111111111111111111112:5014312:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:559578",
+      "fixture": "187.transaction.pb",
+      "sha256": "7513c0cab799b5bfe479ed413f9f223569c1b3522a505cf1ea31468fe1b38271"
+    },
+    {
+      "signature": "3P99p3PzWaDNDhGhHKVueQfEupEk285m1UyY1wr22hnz5wXPwJCgvBoRiK2hB3gr7VcaTVLdVG4u3E8gzGaztui8",
+      "block_num": 455709818,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "52teCEwvy1ycG4S3VsoiRWYZyFQMRKb7FedQRi5RUfqs",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "188252",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1686421",
+      "debits": [
+        {
+          "amount": "188252",
+          "index": 11,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:52teCEwvy1ycG4S3VsoiRWYZyFQMRKb7FedQRi5RUfqs:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:188252:So11111111111111111111111111111111111111112:1686421",
+      "fixture": "188.transaction.pb",
+      "sha256": "38fcb768d6f825f5ea0a47e507ab2468a218391ae1b0219f80d573cf2d748d6a"
+    },
+    {
+      "signature": "3LjCsjtWqRnCTDWGCjPyeFdUneYg795auFKuMsgroetM5acVwmXitWwwjDGpkZRJA2M6vk1XMEposQJsPL1YAuRo",
+      "block_num": 455709817,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "7UiDxgBmL4nSpWR68k9AvWYVREQhcJYtbQ8ipzi27LUJ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "209800",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "1879626",
+      "debits": [
+        {
+          "amount": "209800",
+          "index": 11,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:7UiDxgBmL4nSpWR68k9AvWYVREQhcJYtbQ8ipzi27LUJ:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:209800:So11111111111111111111111111111111111111112:1879626",
+      "fixture": "189.transaction.pb",
+      "sha256": "3674c3996c008555c97a4a5277fabe8b958c1d9e9c85ee65cc49422c30552e1d"
+    },
+    {
+      "signature": "53EjJxTyzyuLhbpHom7PEeg6gDjRoRqnMDCjTZ8cy7WCfxjzjwg9MEVUkQVDGxEuJegvZ3MhmTfrFY5U2HU3EWFy",
+      "block_num": 455709815,
+      "instruction_index": 21,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "309000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "2768698",
+      "debits": [
+        {
+          "amount": "309000",
+          "index": 23,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:21:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:309000:So11111111111111111111111111111111111111112:2768698",
+      "fixture": "190.transaction.pb",
+      "sha256": "e5a25347a616c2b857a1e50d78ba5c9a465a8d171e675d4cac51f702679a8310"
+    },
+    {
+      "signature": "3bppJdYj5gfYBGor4UPsMAJmigKbzX9roWzjhEQdf4pgK2rf5nRXFAgYkHNoj1TcQectyvaPsg73yggRGEF9VgKN",
+      "block_num": 455709808,
+      "instruction_index": 10,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "9iusqWdzf4r2324LTLBj8QEvy1MXkpiiCZJPrMzp5XSV",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4289104",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "478607",
+      "debits": [
+        {
+          "amount": "4289104",
+          "index": 12,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:10:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:9iusqWdzf4r2324LTLBj8QEvy1MXkpiiCZJPrMzp5XSV:So11111111111111111111111111111111111111112:4289104:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:478607",
+      "fixture": "191.transaction.pb",
+      "sha256": "b813814b77c6459c76618d5a876ceaba98908042deb8ece3f023793b2bbccc4a"
+    },
+    {
+      "signature": "53aTd48Bp6yo88xN29UTd1s4JVBRbEtW3BHiyAUH25p9u6jVp4a4DD9vHsnBe3MmkiBsDUGE3iTngpkqTCo6Rdo3",
+      "block_num": 455709805,
+      "instruction_index": 25,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "GZj5vuBUs7Jm4EuWz3hNSB8nipCWnpv5G8PqubaP9RV3",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "2357321",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "263089",
+      "debits": [
+        {
+          "amount": "2357321",
+          "index": 27,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:25:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:GZj5vuBUs7Jm4EuWz3hNSB8nipCWnpv5G8PqubaP9RV3:So11111111111111111111111111111111111111112:2357321:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:263089",
+      "fixture": "192.transaction.pb",
+      "sha256": "37fd7eafcd9283c98169620b0e199b1d8496915875e0d13f4c250da8394fcab8"
+    },
+    {
+      "signature": "LsbU5sBJE3SgnAxbdopSLuB7NChwJ7achgFKBSqJv9ufJzcFyKixsGkoNLgKkEP2aanygtGVHiXk6H2R3cVsNvY",
+      "block_num": 455709803,
+      "instruction_index": 15,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1519015",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "169547",
+      "debits": [
+        {
+          "amount": "1519015",
+          "index": 17,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:15:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8:So11111111111111111111111111111111111111112:1519015:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:169547",
+      "fixture": "193.transaction.pb",
+      "sha256": "26ecd2b5594a650d3a490a24e94750c008797edbd152010ee23b0ea39ddcb0da"
+    },
+    {
+      "signature": "3BvcXsUH4j4fjrPbDkyTb5PBW3T9q96ffk2UMH4gztcE74Frd2XpzAUaALoyvjLw47eytaxsVrX9JonSs4D9kQwM",
+      "block_num": 455709802,
+      "instruction_index": 7,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "7NXGUkoMFNg3caPsH2b5JyHpVLicjsFHszZEsJwKxtdT",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4775065",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "533060",
+      "debits": [
+        {
+          "amount": "4775065",
+          "index": 9,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:7:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:7NXGUkoMFNg3caPsH2b5JyHpVLicjsFHszZEsJwKxtdT:So11111111111111111111111111111111111111112:4775065:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:533060",
+      "fixture": "194.transaction.pb",
+      "sha256": "c4c07800cf68f8b64bcce7be3c3405fc91c861fceabae746809cf4168681a2a0"
+    },
+    {
+      "signature": "4cbFPFp5kcFT57ay9KkZBTqdzG79ecrPA18sFiK4ghJW9NH3Wv53o7AqdVVYV7bXS62GZZSoTMwjXjFhNsgYbERW",
+      "block_num": 455709797,
+      "instruction_index": 7,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "3634014",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "405766",
+      "debits": [
+        {
+          "amount": "3634014",
+          "index": 9,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:7:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF:So11111111111111111111111111111111111111112:3634014:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:405766",
+      "fixture": "195.transaction.pb",
+      "sha256": "b8664911f148eb1641b9beaba04419a746c9474ccfc2af690c2dcde8a54d4733"
+    },
+    {
+      "signature": "4ZagAuUsVwVJNCTVmo5dPxULt41ahQ1Rb6txbzqiQW7WvJPghzXF9bGigp9VYkDhbdnWgmtSM5Ju5SmBwPWCQVEw",
+      "block_num": 455709759,
+      "instruction_index": 12,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "AfX6Mf58SFx8xazhd83GWf3aaxLZMMftQPnAkz9wMEYe",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "485100",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "4343721",
+      "debits": [
+        {
+          "amount": "485100",
+          "index": 14,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:12:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:AfX6Mf58SFx8xazhd83GWf3aaxLZMMftQPnAkz9wMEYe:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:485100:So11111111111111111111111111111111111111112:4343721",
+      "fixture": "196.transaction.pb",
+      "sha256": "d6bdc7a6e83095e49b8b9bc5ca8a8c5c5eabddd3cc703aa97408df3271d577a9"
+    },
+    {
+      "signature": "b6iNrUJXeKCuK4b7yFrY45HF5P7iGsQQxCUpGYWsQcSFFyakBAT1Q6xyXQMbM7tTchtZ9UcieeC9fmkhBHhX8s9",
+      "block_num": 455709755,
+      "instruction_index": 16,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "249086",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "2230758",
+      "debits": [
+        {
+          "amount": "249086",
+          "index": 18,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:16:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:249086:So11111111111111111111111111111111111111112:2230758",
+      "fixture": "197.transaction.pb",
+      "sha256": "ddad4e7c3f4c7bfc1e3c692fee1d5aabaaec9db92483a53cc8c1ce1e4f7e3a08"
+    },
+    {
+      "signature": "3WRrRcLrdfw8QNsCHadHqi2Z4q8YnRcMRoCvqX2Zqig1f9Bvafx1AHs8NTJR1oSfdyqMVzehnWqStCb5pDWLTi2g",
+      "block_num": 455709692,
+      "instruction_index": 14,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "8bxMLoJFoVN1MduejMT7fD7RJoBUhdSqmU7Kne22mh9x",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "4095892",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "457276",
+      "debits": [
+        {
+          "amount": "4095892",
+          "index": 16,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:14:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:8bxMLoJFoVN1MduejMT7fD7RJoBUhdSqmU7Kne22mh9x:So11111111111111111111111111111111111111112:4095892:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:457276",
+      "fixture": "198.transaction.pb",
+      "sha256": "d4e7869c4c3e05df6d8057f1cb429425c5baba5d7db9706560ccc172bd1ee82e"
+    },
+    {
+      "signature": "3gxWZQcMujtPSbGSvbJjjTZHMuPjDrAZ6HMvQvXgA28hnUDPzUZMGPJUH17sZcF3m28vyJGcWsa1TooU6YRV5Uxe",
+      "block_num": 455709687,
+      "instruction_index": 22,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "Grt17vEMmyLyMBgsZBGGVfh6WwNomt6rxc6WfCz4uwsx",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "2678956",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "299148",
+      "debits": [
+        {
+          "amount": "2678956",
+          "index": 24,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:22:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:Grt17vEMmyLyMBgsZBGGVfh6WwNomt6rxc6WfCz4uwsx:So11111111111111111111111111111111111111112:2678956:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:299148",
+      "fixture": "199.transaction.pb",
+      "sha256": "eef92ec841640c17087c0ee8046aabd3e22e62cf4fff8b220fd322d37dfad350"
+    },
+    {
+      "signature": "5se4SMgCeJ9rWRRyKQUjXqEqvgkVFD5wMG7k175PCnNv9ojyC3iZtZHYaHMDHHM6WPvs3XH23EfyghBBK9o3weeX",
+      "block_num": 455709687,
+      "instruction_index": 9,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "Gevi8kk43KU5rNV25MhpNCueu5Nt4utZgBgjLCw4a3EF",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1054113",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "117719",
+      "debits": [
+        {
+          "amount": "1054113",
+          "index": 11,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:9:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:Gevi8kk43KU5rNV25MhpNCueu5Nt4utZgBgjLCw4a3EF:So11111111111111111111111111111111111111112:1054113:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:117719",
+      "fixture": "200.transaction.pb",
+      "sha256": "1c46db8b7c787d12616c692035aa0c5d404e90881ada297b1dee4a4caaefed4e"
+    },
+    {
+      "signature": "pDqS8qBHVFd7fLxB5bMvUfeKCkG2GkbmmYvDkUqwjRws7oyZEwaLwjvUKWKcqTuKfU5NJEuJGQ4WCe6FW71ADz5",
+      "block_num": 455709687,
+      "instruction_index": 10,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "CX24rVf8ZnapZ58DzAsnymxissKEjm8HYo28DPTotefN",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "780881",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "87190",
+      "debits": [
+        {
+          "amount": "780881",
+          "index": 12,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:10:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:CX24rVf8ZnapZ58DzAsnymxissKEjm8HYo28DPTotefN:So11111111111111111111111111111111111111112:780881:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:87190",
+      "fixture": "201.transaction.pb",
+      "sha256": "920cdaeebe6bb9a2c71db2e81a3bfef26a36dca1672d586b51c7c2182c636b72"
+    },
+    {
+      "signature": "rVz19fYZ2127WScBmB2wKhtWDJqJyvjodUJMo7dZndDzMnXuuS1yNDK1MQyzzk6g8v2W7GTsczn4BZsFG8RnRED",
+      "block_num": 455709678,
+      "instruction_index": 16,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "6aQtW5iAbWYnymVJHPSUPM44dC1XDE7B4TjHrFGoTZm6",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "628563",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "5627936",
+      "debits": [
+        {
+          "amount": "628563",
+          "index": 18,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:16:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:6aQtW5iAbWYnymVJHPSUPM44dC1XDE7B4TjHrFGoTZm6:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:628563:So11111111111111111111111111111111111111112:5627936",
+      "fixture": "202.transaction.pb",
+      "sha256": "5464c7204cb68e9d84406d914cf3c9ef7a96469c3c690699e0f7eee1b4ab9713"
+    },
+    {
+      "signature": "4LwYWaL6Y7Ke2XnFQmkMwNByuCvkDmBMk8BDg6JZTVSVqrozrvTREqLuxhymvS2wgCvu6KFPC1kM9T81NoSfbE4p",
+      "block_num": 455709677,
+      "instruction_index": 22,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "7UG7vWHrveKLadkbdgohHUM2qXoMwGSbuDa69TzSyEpT",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "807000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "7227950",
+      "debits": [
+        {
+          "amount": "807000",
+          "index": 24,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:22:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:7UG7vWHrveKLadkbdgohHUM2qXoMwGSbuDa69TzSyEpT:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:807000:So11111111111111111111111111111111111111112:7227950",
+      "fixture": "203.transaction.pb",
+      "sha256": "e579942c788e756eedd5803e06bd98f4dc0f13c4fdbd4851ddff069aaf5eabec"
+    },
+    {
+      "signature": "2QJNJXU9Y2RMhBm33CzieLZXRXNE8burW7szP3dy39AmjHnMAnFsb7BWBhsexH4A4aSreGJp5qMa81jHV7x3KGr5",
+      "block_num": 455709666,
+      "instruction_index": 19,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 1,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "2hn46nz1Yq8UTdYKFGcaWAmtT2MT9pciGpHrzEGJuTWZ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "inputAmount": "779000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputAmount": "6979677",
+      "debits": [
+        {
+          "amount": "779000",
+          "index": 21,
+          "destination": "3f9kSZg8PPJ6NkLwVdXeff16ZT1XbkmT5eaQCqUnpDWx"
+        }
+      ],
+      "expected": "47:19:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:2hn46nz1Yq8UTdYKFGcaWAmtT2MT9pciGpHrzEGJuTWZ:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:779000:So11111111111111111111111111111111111111112:6979677",
+      "fixture": "204.transaction.pb",
+      "sha256": "6da35bf94c0dfbf01d7dd33d565849de1955885b2333d21f34c0925f23fde34e"
+    },
+    {
+      "signature": "F3VfDWkYefELtDcctYj2Txgw8SjFCFXM966uYb7rByUEbCsanaR5QHoZLnKQja4VTBKS2jLDKVBrAhbr67pJtWj",
+      "block_num": 455709660,
+      "instruction_index": 10,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC",
+      "user": "FnVd73VAk1Ppoo6CQaro2z1gKcHK68NUc71rTXmK1wHv",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "1318889",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "147150",
+      "debits": [
+        {
+          "amount": "1318889",
+          "index": 12,
+          "destination": "4maNZQtYFA1cdB55aLS321dxwdH1Y8NWaH4qiMedKpTZ"
+        }
+      ],
+      "expected": "47:10:2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC:FnVd73VAk1Ppoo6CQaro2z1gKcHK68NUc71rTXmK1wHv:So11111111111111111111111111111111111111112:1318889:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:147150",
+      "fixture": "205.transaction.pb",
+      "sha256": "594d093de92c541dcb5f8eae7cfda6066aab905ec9ee685688fbc28730185fb6"
+    },
+    {
+      "signature": "gi4Tiw9VJggyBaHMfaYURMmF154ZL2UcV3QJyEJvWj9HwGmYCTz4cJEC1Sd3wxGtEHUzmikt5SX7pAoa2STziBR",
+      "block_num": 455709624,
+      "instruction_index": 6,
+      "program_id": "HyaB3W9q6XdA5xwpU4XnSZV94htfmbmqJXZcEbRaJutt",
+      "instruction_tag": "f8c69e91e17587c8",
+      "reason": "token_exchange_unclassified",
+      "exactInput": 1,
+      "xToY": 0,
+      "pool": "6rvpVhL9fxm2WLMefNRaLwv6aNdivZadMi56teWfSkuU",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "3582280",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputAmount": "400224",
+      "debits": [
+        {
+          "amount": "3582280",
+          "index": 8,
+          "destination": "f6nwMTRpKTCVmRhGUbjfJPEBeXaaDUCvUUQh1941e4a"
+        }
+      ],
+      "expected": "47:6:6rvpVhL9fxm2WLMefNRaLwv6aNdivZadMi56teWfSkuU:5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ:So11111111111111111111111111111111111111112:3582280:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v:400224",
+      "fixture": "206.transaction.pb",
+      "sha256": "f37a88daffd5ff9427b464dd4fd3756957b51cf54a0eef85df7d5856fbcda5f9"
+    }
+  ]
+}

@@ -322,6 +322,26 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                let input_amount = if layout.protocol == pb::Protocol::Invariant {
+                    // Its optional referral is paid directly from the same
+                    // user account. Include that debit in the user's price,
+                    // without treating the referral recipient as a pool.
+                    let debits: Vec<_> = scoped.iter().filter(|t| t.source == input.source && t.mint == input.mint).collect();
+                    if debits.len() > 2
+                        || debits.iter().any(|t| {
+                            t.authority != input.authority
+                                || (t.destination != input.destination && !accounts[10..].iter().any(|account| account.0 == &t.destination))
+                        })
+                    {
+                        continue;
+                    }
+                    let Some(total) = debits.iter().try_fold(0u64, |total, t| total.checked_add(t.amounts[0])) else {
+                        continue;
+                    };
+                    total
+                } else {
+                    input.amounts[0]
+                };
 
                 if input.mint == output.mint
                     || mints.mint_for(vault_in).as_ref() != Some(&input.mint)
@@ -330,8 +350,8 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     || mints.mint_for(destination).as_ref() != Some(&output.mint)
                     || (layout.protocol == pb::Protocol::Defituna
                         && (mints.mint_for(accounts[9].0).as_ref() != Some(accounts[5].0) || mints.mint_for(accounts[10].0).as_ref() != Some(accounts[6].0)))
-                    || (layout.exact_input && !layout.input_limit && input.amounts[0] != layout.amount)
-                    || ((!layout.exact_input || layout.input_limit) && input.amounts[0] > layout.amount)
+                    || (layout.exact_input && !layout.input_limit && input_amount != layout.amount)
+                    || ((!layout.exact_input || layout.input_limit) && input_amount > layout.amount)
                     || *output.amounts.iter().min().unwrap() < layout.minimum_output
                     || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified)
                 {
@@ -345,7 +365,7 @@ pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMin
                     amm_pool: pool.clone(),
                     user: user.clone(),
                     input_mint: input.mint.clone(),
-                    input_amount: input.amounts[0],
+                    input_amount,
                     output_mint: output.mint.clone(),
                     output_amount: *output.amounts.iter().min().unwrap(),
                     source_index: Some(index as u32),
