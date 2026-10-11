@@ -31,6 +31,10 @@ For the Pluto normalized pricing stream, start in `dex-swaps/src/lib.rs`,
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
+See [`swap-coverage-2026-10-11.md`](swap-coverage-2026-10-11.md) for finalized
+replay results, newer instruction variants, net-receipt verification and gaps
+that still require investigation. Standalone package availability does not
+imply coverage in the normalized pricing stream.
 
 For standalone protocol packages:
 

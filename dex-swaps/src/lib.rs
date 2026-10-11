@@ -9,11 +9,13 @@ mod meteora_amm;
 mod meteora_daam;
 mod meteora_dlmm;
 mod moonshot;
+mod native_venues;
 mod okx;
 mod orca_whirlpool;
 mod pancakeswap;
 mod pumpfun;
 mod pumpfun_amm;
+mod quality;
 mod raydium_amm_v4;
 mod raydium_clmm;
 mod raydium_cpmm;
@@ -21,8 +23,6 @@ mod raydium_launchpad;
 mod routed_pool;
 mod spl_token_swap;
 mod token_mints;
-mod quality;
-mod native_venues;
 
 use std::collections::VecDeque;
 
@@ -43,17 +43,27 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
     Ok(pb::Events {
         parent_slot: block.parent_slot,
         parent_hash: block.previous_blockhash,
-        transactions: block.transactions.into_iter().enumerate().filter_map(|(index, tx)| {
-            if !tx.is_successful() { return None; }
-            let mut transaction = process_transaction(tx)?;
-            transaction.source_index = Some(index as u32);
-            Some(transaction)
-        }).collect(),
+        transactions: block
+            .transactions
+            .into_iter()
+            .enumerate()
+            .filter_map(|(index, tx)| {
+                if !tx.is_successful() {
+                    return None;
+                }
+                let mut transaction = process_transaction(tx)?;
+                transaction.source_index = Some(index as u32);
+                Some(transaction)
+            })
+            .collect(),
     })
 }
 
-fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    if !tx.is_successful() { return None; }
+/// Decode one successful transaction for both streaming and offline coverage audits.
+pub fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
+    if !tx.is_successful() {
+        return None;
+    }
     let tx_meta = tx.meta.as_ref()?;
     let mut swaps = Vec::new();
     let mut boop_state = boop::State::new();
@@ -156,7 +166,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         }
     }
 
-    let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps);
+    let rejected_swaps = quality::verify_and_deduplicate(&tx, &token_mints, &mut swaps, true);
     if swaps.is_empty() && rejected_swaps.is_empty() {
         return None;
     }
@@ -176,6 +186,43 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finalized_swap_variants_preserve_independently_audited_legs() {
+        for line in include_str!("../fixtures/swap-coverage/cases.tsv")
+            .lines()
+            .filter(|line| !line.starts_with('#'))
+        {
+            let fields: Vec<_> = line.split('\t').collect();
+            let bytes = std::fs::read(format!("{}/fixtures/swap-coverage/{}", env!("CARGO_MANIFEST_DIR"), fields[0])).unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+            assert_eq!(base58::encode(tx.hash()), fields[1]);
+            let decoded = process_transaction(tx).expect(fields[0]);
+            let actual: std::collections::HashSet<_> = decoded
+                .swaps
+                .iter()
+                .map(|swap| {
+                    assert!(swap.transfer_verified);
+                    format!(
+                        "{}:{}:{}:{}:{}:{}:{}:{}",
+                        swap.protocol,
+                        swap.source_index.unwrap(),
+                        base58::encode(&swap.amm_pool),
+                        base58::encode(&swap.user),
+                        base58::encode(&swap.input_mint),
+                        swap.input_amount,
+                        base58::encode(&swap.output_mint),
+                        swap.output_amount
+                    )
+                })
+                .collect();
+            for expected in fields[2].split('|') {
+                assert!(actual.contains(expected), "missing audited leg in {}: {}", fields[0], expected);
+            }
+            let identities: std::collections::HashSet<_> = decoded.swaps.iter().map(|s| (s.source_index, s.source_transfer_index)).collect();
+            assert_eq!(identities.len(), decoded.swaps.len(), "duplicate physical CPI in {}", fields[0]);
+        }
+    }
 
     #[test]
     fn restores_missing_legs_from_public_transactions() {

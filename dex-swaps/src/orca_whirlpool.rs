@@ -60,7 +60,7 @@ impl State {
             output_mint,
             output_amount: event.output_amount,
             ..Default::default()
-    })
+        })
     }
 }
 
@@ -354,7 +354,7 @@ mod tests {
         assert_eq!(decoded.swaps.len(), 3);
         for (swap, (pool, input_mint, input_amount, output_mint, output_amount)) in decoded.swaps.iter().zip([
             ("FVB6knS78TJJswCrBhhB2T3cUKBQ8XyRvqwsjDq3oWwE", sol, 273_199_007, fku, 53_097_662_110),
-            ("GNzK4LP1nbfFcMNwB1zG4htCkToXjKYn5mn5yVKvaExm", fku, 53_097_662_110, aqua, 2_214_641_291_345),
+            ("GNzK4LP1nbfFcMNwB1zG4htCkToXjKYn5mn5yVKvaExm", fku, 53_097_662_110, aqua, 2_170_348_465_518),
             ("9TT3NbWogWjbQh7b3s1hfcqYF7VJHmg8uNcXDjtPRnh4", aqua, 2_170_348_465_518, sol, 276_039_217),
         ]) {
             assert_eq!(base58::encode(&swap.amm_pool), pool);

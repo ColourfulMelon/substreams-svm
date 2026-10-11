@@ -17,6 +17,7 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::MeteoraAmm => "meteora_amm",
         pb::Protocol::MeteoraDaam => "meteora_daam",
         pb::Protocol::MeteoraDlmm => "meteora_dlmm",
+        pb::Protocol::MeteoraDbc => "meteora_dbc",
         pb::Protocol::Moonshot => "moonshot",
         pb::Protocol::OkxDex => "okx_dex",
         pb::Protocol::GoonfiV2 => "goonfi_v2",
@@ -27,6 +28,11 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Alphaq => "alphaq",
         pb::Protocol::Kipseli => "kipseli",
         pb::Protocol::Flux => "flux",
+        pb::Protocol::Fluxbeam => "fluxbeam",
+        pb::Protocol::PoseidonV2 => "poseidon_v2",
+        pb::Protocol::Denali => "denali",
+        pb::Protocol::Aquifer => "aquifer",
+        pb::Protocol::BisonfiPredict => "bisonfi_predict",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",
@@ -138,19 +144,41 @@ mod tests {
 
     #[test]
     fn rejected_rows_are_not_streamed_and_source_positions_survive() {
-        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
-        let swap = pb::Swap { source_index: Some(30), source_transfer_index: Some(31), transfer_verified: true, ..Default::default() };
-        let changes = write_swaps(clock, pb::Events {
-            parent_slot: 98, parent_hash: "parent".into(),
-            transactions: vec![pb::Transaction {
-                source_index: Some(17), signature: vec![7;64], swaps: vec![swap.clone()],
-                rejected_swaps: vec![pb::Swap { transfer_verified: false, verification_failure: "duplicate_native_cpi".into(), ..swap }],
-                ..Default::default()
-            }],
-        }).unwrap();
+        let clock = Clock {
+            number: 100,
+            id: "block".into(),
+            timestamp: Some(Default::default()),
+        };
+        let swap = pb::Swap {
+            source_index: Some(30),
+            source_transfer_index: Some(31),
+            transfer_verified: true,
+            ..Default::default()
+        };
+        let changes = write_swaps(
+            clock,
+            pb::Events {
+                parent_slot: 98,
+                parent_hash: "parent".into(),
+                transactions: vec![pb::Transaction {
+                    source_index: Some(17),
+                    signature: vec![7; 64],
+                    swaps: vec![swap.clone()],
+                    rejected_swaps: vec![pb::Swap {
+                        transfer_verified: false,
+                        verification_failure: "duplicate_native_cpi".into(),
+                        ..swap
+                    }],
+                    ..Default::default()
+                }],
+            },
+        )
+        .unwrap();
         let financial = changes.table_changes.iter().filter(|row| row.table == "swaps").collect::<Vec<_>>();
         assert_eq!(financial.len(), 1);
-        let Some(PrimaryKey::CompositePk(key)) = &financial[0].primary_key else { panic!("source key missing") };
+        let Some(PrimaryKey::CompositePk(key)) = &financial[0].primary_key else {
+            panic!("source key missing")
+        };
         assert_eq!(key.keys["transaction_index"], "17");
         assert_eq!(key.keys["instruction_index"], "31");
         assert!(changes.table_changes.iter().all(|row| matches!(row.table.as_str(), "swaps" | "blocks")));
@@ -162,9 +190,19 @@ mod tests {
 
     #[test]
     fn empty_swap_block_keeps_parent_chain_and_oversized_order_keys_fail() {
-        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
+        let clock = Clock {
+            number: 100,
+            id: "block".into(),
+            timestamp: Some(Default::default()),
+        };
         assert_eq!(write_swaps(clock.clone(), pb::Events::default()).unwrap().table_changes[0].table, "blocks");
-        let too_large = pb::Events { transactions: vec![pb::Transaction { source_index: Some(65536), ..Default::default() }], ..Default::default() };
+        let too_large = pb::Events {
+            transactions: vec![pb::Transaction {
+                source_index: Some(65536),
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
         assert!(write_swaps(clock, too_large).is_err());
     }
 }

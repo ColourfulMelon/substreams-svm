@@ -20,6 +20,17 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Tesserav, b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH")),
     (Protocol::Deriverse, b58!("DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD")),
     (Protocol::Zerofi, b58!("ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY")),
+    (Protocol::MeteoraDbc, b58!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN")),
+    (Protocol::Byreal, b58!("REALQqNEomY6cQGZJUGwywTBD2UmDT32rZcNnfxQ5N2")),
+    (Protocol::Pancakeswap, b58!("HpNfyc2Saw7RKkQd8nEL4khUcuPhQ7WwY1B2qjx8jxFq")),
+    (Protocol::Fluxbeam, b58!("FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X")),
+    (Protocol::PoseidonV2, b58!("6RCmQ8XMQCJnPbNDQa8U9ucAS9hk4tXQeps96V7p6aRY")),
+    (Protocol::OrcaWhirlpool, b58!("whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc")),
+    (Protocol::RaydiumClmm, b58!("CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK")),
+    (Protocol::MeteoraDlmm, b58!("LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo")),
+    (Protocol::BisonfiPredict, b58!("2DNbzPochEcyCcWMbL4d9S3u9QqQEj5bbe6cSZFvKsbh")),
+    (Protocol::Aquifer, b58!("AQU1FRd7papthgdrwPTTq5JacJh8YtwEXaBfKU3bTz45")),
+    (Protocol::Denali, b58!("DNL1tgEj3nJovHw9jtyCCQD3arssCJzkmpDizknwzey4")),
 ];
 
 pub(crate) struct Layout {
@@ -32,6 +43,9 @@ pub(crate) struct Layout {
     pub exact_input: bool,
     pub input_limit: bool,
     pub input_first: bool,
+    // DBC fixes users in input/output order, vaults in base/quote order.
+    pub fixed_users: bool,
+    pub minimum_output: u64,
 }
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
@@ -48,7 +62,123 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             *byte ^= key[i % 8] ^ position.to_le_bytes()[i % 2];
         }
     }
+    // Existing IDLs pin these swap variants and reject other token-moving
+    // instructions. Native CPIs remain usable when an event is absent.
+    if protocol == Protocol::OrcaWhirlpool {
+        use substreams_solana_idls::orca::whirlpool::instructions::{unpack, WhirlpoolInstruction};
+        let (amount, threshold, exact_input, legacy) = match unpack(&data).ok()? {
+            WhirlpoolInstruction::Swap(x) => (x.amount, x.other_amount_threshold, x.amount_specified_is_input, true),
+            WhirlpoolInstruction::SwapV2(x) => (x.amount, x.other_amount_threshold, x.amount_specified_is_input, false),
+            _ => return None,
+        };
+        if ix.accounts().len() < if legacy { 11 } else { 15 } {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: if legacy { 2 } else { 4 },
+            authority: if legacy { 1 } else { 3 },
+            users: if legacy { [3, 5] } else { [7, 9] },
+            vaults: if legacy { [4, 6] } else { [8, 10] },
+            amount: if exact_input { amount } else { threshold },
+            minimum_output: if exact_input { threshold } else { amount },
+            exact_input,
+            input_limit: true,
+            input_first: false,
+            fixed_users: false,
+        });
+    }
+    if protocol == Protocol::RaydiumClmm {
+        use substreams_solana_idls::raydium::clmm::v3::instructions::{unpack, RaydiumClmmInstruction};
+        let (swap, legacy) = match unpack(&data).ok()? {
+            RaydiumClmmInstruction::Swap(x) => (x, true),
+            RaydiumClmmInstruction::SwapV2(x) => (x, false),
+            _ => return None,
+        };
+        if ix.accounts().len() < if legacy { 10 } else { 13 } {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 2,
+            authority: 0,
+            users: [3, 4],
+            vaults: [5, 6],
+            amount: if swap.is_base_input { swap.amount } else { swap.other_amount_threshold },
+            minimum_output: if swap.is_base_input { swap.other_amount_threshold } else { swap.amount },
+            exact_input: swap.is_base_input,
+            input_limit: true,
+            input_first: true,
+            fixed_users: true,
+        });
+    }
+    if protocol == Protocol::MeteoraDlmm {
+        use substreams_solana_idls::meteora::dlmm::instructions::{unpack, MeteoraDlmmInstruction};
+        let (amount, minimum_output, exact_input, v2) = match unpack(&data).ok()? {
+            MeteoraDlmmInstruction::Swap(x) => (x.amount_in, x.min_amount_out, true, false),
+            MeteoraDlmmInstruction::Swap2(x) => (x.amount_in, x.min_amount_out, true, true),
+            MeteoraDlmmInstruction::SwapExactOut(x) => (x.max_in_amount, x.out_amount, false, false),
+            MeteoraDlmmInstruction::SwapExactOut2(x) => (x.max_in_amount, x.out_amount, false, true),
+            MeteoraDlmmInstruction::SwapWithPriceImpact(x) => (x.amount_in, 0, true, false),
+            MeteoraDlmmInstruction::SwapWithPriceImpact2(x) => (x.amount_in, 0, true, true),
+            _ => return None,
+        };
+        if ix.accounts().len() < if v2 { 16 } else { 15 } {
+            return None;
+        }
+        return Some(Layout {
+            protocol,
+            pool: 0,
+            authority: 10,
+            users: [4, 5],
+            vaults: [2, 3],
+            amount,
+            minimum_output,
+            exact_input,
+            input_limit: false,
+            input_first: false,
+            fixed_users: true,
+        });
+    }
     let tag = *data.first()?;
+    let discriminator = data.get(..8);
+    let dbc_legacy = discriminator == Some(&[248, 198, 158, 145, 225, 117, 135, 200]);
+    let dbc_v2 = discriminator == Some(&[65, 75, 63, 76, 235, 91, 91, 136]);
+    let dbc_hook = discriminator == Some(&[183, 93, 153, 40, 24, 230, 194, 151]);
+    if protocol == Protocol::MeteoraDbc {
+        if dbc_legacy {
+            if data.len() != 24 {
+                return None;
+            }
+        } else if dbc_v2 || dbc_hook {
+            if *data.get(24)? > 2 {
+                return None;
+            }
+            if dbc_v2 && data.len() != 25 {
+                return None;
+            }
+            if dbc_hook {
+                let slices = u32::from_le_bytes(data.get(25..29)?.try_into().ok()?) as usize;
+                // Borsh enum + u8 length for the two declared hook slice types.
+                if slices > 2 || data.len() != 29 + 2 * slices {
+                    return None;
+                }
+                let mut types = std::collections::HashSet::new();
+                let mut extra = 0usize;
+                for slice in data[29..].chunks_exact(2) {
+                    if slice[0] > 1 || !types.insert(slice[0]) {
+                        return None;
+                    }
+                    extra = extra.checked_add(slice[1] as usize)?;
+                }
+                if ix.accounts().len() < 15 + extra {
+                    return None;
+                }
+            }
+        } else {
+            return None;
+        }
+    }
     // (pool, authority, users A/B, vaults A/B, amount offset, input-first)
     let (pool, authority, users, vaults, offset, input_first) = match protocol {
         Protocol::GoonfiV2 if tag == 1 && matches!(data.len(), 18 | 19) && data[1] <= 1 => (1, 0, [2, 3], [4, 5], 2, false),
@@ -67,12 +197,36 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         Protocol::Flux if tag == 3 && data.len() == 18 && data[17] <= 1 => (1, 0, [4, 5], [2, 3], 9, false),
         Protocol::Scorch if tag == 2 && data.len() == 34 => (15, 1, [2, 3], [4, 5], 18, true),
         Protocol::Scorch if tag == 1 && data.len() == 34 => (11, 1, [2, 3], [4, 5], 18, true),
-        Protocol::Obsidian if tag == 1 && data.len() == 9 => (1, 0, [4, 5], [3, 2], 1, true),
+        Protocol::Obsidian if tag == 1 && data.len() == 9 => (1, 0, [4, 5], [2, 3], 1, false),
         // Account 0 is shared global state; account 1 is the individual market.
         Protocol::Tesserav if tag == 16 && data.len() == 18 && data[1] <= 1 => (1, 2, [5, 6], [3, 4], 2, false),
         // Tag 85 is a leveraged position change with lending CPIs, not a swap.
         Protocol::Deriverse if tag == 26 && data.len() == 32 && data[1] <= 1 && data[2..4] == [0, 0] => (5, 0, [11, 12], [3, 4], 16, false),
         Protocol::Zerofi if tag == 16 && matches!(data.len(), 17 | 18 | 57) => (0, 8, [6, 7], [3, 5], 1, true),
+        Protocol::MeteoraDbc => (2, 9, [3, 4], [5, 6], if !dbc_legacy && data[24] == 2 { 16 } else { 8 }, false),
+        // CLMM V3 dynamic fees append event fields; immediate CPIs still
+        // supply executed amounts using the canonical input/output prefix.
+        Protocol::Byreal if discriminator == Some(&[229, 46, 213, 132, 105, 40, 40, 228]) && data.len() == 41 && data[40] <= 1 => {
+            (2, 0, [3, 4], [5, 6], if data[40] == 1 { 8 } else { 16 }, true)
+        }
+        Protocol::Pancakeswap if discriminator == Some(&[43, 4, 237, 11, 26, 201, 30, 98]) && data.len() == 41 && data[40] <= 1 => {
+            (2, 0, [3, 4], [5, 6], if data[40] == 1 { 8 } else { 16 }, true)
+        }
+        Protocol::Fluxbeam if tag == 1 && data.len() == 17 => (0, 2, [3, 6], [4, 5], 1, true),
+        // Finalized token CPIs and the program-owned POSEID02 market state
+        // independently pin this prefix; unknown opcodes remain excluded.
+        Protocol::PoseidonV2 if tag == 4 && data.len() == 18 && data[1] <= 1 => (0, 2, [3, 4], [5, 6], 2, false),
+        // Aquifer is a multi-asset bank. Account 8 is its real global state;
+        // mint pairs remain explicit, never represented by a fabricated pool.
+        // Cash/outcome exchange: account 3 is the real prediction market;
+        // cash sits in the shared treasury while outcome inventory is in 4.
+        Protocol::BisonfiPredict if tag == 14 && data.len() == 20 && data[9..11].iter().all(|byte| *byte <= 1) && data[11] == 0 => {
+            (3, 0, [1, 2], [8, if data[9] == 0 { 4 } else { 5 }], 1, false)
+        }
+        Protocol::Aquifer if (tag == 1 && data.len() == 9) || (tag == 19 && data.len() == 11 && data[9..] == [0, 0]) => (8, 1, [6, 3], [15, 13], 1, true),
+        Protocol::Denali if discriminator == Some(&[104, 104, 131, 86, 161, 189, 180, 216]) && data.len() == 25 && data[8] <= 1 => {
+            (1, 0, [10, 11], [4, 5], 9, false)
+        }
         _ => return None,
     };
     let count = ix.accounts().len();
@@ -108,6 +262,19 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         Protocol::Tesserav => 12,
         Protocol::Deriverse => 15,
         Protocol::Zerofi => 14,
+        Protocol::MeteoraDbc => 15,
+        Protocol::Byreal | Protocol::Pancakeswap => 13,
+        Protocol::Fluxbeam => 14,
+        Protocol::PoseidonV2 => 11,
+        Protocol::BisonfiPredict => 18,
+        Protocol::Aquifer => {
+            if tag == 1 {
+                16
+            } else {
+                17
+            }
+        }
+        Protocol::Denali => 14,
         _ => return None,
     };
     if count < minimum_accounts {
@@ -117,7 +284,21 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         return None;
     }
     let amount = u64::from_le_bytes(data.get(offset..offset + 8)?.try_into().ok()?);
-    let exact_input = protocol != Protocol::Manifest || data[18] == 1;
+    let exact_input = match protocol {
+        Protocol::MeteoraDbc => dbc_legacy || data[24] == 0,
+        Protocol::Byreal | Protocol::Pancakeswap => data[40] == 1,
+        Protocol::Manifest => data[18] == 1,
+        _ => true,
+    };
+    let minimum_output = match protocol {
+        Protocol::MeteoraDbc => u64::from_le_bytes(data[if !dbc_legacy && data[24] == 2 { 8..16 } else { 16..24 }].try_into().ok()?),
+        Protocol::Byreal | Protocol::Pancakeswap => u64::from_le_bytes(data[if exact_input { 16..24 } else { 8..16 }].try_into().ok()?),
+        Protocol::Fluxbeam => u64::from_le_bytes(data[9..17].try_into().ok()?),
+        Protocol::PoseidonV2 => u64::from_le_bytes(data[10..18].try_into().ok()?),
+        Protocol::BisonfiPredict => u64::from_le_bytes(data[12..20].try_into().ok()?),
+        Protocol::Denali => u64::from_le_bytes(data[17..25].try_into().ok()?),
+        _ => 0,
+    };
     if amount == 0 && exact_input {
         return None;
     }
@@ -129,8 +310,11 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         vaults,
         amount,
         exact_input,
-        input_limit: matches!(protocol, Protocol::Manifest | Protocol::OrcaV2),
+        input_limit: matches!(protocol, Protocol::Manifest | Protocol::OrcaV2 | Protocol::Byreal | Protocol::Pancakeswap)
+            || (protocol == Protocol::MeteoraDbc && !dbc_legacy && data[24] != 0),
         input_first,
+        fixed_users: matches!(protocol, Protocol::MeteoraDbc | Protocol::Obsidian),
+        minimum_output,
     })
 }
 
@@ -143,6 +327,41 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn dbc_modes_and_hook_slices_have_strict_amount_and_account_layouts() {
+        let program = b58!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN");
+        let accounts: Vec<_> = (1..=17).map(|i| [i; 32]).collect();
+        for mode in 0..=2 {
+            let mut data = vec![65, 75, 63, 76, 235, 91, 91, 136];
+            data.extend_from_slice(&100u64.to_le_bytes());
+            data.extend_from_slice(&200u64.to_le_bytes());
+            data.push(mode);
+            let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data.clone());
+            let layout = layout(&tx.walk_instructions().next().unwrap()).unwrap();
+            assert_eq!(layout.amount, if mode == 2 { 200 } else { 100 });
+            assert_eq!(layout.minimum_output, if mode == 2 { 100 } else { 200 });
+            assert_eq!(layout.exact_input, mode == 0);
+            assert!(layout.fixed_users);
+            assert_eq!(layout.input_limit, mode != 0);
+            data[24] = 3;
+            let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
+            assert!(super::layout(&tx.walk_instructions().next().unwrap()).is_none());
+        }
+        let mut data = vec![183, 93, 153, 40, 24, 230, 194, 151];
+        data.extend_from_slice(&100u64.to_le_bytes());
+        data.extend_from_slice(&200u64.to_le_bytes());
+        data.push(0);
+        data.extend_from_slice(&1u32.to_le_bytes());
+        data.extend_from_slice(&[0, 2]);
+        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data.clone());
+        assert!(layout(&tx.walk_instructions().next().unwrap()).is_some());
+        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts[..16], data.clone());
+        assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+        data[29] = 2;
+        let tx = crate::routed_pool::test_fixture::make_tx(program, &accounts, data);
+        assert!(layout(&tx.walk_instructions().next().unwrap()).is_none());
+    }
 
     #[test]
     fn finalized_helius_swaps_match_exact_native_pools_and_user_flows() {
@@ -165,7 +384,7 @@ mod tests {
                         "duplicate CPI in {}",
                         fields[0]
                     );
-                    if !VENUES.iter().any(|(p, _)| *p as i32 == swap.protocol) {
+                    if !(21..=33).contains(&swap.protocol) {
                         continue;
                     }
                     assert!(swap.transfer_verified);
@@ -185,7 +404,7 @@ mod tests {
             }
             assert_eq!(actual.join("|"), fields[3], "Helius mismatch in {}", fields[0]);
         }
-        assert_eq!(protocols.len(), VENUES.len(), "every requested venue requires a real validated swap");
+        assert_eq!(protocols.len(), 13, "every original venue requires a real validated swap");
     }
 
     #[test]

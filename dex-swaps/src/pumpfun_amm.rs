@@ -1,7 +1,7 @@
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::pumpswap;
-use substreams_solana_idls::pumpswap::accounts::TradeAccounts;
+use substreams_solana_idls::pumpswap::accounts::TradeTokenAccounts;
 use substreams_solana_idls::pumpswap::events::TradeDirection;
 
 pub(crate) struct PendingTrade {
@@ -56,7 +56,7 @@ pub(crate) fn extract_pool(instruction: &InstructionView) -> Option<Vec<u8>> {
     }
     // `routed_pool::Tracker::observe` only needs the pool address (accounts[0])
     // for cross-protocol routing attribution. We deliberately don't run the
-    // full strict `TradeAccounts::try_from` here — pre-filter inner CPI
+    // full strict `TradeTokenAccounts::try_from` here — pre-filter inner CPI
     // fixtures may carry only the pool slot, and the strict path would reject
     // them with `Missing` for trailing accounts.
     if !is_trade_instruction(instruction) {
@@ -71,6 +71,9 @@ fn is_trade_instruction(instruction: &InstructionView) -> bool {
         Ok(pumpswap::instructions::PumpSwapInstruction::Buy(_))
             | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteIn(_))
             | Ok(pumpswap::instructions::PumpSwapInstruction::Sell(_))
+            | Ok(pumpswap::instructions::PumpSwapInstruction::BuyV2(_))
+            | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteInV2(_))
+            | Ok(pumpswap::instructions::PumpSwapInstruction::SellV2(_))
     )
 }
 
@@ -78,14 +81,17 @@ fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrad
     match pumpswap::instructions::unpack(instruction.data()) {
         Ok(pumpswap::instructions::PumpSwapInstruction::Buy(_))
         | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteIn(_))
-        | Ok(pumpswap::instructions::PumpSwapInstruction::Sell(_)) => {
+        | Ok(pumpswap::instructions::PumpSwapInstruction::Sell(_))
+        | Ok(pumpswap::instructions::PumpSwapInstruction::BuyV2(_))
+        | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteInV2(_))
+        | Ok(pumpswap::instructions::PumpSwapInstruction::SellV2(_)) => {
             // IDL-canonical account layout — see the comment + IDX_* constants
             // in `substreams_solana_idls::pumpswap::accounts`. Hand-indexing
             // `accounts.get(N)` here previously caused an off-by-one
             // (`base_mint` = accounts[4], should have been [3]) which let the
             // user's *base token account* leak into the `mint` slot, producing
             // ~165 spurious `(mint0, mint1)` pairs per pool downstream.
-            let accounts = TradeAccounts::try_from(instruction).ok()?;
+            let accounts = TradeTokenAccounts::try_from(instruction).ok()?;
             Some(PendingTrade {
                 pool: accounts.pool.to_bytes().to_vec(),
                 base_mint: accounts.base_mint.to_bytes().to_vec(),

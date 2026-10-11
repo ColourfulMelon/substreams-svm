@@ -101,6 +101,12 @@ pub enum Protocol {
     Tesserav = 31,
     Deriverse = 32,
     Zerofi = 33,
+    MeteoraDbc = 34,
+    Fluxbeam = 35,
+    PoseidonV2 = 36,
+    Denali = 37,
+    Aquifer = 38,
+    BisonfiPredict = 39,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -143,6 +149,12 @@ impl Protocol {
             Protocol::Tesserav => "PROTOCOL_TESSERAV",
             Protocol::Deriverse => "PROTOCOL_DERIVERSE",
             Protocol::Zerofi => "PROTOCOL_ZEROFI",
+            Protocol::MeteoraDbc => "PROTOCOL_METEORA_DBC",
+            Protocol::Fluxbeam => "PROTOCOL_FLUXBEAM",
+            Protocol::PoseidonV2 => "PROTOCOL_POSEIDON_V2",
+            Protocol::Denali => "PROTOCOL_DENALI",
+            Protocol::Aquifer => "PROTOCOL_AQUIFER",
+            Protocol::BisonfiPredict => "PROTOCOL_BISONFI_PREDICT",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -182,6 +194,12 @@ impl Protocol {
             "PROTOCOL_TESSERAV" => Some(Self::Tesserav),
             "PROTOCOL_DERIVERSE" => Some(Self::Deriverse),
             "PROTOCOL_ZEROFI" => Some(Self::Zerofi),
+            "PROTOCOL_METEORA_DBC" => Some(Self::MeteoraDbc),
+            "PROTOCOL_FLUXBEAM" => Some(Self::Fluxbeam),
+            "PROTOCOL_POSEIDON_V2" => Some(Self::PoseidonV2),
+            "PROTOCOL_DENALI" => Some(Self::Denali),
+            "PROTOCOL_AQUIFER" => Some(Self::Aquifer),
+            "PROTOCOL_BISONFI_PREDICT" => Some(Self::BisonfiPredict),
             _ => None,
         }
     }

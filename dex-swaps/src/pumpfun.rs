@@ -6,6 +6,10 @@ use crate::SOL_MINT;
 
 pub(crate) struct PendingTrade {
     bonding_curve: Vec<u8>,
+    mint: Vec<u8>,
+    quote_mint: Vec<u8>,
+    user: Vec<u8>,
+    is_buy: bool,
 }
 
 pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instruction: &InstructionView) -> Option<pb::Swap> {
@@ -27,6 +31,18 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
     let event = pumpfun::events::unpack_trade_event_minimal(instruction.data()).ok()??;
     let trade = pending_trade.take()?;
 
+    if event.mint.as_slice() != trade.mint || event.user.as_slice() != trade.user || event.is_buy != trade.is_buy {
+        return None;
+    }
+    let quote_amount = if trade.quote_mint == SOL_MINT {
+        event.sol_amount
+    } else {
+        let amounts = pumpfun::events::unpack_quote_trade_amount(instruction.data()).ok()?;
+        if amounts.mint.as_slice() != trade.quote_mint {
+            return None;
+        }
+        amounts.amount
+    };
     let mint = event.mint.to_vec();
     Some(pb::Swap {
         protocol: pb::Protocol::Pumpfun as i32,
@@ -35,10 +51,10 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
         amm: pumpfun::PROGRAM_ID.to_vec(),
         amm_pool: trade.bonding_curve,
         user: event.user.to_vec(),
-        input_mint: if event.is_buy { SOL_MINT.to_vec() } else { mint.clone() },
-        input_amount: if event.is_buy { event.sol_amount } else { event.token_amount },
-        output_mint: if event.is_buy { mint } else { SOL_MINT.to_vec() },
-        output_amount: if event.is_buy { event.token_amount } else { event.sol_amount },
+        input_mint: if event.is_buy { trade.quote_mint.clone() } else { mint.clone() },
+        input_amount: if event.is_buy { quote_amount } else { event.token_amount },
+        output_mint: if event.is_buy { mint } else { trade.quote_mint },
+        output_amount: if event.is_buy { event.token_amount } else { quote_amount },
         ..Default::default()
     })
 }
@@ -51,15 +67,26 @@ pub(crate) fn extract_pool(instruction: &InstructionView) -> Option<Vec<u8>> {
 }
 
 fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrade> {
-    let bonding_curve = match pumpfun::instructions::unpack(instruction.data()) {
-        Ok(pumpfun::instructions::PumpFunInstruction::Buy(_)) | Ok(pumpfun::instructions::PumpFunInstruction::BuyExactSolIn(_)) => {
-            pumpfun::accounts::get_buy_accounts(instruction).ok()?.bonding_curve
-        }
-        Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)) => pumpfun::accounts::get_sell_accounts(instruction).ok()?.bonding_curve,
+    use pumpfun::instructions::PumpFunInstruction::*;
+    let (pool, mint, quote, user, is_buy) = match pumpfun::instructions::unpack(instruction.data()).ok()? {
+        Buy(_) | BuyExactSolIn(_) => (3, 2, None, 6, true),
+        Sell(_) => (3, 2, None, 6, false),
+        BuyV2(_) | BuyExactQuoteInV2(_) => (10, 1, Some(2), 13, true),
+        SellV2(_) => (10, 1, Some(2), 13, false),
+        BuyV3(_) | BuyExactQuoteInV3(_) => (5, 1, Some(2), 8, true),
+        SellV3(_) => (5, 1, Some(2), 8, false),
         _ => return None,
     };
+    let accounts = instruction.accounts();
     Some(PendingTrade {
-        bonding_curve: bonding_curve.to_bytes().to_vec(),
+        bonding_curve: accounts.get(pool)?.0.clone(),
+        mint: accounts.get(mint)?.0.clone(),
+        quote_mint: match quote {
+            Some(index) if accounts.get(index)?.0.as_slice() != [0; 32] => accounts.get(index)?.0.clone(),
+            _ => SOL_MINT.to_vec(),
+        },
+        user: accounts.get(user)?.0.clone(),
+        is_buy,
     })
 }
 
