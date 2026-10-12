@@ -717,7 +717,7 @@ ahead of the saved sink observation; the reads are sequential. The initial
 catchup proof remains unchanged. This observation is retained separately in
 `fixtures/native-venues/release15-freshness-proof.json`.
 
-## Remaining Pump V3 shared-buyback-recipient gap
+## Pump V3 shared buyback recipients (candidate .16)
 
 A retained original finalized transaction at slot 455950129 contains a V3 sell
 at instruction 11 and a V3 buy at instruction 23, on distinct curves, with the
@@ -733,11 +733,29 @@ Original RPC/protobuf instructions and runtime logs match. Later owner-verified
 curve accounts and derived base vaults corroborate immutable roles only, never
 past amounts or fee absence. The `.15` decoder verifies the buy but leaves the
 sell diagnostic because its recipient guard requires one invocation and an
-isolated single-leg recipient credit. This is a demonstrated remaining gap,
-not a completed repair. The originals and per-leg/aggregate proof are retained
+isolated single-leg recipient credit. The originals and per-leg/aggregate proof are retained
 as `fixtures/swap-coverage/pump-v3-shared-buyback-recipient.*`.
 
 A repair must verify every contributing native call's event, exact token
 settlement and independent pool lamport equation before using an aggregate
 recipient credit. Unknown contributions, overlapping pool activity, failed
 ancestors or inconsistent credits must remain diagnostic.
+
+Candidate .16 implements that proof for V3 buys/sells on distinct curves. Each
+contribution requires canonical mint/token/program roles, one completed event,
+an exact committed base-token CPI, independent source-token conservation,
+proven net receipt and gross wallet funding where present. Native event amounts
+and typed argument bounds must match. Its isolated pool lamport delta must equal
+the fee-adjusted settlement. Aggregate recipient credit is accepted only when
+the number of proven contributions equals every Pump invocation touching that
+recipient, their checked fee sum equals its exact credit, and no explicit SOL
+transfer touches it. Other formats remain diagnostic rather than supplying
+unverified contributions.
+
+All 159 core tests pass, including the original transaction and 37 inconsistent
+settlement mutations. Thirteen replay corpora preserve all 2,405 prior full
+financial-payload occurrences. Exactly one independently proven sell is added,
+appearing in both the published fixture corpus and a recent recognized-swap
+corpus; these are overlapping observations of the same trade. The financial
+proof is retained beside the original. Packaging and finalized remote replay
+remain pending; deployed .15 still has this gap.

@@ -1,0 +1,86 @@
+{
+  "baselineCommit": "ded83fbe68e31aadb9d778edc47f653e05e2db70",
+  "candidateQualitySha256": "64d52ffe95f13badb2e42341a4dca256598c27028c56041caf913d59d996d721",
+  "coreTestsPassed": 159,
+  "badSettlementMutationsRejected": 37,
+  "allPreviousFullPayloadsPreserved": true,
+  "comparisonCorpora": {
+    "recognized": {
+      "unchangedFullFinancialPayloads": 149,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 149
+    },
+    "dlmm": {
+      "unchangedFullFinancialPayloads": 140,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 140
+    },
+    "defituna": {
+      "unchangedFullFinancialPayloads": 111,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 111
+    },
+    "twohop": {
+      "unchangedFullFinancialPayloads": 2,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 2
+    },
+    "jupiter4": {
+      "unchangedFullFinancialPayloads": 305,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 305
+    },
+    "bonk": {
+      "unchangedFullFinancialPayloads": 175,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 175
+    },
+    "spl": {
+      "unchangedFullFinancialPayloads": 243,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 243
+    },
+    "pump": {
+      "unchangedFullFinancialPayloads": 77,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 77
+    },
+    "native_sol_sells": {
+      "unchangedFullFinancialPayloads": 28,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 28
+    },
+    "published_core": {
+      "unchangedFullFinancialPayloads": 1044,
+      "additionalFinancialRows": 1,
+      "totalFinancialRows": 1045
+    },
+    "recent_native_sol_sells": {
+      "unchangedFullFinancialPayloads": 96,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 96
+    },
+    "recent_recognized": {
+      "unchangedFullFinancialPayloads": 31,
+      "additionalFinancialRows": 1,
+      "totalFinancialRows": 32
+    },
+    "one_dex_alias": {
+      "unchangedFullFinancialPayloads": 4,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 4
+    }
+  },
+  "additionalUniqueLeg": {
+    "signature": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN",
+    "nativeInstructionIndex": 11,
+    "inputInstructionIndex": 12,
+    "grossInputAtoms": "7670888229084",
+    "netOutputLamports": "228543099",
+    "appearsInOverlappingCorpora": [
+      "published_core",
+      "recent_recognized"
+    ]
+  },
+  "pricingWrites": false
+}

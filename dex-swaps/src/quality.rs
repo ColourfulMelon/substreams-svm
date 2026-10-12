@@ -1434,6 +1434,95 @@ pub(crate) fn verify_with_fees(
             }
         }
     }
+    // Several V3 swaps on distinct curves can pay the same buyback recipient.
+    // A whole-transaction credit is usable only after every contributing call
+    // independently proves its exact native settlement. Unknown calls still
+    // count against the recipient below and cannot borrow another leg's fees.
+    let mut v3_buyback_contributions = HashMap::<Vec<u8>, (usize, u64)>::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        if ix.program_id().0 != &pumpfun::PROGRAM_ID || !successful_invocations.contains(&(index as u32)) { continue; }
+        let (buy, amount, limit) = match pumpfun::instructions::unpack(ix.data()) {
+            Ok(pumpfun::instructions::PumpFunInstruction::BuyV3(args)) => (true, args.amount, args.max_sol_cost),
+            Ok(pumpfun::instructions::PumpFunInstruction::SellV3(args)) => (false, args.amount, args.min_sol_output),
+            _ => continue,
+        };
+        let a = ix.accounts();
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        if a.len() != 17 || depth == 0 || a[2].0.as_slice() != crate::SOL_MINT
+            || (a[3].0.as_slice() != token::PROGRAM_ID && a[3].0.as_slice() != token_2022::PROGRAM_ID)
+            || a[4].0.as_slice() != token::PROGRAM_ID || a[14].0.iter().any(|byte| *byte != 0)
+            || a[16].0.as_slice() != pumpfun::PROGRAM_ID || a[5].0 == a[13].0 || a[5].0 == a[8].0 || a[13].0 == a[8].0
+            || mints.mint_for(a[6].0).as_ref() != Some(a[1].0) || mints.mint_for(a[9].0).as_ref() != Some(a[1].0)
+            || instructions.iter().filter(|call| call.program_id().0 == &pumpfun::PROGRAM_ID
+                && call.accounts().iter().any(|account| account.0 == a[5].0)).count() != 1
+        { continue; }
+        let end = instructions.iter().enumerate().skip(index + 1)
+            .find(|(_, child)| child.is_root() || child.stack_height() > 0 && child.stack_height() <= depth)
+            .map(|(end, _)| end).unwrap_or(instructions.len());
+        let base: Vec<_> = transfers.iter().filter(|t| t.index > index as u32 && (t.index as usize) < end
+            && t.depth == depth + 1 && t.mint.as_slice() == a[1].0.as_slice()
+            && t.source == *a[if buy { 6 } else { 9 }].0 && t.destination == *a[if buy { 9 } else { 6 }].0
+            && t.authority == *a[if buy { 5 } else { 8 }].0 && t.net_verified
+            && instructions[t.index as usize].program_id().0 == a[3].0
+            && successful_invocations.contains(&t.index)).collect();
+        if base.len() != 1 || base[0].amounts[0] != amount { continue; }
+        let base = base[0];
+        // Source conservation independently checks the gross token debit;
+        // destination fee arithmetic alone must not validate a changed CPI.
+        let source = &base.source;
+        if other_token_operations.contains(source) || !observed_start.contains(source)
+            || !observed_end.contains(source) && !proven_closed.contains(source)
+        { continue; }
+        let incoming: Vec<_> = transfers.iter().filter(|t| t.destination == *source && t.mint == base.mint).collect();
+        if incoming.iter().any(|t| !t.net_verified) { continue; }
+        let received: i128 = incoming.iter().map(|t| i128::from(*t.amounts.iter().min().unwrap())).sum();
+        if deltas.get(source).copied() != Some(received - debits.get(&(source.clone(), base.mint.clone())).copied().unwrap_or(0)) { continue; }
+        if instructions[index + 1..end].iter().filter(|child| child.program_id().0 == &pumpfun::PROGRAM_ID
+            && child.data().get(8..16) == Some(pumpfun::events::TRADE.as_slice())).count() != 1
+        { continue; }
+        let events: Vec<_> = instructions.iter().enumerate().skip(index + 1).take(end - index - 1)
+            .filter_map(|(position, child)| {
+                let accounts = child.accounts();
+                if child.program_id().0 != &pumpfun::PROGRAM_ID || child.stack_height() != depth + 1
+                    || accounts.len() != 1 || accounts[0].0 != a[15].0 || !successful_invocations.contains(&(position as u32))
+                { return None; }
+                let event = pumpfun::events::unpack_trade_event_minimal(child.data()).ok()??;
+                if event.is_buy != buy || event.mint.as_slice() != a[1].0.as_slice() || event.user.as_slice() != a[8].0.as_slice()
+                    || event.token_amount != if buy { base.amounts[0] } else { *base.amounts.iter().min().unwrap() }
+                { return None; }
+                let quote = pumpfun::events::unpack_quote_trade_amount(child.data()).ok()?;
+                (quote.mint.iter().all(|byte| *byte == 0) && quote.amount == event.sol_amount).then_some(quote)
+            }).collect();
+        if events.len() != 1 { continue; }
+        let quote = &events[0];
+        let user_lamports = if buy { quote.amount.checked_add(quote.fee).and_then(|n| n.checked_add(quote.creator_fee)) }
+            else { quote.amount.checked_sub(quote.fee).and_then(|n| n.checked_sub(quote.creator_fee)) };
+        let Some(user_lamports) = user_lamports.filter(|n| *n > 0 && if buy { *n <= limit } else { *n >= limit }) else { continue };
+        let touches: Vec<_> = transfers.iter().filter(|t| t.mint == crate::SOL_MINT
+            && (t.source == *a[5].0 || t.destination == *a[5].0)).collect();
+        // A buy has one gross wallet-to-curve payment. A sell can have one
+        // earlier curve-growth payment; it is funding, never sale proceeds.
+        if touches.len() > 1 || buy && touches.len() != 1 { continue; }
+        let funding = if let Some(t) = touches.first() {
+            if t.source != *a[8].0 || t.destination != *a[5].0 || t.index <= index as u32 || t.index as usize >= end
+                || t.depth != depth + 1 || !instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                || !successful_invocations.contains(&t.index) || if buy { t.amounts[0] != user_lamports } else { t.index >= base.index }
+            { continue; }
+            t.amounts[0]
+        } else { 0 };
+        let Some(meta) = tx.meta.as_ref() else { continue };
+        let resolved = tx.resolved_accounts();
+        let Some(position) = resolved.iter().position(|account| *account == a[5].0) else { continue };
+        let Some(pool_delta) = meta.post_balances.get(position).zip(meta.pre_balances.get(position))
+            .map(|(after, before)| i128::from(*after) - i128::from(*before)) else { continue };
+        let expected = if buy { user_lamports.checked_sub(quote.buyback_fee).map(i128::from) }
+            else { user_lamports.checked_add(quote.buyback_fee).map(|n| i128::from(funding) - i128::from(n)) };
+        if expected != Some(pool_delta) { continue; }
+        let entry = v3_buyback_contributions.entry(a[13].0.clone()).or_default();
+        // Overflow leaves the proven count incomplete, so aggregate credit
+        // cannot pass even when another valid contribution follows it.
+        if let Some(total) = entry.1.checked_add(quote.buyback_fee) { entry.0 += 1; entry.1 = total; }
+    }
     let mut verified = Vec::new();
     let mut native_evidence = HashSet::new();
     // Prefer a native event over its Jupiter wrapper, including when wrapper
@@ -1695,10 +1784,12 @@ pub(crate) fn verify_with_fees(
                             let position = tx.resolved_accounts().iter().position(|a| *a == recipient)?;
                             let meta = tx.meta.as_ref()?;
                             let delta = i128::from(*meta.post_balances.get(position)?) - i128::from(*meta.pre_balances.get(position)?);
+                            let recipient_credit = if recipient_calls == 1 { Some(amounts.buyback_fee) }
+                                else { v3_buyback_contributions.get(recipient)
+                                    .filter(|(proven_calls, _)| *proven_calls == recipient_calls).map(|(_, total)| *total) };
                             if net == 0
-                                || recipient_calls != 1
                                 || explicit_recipient_sol
-                                || delta != i128::from(amounts.buyback_fee)
+                                || recipient_credit.map(i128::from) != Some(delta)
                                 || pool_delta.map(|delta| delta + i128::from(funding)) != Some(i128::from(net.checked_add(amounts.buyback_fee)?))
                             {
                                 return None;
@@ -2193,6 +2284,86 @@ mod tests {
             }
             assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
                 !(s.source_index == Some(9) && s.input_mint == crate::SOL_MINT))), "native SOL multi-hop mode {mode}");
+        }
+    }
+
+    #[test]
+    fn finalized_v3_swaps_share_only_independently_proven_buyback_credit() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-v3-shared-buyback-recipient.transaction.pb").to_vec(),
+        ).unwrap();
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        let sell = decoded.swaps.iter().find(|s| s.source_index == Some(11)).expect("independently settled native sell");
+        assert_eq!((sell.input_amount, sell.output_amount, sell.source_transfer_index), (7_670_888_229_084, 228_543_099, Some(12)));
+        assert_eq!(sell.output_mint, crate::SOL_MINT);
+        let buy = decoded.swaps.iter().find(|s| s.source_index == Some(23)).unwrap();
+        assert_eq!((buy.input_amount, buy.output_amount, buy.source_transfer_index), (228_543_098, 1_329_769_873_727, Some(24)));
+        assert_eq!(decoded.swaps.len(), 2);
+        assert!(decoded.swaps.iter().all(|s| s.transfer_verified));
+        let root_program = base58::encode(tx.walk_instructions().nth(2).unwrap().program_id().0);
+        for mode in 0..37 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 2).unwrap().instructions;
+            let sell = calls[8].accounts.clone();
+            let buy = calls[20].accounts.clone();
+            match mode {
+                0 => meta.post_balances[sell[13] as usize] += 1,
+                1 => meta.post_balances[sell[5] as usize] += 1,
+                2 => meta.post_balances[buy[5] as usize] += 1,
+                3 => calls[9].data[1] ^= 1,
+                4 => calls[21].data[1] ^= 1,
+                5 => calls[22].data[4] ^= 1,
+                6 => calls[10].data[56] ^= 1,
+                7 => calls[23].data[56] ^= 1,
+                8 => calls[10].data[64] = 1,
+                9 => calls[23].data[64] = 0,
+                10 => calls[20].accounts[13] = buy[8],
+                11 => calls[20].accounts[5] = sell[5],
+                12 => calls[10].accounts[0] = sell[13],
+                13 => calls[23].accounts[0] = buy[13],
+                14 => calls[20].data[8] ^= 1,
+                15 => calls[8].data[8] ^= 1,
+                16..=19 => {
+                    let account = match mode { 16 => sell[6], 17 => sell[9], 18 => buy[6], _ => buy[9] };
+                    let balance = meta.post_token_balances.iter_mut().find(|b| b.account_index == u32::from(account)).unwrap().ui_token_amount.as_mut().unwrap();
+                    balance.amount = (balance.amount.parse::<u64>().unwrap() + 1).to_string();
+                }
+                20 => { let duplicate = calls[10].clone(); calls.insert(11, duplicate); }
+                21 => { let duplicate = calls[23].clone(); calls.insert(24, duplicate); }
+                22 | 23 | 36 => {
+                    let position = if mode == 22 { 87 } else if mode == 23 { 85 } else {
+                        meta.log_messages.iter().rposition(|l| *l == format!("Program {root_program} success")).unwrap()
+                    };
+                    let program = if mode == 36 { root_program.clone() } else { base58::encode(pumpfun::PROGRAM_ID) };
+                    assert_eq!(meta.log_messages[position], format!("Program {program} success"));
+                    meta.log_messages[position] = format!("Program {program} failed: custom program error: 1");
+                }
+                24 => calls[22].accounts[0] = sell[5],
+                25 => calls[21].accounts[3] = buy[8],
+                26 => calls[9].accounts[3] = sell[5],
+                27 => calls[21].program_id_index = calls[22].program_id_index,
+                28 | 29 => {
+                    let (event, amount) = if mode == 28 { (23, 1_072_177u64) } else { (10, 1_099_321u64) };
+                    let offsets: Vec<_> = calls[event].data.windows(8).enumerate().filter_map(|(position, bytes)|
+                        (bytes == amount.to_le_bytes()).then_some(position)).collect();
+                    assert_eq!(offsets.len(), 1);
+                    calls[event].data[offsets[0]] ^= 1;
+                }
+                30 => {
+                    let mut payment = calls[22].clone();
+                    payment.accounts = vec![sell[8], sell[13]];
+                    payment.data[4..12].copy_from_slice(&1u64.to_le_bytes());
+                    calls.push(payment);
+                }
+                31 => calls[23].data.truncate(16),
+                32 => calls[23].data[65] ^= 1,
+                33 => calls[20].accounts[2] = buy[1],
+                34 => calls[20].stack_height = Some(3),
+                _ => { let mut unknown = calls[20].clone(); unknown.data = vec![0]; calls.push(unknown); }
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
+                s.source_index != Some(11))), "shared buyback settlement mode {mode}");
         }
     }
 
