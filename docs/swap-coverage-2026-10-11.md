@@ -811,9 +811,19 @@ of net proceeds; their output amounts alone change, from 416523623 to 411317077,
 field and physical identity remains unchanged. Original proof files retain token
 debits, fee allocation, wrapping, close-account refunds and native balance equations.
 
-All 161 core tests pass, including 41 mutations of legacy/V2 settlement and
-volume-account rent refunds. Fourteen retained corpora preserve 2405 of 2408 prior
-full financial occurrences exactly, make only those three proven output corrections,
+All 161 core tests pass, including 51 mutations of legacy/V2 settlement and
+volume-account rent refunds. Fourteen retained corpora preserve 2405 of 2409 prior
+full financial occurrences exactly, make only four proven output corrections,
 and drop none. Thirty-nine added occurrences deduplicate to twenty-five unique
 physical legs. Frozen metadata is unchanged. Package validation, publication and
 a coordinated strict-cursor rollout must precede any claim of live .17 coverage.
+
+A packaged 50-block comparison additionally exposed 84 gross-to-net sell-price
+corrections and one temporary wrapper rent refund. Original finalized RPC evidence
+proves all 85 complete native/user/source equations; the compressed originals and
+owned immutable curve roles are retained. The wrapper creates and destroys one
+account with 772160 lamports of rent. Its only other destination exactly matches
+the committed service-fee transfer, so the destroyed remainder returns to the
+original funder. Ten mutations reject inconsistent ownership, access, refund and
+alternative-destination balances. The enlarged retained corpus adds that original
+previously gross-priced sell as a fourth output-only correction.

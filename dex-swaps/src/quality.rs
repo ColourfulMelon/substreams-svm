@@ -1587,6 +1587,49 @@ pub(crate) fn verify_with_fees(
                     (sell.roles[9], i128::from(sell.creator_fee))]
                 { *native_changes.entry(a[role].0.clone()).or_default() += change; }
             }
+            // A once-created, once-destroyed wrapper account can return rent
+            // directly, without a System transfer. Prove its original funding
+            // and exclusive owner invocations, then check every other account
+            // available to the close invocation. Only the original funder can
+            // receive its remainder; unknown CPI or balance changes reject it.
+            for (position, create) in instructions.iter().enumerate() {
+                let a = create.accounts();
+                if create.program_id().0.iter().any(|b| *b != 0) || create.data().len() != 52
+                    || create.data()[..4] != [0; 4] || a.len() != 2 || create.stack_height() != 2
+                    || !successful_invocations.contains(&(position as u32)) || protected.contains(a[1].0)
+                    || !legacy_native_sells.iter().any(|sell| instructions[sell.instruction].accounts()[sell.roles[2]].0 == a[0].0)
+                { continue; }
+                let Some(parent_position) = (0..position).rev().find(|p| instructions[*p].is_root()) else { continue };
+                let parent = &instructions[parent_position];
+                if parent.program_id().0.as_slice() != &create.data()[20..52]
+                    || !successful_invocations.contains(&(parent_position as u32)) { continue; }
+                let accesses: Vec<_> = instructions.iter().enumerate().filter(|(_, call)| call.accounts().iter().any(|key| key.0 == a[1].0)).collect();
+                if accesses.len() != 3 || accesses[0].0 != parent_position || accesses[1].0 != position { continue; }
+                let (close_position, close) = accesses[2];
+                if close_position <= position || !close.is_root() || close.program_id().0 != parent.program_id().0
+                    || !successful_invocations.contains(&(close_position as u32))
+                    || !close.accounts().iter().any(|key| key.0 == a[0].0)
+                    || instructions.iter().filter(|call| call.program_id().0 == parent.program_id().0).count() != 2
+                { continue; }
+                let children_valid = [parent_position, close_position].iter().all(|root| {
+                    instructions.iter().enumerate().skip(root + 1).take_while(|(_, child)| !child.is_root()).all(|(p, child)|
+                        successful_invocations.contains(&(p as u32)) && child.stack_height() == 2
+                            && (p == position || child.program_id().0.iter().all(|b| *b == 0)
+                                && child.data().len() == 12 && child.data()[..4] == [2, 0, 0, 0]))
+                });
+                let Some(source_position) = resolved.iter().position(|key| *key == a[1].0) else { continue };
+                if !children_valid || meta.pre_balances.get(source_position) != Some(&0) || meta.post_balances.get(source_position) != Some(&0)
+                    || parent.accounts().iter().chain(close.accounts().iter()).filter(|key| key.0 != a[0].0 && key.0 != a[1].0).any(|key| {
+                        let observed = resolved.iter().position(|address| *address == key.0).and_then(|p|
+                            meta.post_balances.get(p).zip(meta.pre_balances.get(p)).map(|(after, before)| i128::from(*after) - i128::from(*before)));
+                        observed != Some(native_changes.get(key.0).copied().unwrap_or(0))
+                    })
+                { continue; }
+                let refund = i128::from(u64::from_le_bytes(create.data()[4..12].try_into().unwrap()));
+                if native_changes.get(a[1].0).copied() != Some(refund) { continue; }
+                *native_changes.entry(a[1].0.clone()).or_default() -= refund;
+                *native_changes.entry(a[0].0.clone()).or_default() += refund;
+            }
             for sell in &legacy_native_sells {
                 let a = instructions[sell.instruction].accounts();
                 // One native payout per user makes its observed proceeds
@@ -2516,6 +2559,7 @@ mod tests {
             (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN.transaction.pb").as_slice(), &[(2, 4, 103975629473576, 4156222862), (6, 8, 7127223838410, 251661465), (10, 12, 7037325258482, 244818582), (14, 16, 6826357804497, 234071979)]),
             (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4dH6TUc4NgzxAGG27zY6WmbfD2cKk1eeew5BL5BnoyDVLZP4QPi3ne2rw1ygycVGkzuYMTmAmw4xXuPnUTxbMo9Z.transaction.pb").as_slice(), &[(7, 10, 295281484069, 8187298)]),
             (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/5AVsjgf2xiAyeeoJmYjKkRvGBVDMXes5T3VpdKA3P2Y9mJQSvqXaoCr6cYSF22Qmn3wifnix7JAzHRkAMxJS4UX9.transaction.pb").as_slice(), &[(3, 6, 2115327702796, 10665)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4jaQ6JV9xBoQYqXs8tai5uk2sf1ZcQppFTJxj3SanSV9tDR7UYysbp8HjqZ57M76wArDBr3oazNzRU6JkJ1HDH1n.transaction.pb").as_slice(), &[(4, 6, 8302045803901, 253796500)]),
         ];
         for (bytes, legs) in fixtures {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
@@ -2622,6 +2666,35 @@ mod tests {
             }
             assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|swap|
                 swap.source_index != Some(9))), "native volume refund mutation {mode}");
+        }
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4jaQ6JV9xBoQYqXs8tai5uk2sf1ZcQppFTJxj3SanSV9tDR7UYysbp8HjqZ57M76wArDBr3oazNzRU6JkJ1HDH1n.transaction.pb").to_vec(),
+        ).unwrap();
+        for mode in 0..10 {
+            let mut altered = tx.clone();
+            let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+            let meta = altered.meta.as_mut().unwrap();
+            let protocol_fee = meta.inner_instructions.iter().find(|group| group.index == 2).unwrap().instructions[0].accounts[6];
+            let create = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 1).unwrap().instructions[0];
+            let source = create.accounts[1] as usize;
+            match mode {
+                0 => create.accounts[0] = protocol_fee,
+                1 => create.data[20] ^= 1,
+                2 => create.accounts[1] = protocol_fee,
+                3 => create.stack_height = Some(3),
+                4 => meta.pre_balances[source] = 1,
+                5 => meta.post_balances[source] = 1,
+                6 => message.instructions[3].program_id_index = message.instructions[2].program_id_index,
+                7 => message.instructions[3].accounts[1] = message.instructions[3].accounts[0],
+                8 => {
+                    let fee = message.instructions[3].accounts[3] as usize;
+                    meta.post_balances[fee] += 1;
+                }
+                9 => meta.inner_instructions.iter_mut().find(|group| group.index == 3).unwrap().instructions[0].data[4] ^= 1,
+                _ => unreachable!(),
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|swap|
+                swap.source_index != Some(4))), "native wrapper rent refund mutation {mode}");
         }
     }
 
