@@ -5,7 +5,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.24";
+const DECODER_VERSION: &str = "v0.5.2-pluto.25";
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
@@ -50,6 +50,14 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Mercurial => "mercurial",
         pb::Protocol::Oasis => "oasis",
         pb::Protocol::JupiterLend => "jupiter_lend",
+        pb::Protocol::Saber => "saber",
+        pb::Protocol::Quantum => "quantum",
+        pb::Protocol::Binaryfi => "binaryfi",
+        pb::Protocol::Triangle => "triangle",
+        pb::Protocol::Archer => "archer",
+        pb::Protocol::Riptide => "riptide",
+        pb::Protocol::Hadron => "hadron",
+        pb::Protocol::Quay => "quay",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",

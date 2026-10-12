@@ -1,3 +1,12 @@
+mod quay;
+mod hadron;
+mod riptide;
+mod archer;
+mod triangle;
+mod proprietary_swaps;
+mod pump_curve;
+mod spl_swap_forks;
+mod saber;
 mod boop;
 mod byreal;
 mod coverage;
@@ -855,6 +864,50 @@ mod tests {
             let identities: std::collections::HashSet<_> = decoded.swaps.iter().map(|s| (s.source_index, s.source_transfer_index)).collect();
             assert_eq!(identities.len(), decoded.swaps.len(), "duplicate physical CPI in {}", fields[0]);
         }
+    }
+
+    #[test]
+    fn all_damm_legacy_suffixes_preserve_exact_net_financial_receipts() {
+        let directory=std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage/damm-legacy-suffix");
+        let cases=std::fs::read_to_string(directory.join("cases.tsv")).unwrap();
+        assert_eq!(cases.lines().count(),217);
+        let mut shapes=std::collections::HashSet::new();
+        for row in cases.lines() {
+            let f:Vec<_>=row.split('\t').collect();let source=f[1].parse::<u32>().unwrap();
+            let original=substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(directory.join(format!("{}.transaction.pb",f[0]))).unwrap()).unwrap();
+            let native=original.walk_instructions().nth(source as usize).unwrap();
+            let data=native.data().clone();let first_shape=shapes.insert((data.len(),data[24..].to_vec()));
+            // Every observed suffix must preserve canonical semantics. Representative
+            // malformed suffixes cannot weaken the exact principal/net-receipt gates.
+            for mode in 0..if first_shape {10}else{2} {
+                let mut tx=original.clone();
+                if mode>0 {
+                    let mut changed=data[..24].to_vec();
+                    match mode {1=>{},2=>changed.push(2),3=>changed.extend([0,0]),4=>{changed.resize(32,0);changed[31]=1;},5=>{changed.resize(41,0);changed[40]=1;},6=>{changed[8..16].copy_from_slice(&(f[2].parse::<u64>().unwrap()+1).to_le_bytes());},7=>{changed[16..24].copy_from_slice(&(f[3].parse::<u64>().unwrap()+1).to_le_bytes());},8=>{changed.pop();},_=>changed[0]^=1,}
+                    let groups=&mut tx.meta.as_mut().unwrap().inner_instructions;let mut index=0u32;
+                    for (root,ix) in tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                        if index==source {ix.data=changed.clone();}index+=1;
+                        if let Some(group)=groups.iter_mut().find(|g|g.index==root as u32) {
+                            for child in &mut group.instructions {if index==source {child.data=changed.clone();}index+=1;}
+                        }
+                    }
+                }
+                let decoded=process_transaction_with_metadata(tx,None,|_,_|None,|_,_|None,|mint,_| {
+                    let bytes=std::fs::read(directory.join("fee-mints").join(format!("{}.bin",base58::encode(mint)))).ok()?;
+                    let (schedule,initialized)=token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID,&bytes)?;
+                    initialized.then(||schedule.at(1055)).flatten()
+                });
+                let found:Vec<_>=decoded.as_ref().map(|t|t.swaps.iter().filter(|s|s.source_index==Some(source)).collect()).unwrap_or_default();
+                if mode>1 {assert!(found.is_empty(),"{} source{source} mutation{mode}",f[0]);continue;}
+                assert_eq!(found.len(),1,"{} source{source} mode{mode}",f[0]);let swap=found[0];
+                assert_eq!(swap.protocol,pb::Protocol::MeteoraDaam as i32);
+                assert_eq!((swap.input_amount,swap.output_amount),(f[2].parse::<u64>().unwrap(),f[3].parse::<u64>().unwrap()));
+                assert_eq!(base58::encode(&swap.amm_pool),f[4]);assert_eq!(base58::encode(&swap.user),f[5]);
+                assert_eq!(base58::encode(&swap.input_mint),f[6]);assert_eq!(base58::encode(&swap.output_mint),f[7]);
+                assert_eq!(swap.source_transfer_index,Some(f[8].parse().unwrap()));assert!(swap.transfer_verified);
+            }
+        }
+        assert_eq!(shapes.len(),4);
     }
 
     #[test]

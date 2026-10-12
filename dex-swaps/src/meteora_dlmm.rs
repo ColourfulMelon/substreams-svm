@@ -91,7 +91,15 @@ pub(crate) fn decode_swap_instruction(ix: &InstructionView) -> Option<PendingSwa
     // dropping ~5/6 of post-launch DLMM volume routed through the variants
     // below.
     let depth = if ix.is_root() { 1 } else { ix.stack_height() };
-    match dlmm::instructions::unpack(ix.data()) {
+    // Bounded committed Swap2 tails follow the declared empty remaining
+    // vector. Keep exactly the canonical28B prefix for the typed ABI parser.
+    let mut data = ix.data().clone();
+    if data.starts_with(&dlmm::instructions::SWAP2)
+        && data.len() >= 28 && data[24..28].iter().all(|byte| *byte == 0)
+        && ((matches!(data.len(), 32 | 56) && data[28..].iter().all(|byte| *byte == 0))
+            || (data.len() == 34 && data[28..] == [0, 0, 0, 0, 4, 0]))
+    { data.truncate(28); }
+    match dlmm::instructions::unpack(&data) {
         Ok(dlmm::instructions::MeteoraDlmmInstruction::Swap(_)) => {
             let a = dlmm::accounts::get_swap_accounts(ix).ok()?;
             Some(PendingSwap {
@@ -252,6 +260,62 @@ fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
     }
 }
 
+/// The padded empty-vector Swap2 forms are accepted only with the two
+/// canonical events and their exact immediate principal/optional host CPIs.
+/// Events distinguish host proceeds; the caller proves the user's net output.
+pub(crate) fn padded_swap2_settlement(source: u32, ix: &InstructionView, calls: &[InstructionView], successful: &std::collections::HashSet<u32>) -> bool {
+    let d = ix.data();
+    let a = ix.accounts();
+    let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+    if ix.program_id().0 != &dlmm::PROGRAM_ID || !d.starts_with(&dlmm::instructions::SWAP2)
+        || !matches!(d.len(), 32 | 34 | 56) || d[24..28] != [0, 0, 0, 0] || a.len() < 16
+        || a[13].0.as_slice() != substreams_solana::b58!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr")
+        || a[15].0 != &dlmm::PROGRAM_ID || !matches!(calls.len(), 4 | 5) || depth == 0
+        || !successful.contains(&source)
+        || calls.iter().enumerate().any(|(n, c)| c.is_root() || c.stack_height() != depth + 1 || !successful.contains(&(source + n as u32 + 1)))
+    { return false; }
+    let Some(pending) = decode_swap_instruction(ix) else { return false };
+    let Some(legacy) = decode_swap_event(&calls[0]) else { return false };
+    let last = calls.last().unwrap();
+    let e = last.data();
+    if calls[0].accounts().len() != 1 || calls[0].accounts()[0].0 != a[14].0
+        || last.program_id().0 != &dlmm::PROGRAM_ID || last.accounts().len() != 1 || last.accounts()[0].0 != a[14].0
+        || e.len() != 163 || e[..16] != [228, 69, 165, 46, 81, 203, 154, 29, 46, 116, 82, 215, 148, 27, 84, 77]
+    { return false; }
+    let p = &e[16..];
+    let requested = u64::from_le_bytes(d[8..16].try_into().unwrap());
+    let minimum = u64::from_le_bytes(d[16..24].try_into().unwrap());
+    let host = u64::from_le_bytes(p[137..145].try_into().unwrap());
+    let output = u64::from_le_bytes(p[105..113].try_into().unwrap());
+    if p[..32] != pending.lb_pair || p[32..64] != pending.user || p[72] > 1 || p[145] > 1 || p[146] > 1
+        || requested == 0 || output == 0 || output < minimum
+        || u64::from_le_bytes(p[89..97].try_into().unwrap()) != requested || p[97..105] != [0; 8]
+        || legacy.lb_pair != pending.lb_pair || legacy.user != pending.user || legacy.amount_in != requested
+        || legacy.amount_out != output || legacy.swap_for_y != (p[72] == 1)
+    { return false; }
+    let to_y = p[72] == 1;
+    let legs = &calls[1..calls.len() - 1];
+    for (n, c) in legs.iter().enumerate() {
+        let host_leg = legs.len() == 3 && n == 1;
+        let (roles, program, amount) = if n == 0 {
+            ([4, if to_y { 6 } else { 7 }, if to_y { 2 } else { 3 }, 10], if to_y { 11 } else { 12 }, requested)
+        } else if host_leg {
+            let on_x = p[146] == 1;
+            if host == 0 || on_x != if p[145] == 1 { to_y } else { !to_y } || a[9].0 == &dlmm::PROGRAM_ID { return false; }
+            ([if on_x { 2 } else { 3 }, if on_x { 6 } else { 7 }, 9, 0], if on_x { 11 } else { 12 }, host)
+        } else {
+            ([if to_y { 3 } else { 2 }, if to_y { 7 } else { 6 }, 5, 0], if to_y { 12 } else { 11 }, output)
+        };
+        let cd = c.data();
+        let ca = c.accounts();
+        if c.program_id().0 != a[program].0 || ![substreams_solana_idls::spl::token::PROGRAM_ID.as_slice(), substreams_solana_idls::spl::token_2022::PROGRAM_ID.as_slice()].contains(&c.program_id().0.as_slice())
+            || cd.len() != 10 || cd[0] != 12 || u64::from_le_bytes(cd[1..9].try_into().unwrap()) != amount
+            || ca.len() != 4 || ca.iter().zip(roles).any(|(key, role)| key.0 != a[role].0)
+        { return false; }
+    }
+    (legs.len() == 3 || host == 0 || a[9].0 == &dlmm::PROGRAM_ID) && output > 0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -304,7 +368,7 @@ mod tests {
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source)
                 && s.protocol == pb::Protocol::MeteoraDlmm as i32).collect();
-            assert_eq!(swaps.len(), 1, "one physical swap, separately declared host payout");
+            assert_eq!(swaps.len(), 1, "one physical swap, separately declared host payout: source={source} input={input} decoded={:?}", decoded.swaps);
             let swap = swaps[0];
             assert_eq!((swap.input_amount, swap.output_amount, swap.source_transfer_index), (input, output, Some(first)));
             assert_eq!((swap.amm_pool.as_slice(), swap.user.as_slice()), (layout.lb_pair.as_slice(), layout.user.as_slice()));

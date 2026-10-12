@@ -176,6 +176,14 @@ pub enum Protocol {
     Mercurial = 52,
     Oasis = 53,
     JupiterLend = 54,
+    Saber = 55,
+    Quantum = 56,
+    Binaryfi = 57,
+    Triangle = 58,
+    Archer = 59,
+    Riptide = 60,
+    Hadron = 61,
+    Quay = 62,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -239,6 +247,14 @@ impl Protocol {
             Protocol::Mercurial => "PROTOCOL_MERCURIAL",
             Protocol::Oasis => "PROTOCOL_OASIS",
             Protocol::JupiterLend => "PROTOCOL_JUPITER_LEND",
+            Protocol::Saber => "PROTOCOL_SABER",
+            Protocol::Quantum => "PROTOCOL_QUANTUM",
+            Protocol::Binaryfi => "PROTOCOL_BINARYFI",
+            Protocol::Triangle => "PROTOCOL_TRIANGLE",
+            Protocol::Archer => "PROTOCOL_ARCHER",
+            Protocol::Riptide => "PROTOCOL_RIPTIDE",
+            Protocol::Hadron => "PROTOCOL_HADRON",
+            Protocol::Quay => "PROTOCOL_QUAY",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -299,6 +315,14 @@ impl Protocol {
             "PROTOCOL_MERCURIAL" => Some(Self::Mercurial),
             "PROTOCOL_OASIS" => Some(Self::Oasis),
             "PROTOCOL_JUPITER_LEND" => Some(Self::JupiterLend),
+            "PROTOCOL_SABER" => Some(Self::Saber),
+            "PROTOCOL_QUANTUM" => Some(Self::Quantum),
+            "PROTOCOL_BINARYFI" => Some(Self::Binaryfi),
+            "PROTOCOL_TRIANGLE" => Some(Self::Triangle),
+            "PROTOCOL_ARCHER" => Some(Self::Archer),
+            "PROTOCOL_RIPTIDE" => Some(Self::Riptide),
+            "PROTOCOL_HADRON" => Some(Self::Hadron),
+            "PROTOCOL_QUAY" => Some(Self::Quay),
             _ => None,
         }
     }

@@ -4,10 +4,11 @@ use substreams_solana::{b58, block_view::InstructionView};
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd");
 pub(crate) const LIQUIDITY_PROGRAM: [u8; 32] = b58!("jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC");
-const ORACLE_PROGRAM: [u8; 32] = b58!("jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc");
+pub(crate) const ORACLE_PROGRAM: [u8; 32] = b58!("jupnw4B6Eqs7ft6rxpzYLJZYSnrpRgPcr589n5Kv4oc");
 const ASSOCIATED_TOKEN_PROGRAM: [u8; 32] = b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
 pub(crate) const SWAP_IN: [u8; 8] = [141, 172, 10, 208, 69, 9, 56, 154];
 pub(crate) const SWAP_OUT: [u8; 8] = [206, 36, 149, 14, 163, 132, 148, 1];
+pub(crate) const GET_CENTER_PRICE: [u8; 8] = [60, 51, 11, 241, 151, 180, 192, 27];
 pub(crate) const PRE_OPERATE: [u8; 8] = [129, 205, 158, 155, 198, 155, 72, 133];
 pub(crate) const OPERATE: [u8; 8] = [217, 106, 208, 99, 116, 151, 42, 135];
 
@@ -26,11 +27,18 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Swap> {
     let data = ix.data();
     if ix.program_id().0.as_slice() != PROGRAM_ID
         || data.len() != 25
-        || ![24, 25].contains(&a.len())
+        || ![24, 25, 26, 27].contains(&a.len())
         || data[8] > 1
         || a[20].0.as_slice() != LIQUIDITY_PROGRAM
         || a[23].0.as_slice() != ORACLE_PROGRAM
         || a.len() == 25 && a[24].0.as_slice() != ASSOCIATED_TOKEN_PROGRAM
+        // The observed 26/27-account ABI omits the ATA program and passes
+        // oracle state plus its sources. The committed oracle CPI must bind
+        // this complete tail before settlement can produce a price.
+        || a.len() > 25 && a[24..].iter().any(|tail| {
+            tail.0.as_slice() == PROGRAM_ID || tail.0.as_slice() == ASSOCIATED_TOKEN_PROGRAM
+                || tail.0.as_slice() == ORACLE_PROGRAM || tail.0.as_slice() == LIQUIDITY_PROGRAM
+        })
         || a[21..23].iter().any(|program| {
             ![
                 substreams_solana_idls::spl::token::PROGRAM_ID.as_slice(),
@@ -336,6 +344,191 @@ mod tests {
                     );
                     assert!(!result.coverage_transaction.is_empty());
                 }
+            }
+        }
+    }
+
+    #[test]
+    fn finalized_oracle_tails_and_signed_supply_settlement_bind_exact_receipts() {
+        for (fixture, source, input, output) in [
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/46bAEwM4U9uyYvqu1WFTLJy1GM4vFNvyCedEJ6ZtAQxx44CsuDDPA66jGXsUwwWkr8yUDsiVHXbvbkdziWEzGRbo.pb"
+                )
+                .as_slice(),
+                16u32,
+                184246890u64,
+                141176134u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/423VH6ahp3STeimJwVUUZXq43zJnbzeysnJM5mCnJdYgGt54aNffHEF5RQErFChMYGCKWDsk6mdmjAZo6qRkphbi.pb"
+                )
+                .as_slice(),
+                8u32,
+                251712956u64,
+                192871019u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/3vvmUkgpNhw5mg1HTH2wn9nfgsKFUUjD5U2tYZgX6yeLfSs3D43qcAikojiAaHU9yH3x7i8MQ9mx4pLZkhnsYhyf.pb"
+                )
+                .as_slice(),
+                8u32,
+                7634582u64,
+                5849878u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/3CHRNKj9TneShPsrLrAcuoKSicN4zaAXzPyyY8EWpGxp3CEByVQ3hrMkx7wDcDvrJt6EjwLi1rbmKvBVrFztfaMV.pb"
+                )
+                .as_slice(),
+                3u32,
+                2400000000u64,
+                2732273316u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/32GcCdtYNdtQATHs3yV4qQnabAirUd53xGnJss5JsMCogA1D1dGry8p2GNKaWunZwu4VKLMyP9tehgYGNHZS2rXf.pb"
+                )
+                .as_slice(),
+                11u32,
+                12343750u64,
+                9458204u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/66daBVKn2dkJr2eK3m9rk8wVvzbNq3iaELURMpKKWc6zn5gPjf99NtzUBUL827t2P7cmgbnq4bQ4KP55xz42tp8r.pb"
+                )
+                .as_slice(),
+                3u32,
+                2048653738u64,
+                2332279174u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/5ZwoLDAJfBtqWak5tAXRoNgGXkZ8mkJmFNFt8jxEwQ82B2vqGobEwNyg6J5wpgkSZAFet5xoBu3T63pcWQwRGWhB.pb"
+                )
+                .as_slice(),
+                10u32,
+                43481725u64,
+                33317191u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/TWfm9d8HzN1UV1QV9Dvm9wCD7yJg1PchPZJfzkfAVxrbG9pubMVtKh3McTXLiwZNwtCctipFbXDf4KS7dcQrh7Q.pb"
+                )
+                .as_slice(),
+                10u32,
+                41066906u64,
+                31466878u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/3bbqUuD2pjc2LJRbbMfxgDQGDoS5rC3rNW73m6kw4BjieS4gQoBus6ouG5RtVrGRe7FUtkYQsfcpfgAAr2w7MAu4.pb"
+                )
+                .as_slice(),
+                8u32,
+                7638026u64,
+                5852519u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/38FPQwfKMdRCRCybx7aZe54d8GbSZExqaHf7bdDu8y9scjjtnkohvHU9qptPcqQuZcE53itP91szijywzhSjqJG.pb"
+                )
+                .as_slice(),
+                13u32,
+                490039698u64,
+                557883781u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/YQd257hjLfV6kfq6c5gHigngKTQRkhPDfwA2zcuwAZN8HVCtt6WwufQs4BigjUPakQGq8TDNkn9tMrknfLe7Qax.pb"
+                )
+                .as_slice(),
+                11u32,
+                9110057u64,
+                6980439u64,
+            ),
+            (
+                include_bytes!(
+                    "../fixtures/swap-coverage/jupiter-lend-oracle/5Ezg6q4VkDRQvu8XyKySuvxtaPC3haVHkaUbC7ijnvjcjNbcVnQbfD8bBZ5rjXHabW95wpfC721MAzEs5vgpYEyV.pb"
+                )
+                .as_slice(),
+                9u32,
+                2332746735u64,
+                2048653738u64,
+            ),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let original = tx.walk_instructions().nth(source as usize).unwrap();
+            let native_data = original.data().clone();
+            let a: Vec<_> = original.accounts().iter().map(|a| a.0.clone()).collect();
+            let side = if native_data[8] == 1 { 0 } else { 1 };
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.amm.as_slice() == PROGRAM_ID).collect();
+            assert_eq!(swaps.len(), 1, "source {source}");
+            let swap = swaps[0];
+            assert_eq!(swap.protocol, Protocol::JupiterLend as i32);
+            assert_eq!(swap.amm_pool, a[1]);
+            assert_eq!(swap.user, a[0]);
+            assert_eq!(swap.input_mint, a[7 + side]);
+            assert_eq!(swap.output_mint, a[8 - side]);
+            assert_eq!((swap.input_amount, swap.output_amount), (input, output));
+            assert_eq!(swap.source_index, Some(source));
+            assert_eq!(swap.source_transfer_index, Some(source + 3));
+            assert!(swap.transfer_verified);
+            assert!(decoded.coverage_candidates.iter().all(|c| c.source_index != source));
+            for mode in 0..20 {
+                let mut wrong = tx.clone();
+                let meta = wrong.meta.as_mut().unwrap();
+                let group = meta
+                    .inner_instructions
+                    .iter_mut()
+                    .find(|g| g.instructions.iter().any(|ix| ix.data == native_data))
+                    .unwrap();
+                let pos = group.instructions.iter().position(|ix| ix.data == native_data).unwrap();
+                let calls = &mut group.instructions;
+                let native = calls[pos].clone();
+                match mode {
+                    0 => calls[pos + 1].data[0] ^= 1,
+                    1 => {
+                        calls[pos + 1].data.pop();
+                    }
+                    2 => calls[pos + 1].data.push(0),
+                    3 => calls[pos + 1].accounts[0] = native.accounts[0],
+                    4 => calls[pos + 1].accounts[1] = native.accounts[0],
+                    5 => calls[pos + 1].program_id_index = native.program_id_index,
+                    6 => calls[pos + 1].stack_height = Some(original.stack_height() + 2),
+                    7 => {
+                        calls.remove(pos + 1);
+                    }
+                    8 => calls[pos].accounts.push(native.accounts[0]),
+                    9 => calls[pos + 4].data[8..24].copy_from_slice(&0i128.to_le_bytes()),
+                    10 => calls[pos + 4].data[8..24].copy_from_slice(&(-1i128).to_le_bytes()),
+                    11 => calls[pos + 4].data[8..24].copy_from_slice(&(i128::from(input) + 1).to_le_bytes()),
+                    12 => calls[pos + 4].data[24..40].copy_from_slice(&(-1i128).to_le_bytes()),
+                    13 => calls[pos + 5].data[8..24].copy_from_slice(&0i128.to_le_bytes()),
+                    14 => calls[pos + 5].data[8..24].copy_from_slice(&i128::from(output).to_le_bytes()),
+                    15 => calls[pos + 5].data[8..24].copy_from_slice(&(-i128::from(output) - 1).to_le_bytes()),
+                    16 => calls[pos + 5].data[24..40].copy_from_slice(&1i128.to_le_bytes()),
+                    17 => calls[pos + 6].accounts[2] = native.accounts[0],
+                    18 => {
+                        let own = format!("Program {} success", base58::encode(ORACLE_PROGRAM));
+                        let end = meta.log_messages.iter().position(|l| l == &own).unwrap();
+                        meta.log_messages[end] = own.replace(" success", " failed: custom program error: 1");
+                    }
+                    _ => {
+                        let own = format!("Program {} success", base58::encode(PROGRAM_ID));
+                        let end = meta.log_messages.iter().position(|l| l == &own).unwrap();
+                        meta.log_messages[end] = own.replace(" success", " failed: custom program error: 1");
+                    }
+                }
+                let result = crate::process_transaction(wrong).unwrap();
+                assert!(
+                    result.swaps.iter().all(|s| s.amm.as_slice() != PROGRAM_ID),
+                    "source {source}, invalid oracle/supply settlement {mode}"
+                );
             }
         }
     }

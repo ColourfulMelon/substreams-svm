@@ -50,6 +50,16 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::OpenbookV2, b58!("opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb")),
     (Protocol::Mercurial, crate::mercurial::PROGRAM_ID),
     (Protocol::Oasis, crate::oasis::PROGRAM_ID),
+    (Protocol::Saber, crate::saber::PROGRAM_ID),
+    (Protocol::SplTokenSwap, crate::spl_swap_forks::DOOAR),
+    (Protocol::SplTokenSwap, crate::spl_swap_forks::DEXLAB),
+    (Protocol::Quantum, crate::proprietary_swaps::QUANTUM),
+    (Protocol::Binaryfi, crate::proprietary_swaps::BINARYFI),
+    (Protocol::Triangle, crate::triangle::PROGRAM_ID),
+    (Protocol::Archer, crate::archer::PROGRAM_ID),
+    (Protocol::Riptide, crate::riptide::PROGRAM_ID),
+    (Protocol::Hadron, crate::hadron::PROGRAM_ID),
+    (Protocol::Quay, crate::quay::PROGRAM_ID),
 ];
 
 pub(crate) struct Layout {
@@ -69,9 +79,47 @@ pub(crate) struct Layout {
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     let program = ix.program_id();
+    if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice()].contains(&program.0.as_slice()) {
+        return crate::spl_swap_forks::layout(ix);
+    }
     let protocol = VENUES.iter().find(|(_, id)| id.as_slice() == program.0.as_slice())?.0;
+    if protocol == Protocol::Saber { return crate::saber::layout(ix); }
+    if [Protocol::Quantum,Protocol::Binaryfi].contains(&protocol) { return crate::proprietary_swaps::layout(ix); }
+    if protocol == Protocol::Triangle { return crate::triangle::layout(ix); }
+    if protocol == Protocol::Archer { return crate::archer::layout(ix); }
+    if protocol == Protocol::Riptide { return crate::riptide::layout(ix); }
+    if protocol == Protocol::Hadron { return crate::hadron::layout(ix); }
+    if protocol == Protocol::Quay { return crate::quay::layout(ix); }
     let raw = ix.data();
     let mut data = raw.clone();
+    // These extended calls preserve the canonical market account prefix.
+    // The bounded flag is opaque; exact committed receipts determine price.
+    if protocol == Protocol::SolfiV2 && data.len() == 25
+        && data[0] == 7 && data[17] <= 1 && data[18] <= 1 && data[19..].iter().all(|byte| *byte == 0)
+    {
+        let accounts = ix.accounts();
+        if accounts.len() != 13
+            || [10, 11].iter().any(|i| accounts[*i].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID)
+            || accounts[12].0.as_slice() != b58!("Sysvar1nstructions1111111111111111111111111")
+        { return None; }
+        data.truncate(18);
+    }
+    if protocol == Protocol::SolfiV2 && data.len() == 153 && data[0] == 14 {
+        let accounts = ix.accounts();
+        if accounts.len() != 13
+            || [10, 11].iter().any(|i| accounts[*i].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID)
+            || accounts[12].0.as_slice() != b58!("Sysvar1nstructions1111111111111111111111111")
+        { return None; }
+        let amount = u64::from_le_bytes(data[1..9].try_into().ok()?);
+        if amount == 0 { return None; }
+        // Signed quote fields are opaque. In particular offset 9 is not
+        // a minimum output, and the last u64 does not specify direction.
+        return Some(Layout {
+            protocol, pool: 1, authority: 0, users: [6, 7], vaults: [4, 5], amount,
+            exact_input: true, input_limit: false, input_first: false,
+            fixed_users: false, minimum_output: 0,
+        });
+    }
     if protocol == Protocol::SplTokenSwap {
         // Orca V1 and the canonical SwaPp program use this legacy ABI.
         // The later Token-2022 extension has separate mint/program accounts.
@@ -387,6 +435,14 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     }
     if protocol == Protocol::MeteoraDlmm {
         use substreams_solana_idls::meteora::dlmm::instructions::{unpack, MeteoraDlmmInstruction};
+        // Original committed Swap2 calls append these bounded tails after
+        // an empty RemainingAccountsInfo vector. The declared ABI ends at28;
+        // opaque padding never becomes a price, mode or remaining-account hint.
+        if data.starts_with(&substreams_solana_idls::meteora::dlmm::instructions::SWAP2)
+            && data.len() >= 28 && data[24..28].iter().all(|byte| *byte == 0)
+            && ((matches!(data.len(), 32 | 56) && data[28..].iter().all(|byte| *byte == 0))
+                || (data.len() == 34 && data[28..] == [0, 0, 0, 0, 4, 0]))
+        { data.truncate(28); }
         let (amount, minimum_output, exact_input, v2) = match unpack(&data).ok()? {
             MeteoraDlmmInstruction::Swap(x) => (x.amount_in, x.min_amount_out, true, false),
             MeteoraDlmmInstruction::Swap2(x) => (x.amount_in, x.min_amount_out, true, true),
@@ -439,6 +495,21 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     }
     if protocol == Protocol::MeteoraDaam {
         use substreams_solana_idls::meteora::daam::instructions::{unpack, MeteoraDammInstruction};
+        // Finalized legacy calls retain the exact-input ABI before a bool or
+        // zero padding. Normalize only these observed suffixes; principal CPI
+        // verification still requires the full requested debit and net minimum.
+        // Never reinterpret the suffix as swap2's partial/exact-output mode.
+        if data.starts_with(&substreams_solana_idls::meteora::daam::instructions::SWAP)
+            && ((data.len() == 25 && data[24] <= 1)
+                || (matches!(data.len(), 32 | 41) && data[24..].iter().all(|byte| *byte == 0)))
+        {
+            data.truncate(24);
+        }
+        // Swap2 declares25 bytes. Proven32-byte exact-in calls append zero
+        // padding; the real mode is still the canonical byte at24.
+        if data.starts_with(&substreams_solana_idls::meteora::daam::instructions::SWAP2)
+            && data.len() == 32 && data[24] <= 2 && data[25..].iter().all(|byte| *byte == 0)
+        { data.truncate(25); }
         let (amount, minimum_output, exact_input, input_limit) = match unpack(&data).ok()? {
             MeteoraDammInstruction::Swap(x) => (x.params.amount_in, x.params.minimum_amount_out, true, false),
             MeteoraDammInstruction::Swap2(x) if x.params.swap_mode <= 2 => (
@@ -806,11 +877,266 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
     Some(ix.accounts().get(layout.pool)?.0.clone())
 }
 
+/// The observed extended SolFi calls settle with two immediate classic
+/// transfers. Reject aliases, extra flows and a different vault authority.
+pub(crate) fn solfi_extended_settlement(ix: &InstructionView, children: &[InstructionView]) -> Option<(u64, u64)> {
+    let data = ix.data();
+    let layout = layout(ix)?;
+    if !matches!(data.len(), 25 | 153) || layout.protocol != Protocol::SolfiV2 { return None; }
+    let accounts = ix.accounts();
+    let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+    if depth == 0 || children.len() != 2
+        || [0, 1, 4, 5, 6, 7, 8, 9].iter().enumerate().any(|(n, i)|
+            [0, 1, 4, 5, 6, 7, 8, 9][..n].iter().any(|j| accounts[*i].0 == accounts[*j].0))
+    { return None; }
+    let reverse = if data.len() == 25 { usize::from(data[17] == 1) } else {
+        let input = children[0].accounts();
+        usize::from(input.first()?.0 == accounts[7].0)
+    };
+    let mut amounts = [0; 2];
+    for (n, child) in children.iter().enumerate() {
+        let roles = if n == 0 { [6 + reverse, 4 + reverse, 0] } else { [5 - reverse, 7 - reverse, 1] };
+        let d = child.data();
+        let a = child.accounts();
+        if child.is_root() || child.stack_height() != depth + 1
+            || child.program_id().0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID
+            || d.len() != 9 || d[0] != 3 || a.len() != 3
+            || a.iter().zip(roles).any(|(key, role)| key.0 != accounts[role].0)
+        { return None; }
+        amounts[n] = u64::from_le_bytes(d[1..9].try_into().ok()?);
+    }
+    (amounts[0] == u64::from_le_bytes(data[1..9].try_into().ok()?)
+        && amounts[1] > 0 && amounts[1] >= layout.minimum_output)
+        .then_some((amounts[0], amounts[1]))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 
+
+    #[test]
+    fn finalized_solfi_u64_direction_requires_exact_zero_suffix_and_principal_cpis() {
+        for (raw, output) in [
+            (include_bytes!("../fixtures/swap-coverage/solfi-u64-direction/0.transaction.pb").as_slice(), 1_079_466_951),
+            (include_bytes!("../fixtures/swap-coverage/solfi-u64-direction/1.transaction.pb").as_slice(), 1_079_466_724),
+            (include_bytes!("../fixtures/swap-coverage/solfi-u64-direction/2.transaction.pb").as_slice(), 1_079_466_616),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&raw.to_vec()).unwrap();
+            let walk: Vec<_> = tx.walk_instructions().collect();
+            assert_eq!(solfi_extended_settlement(&walk[3], &walk[4..6]), Some((1_078_357_864, output)));
+            let native_data = walk[3].data().clone();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(3)).collect();
+            assert_eq!(swaps.len(), 1);
+            assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (1_078_357_864, output));
+            assert!(swaps[0].transfer_verified);
+            for mode in 0..22 {
+                let mut changed = tx.clone();
+                let meta = changed.meta.as_mut().unwrap();
+                let calls = &mut meta.inner_instructions[0].instructions;
+                let p = calls.iter().position(|x| x.data == native_data).unwrap();
+                let a = calls[p].accounts.clone();
+                match mode {
+                    0 => calls[p].data[18] = 2,
+                    1..=6 => calls[p].data[18 + mode] = 1,
+                    7 => calls[p].data[17] = 2,
+                    8 => { calls[p].data.pop(); }
+                    9 => calls[p].data.push(0),
+                    10 => calls[p].data[1] ^= 1,
+                    11 => calls[p].data[9..17].copy_from_slice(&(output + 1).to_le_bytes()),
+                    12 => calls[p].accounts[10] = a[1],
+                    13 => calls[p].accounts[12] = a[1],
+                    14 => calls[p + 1].accounts[0] = a[6],
+                    15 => calls[p + 1].accounts[1] = a[4],
+                    16 => calls[p + 1].accounts[2] = a[1],
+                    17 => calls[p + 2].accounts[2] = a[0],
+                    18 => calls[p + 2].stack_height = Some(4),
+                    19 => { let extra = calls[p + 1].clone(); calls.insert(p + 3, extra); }
+                    20 => meta.err = Some(Default::default()),
+                    _ => calls[p + 2].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
+                }
+                assert!(crate::process_transaction(changed).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(3))), "invalid padded SolFi {mode}");
+            }
+        }
+    }
+
+    #[test]
+    fn finalized_meteora_swap2_padding_preserves_principal_and_separate_fees() {
+        let mut shapes = std::collections::HashSet::new();
+        for line in include_str!("../fixtures/swap-coverage/meteora-swap2-padding/cases.tsv").lines() {
+            let f: Vec<_> = line.split('\t').collect();
+            let bytes = std::fs::read(format!("{}/fixtures/swap-coverage/meteora-swap2-padding/{}.pb", env!("CARGO_MANIFEST_DIR"), f[0])).unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+            let index = f[1].parse::<u32>().unwrap();
+            let dlmm = f[9] == "meteora_dlmm";
+            let source = tx.walk_instructions().nth(index as usize).unwrap();
+            let data = source.data().clone();
+            let program = base58::encode(source.program_id().0);
+            let decode = |tx| crate::process_transaction_with_metadata(tx, None, |_, _| None, |_, _| None, |mint, _| {
+                let bytes = std::fs::read(format!("{}/fixtures/swap-coverage/meteora-swap2-padding/fee-mints/{}.bin", env!("CARGO_MANIFEST_DIR"), base58::encode(mint))).ok()?;
+                let (schedule, initialized) = crate::token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, &bytes)?;
+                if !initialized { return None; }
+                schedule.at(1055)
+            });
+            let decoded = decode(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
+            let swap = swaps[0];
+            assert!(swap.transfer_verified);
+            assert_eq!(swap.protocol, if dlmm { Protocol::MeteoraDlmm } else { Protocol::MeteoraDaam } as i32);
+            assert_eq!(base58::encode(&swap.amm_pool), f[2]);
+            assert_eq!(base58::encode(&swap.user), f[3]);
+            assert_eq!(base58::encode(&swap.input_mint), f[4]);
+            assert_eq!(swap.input_amount, f[5].parse::<u64>().unwrap());
+            assert_eq!(base58::encode(&swap.output_mint), f[6]);
+            assert_eq!(swap.output_amount, f[7].parse::<u64>().unwrap());
+            assert_eq!(swap.source_transfer_index, Some(f[8].parse::<u32>().unwrap()));
+            if !shapes.insert((dlmm, data.len(), source.is_root())) { continue; }
+            if source.is_root() {
+                for mode in 0..7 {
+                    let mut wrong = tx.clone();
+                    let ix = wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == data).unwrap();
+                    match mode {
+                        0 => ix.data[0] ^= 1,
+                        1 => ix.data[8] ^= 1,
+                        2 => { ix.data.pop(); }
+                        3 => ix.data.push(0),
+                        4 => ix.data[if dlmm { 28 } else { 25 }] = 1,
+                        5 => ix.data[24] = if dlmm { 1 } else { 3 },
+                        _ => ix.accounts.truncate(if dlmm { 15 } else { 13 }),
+                    }
+                    assert!(decode(wrong).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(index))),
+                        "{} root index {index} invalid swap2 {mode}", f[0]);
+                }
+                continue;
+            }
+            for mode in 0..20 {
+                let mut wrong = tx.clone();
+                let meta = wrong.meta.as_mut().unwrap();
+                let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)|
+                    group.instructions.iter().position(|ix| ix.data == data).map(|p| (g, p))).unwrap();
+                let calls = &mut meta.inner_instructions[g].instructions;
+                let a = calls[p].accounts.clone();
+                let end = calls.iter().enumerate().skip(p + 1).find(|(_, c)| c.stack_height.unwrap_or(0) <= calls[p].stack_height.unwrap_or(0)).map_or(calls.len(), |(n, _)| n);
+                let token: Vec<_> = calls.iter().enumerate().take(end).skip(p + 1).filter(|(_, c)| c.data.first() == Some(&12) && c.data.len() == 10).map(|(n, _)| n).collect();
+                let first = token[0];
+                let last = *token.last().unwrap();
+                match mode {
+                    0 => calls[p].data[0] ^= 1,
+                    1 => calls[p].data[8] ^= 1,
+                    2 => { calls[p].data.pop(); }
+                    3 => calls[p].data.push(0),
+                    4 => calls[p].data[if dlmm { 28 } else { 25 }] = 1,
+                    5 => calls[p].data[if dlmm { 24 } else { 24 }] = if dlmm { 1 } else { 3 },
+                    6 => calls[p].accounts[if dlmm { 0 } else { 1 }] = a[if dlmm { 10 } else { 8 }],
+                    7 => calls[p].accounts[if dlmm { 2 } else { 4 }] = a[if dlmm { 3 } else { 5 }],
+                    8 => calls[p].accounts[if dlmm { 4 } else { 2 }] = a[if dlmm { 5 } else { 3 }],
+                    9 => calls[p].accounts[6] = a[7],
+                    10 => calls[p].accounts[if dlmm { 11 } else { 9 }] = a[0],
+                    11 => calls[first].accounts[0] = a[0],
+                    12 => calls[first].accounts[2] = a[0],
+                    13 => calls[last].accounts[0] = a[if dlmm { 10 } else { 8 }],
+                    14 => calls[last].accounts[2] = a[0],
+                    15 => calls[last].data[1..9].fill(0),
+                    16 => calls[last].stack_height = Some(99),
+                    17 => meta.err = Some(Default::default()),
+                    18 => {
+                        let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {program} success")).unwrap();
+                        *success = format!("Program {program} failed: custom program error: 1");
+                    }
+                    _ => calls[p].accounts.truncate(if dlmm { 15 } else { 13 }),
+                }
+                assert!(decode(wrong).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(index))),
+                    "{} index {index} invalid swap2 {mode}", f[0]);
+            }
+            let mut canonical = tx.clone();
+            for group in &mut canonical.meta.as_mut().unwrap().inner_instructions {
+                for ix in &mut group.instructions { if ix.data == data { ix.data.truncate(if dlmm { 28 } else { 25 }); } }
+            }
+            let canonical = decode(canonical).unwrap();
+            let s = canonical.swaps.iter().find(|s| s.source_index == Some(index)).unwrap();
+            assert_eq!((s.input_amount, s.output_amount), (swap.input_amount, swap.output_amount));
+        }
+    }
+
+    #[test]
+    fn finalized_saber_solfi_expanded_principal_receipts_match_independent_oracle() {
+        for line in include_str!("../fixtures/swap-coverage/saber-solfi-expanded/cases.tsv").lines() {
+            let f: Vec<_> = line.split('\t').collect();
+            let raw = std::fs::read(format!("{}/fixtures/swap-coverage/saber-solfi-expanded/{}.pb", env!("CARGO_MANIFEST_DIR"), f[0])).unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&raw).unwrap();
+            assert_eq!(base58::encode(tx.hash()), f[0]);
+            let index = f[1].parse::<u32>().unwrap();
+            let source = tx.walk_instructions().nth(index as usize).unwrap();
+            let native_data = source.data().clone();
+            let program = base58::encode(source.program_id().0);
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
+            let swap = swaps[0];
+            assert_eq!(swap.protocol, if f[9] == "saber" { Protocol::Saber } else { Protocol::SolfiV2 } as i32);
+            assert!(swap.transfer_verified);
+            assert_eq!(base58::encode(&swap.amm_pool), f[2]);
+            assert_eq!(base58::encode(&swap.user), f[3]);
+            assert_eq!(base58::encode(&swap.input_mint), f[4]);
+            assert_eq!(swap.input_amount, f[5].parse::<u64>().unwrap());
+            assert_eq!(base58::encode(&swap.output_mint), f[6]);
+            assert_eq!(swap.output_amount, f[7].parse::<u64>().unwrap());
+            assert_eq!(swap.source_transfer_index, Some(f[8].parse::<u32>().unwrap()));
+            if native_data.len() != 153 && !(native_data.len() == 25 && native_data[18] == 1) { continue; }
+            for mode in 0..22 {
+                let mut wrong = tx.clone();
+                let meta = wrong.meta.as_mut().unwrap();
+                let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)|
+                    group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))).unwrap();
+                let calls = &mut meta.inner_instructions[g].instructions;
+                let a = calls[p].accounts.clone();
+                match mode {
+                    0 => calls[p].data[0] = 15,
+                    1 => { calls[p].data.pop(); }
+                    2 => calls[p].data.push(0),
+                    3 => calls[p].data[1] ^= 1,
+                    4 => calls[p].accounts[1] = a[0],
+                    5 => calls[p].accounts[4] = a[5],
+                    6 => calls[p].accounts[6] = a[7],
+                    7 => calls[p].accounts[8] = a[9],
+                    8 => calls[p].accounts[10] = a[1],
+                    9 => calls[p].accounts[12] = a[1],
+                    10 => calls[p + 1].accounts[0] = a[1],
+                    11 => calls[p + 1].accounts[1] = a[1],
+                    12 => calls[p + 1].accounts[2] = a[1],
+                    13 => calls[p + 2].accounts[0] = a[1],
+                    14 => calls[p + 2].accounts[1] = a[1],
+                    15 => calls[p + 2].accounts[2] = a[0],
+                    16 => calls[p + 2].stack_height = Some(99),
+                    17 => { let extra = calls[p + 1].clone(); calls.insert(p + 3, extra); }
+                    18 => meta.err = Some(Default::default()),
+                    19 => {
+                        let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {program} success")).unwrap();
+                        *success = format!("Program {program} failed: custom program error: 1");
+                    }
+                    20 => calls[p + 1].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
+                    _ => calls[p + 2].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
+                }
+                assert!(crate::process_transaction(wrong).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(index))),
+                    "{} index {index} invalid settlement {mode}", f[0]);
+            }
+            if native_data.len() == 153 {
+                // Quote timestamps/signatures/flags never become settled price.
+                let mut changed = tx.clone();
+                for group in &mut changed.meta.as_mut().unwrap().inner_instructions {
+                    for ix in &mut group.instructions {
+                        if ix.data == native_data { ix.data[9..].fill(255); }
+                    }
+                }
+                let d = crate::process_transaction(changed).unwrap();
+                let s = d.swaps.iter().find(|s| s.source_index == Some(index)).unwrap();
+                assert_eq!((s.input_amount, s.output_amount), (swap.input_amount, swap.output_amount));
+            }
+        }
+    }
     #[test]
     fn finalized_orca_v1_swaps_require_exact_committed_user_and_vault_flows() {
         for (fixture, index, input, output) in [
@@ -1813,4 +2139,107 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn routed_candidates_require_native_dlmm_and_solfi_layout_and_principals() {
+        use crate::token_mints::TokenMintLookup;
+        use proto::pb::dex::swaps::v1 as pb;
+        let mut shapes = std::collections::HashSet::new();
+        let mut positives = 0;
+        let mut mutations = 0;
+        for (fixture, cases) in [
+            ("meteora-swap2-padding", include_str!("../fixtures/swap-coverage/meteora-swap2-padding/cases.tsv")),
+            ("saber-solfi-expanded", include_str!("../fixtures/swap-coverage/saber-solfi-expanded/cases.tsv")),
+        ] {
+            for row in cases.lines() {
+                let f: Vec<_> = row.split('\t').collect();
+                if !["meteora_dlmm", "solfi_v2"].contains(&f[9]) { continue; }
+                let bytes = std::fs::read(format!("{}/fixtures/swap-coverage/{fixture}/{}.pb", env!("CARGO_MANIFEST_DIR"), f[0])).unwrap();
+                let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+                let index = f[1].parse::<u32>().unwrap();
+                let ix = tx.walk_instructions().nth(index as usize).unwrap();
+                let data = ix.data().clone();
+                let dlmm = f[9] == "meteora_dlmm";
+                if !dlmm && !matches!(data.len(), 25 | 153) { continue; }
+                let shape = (dlmm, data.len(), ix.is_root(), if !dlmm && data.len() == 25 { data[18] } else { 0 });
+                if !shapes.insert(shape) { continue; }
+                let a: Vec<_> = ix.accounts().iter().map(|a| a.0.clone()).collect();
+                let quote = pb::Swap {
+                    protocol: pb::Protocol::JupiterV6 as i32,
+                    amm: ix.program_id().0.clone(),
+                    amm_pool: base58::decode(f[2]).unwrap(), user: base58::decode(f[3]).unwrap(),
+                    input_mint: base58::decode(f[4]).unwrap(), input_amount: f[5].parse().unwrap(),
+                    output_mint: base58::decode(f[6]).unwrap(), output_amount: f[7].parse().unwrap(),
+                    // Existing Jupiter-derived candidates have no native provenance.
+                    ..Default::default()
+                };
+                let verify = |tx: &ConfirmedTransaction, quote: pb::Swap| {
+                    let mints = TokenMintLookup::new(tx, tx.meta.as_ref().unwrap());
+                    let mut candidates = vec![quote];
+                    crate::quality::verify_with_fees(tx, &mints, &mut candidates, false, |mint, _| {
+                        let raw = std::fs::read(format!("{}/fixtures/swap-coverage/{fixture}/fee-mints/{}.bin", env!("CARGO_MANIFEST_DIR"), base58::encode(mint))).ok()?;
+                        let (schedule, initialized) = crate::token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, &raw)?;
+                        if !initialized { return None; }
+                        schedule.at(1055)
+                    });
+                    candidates
+                };
+                for mode in 0..10 {
+                    if !dlmm && data.len() == 153 && mode >= 8 { continue; }
+                    let mut wrong = tx.clone();
+                    let mut candidate = quote.clone();
+                    if mode == 1 { candidate.amm_pool = a[if dlmm { 1 } else { 0 }].clone(); }
+                    if mode == 2 { candidate.user = a[if dlmm { 0 } else { 1 }].clone(); }
+                    if (3..=6).contains(&mode) || mode >= 8 {
+                        let change = |data: &mut Vec<u8>| match mode {
+                            3 => data[0] ^= 1,
+                            4 => { data.pop(); },
+                            5 => data.push(0),
+                            6 => data[if dlmm { 8 } else { 1 }] ^= 1,
+                            8 => data[if dlmm { 16..24 } else { 9..17 }].copy_from_slice(&(quote.output_amount + 1).to_le_bytes()),
+                            _ => data[if dlmm { 28 } else { 19 }] ^= 1,
+                        };
+                        let mut cursor = 0u32;
+                        let groups = &mut wrong.meta.as_mut().unwrap().inner_instructions;
+                        for (root, call) in wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                            if cursor == index { change(&mut call.data); }
+                            cursor += 1;
+                            if let Some(group) = groups.iter_mut().find(|g| g.index == root as u32) {
+                                for child in &mut group.instructions {
+                                    if cursor == index { change(&mut child.data); }
+                                    cursor += 1;
+                                }
+                            }
+                        }
+                    }
+                    if mode == 7 {
+                        let program = base58::encode(ix.program_id().0);
+                        let ordinal = tx.walk_instructions().take(index as usize).filter(|call| call.program_id().0 == ix.program_id().0).count();
+                        let log = wrong.meta.as_mut().unwrap().log_messages.iter_mut()
+                            .filter(|log| **log == format!("Program {program} success")).nth(ordinal).unwrap();
+                        *log = format!("Program {program} failed: rolled back native swap");
+                    }
+                    let found = verify(&wrong, candidate);
+                    if mode == 0 {
+                        assert_eq!(found.len(), 1, "valid routed shape {shape:?}");
+                        assert_eq!((found[0].input_amount, found[0].output_amount), (quote.input_amount, quote.output_amount));
+                        assert_eq!(found[0].source_index, Some(index));
+                        assert_eq!(found[0].source_transfer_index, Some(f[8].parse().unwrap()));
+                        assert!(found[0].transfer_verified);
+                        positives += 1;
+                    } else {
+                        assert!(found.is_empty(), "routed shape {shape:?} bypassed native check {mode}");
+                        mutations += 1;
+                    }
+                }
+            }
+        }
+        assert!(shapes.iter().any(|s| s.0 && s.1 == 32));
+        assert!(shapes.iter().any(|s| s.0 && s.1 == 34));
+        assert!(shapes.iter().any(|s| s.0 && s.1 == 56));
+        assert!(shapes.iter().any(|s| !s.0 && s.1 == 25));
+        assert!(shapes.iter().any(|s| !s.0 && s.1 == 153));
+        println!("Routed candidate proof: {positives} original shapes, {mutations} invalid variants");
+    }
+
 }
