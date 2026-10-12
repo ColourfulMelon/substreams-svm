@@ -56,6 +56,7 @@ enum Protocol {
   PROTOCOL_PHOENIX = 50;
   PROTOCOL_OPENBOOK_V2 = 51;
   PROTOCOL_MERCURIAL = 52;
+  PROTOCOL_OASIS = 53;
 }
 
 message Events {

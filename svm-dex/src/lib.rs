@@ -46,6 +46,7 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Phoenix => "phoenix",
         pb::Protocol::OpenbookV2 => "openbook_v2",
         pb::Protocol::Mercurial => "mercurial",
+        pb::Protocol::Oasis => "oasis",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",

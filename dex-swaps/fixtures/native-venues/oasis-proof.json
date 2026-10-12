@@ -1,0 +1,372 @@
+{
+  "scope": "Ten original finalized calls on three owned pools, both directions. Exactly two positive immediate classic Token transfers plus an explicit zero referral. Nonzero referrals, extra/nested children and other ABI variants remain unverified. Later reads prove immutable pool/vault roles, not historical reserves/fees.",
+  "primaryDeployedProgram": {
+    "address": "9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H",
+    "loaderOwner": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "programdataAddress": "49BfBrR2oseea9w1sbkBupHVEy3v1AXwhRG9ip5homMe",
+    "context": 455876059,
+    "deploymentSlot": "232074629",
+    "elfSha256": "7dfbabf496199f5fd2ebd8307b640b5302793fbd4ba46d0f4478d875986ca32b",
+    "observedInstruction": "Anchor global:swap; 33 bytes: discriminator, u64 input limit, 16-byte price limit, bool x_to_y",
+    "poolSeed": "marcopoolv1",
+    "stateSeed": "marcostatev1",
+    "authoritySeed": "MarcoPolo",
+    "caveat": "No standard on-chain IDL exists. Role mapping is supported by Jupiter v4 IDL, deployed program strings, owned PDA/vault state and finalized instructions; this is not a claim of all Oasis variants."
+  },
+  "ownedAccounts": [
+    {
+      "fixture": "oasis-owned-0.bin",
+      "address": "BE5YRQ6N6LCw7UL3JwzVp317EWa4mzJY6JKDaudcXu7A",
+      "owner": "9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H",
+      "context": 455876442,
+      "sha256": "d20993a7910f27d99784f2b9d1f610f5bb7db1ee67d67a1fcf5247e896d97186"
+    },
+    {
+      "fixture": "oasis-owned-1.bin",
+      "address": "4ZNuA5BYmm1fNBUGr6jHUbxiiUccGh2zgDmYcf7P763S",
+      "owner": "9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H",
+      "context": 455876443,
+      "sha256": "88ddd971b7b3c6e58b3045cc754e787997a5b4890caca308cce4f29336a9e231"
+    },
+    {
+      "fixture": "oasis-owned-2.bin",
+      "address": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876444,
+      "sha256": "0e62534ad003d874457b4279155b17b5f757ca8465d6443fc0fe7465c07efeea"
+    },
+    {
+      "fixture": "oasis-owned-3.bin",
+      "address": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876444,
+      "sha256": "959bd3d0af16f385394fae77a634ccb9a3d162e278dddf541ff319ed80455418"
+    },
+    {
+      "fixture": "oasis-owned-4.bin",
+      "address": "8GmMLucoAARw9X6g2aUVBdzRpxF6egeHMDtLJen2Kkq7",
+      "owner": "9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H",
+      "context": 455876445,
+      "sha256": "5dc908d2d872f7e5235b37dd2a69b27e341975d16be08e648fb2b8c295436c6e"
+    },
+    {
+      "fixture": "oasis-owned-5.bin",
+      "address": "3wgma9BjSfFKNZnWXB4YtyxFwCZ94teWJ2XbjKa7WKtp",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876446,
+      "sha256": "67f9ab17cbf7514c783819a5b3b86e76dea914f20003cecb9624e0a12a3f851b"
+    },
+    {
+      "fixture": "oasis-owned-6.bin",
+      "address": "GKobg2LGwECPuTw8D65upawRm5EEX9ih3yzfh1wUtf3W",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876447,
+      "sha256": "574bba6674fe271c8463f72a2276976269b9154195859b0a3bbcaf965094c171"
+    },
+    {
+      "fixture": "oasis-owned-7.bin",
+      "address": "7BgYdhGzXbV56DjwXEdrgazN46b4st5RAzTT4M8M7VCo",
+      "owner": "9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H",
+      "context": 455876448,
+      "sha256": "a6408485fdc63f19b73c0e1acdc5e4111375278587a8be8e9ef3b9a6c0b6af8c"
+    },
+    {
+      "fixture": "oasis-owned-8.bin",
+      "address": "2kdXUmgUASca5R7mnyoP6UJRYUhMLJ9nq5Ap8tuYo2uo",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876448,
+      "sha256": "86884db48fc7cb69c1719d6eb98d626fe597d584607498f214cbc68e26e7e802"
+    },
+    {
+      "fixture": "oasis-owned-9.bin",
+      "address": "2PdkQQAtAvtaMz93EUvu3ekTLtFPN4aR8KPvKevb67mi",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "context": 455876449,
+      "sha256": "247b13a66f5762400de61a0d06f29d8aab0038b2e77a4c4b97fb1ba3e31e1d62"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture": "oasis-route-1.transaction.pb",
+      "retained": true,
+      "signature": "2EnghRkXcnkArpSS2cjpwY3dWGvJ9fjYqHLHpac3ZJk96uyjeYpNRiyXcNX7XBR6gmXYopYCBZkrR4n1V2ywgfuw",
+      "slot": 455815369,
+      "commitment": "finalized",
+      "nativeIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 5,
+      "zeroReferralCpiIndex": 6,
+      "inputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "outputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "rpcJsonSha256": "a3fffee2652d7848f43ac164dc2fa17dfe66cd3367ac9b50058aa8b740648de7",
+      "protobufSha256": "bc7affab15e1242c7ee1a1d06b62b2b0eeab3e8f84a05c0dbac2e433c31fa040",
+      "declaredInputLimit": "236347",
+      "priceLimit": "ffffffffffffffffffffffffffffffff",
+      "xToY": false
+    },
+    {
+      "fixture": "oasis-route-2.transaction.pb",
+      "retained": true,
+      "signature": "2TkWLJG3GSsqLmsYjngaF2NF3LvcxoRtDFZMtCgZXHbL4vMrsu99SePjJFtuQKVBj46B9rGGv2d9yo3ffU6N9yjw",
+      "slot": 455789590,
+      "commitment": "finalized",
+      "nativeIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 14,
+      "zeroReferralCpiIndex": 15,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "9d4e3b39cdc677afdc481e7145241db6a1ccad7d1be092317eca4f83aca9367e",
+      "protobufSha256": "e2e77815c10d12037b58d80bd8af7bc743dbaf5ae889fc3e8606aadf628fac92",
+      "declaredInputLimit": "1057316",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    },
+    {
+      "fixture": "oasis-route-3.transaction.pb",
+      "retained": true,
+      "signature": "2bRBfijLsu5CVnW3ZfVYwYUwVdfJbS13Cqd83v2TGuER2mBAEg9N2yFNF9YcF2JoV6SqDgvQeFTAu6yg8MDCfJEH",
+      "slot": 455858721,
+      "commitment": "finalized",
+      "nativeIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 5,
+      "zeroReferralCpiIndex": 6,
+      "inputVault": "GKobg2LGwECPuTw8D65upawRm5EEX9ih3yzfh1wUtf3W",
+      "outputVault": "3wgma9BjSfFKNZnWXB4YtyxFwCZ94teWJ2XbjKa7WKtp",
+      "rpcJsonSha256": "8b9e0031c1b4bb73e4d89627174561e707643dcc2007fec853273edc69cbe050",
+      "protobufSha256": "fe218c3c4fcb27935e27d7fc7d2fc0629688f476eb967dbb9d9dac824f48a332",
+      "declaredInputLimit": "15016",
+      "priceLimit": "ffffffffffffffffffffffffffffffff",
+      "xToY": false
+    },
+    {
+      "fixture": "oasis-route-4.transaction.pb",
+      "retained": true,
+      "signature": "2vLZitVJgHgBFtcf4wsR7Ht2CN8x2yMbSUzwbQMFrGCcjQvkGt7Peg9aJ8E6rrY9gczs6J3DqJfdCzQYY4kmLvb7",
+      "slot": 455791730,
+      "commitment": "finalized",
+      "nativeIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 5,
+      "zeroReferralCpiIndex": 6,
+      "inputVault": "2PdkQQAtAvtaMz93EUvu3ekTLtFPN4aR8KPvKevb67mi",
+      "outputVault": "2kdXUmgUASca5R7mnyoP6UJRYUhMLJ9nq5Ap8tuYo2uo",
+      "rpcJsonSha256": "d3fa003309d11be292d3ef0399a5a1c6665870c82e0acae5f36fd0c44fda181a",
+      "protobufSha256": "f13786e29513142b83ad9e980eea3f3b3ba19ab209f63b7c461d07143004b418",
+      "declaredInputLimit": "3490353",
+      "priceLimit": "ffffffffffffffffffffffffffffffff",
+      "xToY": false
+    },
+    {
+      "fixture": "oasis-route-5.transaction.pb",
+      "retained": false,
+      "signature": "2vZxNeGNtBARy43ZQHcxST1VmkZQk9wxUdrFBTcTyTh28AyKkDa2GMjxfqyWakX9f4131kcGFAGqEHqeHtx3V22B",
+      "slot": 455788441,
+      "commitment": "finalized",
+      "nativeIndex": 24,
+      "inputCpiIndex": 25,
+      "outputCpiIndex": 26,
+      "zeroReferralCpiIndex": 27,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "1431286a7c9b9d670a2d89220917a05dee334888dca2e5834e9c7508704e4363",
+      "protobufSha256": "e1a7e479d66a09193fa3a488b40e377faf627dcc4655970d27e56951a0611159",
+      "declaredInputLimit": "815852",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    },
+    {
+      "fixture": "oasis-route-6.transaction.pb",
+      "retained": false,
+      "signature": "3R1qp2KHYpaN5C7pEJWT3tXgxv5cdxzYrHso1vCgoLuVzsYkMfK11x1xEzrHZdLErmmJn1UNmyyWwaVxWwmWze88",
+      "slot": 455790044,
+      "commitment": "finalized",
+      "nativeIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 14,
+      "zeroReferralCpiIndex": 15,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "effcc51b4710236bc4528e2436055adae631b4b4955178ed625af215aad065cf",
+      "protobufSha256": "923e6148032addf16dc3911b4e245e477b5235803004f7571947f5772b4b5d1d",
+      "declaredInputLimit": "951175",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    },
+    {
+      "fixture": "oasis-route-7.transaction.pb",
+      "retained": false,
+      "signature": "3dWQbfmbqgkqL1HZPMHDwT66mXGLNwzWy6Sx8bZCq9kKHnKs8H3ttfQ4Pd6oGhH83hBXEGTt3bqxnFCBCBCfWu5A",
+      "slot": 455789174,
+      "commitment": "finalized",
+      "nativeIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 14,
+      "zeroReferralCpiIndex": 15,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "6e297e2e007d541b437ffd6602c36e1cee4f50dc6d9decde4a5d78de54f49703",
+      "protobufSha256": "8edfa3779df5ecdf94b237dcbbc0c8a02e351a44978ac6b21715c447276c8ca4",
+      "declaredInputLimit": "903377",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    },
+    {
+      "fixture": "oasis-route-8.transaction.pb",
+      "retained": false,
+      "signature": "5Sx8wJ4LyikRDKRwZAiSuE6JkRAemVTeFk7ApnY2ZXWdhzZj6pN2jfQrN5CjPmzbkiGFNMZpk8yFKFWAC7o6LhFu",
+      "slot": 455788822,
+      "commitment": "finalized",
+      "nativeIndex": 23,
+      "inputCpiIndex": 24,
+      "outputCpiIndex": 25,
+      "zeroReferralCpiIndex": 26,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "076d8567d85b967c52ca1608a7e3473e12bb6a7f05b92533035efdb19be90510",
+      "protobufSha256": "9192771229bb5d4a314636a730221f35a51de26a68fcb734c471bfb14f726a57",
+      "declaredInputLimit": "740903",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    },
+    {
+      "fixture": "oasis-route-9.transaction.pb",
+      "retained": false,
+      "signature": "61V3wZuzqoinYRNRsaEp6VQg9KgGJbzskFMZyjC2izGb3igkJvYQqeC9zcsKsZNEzFuJMhHLdPyGnvjZpo628U5L",
+      "slot": 455777122,
+      "commitment": "finalized",
+      "nativeIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 12,
+      "zeroReferralCpiIndex": 13,
+      "inputVault": "2PdkQQAtAvtaMz93EUvu3ekTLtFPN4aR8KPvKevb67mi",
+      "outputVault": "2kdXUmgUASca5R7mnyoP6UJRYUhMLJ9nq5Ap8tuYo2uo",
+      "rpcJsonSha256": "963dddc401d07edd866363c6e5a5666fb2b2b648fcde3e2806cd9956457dc594",
+      "protobufSha256": "a20234bc72a2dc12804353c4b90783867498ecdbcf6e24024b319a4e2b98a5ef",
+      "declaredInputLimit": "1603569",
+      "priceLimit": "ffffffffffffffffffffffffffffffff",
+      "xToY": false
+    },
+    {
+      "fixture": "oasis-route-10.transaction.pb",
+      "retained": false,
+      "signature": "RG5atoQvZn9sFLQXijZ1LBXxbmN8dhEi4WNVWBebf82ujUnWaE5Emenj8c1zw99X1JyrSyCLXixKUcrDN2uyZfK",
+      "slot": 455789972,
+      "commitment": "finalized",
+      "nativeIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 14,
+      "zeroReferralCpiIndex": 15,
+      "inputVault": "62dmqiJqT2Kb7RBzYGnPmaG7Hp4mottjSiy4dC6F5b5w",
+      "outputVault": "8esE8WCFR2j3ufqvPjtftGqxoba3crRua6xKmFnb1XjJ",
+      "rpcJsonSha256": "05713aa98b65f875a493857c4904ddda677690cdbf53cd993c216639b75234f0",
+      "protobufSha256": "95ebc66ca65c067a347177703105d9618d137120c5c9d08477db154b1a4a74f3",
+      "declaredInputLimit": "927938",
+      "priceLimit": "00000000000000000000000000000000",
+      "xToY": true
+    }
+  ],
+  "primaryRoleDefinition": {
+    "program": "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB",
+    "owner": "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB",
+    "context": 455877687,
+    "idlSha256": "1a24be2d1c652976ba3ec11b4b3973bf828cedc239f147cd7ecdded590dd6e52",
+    "instruction": {
+      "name": "marcoPoloSwap",
+      "accounts": [
+        {
+          "name": "swapProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "state",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenX",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenY",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolXAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolYAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "swapperXAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "swapperYAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "swapper",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "referrerXAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "referrerYAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "referrer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "programAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  }
+}

@@ -8,6 +8,7 @@ mod jupiter_v6;
 mod logs;
 mod manifest;
 mod mercurial;
+mod oasis;
 mod meteora_amm;
 mod meteora_daam;
 mod meteora_dlmm;

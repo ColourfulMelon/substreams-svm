@@ -450,3 +450,39 @@ all eight candle intervals. Only these isolated price checks assign controlled
 current timestamps; historical source transaction timestamps are not refreshed.
 The temporary database was removed. Live pluto.12 and its schema are unchanged;
 apply the companion migration before the controlled pluto.13 rollout.
+
+## Oasis / MarcoPolo native receipts (candidate .13)
+
+Added protocol `oasis = 53` for the observed 33-byte Anchor `swap` format on
+`9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H`. The primary account-role
+source is the owner-verified Jupiter v4 on-chain IDL (`marcoPoloSwap`, context
+455877687). Oasis has no standard on-chain IDL. Its owner-verified deployed
+program data (deployment slot 232074629, read context 455876059) identifies
+MarcoPolo instruction names and seeds; all three independently owned pools
+match `marcopoolv1` plus the declared mint pair. State and authority match
+`marcostatev1` and `MarcoPolo`. Later owned reads corroborate immutable pool,
+vault, mint and authority roles, not historical reserves or fees.
+
+The finalized 60-transaction Jupiter v4 sample contained ten previously missing
+Oasis legs, on three pools and in both directions. Each has two positive classic
+Token transfers followed by a **zero** referral transfer. Four original protobuf
+transactions, ten independent amount-oracle rows, owned account bytes and the
+primary IDL role definition are retained in `fixtures/native-venues/oasis-*`.
+The decoder requires the exact program, opcode, payload length, boolean,
+17-account role layout, declared mints, user and vault authorities, input limit,
+and all three committed immediate Token calls. Failed or incomplete ancestors,
+extra/nested operations, nonzero referrals and other formats stay unverified.
+This is evidence for this observed format, not all Oasis variants.
+
+The financial core test covers all four retained originals and 148 negative
+mutations. All 148 decoder/sink tests pass; release WASM builds pass. Replay
+preserves all 694 earlier complete financial payloads, plus 175 payloads from a
+new 60-transaction BONKSwap sample, and adds exactly ten Oasis legs (879 total).
+BONKSwap's third transfers in that sample are also zero; no BONKSwap decoder
+change was needed. The ten new legs match the independent user/vault CPI oracle
+exactly and are emitted once even when Jupiter also logs a wrapper event.
+
+The companion pricing schema adds the Oasis enum to every financial aggregate;
+coordinate it with the .13 rollout. The live .12 package has not been replaced.
+The full Token-2022 registry, store warmup, remaining variants and historical
+backfill still need completion before claiming exhaustive transaction coverage.

@@ -48,6 +48,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Onedex, b58!("DEXYosS6oEGvk8uCDayvwEZz4qEyDJRf9nFgYCaqPMTm")),
     (Protocol::OpenbookV2, b58!("opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb")),
     (Protocol::Mercurial, crate::mercurial::PROGRAM_ID),
+    (Protocol::Oasis, crate::oasis::PROGRAM_ID),
 ];
 
 pub(crate) struct Layout {
