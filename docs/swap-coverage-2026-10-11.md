@@ -486,3 +486,28 @@ The companion pricing schema adds the Oasis enum to every financial aggregate;
 coordinate it with the .13 rollout. The live .12 package has not been replaced.
 The full Token-2022 registry, store warmup, remaining variants and historical
 backfill still need completion before claiming exhaustive transaction coverage.
+
+
+## Runtime log truncation and replay depth (candidate .13)
+
+A finalized, successful transaction proves that its root committed. If the
+runtime emits its exact `Log truncated` marker, completed child calls already
+returned into that root remain committed even when its final success log is
+missing. Unfinished inner frames and their children remain unproven: a later
+failure may be caught by the root. Parsing stops at the first marker because
+the runtime collector can retain shorter messages after dropping a larger one.
+See the pinned [Solana log collector](https://github.com/solana-labs/solana/blob/49443406fd729c5818ecf58ae773592804d35d89/program-runtime/src/log_collector.rs)
+and [transaction atomicity](https://solana.com/docs/core/transactions).
+
+The original `spl-swap-recent-1` transaction reproduces a fully committed SPL
+swap before a later unfinished DAMM frame. Core tests reject missing/spoofed
+markers, failed status/ancestors, malformed root depth and pending inner work,
+including suffix success logs after truncation. The separate `recent-56` original
+retains an actual short log after the marker.
+
+Three existing DLMM rows change only their descriptive stack height from 3 to
+2, matching original compiled instructions. Program, pool, user, mints, amounts
+and physical source identities remain identical. Replay ignores this metadata
+field when comparing previous financial payloads, so it neither reinserts these
+trades nor refreshes historical timestamps. It still refuses changed amounts,
+missing trades and reassignment of a known pool.

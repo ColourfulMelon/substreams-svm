@@ -36,6 +36,9 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
         for swap in transaction.swaps {
             let mut identity = swap.clone();
             identity.source_index = None;
+            // Runtime call depth is descriptive metadata, not an amount or
+            // physical trade identity. Correcting it must not replay a fill.
+            identity.stack_height = 0;
             identity.source_transfer_index = None;
             identity.transfer_verified = false;
             identity.orderbook_fill_verified = false;
@@ -69,6 +72,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
         for swap in &transaction.swaps {
             let mut identity = swap.clone();
             identity.source_index = None;
+            identity.stack_height = 0;
             identity.source_transfer_index = None;
             identity.transfer_verified = false;
             identity.orderbook_fill_verified = false;
@@ -132,11 +136,13 @@ mod tests {
 
     #[test]
     fn quality_metadata_does_not_recount_old_financial_payloads() {
-        let old = events(1, &[10]);
+        let mut old = events(1, &[10]);
+        old.transactions[0].swaps[0].stack_height = 3;
         let mut new = old.clone();
         new.transactions[0].source_index = Some(123);
         let swap = &mut new.transactions[0].swaps[0];
         swap.source_index = Some(9);
+        swap.stack_height = 2;
         swap.source_transfer_index = Some(10);
         swap.transfer_verified = true;
         assert!(missing_swaps(old, new).unwrap().transactions.is_empty());

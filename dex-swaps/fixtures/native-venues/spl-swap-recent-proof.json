@@ -1,0 +1,1377 @@
+{
+  "scope": "61 independently owner/PDA-verified finalized swap legs in 60 original transactions; nine no-fee and 52 owner-fee variants. Explicit Token initialization proves mint roles for transient accounts absent from balance snapshots. Later pool reads prove immutable role fields, not historical reserves. Three representative originals are retained here; all signatures and hashes are recorded.",
+  "primarySources": [
+    "https://github.com/jup-ag/jupiter-amm-implementation/blob/main/jupiter-core/src/amms/spl_token_swap_amm.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/instruction.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/state.rs"
+  ],
+  "fixtures": [
+    {
+      "fixture": "spl-swap-recent-1.transaction.pb",
+      "signature": "5gcGVggC6McJXgjnFfgxzvkq7drhUGTPazVUUGmr3V2nWoJ4WpZHFv99AMcfyebQynyfG5eKtmnoVHXvSfqST1nq",
+      "slot": 455879904,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 32,
+      "inputCpiIndex": 33,
+      "outputCpiIndex": 34,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c8fe835f459888e87287e03466bec4e5baf0299ed64f38477fdb55e1f7b3a9cd",
+      "rpcJsonSha256": "357a4b3357213edc03ebc0871c3469a230579e68b7afb90622675c3d2e204e79",
+      "protobufSha256": "4f3309408c50e5af33d19521b7bb838ff2bd6153983d06a143a3f99a16426bfa",
+      "declaredInputMaximum": "991",
+      "declaredOutputMinimum": "1",
+      "retained": true
+    },
+    {
+      "fixture": "spl-swap-recent-2.transaction.pb",
+      "signature": "5dd2xag8NSksLY8GwTCihBJvuWVPfJ6X4GxBrHeF23osEuQVH6em1DhcmmdNWSQwiz46UtUtE7FhtATu2gKhopUY",
+      "slot": 455879910,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 9,
+      "inputCpiIndex": 10,
+      "outputCpiIndex": 12,
+      "feeCpiIndexes": [
+        11
+      ],
+      "feePoolTokenAmounts": [
+        "41"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "653646d0111cb67ef73533d767b8c3cb0de697b1e90024b55af1e11398471c42",
+      "rpcJsonSha256": "dad74fe423b59de23f7c2faac777db8c951ab3cc37086b68f5203a1cdfac2455",
+      "protobufSha256": "1174a2e95ac457f4e2d70745b30034b46c0121e9133c66a33896a58a9e053f86",
+      "declaredInputMaximum": "118943",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-3.transaction.pb",
+      "signature": "3ELwhHgPiJuCfSdCpCiw9BEk9UYoXxKpqrSYPu87KGDQdAkoEfs8swizUD22TtDGSe89uzTaRNcznWq29vKHMM81",
+      "slot": 455879738,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 30,
+      "inputCpiIndex": 31,
+      "outputCpiIndex": 32,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c8fe835f459888e87287e03466bec4e5baf0299ed64f38477fdb55e1f7b3a9cd",
+      "rpcJsonSha256": "28d69680910b121d89f3788a0a78e9dbb07a523f366054f2030952d06e5314da",
+      "protobufSha256": "5b695df33eb351d1c3a3e7d544be089e356a438062e6fa46e45ea861dc2567d6",
+      "declaredInputMaximum": "1983",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-4.transaction.pb",
+      "signature": "2o6zqE75EeT7QXkHWGpU6iebHGTZAPyTVZhKvJQtdbuWrCNhknoS3wXDKqNVHA7AHe2Lkn4zerd1kZ42v3GoyGq7",
+      "slot": 455879627,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 9,
+      "inputCpiIndex": 10,
+      "outputCpiIndex": 12,
+      "feeCpiIndexes": [
+        11
+      ],
+      "feePoolTokenAmounts": [
+        "100616"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "cb0c6092b3c5539ec8b6e71e40fc516511fb881b7361a5b1ad1fdae9017602c3",
+      "rpcJsonSha256": "54e28a6fe9136675b7c207d8a15e294261bee5d5d7f0dd298b095733cd82cf93",
+      "protobufSha256": "ab7d9ef3d8e8a4e8e761d1ef38cdb4e3cf728ea16a2fe54c702403c169cb5f94",
+      "declaredInputMaximum": "119125",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-5.transaction.pb",
+      "signature": "2kuWvM3CG6RpkEzWiBTRSvGnRZRJYS7FMubMQ7an9zUBnBUFyMNEAV1bniVHEKVkFJEmRJa8vue9WoaeBLfFqbwY",
+      "slot": 455879796,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 9,
+      "inputCpiIndex": 10,
+      "outputCpiIndex": 12,
+      "feeCpiIndexes": [
+        11
+      ],
+      "feePoolTokenAmounts": [
+        "560419"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "bbf0731dfd4f9005138758344b87399a68fa632fd8f45f912026fe35e589745f",
+      "rpcJsonSha256": "3cc9689934230ee8641ea657f270ec00432922459509c42fd678f29114076e07",
+      "protobufSha256": "d96e23ca01254f711c2be6c354a69088604a254149d69e4f4194555c0c242650",
+      "declaredInputMaximum": "119064",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-6.transaction.pb",
+      "signature": "2kuWvM3CG6RpkEzWiBTRSvGnRZRJYS7FMubMQ7an9zUBnBUFyMNEAV1bniVHEKVkFJEmRJa8vue9WoaeBLfFqbwY",
+      "slot": 455879796,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 14,
+      "inputCpiIndex": 15,
+      "outputCpiIndex": 17,
+      "feeCpiIndexes": [
+        16
+      ],
+      "feePoolTokenAmounts": [
+        "1371638"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "1b0134899b4d79c98a192ecbb9d4b4e367f73cf22b1d48ceb57010a1203d7807",
+      "rpcJsonSha256": "3cc9689934230ee8641ea657f270ec00432922459509c42fd678f29114076e07",
+      "protobufSha256": "d96e23ca01254f711c2be6c354a69088604a254149d69e4f4194555c0c242650",
+      "declaredInputMaximum": "18609155",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-7.transaction.pb",
+      "signature": "ZdwFFKpxo68DvrNT75cMbnxSu9hN9R2FGd7pEipxb48vvfkvR3qd64iCxUbD4wov2rZUrA2xfjqp41funmqVS2b",
+      "slot": 455879361,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "3085"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d2a9a33784be2ce188edf31b2edfbb8c68c451c8615134842f488c7060d5a0d8",
+      "rpcJsonSha256": "189f454d8ecc0846e9031d872bb8e0a568c8add07e058b192d03348493475567",
+      "protobufSha256": "c0d9ea58d809775c5f77f9dff92411f6c204da48d66a041ae0cbdc472c381233",
+      "declaredInputMaximum": "8167",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-8.transaction.pb",
+      "signature": "bgE3pi6XVg8f3ULQXanfavULPrkihwk1WkTjfRni27Nw6yCTpBYa37YSdQGPcPgPb2ZRebXPK7fvY1NBU3Y6jQt",
+      "slot": 455879160,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 11,
+      "inputCpiIndex": 12,
+      "outputCpiIndex": 14,
+      "feeCpiIndexes": [
+        13
+      ],
+      "feePoolTokenAmounts": [
+        "247490"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "0b1cb6d55de3f4e29776db0643e54cb0fb4a29ccefc594f012ec2ccfc11a3944",
+      "protobufSha256": "29f5b9016bb390320c4eea295abe34ebd639f3f53f8ca9bbcb763218be2448e6",
+      "declaredInputMaximum": "6709700",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-9.transaction.pb",
+      "signature": "63zcyFLJj9CGNdc2GE4qoC4pWFtCvtSpBjA94mwXzmypd9euhnjm8jFWTPn9jNRcUgj4KBdQAzmfoR91SuG4r1Fk",
+      "slot": 455879601,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 23,
+      "inputCpiIndex": 24,
+      "outputCpiIndex": 26,
+      "feeCpiIndexes": [
+        25
+      ],
+      "feePoolTokenAmounts": [
+        "18"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "820edb76c3d8cc1feff1473bbdb3853ab753d881ca86e6e7e5bc4fa9220f7f48",
+      "rpcJsonSha256": "cfc9099d1624e652b3940eb567bd39de38cc2a62624dc782c9d7b88444960b60",
+      "protobufSha256": "15a3648e55d59ae4ffd9b159cadf9ee14191435fb403bd9a073f30b32f207018",
+      "declaredInputMaximum": "4598",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-10.transaction.pb",
+      "signature": "4wNieFDWRrgGD3LdFbL63p6Fv62vLTDLYivYyJqZpBdQA84sh7y2oToGFbPry9tnRA6wWy8b3TVPq5kBATQhoBCG",
+      "slot": 455879438,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 20,
+      "inputCpiIndex": 21,
+      "outputCpiIndex": 22,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "db5c7bab92533305a6caced22e4e677421b9737210e0aa1afa6f35f642a171da",
+      "rpcJsonSha256": "b35aa2f3e7a9809981fbd1a7de4f70e866f1941a61ebd2c6fea1ebdf46dd95aa",
+      "protobufSha256": "19e2681052a7c33eae3c6783cc7ac7d85c11e4f0e6a2583530105837561f8904",
+      "declaredInputMaximum": "2978",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-11.transaction.pb",
+      "signature": "3Uxi5VuxR18R6Qsi782Tyf6Qp5WS4UfwTR8BnCVjCUGvdUx2tCc7Uq8X8Re9sn4rmBqDBu4ebPD5NxXp9n6dV4tJ",
+      "slot": 455879378,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "2056"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d2a9a33784be2ce188edf31b2edfbb8c68c451c8615134842f488c7060d5a0d8",
+      "rpcJsonSha256": "b4b1d05a4b49b403336b6cb845d1e6e5d58ac715e6032ed7536edd023f91cd53",
+      "protobufSha256": "112085d70681588a6773a39e7d87b610c85b03979fa2bc2b62833bbbf9077baf",
+      "declaredInputMaximum": "7603",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-12.transaction.pb",
+      "signature": "7vTcrz3XsnPZKKBV9spmCVagiVLfyTBHzR9x14GbySAgAkU41Qed9PUCroPuNJw37dAWFV89P9woTvkmtZZFNhE",
+      "slot": 455879138,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 5,
+      "inputCpiIndex": 6,
+      "outputCpiIndex": 8,
+      "feeCpiIndexes": [
+        7
+      ],
+      "feePoolTokenAmounts": [
+        "218"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d31cadbbe4a81144241cdcaeca4919870f7abc32df68c2f7edc7c07e46acb6f6",
+      "rpcJsonSha256": "7c3c3357567558e47a0783c020950675e1a405449331c8aaba78fa727e68f639",
+      "protobufSha256": "80e09ea4d056ae1e82b8188778179242e7bc224011f33ae0bcab786df3368cab",
+      "declaredInputMaximum": "538256",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-13.transaction.pb",
+      "signature": "4xR5SrNSk5HCAJyFTmU3oj5TCrBL9iKQ62y8YtQLxoxzLT5CuJJbSUib6TM2LrWztwfz2arykqLgJa6g6tbBnwKu",
+      "slot": 455879137,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 8,
+      "inputCpiIndex": 9,
+      "outputCpiIndex": 11,
+      "feeCpiIndexes": [
+        10
+      ],
+      "feePoolTokenAmounts": [
+        "214437"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "76f49d42d9a3d46e533465b0a29f5db7c49278f40d64f80df905afcd18d0a804",
+      "rpcJsonSha256": "afc5b2c9eb9177ea8567946bd12c050749bc9940aa66ad480cc14b80c445a3c8",
+      "protobufSha256": "9e694094512154d5a355ad1654c5c10eb3db39b5b483d682ea7166a41388f19b",
+      "declaredInputMaximum": "623367",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-14.transaction.pb",
+      "signature": "5ZPW2ieGo6s496cDcEp2Uq8hh45Vu8a5Csf1jbGnh4UMBH8FHePiLxA7ZoCYGSaptHQudd9VQ9URdCZ5yes1P7FQ",
+      "slot": 455879135,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 6,
+      "feeCpiIndexes": [
+        5
+      ],
+      "feePoolTokenAmounts": [
+        "130643"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "1a6c1ada27fd158f79c50f5f4e63b6244fc116de5c0c3b7f473f79665e4abfe0",
+      "protobufSha256": "0882dcfdf3665d4388ec55df4c2a214f1e2b108b82709e768f90d402c1f8d0a5",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-15.transaction.pb",
+      "signature": "2KaFFZPym4F9YZTbYpvXFZS6rAoSWu18f4XHCH57KicrBfALV3JCUy4RQiYRF712on1wqLYobxD9axohKPjUr1A",
+      "slot": 455879146,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 23,
+      "inputCpiIndex": 24,
+      "outputCpiIndex": 26,
+      "feeCpiIndexes": [
+        25
+      ],
+      "feePoolTokenAmounts": [
+        "1038103"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "843d7f05d25a0b3b7c15164b257adacde79cd4897c66c154ce03ae80ee0c046f",
+      "protobufSha256": "1003e995ab8cd9bf373180c4c364b854ac460458d7884cced67c62f1530ad0b3",
+      "declaredInputMaximum": "25339230",
+      "declaredOutputMinimum": "0",
+      "retained": true
+    },
+    {
+      "fixture": "spl-swap-recent-16.transaction.pb",
+      "signature": "3nn5ATEbZXrm1PdnfMSCmHge6yQH16DwRnVBxVq96u4YDbrSu8eT2wTvnYKcDmLdcHR3coPs1bdK1wo5MFgPsMcy",
+      "slot": 455879134,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "150038"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "df9dc2d1bea44baf0bb21e9fa2c9e1bb52a86e3b6ccdb2e367edff18281f2303",
+      "protobufSha256": "799fd1a6cb934a7af974d163ded582d3ce06588cd0641eb7e1c83a9f8ad28d2e",
+      "declaredInputMaximum": "4065817",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-17.transaction.pb",
+      "signature": "2BFCwTq9fTPV47uL1yTBmj1S1B7TsvKcbydq38p5X9kpQm11njtLwDog8xHt5w5bhKfavE6z8d3aWHpTxQS4vuBT",
+      "slot": 455879123,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 8,
+      "inputCpiIndex": 9,
+      "outputCpiIndex": 11,
+      "feeCpiIndexes": [
+        10
+      ],
+      "feePoolTokenAmounts": [
+        "1378341"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "203707160f3f48573598847f3af3ea0febe9df0f33da2dcb3f166c6fa8059215",
+      "protobufSha256": "a2a43500f81173785c8d15f407b482135f55a9d6ccdf850e3f3c38288ff7eb39",
+      "declaredInputMaximum": "33633282",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-18.transaction.pb",
+      "signature": "rsiHB7vJGtJLFMjZFg1winPGKBXWTKtoqvw8JXntwZQagz2w321XbMqfhs7jK2vmm6AK6LzNJ9J6oAKjbRZ1v1U",
+      "slot": 455879126,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 10,
+      "feeCpiIndexes": [
+        9
+      ],
+      "feePoolTokenAmounts": [
+        "82876"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "34c527c423f3c9a0de302db4a38d293aeb01c7adee93c06b09bab8ccffb7d942",
+      "protobufSha256": "ebbe29a2aebc70bcb478d1d178910611d1911a7742ce34202cebcaae56ba2deb",
+      "declaredInputMaximum": "2244023",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-19.transaction.pb",
+      "signature": "BES1f4SXGimVsQBrA69itBDn2efauuXTRiD3skGeBcSj4sWzmsWA7YgiKWnbrStgTXiLDLBM5jqvjJ6p7X7tHat",
+      "slot": 455879121,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 6,
+      "feeCpiIndexes": [
+        5
+      ],
+      "feePoolTokenAmounts": [
+        "130705"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "6f7083358ad0d69db1a60ede91bb514cdf97d88abac8caf3bd7e0a197da81510",
+      "protobufSha256": "cea00b2d8fbb439dc6f33c40279ec9beb44deb15d76d4cc752337615b75e78c8",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-20.transaction.pb",
+      "signature": "upKNHShbMkmbczDtG8JxjdpgGBd6HVMpaUojMVwqo5tMVjbvuEoEMH5FjwDx5Q37CH3dLFEKpNEougFaqMtUi4u",
+      "slot": 455879116,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "130717"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "ba0bb4fdfdc4d6ea1c307166d3d0817e622ce3dbc2bbde685431668d3d554b37",
+      "protobufSha256": "803427248023433f1f202f24cb386391aa18054ea50ac1dcb494716b6dc92b5d",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-21.transaction.pb",
+      "signature": "53mMwq9TwAr3r7ExNcEcWMJHhbvTpP8rBnDpqvhW1DngrjJiwdRjtgZcwivmqfRKBBYsnUF1Qavg9DjrQdM1Hb4S",
+      "slot": 455879116,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "130717"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "9c25e3cfe5946837b3301f7614fdc076e2f8dcc265278f2faf407217ed764b9c",
+      "protobufSha256": "32c7a2314a7f4a485cb48933ca6f501faf44c17a529ee1c4c6ba4bcfc292a312",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-22.transaction.pb",
+      "signature": "2BQwmCP37EXfyMwSsqAxWukToyXoU3CAKX1jtqSHWaQWnVabwTUF8UWCqviz8pm5djGAqbKG6vUCpZ3CBrtEGJiH",
+      "slot": 455879116,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 10,
+      "feeCpiIndexes": [
+        9
+      ],
+      "feePoolTokenAmounts": [
+        "743574"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "3a0014869d531711a0b20d5f7bfd984592223bb4b7a7f868d24d7e2beb8f4473",
+      "rpcJsonSha256": "4a05b3cbe3c631f309bedd5efc0b864bf22406187ced0e3befd798fa53207bcd",
+      "protobufSha256": "41fae7d9f5907bb5fe738ba25abef6bdae334a13cd3ba444f209c53fac427719",
+      "declaredInputMaximum": "2045718",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-23.transaction.pb",
+      "signature": "2KFvMWj7o3DQT8oqUSc7vveetM4rNda8wT9hm5xHNdodpA3Duegw2UbgDdaR7xsZYj8ATFfh7kUbTXzgSHbdMaUd",
+      "slot": 455879115,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 6,
+      "feeCpiIndexes": [
+        5
+      ],
+      "feePoolTokenAmounts": [
+        "225244"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "dfc00348378ed4af656b5b4a390e11e49338c5748f9bb17bbb03a2a2afd313b2",
+      "protobufSha256": "38ccf9eafb8cccfcb06b63fcb3404ce90fb48107113656d7cb12d5237480cd57",
+      "declaredInputMaximum": "5492802",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-24.transaction.pb",
+      "signature": "61uobMjb3awvKg9hQAcHYmtA1xDXqM9K9psq3WbtqsCutQJx1ZovtjiZqybhL9PWFuzTBxFU2kMrTPDFy1qzEoJe",
+      "slot": 455879115,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 21,
+      "inputCpiIndex": 22,
+      "outputCpiIndex": 24,
+      "feeCpiIndexes": [
+        23
+      ],
+      "feePoolTokenAmounts": [
+        "151062"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "9dfe3a14cad5ea213d6bee2174235844e38d582e52625535d9861a47ff819221",
+      "protobufSha256": "f740713111130775dc073ba30ecf133ea1858402ed86c8cced23d4ec13de0879",
+      "declaredInputMaximum": "4091745",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-25.transaction.pb",
+      "signature": "24mcqaAn9KuvjFhThNdoqf2BSKnNYedsMxSyotGbv1LqLumHiGhSWNL7jCUYRM97n4oxKNU3DWiLkUbrCYkJqy37",
+      "slot": 455879018,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 22,
+      "inputCpiIndex": 23,
+      "outputCpiIndex": 24,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c7816ce6ab71a21f71ee1550d19e53ec4674158f934d835970140c1fad510b29",
+      "rpcJsonSha256": "ea9a34ca3e86405dc89f816334b09182051b783d018ef30813caff9133f110a3",
+      "protobufSha256": "8a2b36a84144cefb9fc8435f9c283da2948737cbca9005bc76fdbb2ddb9d7adf",
+      "declaredInputMaximum": "1084",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-26.transaction.pb",
+      "signature": "3rtAqruyDinPAq13byi7NQmNEkQaoNNLzBw769MGfqQGr9oowEDNcX5iQA2aWPhAQL1x1ttVvsTLnB6NLfEdhxfP",
+      "slot": 455879116,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 15,
+      "feeCpiIndexes": [
+        14
+      ],
+      "feePoolTokenAmounts": [
+        "147"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "99049c428c7aaa2d4bce3e7a48eae25d9154ea9196c62a5512f1257733c3d08f",
+      "protobufSha256": "1cd3332bc1511a3d6c156a7a89b75c16065d2596a48780ca940ec2302edae3c0",
+      "declaredInputMaximum": "7180",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-27.transaction.pb",
+      "signature": "432UB8jhjuYanACC7j27yXNMtQVWyj1idAdb97vKBchGswD8Yo1DzW2EKMTx9JyRMQoEzBqHDj8SCBCw6kSWgHus",
+      "slot": 455879015,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 22,
+      "inputCpiIndex": 23,
+      "outputCpiIndex": 24,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c7816ce6ab71a21f71ee1550d19e53ec4674158f934d835970140c1fad510b29",
+      "rpcJsonSha256": "536ef4b0a7df04a1bdd7768ab81a23b3d4de4379921d4d9a0201f105fd50e9d3",
+      "protobufSha256": "761bcf11ccf0be4eea47123b14ca20e861aeeadad9de235c0ebca7e5de5fa45e",
+      "declaredInputMaximum": "986",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-28.transaction.pb",
+      "signature": "4pkdcgMuij3WuX15XHKoNtxHgTkcJEoDX52Up6e7Vp8VvECUicuqB6ATkvorsXMSuS3tjhFyJsUMvVxN8xxeaTL2",
+      "slot": 455878935,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "2058"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d2a9a33784be2ce188edf31b2edfbb8c68c451c8615134842f488c7060d5a0d8",
+      "rpcJsonSha256": "9f8bac69adf617468e5411e17b89142d8d90a837036fba2628764da123f68fc1",
+      "protobufSha256": "5650f9062ca33121b7e824167e80daa81b42bee09563ac9e9d25c0d97bf6c6a1",
+      "declaredInputMaximum": "7733",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-29.transaction.pb",
+      "signature": "5kypzqs6Q87VGV8MmzE9QfWp8QFpxVMrRujiKC6d79SBqQLh3bwg6juAtaFZRAKMurcmxvWJ75sWaTU6oAYaJAVR",
+      "slot": 455878923,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "193739"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "d61cc2520c812cf0336d7339aa1e859313da74a3d302635b2e0f5acc25e186aa",
+      "protobufSha256": "b189fbd3c4ee7214a1e5879157fe7e03cb2f58237c25519cc4f5e5b736d85c84",
+      "declaredInputMaximum": "4723515",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-30.transaction.pb",
+      "signature": "4hYmq2WMBHiTdn4J3FPb3Uasdfo6ic2r6oUiUPtJoEJHCP6rigYLbL16FNkxwxJJU9EocyvS2KYoT6ijXhftyJqJ",
+      "slot": 455878935,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 14,
+      "inputCpiIndex": 15,
+      "outputCpiIndex": 17,
+      "feeCpiIndexes": [
+        16
+      ],
+      "feePoolTokenAmounts": [
+        "193726"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "bae9e48f52ff3f9def1c042c872c3fbb67a95b13758a26634c16229180705ae8",
+      "protobufSha256": "40a553d94c3d14eb62cdbff4c16bec9d0aec123ae3d241983548736d93ac5480",
+      "declaredInputMaximum": "4723515",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-31.transaction.pb",
+      "signature": "4jc3u1XBnnEVTpPYyLf73WhRbgJNGLqEGRWcxjou3ewvSbXGb7UNTQjUghqbe5EthWgrPyeDbrHgPnGTRjPyb9J6",
+      "slot": 455878913,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "214572"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "76f49d42d9a3d46e533465b0a29f5db7c49278f40d64f80df905afcd18d0a804",
+      "rpcJsonSha256": "fdf49c8ca658a9b95b07549d4022c27c3443e39e1010822bc78be413ea5bba30",
+      "protobufSha256": "9ec03bd4b690e7d8109fcb6cf8e54e4d27cde9d6aa90c2dcff9571ffbc353b3f",
+      "declaredInputMaximum": "622542",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-32.transaction.pb",
+      "signature": "4mTKESyUpqkx1j1gHtYtXnbP7WDumsWcsvv3sMuN5bPB5GsEkftrBLSBK6mKL6USctkSHwzbgS9mkWHQkyEQCgpR",
+      "slot": 455878905,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 15,
+      "inputCpiIndex": 16,
+      "outputCpiIndex": 18,
+      "feeCpiIndexes": [
+        17
+      ],
+      "feePoolTokenAmounts": [
+        "21374"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "970623357b105f29c8a1d1325579fbe2e8d33adf289dd5b1a4833f00af97770e",
+      "protobufSha256": "222d945bec1109ead21db0a6a53b46b71c25c264a7f221b9153115b81325288a",
+      "declaredInputMaximum": "580000",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-33.transaction.pb",
+      "signature": "4EGHLnaHsBvHQzoosG3Si9V1qDFRoigpKu9B4G9eguqUCEAPxAxBzCTPRfQmi6RjXYyLq5XtZEGx7G42JASBKdrF",
+      "slot": 455878873,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "217"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d31cadbbe4a81144241cdcaeca4919870f7abc32df68c2f7edc7c07e46acb6f6",
+      "rpcJsonSha256": "4e371f7176792639bdfc7f2b5eb0f26ce0806e61a88ecd1f4e4e9771fb7c37e9",
+      "protobufSha256": "e4e8656786c999d235b40bc6252be8b7131d34d3a0197bce8af5ea0b28b0c172",
+      "declaredInputMaximum": "537539",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-34.transaction.pb",
+      "signature": "3rj3MDADHnQRma82FRnnD9RXWVfxViea6WF9L7PzGdi3wSLoHP2VAWzzU7XE8sXjR8ibhKo4dPvebBPNwJgYXwd4",
+      "slot": 455878889,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "feeCpiIndexes": [
+        12
+      ],
+      "feePoolTokenAmounts": [
+        "1255"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "4316181faf5e8e5642ca70b92eb92d6e2140d3024c91d3ef43f98906a622cc3b",
+      "rpcJsonSha256": "197bf2e374545e683c76f8e5998271cab2fc1246cde60a7a780b63f6b0520886",
+      "protobufSha256": "7964bdb2a9a72803d63befb0866979e0f46b0e5c7fe8b3fe45d1ecc7a3f26d14",
+      "declaredInputMaximum": "936000",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-35.transaction.pb",
+      "signature": "5Mn8FyGXz1WhegmwkJwgnKSqtYWVDrD9b8TPHcqeiP2wTWykJeQRebRVPhVxcdeTVEb2Evc5i2Q3c3viVZxFkUUd",
+      "slot": 455878861,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 10,
+      "feeCpiIndexes": [
+        9
+      ],
+      "feePoolTokenAmounts": [
+        "214706"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "76f49d42d9a3d46e533465b0a29f5db7c49278f40d64f80df905afcd18d0a804",
+      "rpcJsonSha256": "362b630a6df8a1a7fddc51750e14e50a4c410498f1c289577eeb43b2f5486136",
+      "protobufSha256": "a0b0014465fd98481d23afa5a4e838a34e331cbc7440d1179650bac99c684235",
+      "declaredInputMaximum": "622448",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-36.transaction.pb",
+      "signature": "2zovaDXeWEztZPjBWwk11CXV23CzfofCkMyb8rnqqHJCuASB9nF6yC5AnP65vyMSFyUhhLxotrGMD71ZDTYZVZ6i",
+      "slot": 455878871,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 18,
+      "inputCpiIndex": 19,
+      "outputCpiIndex": 21,
+      "feeCpiIndexes": [
+        20
+      ],
+      "feePoolTokenAmounts": [
+        "39128"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "7eab080c9cfc786e1da2791b37d8077f13bb53a21cd94b0524dcd14f78c96b34",
+      "protobufSha256": "983d6ce81bd83d975c878de7b8a8444c6a733844bf7372a9c3aa098bb1343843",
+      "declaredInputMaximum": "1061835",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-37.transaction.pb",
+      "signature": "4GVAm2GeYhwzCd9W42QLodCBgeZMcqd2X9RXuGcnHNRJDjs6TaSS4cDNJZwCDE4KKbvPoE47wkxBsJZbBdCENyAY",
+      "slot": 455878849,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "217"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d31cadbbe4a81144241cdcaeca4919870f7abc32df68c2f7edc7c07e46acb6f6",
+      "rpcJsonSha256": "ead6d29beef06c962fe05f0f0090e04b9a6254dd5dfb3a60d63aeba0fa9de961",
+      "protobufSha256": "d5e94ab9f24f0933de368921bfc2cc6a4c7e41e3aa03d5b2238e7b40929af49b",
+      "declaredInputMaximum": "537328",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-38.transaction.pb",
+      "signature": "d84rjZNFD27XGS24rbEVPWTUyQQRNdHZynMD7gRNumEVTDSANHEZsKAgoHe4XJtLWFEtFWqLuhqBRJUUExYKNUH",
+      "slot": 455878780,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 19,
+      "inputCpiIndex": 20,
+      "outputCpiIndex": 22,
+      "feeCpiIndexes": [
+        21
+      ],
+      "feePoolTokenAmounts": [
+        "428"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "4316181faf5e8e5642ca70b92eb92d6e2140d3024c91d3ef43f98906a622cc3b",
+      "rpcJsonSha256": "3adeee8b476978eb40092060725a74fa8e51706e39568f5664402b56569a5e46",
+      "protobufSha256": "272d7c3fc6c5094cfdd0b521fa4ad6367f75e474a40f01639ef8822255510e8c",
+      "declaredInputMaximum": "320422",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-39.transaction.pb",
+      "signature": "4HHimBuxormfYD4SNFYjWEGTh3Q7TuWGEy5TqEDS587UDBQv4r3pyzaTi7kftp4NJX7AV7r8mXTT5iY8mnUDqJQF",
+      "slot": 455878782,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 2,
+      "inputCpiIndex": 3,
+      "outputCpiIndex": 5,
+      "feeCpiIndexes": [
+        4
+      ],
+      "feePoolTokenAmounts": [
+        "397680"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "452dd5c999fc9d7536ddb67fcb738d53d76f41c975f498771cf03209af439a7d",
+      "protobufSha256": "b8b4739f75de44a972910209ee85ace9ed49ab39b642e18f9dcabdcc856c4b7d",
+      "declaredInputMaximum": "9696928",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-40.transaction.pb",
+      "signature": "xw164N6cuVR14D3DaFZXHeiKQYe4t594bMSAfrtr5FWgVxE8GEPNV9wzovrvd6WQcZNgwAnYtj3uFPo4ShDirdS",
+      "slot": 455878786,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "468"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "4316181faf5e8e5642ca70b92eb92d6e2140d3024c91d3ef43f98906a622cc3b",
+      "rpcJsonSha256": "f048c754777dca2f2354838dfe3c55220bda7be5484ebbfc0731c4468327b5ef",
+      "protobufSha256": "4117eb751e1af19ab2fb796db260f00cebae2042a8cef7189d36dcd4989fdba3",
+      "declaredInputMaximum": "350000",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-41.transaction.pb",
+      "signature": "4wPhsETc2Ww227TZcrjq3qtgKfx3irFn4Wt3KVyTBpeJCs4vmwVEzB1aZwYvu5NmzRKhWzAPQJ59fmG1cNHd4BEr",
+      "slot": 455878777,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 11,
+      "inputCpiIndex": 12,
+      "outputCpiIndex": 14,
+      "feeCpiIndexes": [
+        13
+      ],
+      "feePoolTokenAmounts": [
+        "36911"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "4233a768758b7a655a2b542986192323ff1e9f4ba7bfac7a0431cc47271ba0ab",
+      "protobufSha256": "d8b1c04ccbc493d436b4e9c08ee523ce56b2a3fae7583656d0b595d469896f72",
+      "declaredInputMaximum": "1001513",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-42.transaction.pb",
+      "signature": "2m7B2zHKf2iCKPcLjHEuS36MwHdrXFKnAH1Ub2AD9hG8QjJtkg3vi4htNEAwtadxreTJf46fDA1Gw9jS1z7abpEQ",
+      "slot": 455878774,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 10,
+      "feeCpiIndexes": [
+        9
+      ],
+      "feePoolTokenAmounts": [
+        "82778"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "faa212e5c9f2c9685eb7a013e0ffd6d408126cc2b8e409fa4694f63b2ee30d6d",
+      "protobufSha256": "d5a2c7c2bcc9864c281f5a8d0995a8d829d3510cd50d3e04b22cca63c4bff28c",
+      "declaredInputMaximum": "2241529",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-43.transaction.pb",
+      "signature": "4CSFnW9Fk8jBma72X8WZvEVfDQPr41tPsiTjUg933QtrPUAoDAmDbYKHgMk1S1oCK3KiWiDEZhHdPVk8uoFpdfkd",
+      "slot": 455878763,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 29,
+      "inputCpiIndex": 30,
+      "outputCpiIndex": 32,
+      "feeCpiIndexes": [
+        31
+      ],
+      "feePoolTokenAmounts": [
+        "21596"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "e13ba340b9122649b05c6dc65b55f844795d705ee51dadbd4b082d3def906517",
+      "protobufSha256": "781cd938b3325763695e0396a2950e13c4813bd65bba5f1f2d02b1ad29a49a40",
+      "declaredInputMaximum": "529917",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-44.transaction.pb",
+      "signature": "67mHmsgUmyWMHk7d8V7uUXc1QHFnjX6TuqPykkZz8Tdg7F9FNPcSsKpCM3qrZcHhm9sTv5XsXy5YezMx5jn3T6Gd",
+      "slot": 455878771,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 3,
+      "inputCpiIndex": 4,
+      "outputCpiIndex": 6,
+      "feeCpiIndexes": [
+        5
+      ],
+      "feePoolTokenAmounts": [
+        "130778"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "30fa488310cd9f3df925d47ff439d4c0542b315c9bee93e1a0c9cb7b05e8a2c6",
+      "protobufSha256": "4e19befa36c6649ba7b4190b165a2e2a359eb85acf8dbba30e66afe4971afbaf",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-45.transaction.pb",
+      "signature": "KE91QFQ7DTcoekUEdYbNtSGzcGFPub6S9yA8Ry5yD4SCHe592Sn6j6TJQeFF44JU34SRMseCsBDzbE2KvDn2APP",
+      "slot": 455878772,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 24,
+      "inputCpiIndex": 25,
+      "outputCpiIndex": 27,
+      "feeCpiIndexes": [
+        26
+      ],
+      "feePoolTokenAmounts": [
+        "322898"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "40c760d4d2c2d74b314747c93806c30f2d9878ac1c7aef79e1fc359a6619ad90",
+      "protobufSha256": "c705443d1105744ae260e650d2d580268195978da33c95a7f51adbf2f9395f7e",
+      "declaredInputMaximum": "7871738",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-46.transaction.pb",
+      "signature": "4BEuHz4erJSvuvWJ4vDuAAaRBwGXSFPrSsDjqAMghHTx92m81a6eycFzm24UqdGwpqXE9rZTS4582Dp1Dw9sF9vJ",
+      "slot": 455878774,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "455"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "4316181faf5e8e5642ca70b92eb92d6e2140d3024c91d3ef43f98906a622cc3b",
+      "rpcJsonSha256": "8243daea04edf97f1d1f8cf65edcba73b10a77d608109ee7c6667f7cc8bac7e4",
+      "protobufSha256": "03ba8a90f7d1f27b86f947f7a33ed3d94dd802a96612f74486384f6e9a4ee542",
+      "declaredInputMaximum": "340000",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-47.transaction.pb",
+      "signature": "4YkpufAN9P3FmT1qM4rcguqHhxqoCr6zvPyhMRDd398pdAvC9CKeq4hvD1dqGcLVTmfA3uDnaSF4yHfQCZpvXxiX",
+      "slot": 455878761,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "130790"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "e8036081f372a1250c4a61ae4a849d18181e052e00702025a453061ed13c5616",
+      "protobufSha256": "f4d21019a2f9a5ab30ccbe57fe7a71aedfcda10861325ad7282ea5e3f62e95ac",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-48.transaction.pb",
+      "signature": "52LF8SKA2mi67ccbTMrxTvPXo1Vru3EnZ39NPguh1J4H6TqFnKCDpHQF2K9rbFPKXxWZni2GQ7Bh2g7MXZiquciQ",
+      "slot": 455878761,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 10,
+      "feeCpiIndexes": [
+        9
+      ],
+      "feePoolTokenAmounts": [
+        "82791"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "75f1820630e1ac662dce8c2c3d03e1ff6275cc081aa223516292d3a6f98276c6",
+      "protobufSha256": "7b76ab54a656439d283866036a6c9eb346b1ec2cdc396b6367900a977872f36d",
+      "declaredInputMaximum": "2240625",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-49.transaction.pb",
+      "signature": "2C9NXmWg7da8zBvWfWAEPSF769NB5mPiQvKieCR7zM3WGhoVZJrsD5wakinvGeSqDpYmmSRF8waJKWpxRnNMJMzE",
+      "slot": 455878762,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 4,
+      "inputCpiIndex": 5,
+      "outputCpiIndex": 7,
+      "feeCpiIndexes": [
+        6
+      ],
+      "feePoolTokenAmounts": [
+        "5770"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7887ae81d557f35e4073050d29f3b0880a2da6ea7690fd19af963b91fa11205b",
+      "rpcJsonSha256": "a3d47c91be40582bc22e79cc744ae5d7588671e6923fbd039898db151bc7c093",
+      "protobufSha256": "ab1ab6d42964e8d0bb51d6c561b677ed42c7893c901724d6b4bd435b60d97943",
+      "declaredInputMaximum": "158897",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-50.transaction.pb",
+      "signature": "4HCUHAC5ysiYaFnf2DxeuXTbZf2Wnb3hdS3tTovV2PShbFh3JPAvckqZCPssLWDz4A5JkH7gei7sXz5JiVDswpSk",
+      "slot": 455878760,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 6,
+      "inputCpiIndex": 7,
+      "outputCpiIndex": 9,
+      "feeCpiIndexes": [
+        8
+      ],
+      "feePoolTokenAmounts": [
+        "130790"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "9423d8157b20d3baec1566997a50d0dd04c81eef6dbde429a23ec8ff4051af11",
+      "protobufSha256": "66576f4f1a5924b9a838c46cfd1bc8b1de15d7e7adfbcd6abac975f3d57e3294",
+      "declaredInputMaximum": "3187419",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-51.transaction.pb",
+      "signature": "5DnAVQaxXvMXQqxoBZJrHDfE9Nj6ny7MhuNHkJ8THqpiiFaS7oUWcocqYwHDNyd8mRXUwHiiMqw5wtVBiPhBntAn",
+      "slot": 455878758,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 14,
+      "inputCpiIndex": 15,
+      "outputCpiIndex": 17,
+      "feeCpiIndexes": [
+        16
+      ],
+      "feePoolTokenAmounts": [
+        "64985"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "25a427c4a58d954caafa9107e9e17b87e8621da06c0dd9c731ebff5a72f5b396",
+      "protobufSha256": "0f09fbd721fe4f5b86b7a0473aec90ccb9fddaa88daeafcacd2b9a07f535d3d4",
+      "declaredInputMaximum": "1585588",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-52.transaction.pb",
+      "signature": "2QviwvDNP7tdnztMhkWYkLjpnoUWwaHzCW821R4P1MDHF4xY1K5vGCzoYxnEPdQf5VZ4nSwV6n7nWn971qD8EBM",
+      "slot": 455878758,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 2,
+      "inputCpiIndex": 3,
+      "outputCpiIndex": 5,
+      "feeCpiIndexes": [
+        4
+      ],
+      "feePoolTokenAmounts": [
+        "397840"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "656ce4a846be8b8989a0f2a4d5c7a0c9de9de70bed5c0bacf8dcd7f0cc762441",
+      "protobufSha256": "5354e74c7d436ee2e3dfa40119cd28b6117417c4b4763dec21e73ee7b3ed8bb9",
+      "declaredInputMaximum": "9696928",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-53.transaction.pb",
+      "signature": "2Gi1ikj1nmEnrvqdo9RxspkD1DMbYjZXQcuc5qHjnyVz1saGQgCETZ9TfhQ7jcYHBqfmFJJ8Fz8V9Yp1AC8DaEp9",
+      "slot": 455878653,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 11,
+      "inputCpiIndex": 12,
+      "outputCpiIndex": 14,
+      "feeCpiIndexes": [
+        13
+      ],
+      "feePoolTokenAmounts": [
+        "201918"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "2b9375c3d1748f5bffff095c0f0473958ea0481152171fc9405b1916f5c62c07",
+      "protobufSha256": "4a7b001fe7fde91180cb75dfe07af08e41b935a3058aaebeac6f050a2b7accca",
+      "declaredInputMaximum": "4920155",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-54.transaction.pb",
+      "signature": "41X76tSZEubAFPCMhDXphYDEWGXGAq9CXGvq9zeWy2uU84XXyut5KmiTToY8Jbrb53eysxUAySq3BjqQyzBe5WxD",
+      "slot": 455878661,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 15,
+      "inputCpiIndex": 16,
+      "outputCpiIndex": 17,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "db5c7bab92533305a6caced22e4e677421b9737210e0aa1afa6f35f642a171da",
+      "rpcJsonSha256": "388ae5d2bcf9f76cb1719f2ba8cc17e8a7cec3ed022e1095f4017ae8a9927163",
+      "protobufSha256": "3e1944a44eef2f1bae1238ef45dac381b99d2f21b51200929438392b4444be62",
+      "declaredInputMaximum": "991",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-55.transaction.pb",
+      "signature": "4vr6kxZMRndnkUErFTyLsTCyRWyFxZMZwYKEUWxDgNsjQk2TBR79Ao8M5kbi5QSnEgTETkNJi6ayqWsgSS6R17kM",
+      "slot": 455878659,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 2,
+      "inputCpiIndex": 3,
+      "outputCpiIndex": 5,
+      "feeCpiIndexes": [
+        4
+      ],
+      "feePoolTokenAmounts": [
+        "274960"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "7792baec19f0795c76435321ff3ad0159516345a3a55fedf799150b2173208eb",
+      "rpcJsonSha256": "dceb5060bea7a8e4224541b2f834e6ddb283b3881b8a70512ea3dfcd4881d175",
+      "protobufSha256": "a7199d61411e63ec7e266ca3af2dda96f8230308a278d735ed55e1a86fedeaef",
+      "declaredInputMaximum": "6700188",
+      "declaredOutputMinimum": "0",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-56.transaction.pb",
+      "signature": "nfRMPNFfDMvJLmMgvxSYyVjG9vFyBLzrGmYTRoe8rXrvwaMGpCnDgGp3GHb2LQQPK7nWzchZT8XtL7YvqC9mnku",
+      "slot": 455878647,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 13,
+      "inputCpiIndex": 14,
+      "outputCpiIndex": 16,
+      "feeCpiIndexes": [
+        15
+      ],
+      "feePoolTokenAmounts": [
+        "18"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "820edb76c3d8cc1feff1473bbdb3853ab753d881ca86e6e7e5bc4fa9220f7f48",
+      "rpcJsonSha256": "0d64796188980c66c610f0653418816db10a3703e6923b92cd9a781f1abaa6c3",
+      "protobufSha256": "091f8ff595ebdfecf50e790b644cf410008bc3055b39712321e5f54665c0cd8c",
+      "declaredInputMaximum": "5113",
+      "declaredOutputMinimum": "1",
+      "retained": true
+    },
+    {
+      "fixture": "spl-swap-recent-57.transaction.pb",
+      "signature": "xP5dPnAzBgfKzbxEXQct5n8jsv8R7x3Siu5m2GWZdmbvJGAjAMJEE9nkKLq7R3Gs1p2gJ3rEXmW7C9LTUaAewbB",
+      "slot": 455878632,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 18,
+      "inputCpiIndex": 19,
+      "outputCpiIndex": 21,
+      "feeCpiIndexes": [
+        20
+      ],
+      "feePoolTokenAmounts": [
+        "175"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c8fe835f459888e87287e03466bec4e5baf0299ed64f38477fdb55e1f7b3a9cd",
+      "rpcJsonSha256": "0906ac20aac37bba65d38d989bccaf7db5a134d92c04c1e2a02bfc7fbc0237c8",
+      "protobufSha256": "ffd3f57856f17b0275e7989da0e2b994da2d6ad80bf3dc61b63431476aa5ccce",
+      "declaredInputMaximum": "10000",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-58.transaction.pb",
+      "signature": "35ZxCi3sBtEMVyugFkb7xyqBR7bNnYPhg8w7dren9V7tm8pJQwy8CBD7Xsp7J5r5e4VUUNHTATmpc6kUURVcKiAs",
+      "slot": 455878627,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 18,
+      "inputCpiIndex": 19,
+      "outputCpiIndex": 20,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d2f482cbcbcc240be046aca8c102619c27ab19fd79b19758a4e698be8305e8b8",
+      "rpcJsonSha256": "10e9e8d081a8bd38f62575028d18aaba1f3789a6e53e16aebff847209a9e5159",
+      "protobufSha256": "ae0871e444778103e7b59ea5ae6a0ea01c6216a3f8ecb1860a3d1e90c562634a",
+      "declaredInputMaximum": "1186",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-59.transaction.pb",
+      "signature": "5BudNoMZ4YJSkAEBo1tDPohRmJ3BC8s6zR5buQhBshFh4Hh9r8xaob9GxT8A6qwVZVdqDkVMJS6GYoNyRtHquTLv",
+      "slot": 455878607,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 20,
+      "inputCpiIndex": 21,
+      "outputCpiIndex": 22,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "820edb76c3d8cc1feff1473bbdb3853ab753d881ca86e6e7e5bc4fa9220f7f48",
+      "rpcJsonSha256": "5db6b6a1bba21f6f0688db56043eac081855a0b48e93119b9138484cc1d808e1",
+      "protobufSha256": "659ad5d9605acb20bf58c64dcb363b34da41472d2ea510b17f721ce3b25e8b5a",
+      "declaredInputMaximum": "3770",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-60.transaction.pb",
+      "signature": "5enWZK2K6LfeKdGVBa4tipBhzAeUHRpMe1YgxWaR3W5c24BGkf2YgvpVRc6XuMU2sEu5GqVrsuAAtkoaqNxiCzch",
+      "slot": 455878636,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 18,
+      "inputCpiIndex": 19,
+      "outputCpiIndex": 21,
+      "feeCpiIndexes": [
+        20
+      ],
+      "feePoolTokenAmounts": [
+        "175"
+      ],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c8fe835f459888e87287e03466bec4e5baf0299ed64f38477fdb55e1f7b3a9cd",
+      "rpcJsonSha256": "8585e3add8007c5a011f098b5736131f51143ddbad4ff2ca834af355497f54c1",
+      "protobufSha256": "abb4332f88a29706dbae0e873347a361aee28427c2c51df5af1d93aabc7242a0",
+      "declaredInputMaximum": "10480",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    },
+    {
+      "fixture": "spl-swap-recent-61.transaction.pb",
+      "signature": "5dudJgbeobYYPs1UxAtsifRJn6C7fyoW2N15JQi8ahDpTsHhMP3gtyRh7JJuKgLTbeMjPdvDeXedLuC9DZQZZGGb",
+      "slot": 455878609,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 18,
+      "inputCpiIndex": 19,
+      "outputCpiIndex": 20,
+      "feeCpiIndexes": [],
+      "feePoolTokenAmounts": [],
+      "ownedPoolReadContext": 455882146,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "d2f482cbcbcc240be046aca8c102619c27ab19fd79b19758a4e698be8305e8b8",
+      "rpcJsonSha256": "a23079cfb5baf32d5cd00b7119c0db5cdb09a064f5d2515a9e3c93587a3591d3",
+      "protobufSha256": "987f18a59e37d0622344775e3d3f8615be11d04317d3223c3bc91b77f3bb5839",
+      "declaredInputMaximum": "1720",
+      "declaredOutputMinimum": "1",
+      "retained": false
+    }
+  ]
+}
