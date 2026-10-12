@@ -696,3 +696,28 @@ does not contain the older aliased-recipient positive; its original finalized
 RPC/PB proof and core replay provide that evidence separately.
 Deployed .14 does not include this repair. Retained
 originals and independent proofs are in `fixtures/swap-coverage/onedex-aliased-*`.
+
+## Remaining Pump V3 shared-buyback-recipient gap
+
+A retained original finalized transaction at slot 455950129 contains a V3 sell
+at instruction 11 and a V3 buy at instruction 23, on distinct curves, with the
+same declared buyback recipient. Exact token CPIs and whole-transaction debit/
+receipt balances independently prove both base legs. The sell's pool debit is
+229,642,420 lamports: net user proceeds 228,543,099 plus buyback fee 1,099,321.
+The buy's System CPI transfers gross user input 228,543,098 lamports, and its
+pool receives 227,470,921 after the 1,072,177 buyback fee. The shared recipient
+receives exactly 2,171,498, the sum of both fees; neither pool has another native
+invocation, and no explicit System transfer touches that recipient.
+
+Original RPC/protobuf instructions and runtime logs match. Later owner-verified
+curve accounts and derived base vaults corroborate immutable roles only, never
+past amounts or fee absence. The `.15` decoder verifies the buy but leaves the
+sell diagnostic because its recipient guard requires one invocation and an
+isolated single-leg recipient credit. This is a demonstrated remaining gap,
+not a completed repair. The originals and per-leg/aggregate proof are retained
+as `fixtures/swap-coverage/pump-v3-shared-buyback-recipient.*`.
+
+A repair must verify every contributing native call's event, exact token
+settlement and independent pool lamport equation before using an aggregate
+recipient credit. Unknown contributions, overlapping pool activity, failed
+ancestors or inconsistent credits must remain diagnostic.

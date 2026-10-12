@@ -1,0 +1,42 @@
+{
+  "scope": "Original finalized RPC/PB call/runtime parity; isolated per-pool token and lamport settlement; shared recipient aggregate credit. Current account state corroborates immutable roles only. This records a remaining decoder gap, not a decoder repair or universal fee-state proof.",
+  "signature": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN",
+  "slot": 455950129,
+  "recipient": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+  "recipientCredit": "2171498",
+  "legs": [
+    {
+      "nativeIndex": 11,
+      "direction": "sell",
+      "pool": "8DrgebUtfnpccf4V2S5KBGsHmst9DrM1FP99qAitPYb1",
+      "mint": "Hk5pde1vSNG7P59jJaugUTUGwWzZmHh7H9PHE3ZGpump",
+      "tokenAtoms": "7670888229084",
+      "userLamports": "228543099",
+      "buybackLamports": "1099321",
+      "tokenCpi": 12,
+      "eventCpi": 13,
+      "poolLamportChange": "-229642420",
+      "poolReadContext": 455956666,
+      "poolBytesSha256": "a90a809c9f93d7d3ab1a8a411fa26ab7824ae00ebd33e2629553e9622b8d9cf6"
+    },
+    {
+      "nativeIndex": 23,
+      "direction": "buy",
+      "pool": "6pDeBhM6Y2uus1JYcKm5a4im43tuWbxQjepkB46j7Bft",
+      "mint": "6vwb9yMLGJsh2MVpNUZRTozZ3yBvwaVnP2Yr5LGbpump",
+      "tokenAtoms": "1329769873727",
+      "userLamports": "228543098",
+      "buybackLamports": "1072177",
+      "tokenCpi": 24,
+      "eventCpi": 26,
+      "poolLamportChange": "227470921",
+      "poolReadContext": 455956666,
+      "poolBytesSha256": "daacbc24a07b38bc7e50b1ad9a27a341b55050809cf39683bf13bed3bf6dc9d6"
+    }
+  ],
+  "transactionSha256": "c2586884d84ea685d6f128ae18f76898deac2fcce375eef3e02676704dc76e7d",
+  "rpcSha256": "16986c91bfea7cc0526265c888f0a2cfc44ce63ced2c89aca81b49bd959945c6",
+  "observedDecoderVersion": "v0.5.2-pluto.15",
+  "observedSellVerified": false,
+  "observedBuyVerified": true
+}
