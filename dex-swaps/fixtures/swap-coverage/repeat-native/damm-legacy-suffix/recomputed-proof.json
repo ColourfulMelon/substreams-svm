@@ -1,0 +1,177 @@
+{
+  "scope": "All original finalized RPC/PB/runtime instructions match. Current canonical EvtSwap2 confirms exact-input mode and zero leftover; exact principal CPIs, optional separate referral and available global user ledgers agree. Owned raw/parsed Token-2022 schedules independently reproduce all net outputs; no absent unknown mint is assumed fee-free. These suffixes are only accepted subject to the existing exact principal receipt constraints.",
+  "source": "MeteoraAg/damm-v2@a85c926607433f23f0ea60f4ca7b1ae92f4156cb/programs/cp-amm/src",
+  "transactions": [
+    {
+      "signature": "2hMTyUZ1RhdtUxFPysouQtGQLcx5cenheAiJ23GNJvVaQnLdD23epRsfwRtWzDkNnea4ogx159pgbvop9zMaMdgv",
+      "slot": 456073047,
+      "pbSha256": "769e820a33ce2107b775ca2b29f4cc9f5536c2cfb90be0d456adc1158dbc67aa",
+      "rpcSha256": "da6aadcc8c706492e1291bebb252b3d10aebcf4148fa589bf3ae3ec172596bbe",
+      "source": 11,
+      "firstTransfer": 12,
+      "pool": "DUo5rdHGN7BeRV23NtWNXVNatW2YwTPtL3gQS2iaz9Uj",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "FLYVcm25f7JgRJKo7GvNQZZY4AkcZktQfAifcVS9FiSH",
+      "input": "9274511492",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1019558",
+      "grossOutput": "1019558",
+      "outputTransferFee": "0",
+      "referralAmount": "0",
+      "referralAliasesUserInput": false,
+      "primaryOutputTransfer": 13,
+      "instructionLength": 25,
+      "suffix": "00",
+      "minimum": "0",
+      "observedUserLedgers": [
+        {
+          "address": "H1Y8UvSWviUiVgeyPkeGRCC6hkFcvCrxjJj554rH8SG2",
+          "observed": "0",
+          "expected": "0"
+        },
+        {
+          "address": "6mcijD2FrFYH9maLKyHWNDzTUWVn1Dc4SWsMWMHk5Fuq",
+          "observed": "19167",
+          "expected": "19167"
+        }
+      ]
+    },
+    {
+      "signature": "4N8YUJ9f42XJp2K44fbdqxstmfkUZrFyRB3q9K7LS7kfgwp2DZwjXEWSjXhuFfLzF7yX6bo3r3tpZMPEp44n5G2X",
+      "slot": 456073270,
+      "pbSha256": "2daeccd2ef690d039a3051e5d513ac35e42a04b36a9e24a2021a1f496a6b80b0",
+      "rpcSha256": "73fe7ae90c10f411bd358929177dc9f430fa7ab20fd94b047e239e6d2c33236a",
+      "source": 11,
+      "firstTransfer": 12,
+      "pool": "CMvkNVxShZ9q4kvycKYWv7gRHnnucBqLaQdWn8njbw23",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "3v39wuiJ4kGzsmd1w4DCFDWfGC2ScaJ9mXfZJaXvoREV",
+      "input": "6573304442768",
+      "outputMint": "5Jr9hGmJgxBRjjF8XGcGgQzXUdsbpZNNMpigEv8Wpump",
+      "output": "23343096",
+      "grossOutput": "23343096",
+      "outputTransferFee": "0",
+      "referralAmount": "0",
+      "referralAliasesUserInput": false,
+      "primaryOutputTransfer": 13,
+      "instructionLength": 32,
+      "suffix": "0000000000000000",
+      "minimum": "0",
+      "observedUserLedgers": [
+        {
+          "address": "G12TANDp2dsANpMs68uwVQPgWk2A6PW96YfFE2RUeDVx",
+          "observed": "0",
+          "expected": "0"
+        },
+        {
+          "address": "4SDHc7t8ct7hmTnECChWbtizc9XMggEtJu94wqNwvpRh",
+          "observed": "0",
+          "expected": "0"
+        }
+      ]
+    },
+    {
+      "signature": "5jwaW631tcmGMsU6n7AwtiBZCGtA3ctLetD1DFMjik1NWMKSHg4RMvRpi5envj2LJWmPyCSTRis2TJHmbYwxAsas",
+      "slot": 456073450,
+      "pbSha256": "8e0518c55ee0b394e68738606c6dee294500ca06075fb1d311a5449ba2709a2b",
+      "rpcSha256": "9a7b3f119762a8b74783a5404d2ade56242109b0062eb489ce315bba1290e4ed",
+      "source": 14,
+      "firstTransfer": 15,
+      "pool": "JBFxjXeyniW418R5pwAYq3yJtkpbLJ6WETJtDcREVsRH",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "9xzmB67zWX8PJiGpQFbWuNBXTqyPpu2qV3mxQfhqUREV",
+      "input": "3119506849509",
+      "outputMint": "5Jr9hGmJgxBRjjF8XGcGgQzXUdsbpZNNMpigEv8Wpump",
+      "output": "22399526",
+      "grossOutput": "22399526",
+      "outputTransferFee": "0",
+      "referralAmount": "0",
+      "referralAliasesUserInput": false,
+      "primaryOutputTransfer": 16,
+      "instructionLength": 25,
+      "suffix": "00",
+      "minimum": "0",
+      "observedUserLedgers": [
+        {
+          "address": "Dg92BVov9SCcemKHQbDRozWuuuMj3sCQnTmfJPSJzUMq",
+          "observed": "0",
+          "expected": "0"
+        },
+        {
+          "address": "4SDHc7t8ct7hmTnECChWbtizc9XMggEtJu94wqNwvpRh",
+          "observed": "0",
+          "expected": "0"
+        }
+      ]
+    },
+    {
+      "signature": "z8qcSm4JYfQsCgZNrbC9m927M43gtiFWGSRkpFk18msVE9biABCYcBcn1b66SvdF8NNZXyQnxeSRYyDZ8SshCMt",
+      "slot": 456073462,
+      "pbSha256": "a6b946b918ae79112c71a1902bba56ae40e2b652f7de042c689695f2af036239",
+      "rpcSha256": "36298e10c5b6d27e6a6c2445989a5cf7b6c4fafc133057096a495c75bd5c90f9",
+      "source": 19,
+      "firstTransfer": 20,
+      "pool": "DGpeg7p8vdYuKX57DVjFUrJPeybuXrzuCha6HjGWRAXE",
+      "user": "8pY1AukbuPgUE3EetyLa59rFLMimJGT94ZzbMEZcQF4w",
+      "inputMint": "2WvvNt9P7RYJzSPE7q2mV1ySrm97ddbf5YjfkAX5pump",
+      "input": "345485512",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "57985",
+      "grossOutput": "57985",
+      "outputTransferFee": "0",
+      "referralAmount": "412",
+      "referralAliasesUserInput": false,
+      "primaryOutputTransfer": 21,
+      "instructionLength": 25,
+      "suffix": "00",
+      "minimum": "0",
+      "observedUserLedgers": [
+        {
+          "address": "DnBsgeerKkbMB1t4rkZmsx5tBvpCQQt7k9QHSS1HSHdg",
+          "observed": "0",
+          "expected": "0"
+        },
+        {
+          "address": "7PxF52h3kB2kWagGDxQ2fdhDC4xc6PHkwQ21KE4Fabxq",
+          "observed": "2839",
+          "expected": "2839"
+        }
+      ]
+    },
+    {
+      "signature": "5eFdEaW9MdWymWgCqnz8McLk9ZCgx48Uan2F3kyu8a6XBBxfiX6iyp6ixR2yFNGUF7Bd3h6zWWxK7ea7qMQAnSem",
+      "slot": 456073475,
+      "pbSha256": "09daf6abb557a7bc0f96ffe99fb5fc08979f9ba1e81e41dd60182321e6b28c96",
+      "rpcSha256": "d11f6bc0e46f49e206f98971c6f0436f2b939731d313fb903492cb4331e7c047",
+      "source": 0,
+      "firstTransfer": 1,
+      "pool": "ACYMeYFGifBPv1A2jqPwUQZPvQfCe2L2FjSQAZSAaJnf",
+      "user": "AWpmvBFxNd2oGZufQD2v7RuPpFukj1d5bbDSToKFQvS1",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "2500000",
+      "outputMint": "GuHks4uN87L8UUGfokJaJNeqt668twPCpSC6EwHAvguw",
+      "output": "315202481777308",
+      "grossOutput": "315202481777308",
+      "outputTransferFee": "0",
+      "referralAmount": "0",
+      "referralAliasesUserInput": false,
+      "primaryOutputTransfer": 2,
+      "instructionLength": 25,
+      "suffix": "00",
+      "minimum": "260000000000000",
+      "observedUserLedgers": [
+        {
+          "address": "13KzYpPmGrb9JE9vzNvddt8tyaqLy7oVCxjdDK2kBGWT",
+          "observed": "-2500000",
+          "expected": "-2500000"
+        },
+        {
+          "address": "By69QqoL3TpUwZPBaBBWxUaxvkT19bQKCKTBb5BCH2sH",
+          "observed": "315202481777308",
+          "expected": "315202481777308"
+        }
+      ]
+    }
+  ],
+  "globalCoverageProven": false
+}

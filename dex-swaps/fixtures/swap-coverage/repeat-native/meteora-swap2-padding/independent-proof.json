@@ -1,0 +1,57 @@
+{
+  "primaryDlmm": "MeteoraAg/dlmm-sdk@576919e3e4368e542c402f000b4264724f7f23ec/idls/dlmm.json",
+  "primaryDamm": "MeteoraAg/damm-v2@a85c926607433f23f0ea60f4ca7b1ae92f4156cb/programs/cp-amm/src",
+  "originals": [
+    {
+      "signature": "5ooBTWm1KLeT38QZ1Fnt2BmvFuAy3Ddm9mcBbhejq8okEir6hdeMDeUPkkYcyqas9GCxo5NVFbLTyHKMftrK4Vmf",
+      "instruction_index": 1,
+      "block_num": 456073080,
+      "program_id": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+      "protocol": "meteora_dlmm",
+      "pool": "Eq9tFRMHQ2y7pu9Cp1J8WfQMtQWxCm6KqG3E8XqHAxUg",
+      "user": "Bz9ETFkwC59TYq4FBsxZB4BaLqqGKc7EPMHdC9Fk3QDH",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "12036558",
+      "outputMint": "HsRpHQn6VbyMs5b5j5SV6xQ2VvpvvCCzu19GjytVSCoz",
+      "output": "127896711057",
+      "grossOutput": "127896711057",
+      "outputTransferFee": "0",
+      "sourceTransfer": 3,
+      "outputTransfer": 4,
+      "hostFee": "0",
+      "hostAliasesUserInput": false,
+      "hostAliasesUserOutput": false,
+      "instructionLength": 32,
+      "suffix": "00000000",
+      "originalRpcProvesNativeCommit": true,
+      "rpcRuntimeComplete": true,
+      "pbSha256": "d66c76f6506f8848dddfefee0643c2d6fde4b3b44ec1b670ea0130d838fa2433",
+      "ledger": [
+        {
+          "address": "Cz6SSEaqf2QPXSqHcsxdpovWES87GQjhEpA7o7y5vnbe",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "1680697469",
+          "closing": "1680763526",
+          "credit": "12102615",
+          "debit": "12036558",
+          "nativeCloseAtoms": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9LX66HCvdt4afShdbGXdFzYKQ6eTFf2QNbdAoMoFiXUP",
+          "mint": "HsRpHQn6VbyMs5b5j5SV6xQ2VvpvvCCzu19GjytVSCoz",
+          "opening": "0",
+          "closing": "0",
+          "credit": "127896711057",
+          "debit": "127896711057",
+          "nativeCloseAtoms": "0",
+          "created": false,
+          "closed": false
+        }
+      ]
+    }
+  ],
+  "historicalReserveClaim": false,
+  "globalCoverageClaim": false
+}

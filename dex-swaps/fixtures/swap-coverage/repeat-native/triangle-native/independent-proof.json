@@ -1,0 +1,408 @@
+{
+  "program": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+  "programdata": "45i3gh5ey3JmXMZEnNCX4KKcivjNkTauVFrHcS3zSiCb",
+  "executableSha256": "e366e2f33caa37d6ae75e00b773b189cb2b8c612cfeb20d9d205def67770cbf8",
+  "deploymentSlot": 452701164,
+  "primaryContract": {
+    "dispatch": 5179,
+    "swapOpcode": 4,
+    "swapHandler": 3931,
+    "exactAccountCount": 3955,
+    "userSigner": 3956,
+    "prioritySigner": 3959,
+    "priorityFlagMaximum": 3952,
+    "groupOwner": 4110,
+    "groupVersionLength": 7029,
+    "outcomeIndexBound": 4229,
+    "outcomeRecord": 7059,
+    "ownedOutcomeVaults": [
+      4242,
+      4261
+    ],
+    "ownedPredictionMarket": 4278,
+    "authorityPdaSeeds": [
+      4495,
+      4499
+    ],
+    "buyPrincipal": [
+      4542,
+      4649
+    ],
+    "sellPrincipal": [
+      4728,
+      4837
+    ],
+    "conversionExcluded": true
+  },
+  "originals": [
+    {
+      "signature": "cWbKcQ83NGCUzreXNGVfqfrgpaJ7aLs3pJWoYZskTwzfPqpRpikr6Y8ZRuopXexyNdgkpHPExSjGdMGuE4cJRCn",
+      "instruction_index": 8,
+      "block_num": 456073032,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "6tDdr6beZcLfMvh2d9Gig2LUjhHj6jWiGLM62hRMJUYL",
+      "user": "DHhixXFhazjfLKQrTzt4oX8qDq47ZsGz9JnxETSkVeHJ",
+      "sourceTokenAccount": "DzKborBWCYNJQJdqMDFgiJaZsaSqYHG4i7b9diQDjK4p",
+      "destinationTokenAccount": "ABNx8Hb9YN8DZa4Ts3VoDM6LwPbmKLHLGftViQ9zU7Mi",
+      "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "outputMint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+      "input": "1094036",
+      "output": "8628880",
+      "sourceTransfer": 9,
+      "outputTransfer": 14,
+      "conversion": {
+        "kind": "mint",
+        "collateralAtoms": "8628880",
+        "priced": false
+      },
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 111,
+      "pbRuntimeLines": 111,
+      "pbSha256": "6c0d4e51180edcd32666574d40b820b8fc1a469b1e924dbafd73caee8b2e7927",
+      "ledger": [
+        {
+          "address": "DzKborBWCYNJQJdqMDFgiJaZsaSqYHG4i7b9diQDjK4p",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "42058409",
+          "closing": "40848124",
+          "credit": "0",
+          "debit": "1210285",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "ABNx8Hb9YN8DZa4Ts3VoDM6LwPbmKLHLGftViQ9zU7Mi",
+          "mint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+          "opening": "0",
+          "closing": "0",
+          "credit": "8628880",
+          "debit": "8628880",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        }
+      ]
+    },
+    {
+      "signature": "4XCZZbcYEJ83QZqpGDvo2ARwdSJrf2Jhxam9edVAJLACebxLTGsf91UuiBEA36z26n6GXtAGU5SPFpTu73UgXwXZ",
+      "instruction_index": 13,
+      "block_num": 456073174,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "Cg9tuAoAaFGhyy4UGbtkNnFBrxvCiVjS8wPH7SbUzvRa",
+      "user": "Ebwz5tVsEkXD9f3gCVJaDMUJhPnyFHWXaUWUqC3pdfRd",
+      "sourceTokenAccount": "9uoHXFaJQ2xVC15NWCmbKZy8RAbRrg4cCdczNcAirxFC",
+      "destinationTokenAccount": "6cQ4jYf9S3PkXWr49o2vcysmwVTt5GUWUKFg5y61P53Z",
+      "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "outputMint": "Ban5tbFvWHnAuQ5wuXzsXJQXd4P9MitZ1S2ooG5ez3j",
+      "input": "1773789",
+      "output": "173387800",
+      "sourceTransfer": 14,
+      "outputTransfer": 19,
+      "conversion": {
+        "kind": "mint",
+        "collateralAtoms": "173387800",
+        "priced": false
+      },
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 134,
+      "pbRuntimeLines": 134,
+      "pbSha256": "ee2c584a58e83366a2afe543f1315ea908dfa1208d22958425d53462e11df92c",
+      "ledger": [
+        {
+          "address": "9uoHXFaJQ2xVC15NWCmbKZy8RAbRrg4cCdczNcAirxFC",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "51515303",
+          "closing": "49524805",
+          "credit": "0",
+          "debit": "1990498",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "6cQ4jYf9S3PkXWr49o2vcysmwVTt5GUWUKFg5y61P53Z",
+          "mint": "Ban5tbFvWHnAuQ5wuXzsXJQXd4P9MitZ1S2ooG5ez3j",
+          "opening": "0",
+          "closing": "0",
+          "credit": "173387800",
+          "debit": "173387800",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        }
+      ]
+    },
+    {
+      "signature": "2NkyCe6k4MaTnkBTRFSQV7g98apVHTdPQkbfeFTaPFGf7MGxmk7bwJTTdFWThv3aVuodkpCktr2zVgrZLaG9X1S8",
+      "instruction_index": 13,
+      "block_num": 456073184,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "6tDdr6beZcLfMvh2d9Gig2LUjhHj6jWiGLM62hRMJUYL",
+      "user": "3ctTFDxa7ynzoQutFXcLRNNTBDp84gbTieDh4whxCoPS",
+      "sourceTokenAccount": "69xFmLLHdsnmqmTBNPF5dw2B6sBbdYDc1DcFtYCv5djb",
+      "destinationTokenAccount": "CaKoA5xUeiP2oE1yT1MRcSNRue4VAH1EzhjQcE1RY97J",
+      "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "outputMint": "3xo8xAJu3D9LMWNZHjUV1bkrrDeABRcxxt6QfGLqdG8X",
+      "input": "1000193",
+      "output": "1000693",
+      "sourceTransfer": 14,
+      "outputTransfer": 15,
+      "conversion": null,
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 119,
+      "pbRuntimeLines": 119,
+      "pbSha256": "0f3c6e9677fb29528d4ab031698cda996735ce97d0aba8e9ce80118c5ee238e5",
+      "ledger": [
+        {
+          "address": "69xFmLLHdsnmqmTBNPF5dw2B6sBbdYDc1DcFtYCv5djb",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "1420007",
+          "closing": "419759",
+          "credit": "0",
+          "debit": "1000248",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "CaKoA5xUeiP2oE1yT1MRcSNRue4VAH1EzhjQcE1RY97J",
+          "mint": "3xo8xAJu3D9LMWNZHjUV1bkrrDeABRcxxt6QfGLqdG8X",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1000693",
+          "debit": "1000693",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        }
+      ]
+    },
+    {
+      "signature": "2mqyiyye9gtATm5h8sp14NXS4SgUxJqqKwxCkbbnhvdQXVXfEdntvSEXwCM3DtJYaWR3uTKMtVjWGEx9wuiwCCN6",
+      "instruction_index": 3,
+      "block_num": 456073214,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "6tDdr6beZcLfMvh2d9Gig2LUjhHj6jWiGLM62hRMJUYL",
+      "user": "5eGbNkxkmTyqXT9Ru3gwf3j4xmvdsg3aRJvWfSPSkHyd",
+      "sourceTokenAccount": "9ZTJCiKLvECEyDnoe1KepoK61KfdnmyLPHLykqzXNU1i",
+      "destinationTokenAccount": "GuBGTVZt2WwHEeR43s6PoQD9gaCCWkhrL3nNrFsHX6ic",
+      "inputMint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+      "outputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "input": "668270",
+      "output": "334",
+      "sourceTransfer": 4,
+      "outputTransfer": 9,
+      "conversion": {
+        "kind": "merge",
+        "collateralAtoms": "668270",
+        "priced": false
+      },
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 59,
+      "pbRuntimeLines": 59,
+      "pbSha256": "0fe89cf2eaac83b90184ee11a5585b4510a40304813fe237719f342d7cbe978d",
+      "ledger": [
+        {
+          "address": "9ZTJCiKLvECEyDnoe1KepoK61KfdnmyLPHLykqzXNU1i",
+          "mint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+          "opening": "668270",
+          "closing": "0",
+          "credit": "0",
+          "debit": "668270",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GuBGTVZt2WwHEeR43s6PoQD9gaCCWkhrL3nNrFsHX6ic",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "0",
+          "closing": "0",
+          "credit": "334",
+          "debit": "334",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        }
+      ]
+    },
+    {
+      "signature": "7bhEAVGVPRW9K9XWxbh4Hio4kU2SwJa3rozyPLS5ShipFAmZMBFuwrxq5cUdbqAadmYQwwQ9H1ZYpWhyBjg2oYk",
+      "instruction_index": 8,
+      "block_num": 456073289,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "6tDdr6beZcLfMvh2d9Gig2LUjhHj6jWiGLM62hRMJUYL",
+      "user": "82MMAooKk1riSuF8NjeVUywrWAUyWCpKhb5Xc1yofVDE",
+      "sourceTokenAccount": "3RniKkY5VcSMYvm95wmWSFmLWbYWvrHmBvNEtnuHTzhb",
+      "destinationTokenAccount": "EHnLq1ZNUvYPaNQcHXZVcmbHxdkDPWe6HJ8oUKiJZzwi",
+      "inputMint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+      "outputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "input": "1683274",
+      "output": "841",
+      "sourceTransfer": 9,
+      "outputTransfer": 14,
+      "conversion": {
+        "kind": "merge",
+        "collateralAtoms": "1683274",
+        "priced": false
+      },
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 84,
+      "pbRuntimeLines": 84,
+      "pbSha256": "c0607e8c93a4415244aae0e3f138bb3fd23359aa7baf7e28daf751f051e5601b",
+      "ledger": [
+        {
+          "address": "3RniKkY5VcSMYvm95wmWSFmLWbYWvrHmBvNEtnuHTzhb",
+          "mint": "ENPJYzsDgy52W3HZzgdpiScW3QoheLGMQ6HKYzDM4PR7",
+          "opening": "1683274",
+          "closing": "0",
+          "credit": "0",
+          "debit": "1683274",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "EHnLq1ZNUvYPaNQcHXZVcmbHxdkDPWe6HJ8oUKiJZzwi",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "0",
+          "closing": "0",
+          "credit": "841",
+          "debit": "841",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        }
+      ]
+    },
+    {
+      "signature": "2rukNnZnafcKWKgobWfzMon8EqwEyaXPLbycbxz9ysWk6SY77JRonZMe99ZhEgDqYaCBDzjNvp7j6zRYKN7sGi4Y",
+      "instruction_index": 8,
+      "block_num": 456073370,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "9fGWNCrsaNzTcotrVx7N8HzizSy9wtZXetEruekbrRB",
+      "user": "3QMLRJES1nQzqeWKfj1F3Mmac4XJhe8nQqp8Astm6HMK",
+      "sourceTokenAccount": "2hFXx7Tn9zhqXCMzHpb4xYQQ1ZJgqc8D2PiJj6tAZHFx",
+      "destinationTokenAccount": "AqEHMfKrJFjJQTN95Y9EZUZygLrbxn8AN2EjUAS7EFoM",
+      "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "outputMint": "76P4C3y4o6zfmwtHjmo463EZzRBKC4i1pxaLEvA1fDnw",
+      "input": "9402947",
+      "output": "20657549",
+      "sourceTransfer": 9,
+      "outputTransfer": 14,
+      "conversion": {
+        "kind": "mint",
+        "collateralAtoms": "20657549",
+        "priced": false
+      },
+      "rpcRuntimeComplete": true,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 111,
+      "pbRuntimeLines": 111,
+      "pbSha256": "57186e6ae107f373f94770b7e043a87ff6e02dd749b1eb359915d43da68eedd0",
+      "ledger": [
+        {
+          "address": "2hFXx7Tn9zhqXCMzHpb4xYQQ1ZJgqc8D2PiJj6tAZHFx",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "138464490",
+          "closing": "128462101",
+          "credit": "0",
+          "debit": "10002389",
+          "minted": "0",
+          "burned": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "AqEHMfKrJFjJQTN95Y9EZUZygLrbxn8AN2EjUAS7EFoM",
+          "mint": "76P4C3y4o6zfmwtHjmo463EZzRBKC4i1pxaLEvA1fDnw",
+          "opening": "0",
+          "closing": "0",
+          "credit": "20657549",
+          "debit": "20657549",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        }
+      ]
+    },
+    {
+      "signature": "2AnfUQDLwu3XiSUzzYwMLDAr2aczDaRUBbHowGDjQ2MjyAKLmwWTmrCTkwMKV9pMK8FWJWVokciWp8Yeorwt7r5Y",
+      "instruction_index": 37,
+      "block_num": 456073436,
+      "program_id": "Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4",
+      "protocol": "triangle",
+      "pool": "GWSkYW2a2aDZmxEBoaQ46etybup3p8xyHcDkRYz7ADrM",
+      "user": "F3BNXDr4Q1YL7FFZzTAQuMERwdByjHK3HQDNnqdDpBLP",
+      "sourceTokenAccount": "HfZfw52oh7ZgsnKp6SRn8uExZjNQ3mpYsgCKRhRvkjdy",
+      "destinationTokenAccount": "CzPkj7AUhdckLo3mtP2Y8zbiJqY9uAdW3nQezv7y3dhP",
+      "inputMint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+      "outputMint": "ADQNtg5tgDsmxWhD5mrRtcYUhxiBUfnSFgGHmmR27btS",
+      "input": "270660",
+      "output": "2460545",
+      "sourceTransfer": 38,
+      "outputTransfer": 43,
+      "conversion": {
+        "kind": "mint",
+        "collateralAtoms": "2460545",
+        "priced": false
+      },
+      "rpcRuntimeComplete": false,
+      "originalRpcProvesNativeCommit": true,
+      "matchedRpcRuntimeLines": 156,
+      "pbRuntimeLines": 192,
+      "pbSha256": "510b42f778433ee2755512d2fd5a79cbecb97f63018a9b88873e3cc37c722760",
+      "ledger": [
+        {
+          "address": "HfZfw52oh7ZgsnKp6SRn8uExZjNQ3mpYsgCKRhRvkjdy",
+          "mint": "CASHx9KJUStyftLFWGvEVf59SGeG9sh5FfcnZMVPCASH",
+          "opening": "0",
+          "closing": "0",
+          "credit": "300032",
+          "debit": "300032",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": true
+        },
+        {
+          "address": "CzPkj7AUhdckLo3mtP2Y8zbiJqY9uAdW3nQezv7y3dhP",
+          "mint": "ADQNtg5tgDsmxWhD5mrRtcYUhxiBUfnSFgGHmmR27btS",
+          "opening": "0",
+          "closing": "2460545",
+          "credit": "2460545",
+          "debit": "0",
+          "minted": "0",
+          "burned": "0",
+          "created": true,
+          "closed": false
+        }
+      ]
+    }
+  ],
+  "historicalCurrentPoolClaim": false,
+  "globalCoverageClaim": false
+}

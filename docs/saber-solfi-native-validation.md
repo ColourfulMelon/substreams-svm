@@ -1,0 +1,11 @@
+# Saber and SolFi native receipt validation
+
+All 633 uncovered native calls in the finalized `.24` baseline, slots **456081600–456085680** (4,081 blocks), have independently verified exact financial tuples: **144 Saber and 489 SolFi V2** swaps across **20 owned pools**, with **1,266 complete user token ledgers**. Original protobuf bytes are unchanged. Finalized RPC version support includes `maxSupportedTransactionVersion:127`; complete instruction bytes, account order, stack depth, token balances, owners, decimals and runtime prefixes agree.
+
+Saber uses the nine-account, 17-byte opcode1 ABI from `saber-hq/stable-swap@39d5d4e0e844a009c83d37a3ce63d219fdba0bff`. Program-owned395-byte SwapInfo pins reserves, mints and admin recipients, with the canonical authority PDA and initialized classic token vaults. The first input transfer and second user output define price; the third admin fee is excluded. All three exact CPI roles must commit.
+
+SolFi's 13-account native wire profiles are 25-byte opcode7 (direction and flags each0/1, remaining bytes zero) and153-byte opcode14. The owned1728-byte market pins mints and vaults; classic token programs and Instructions sysvar are fixed. Two exact immediate principal transfers establish input, output and direction. Signed quote bytes never determine price or minimum: opcode14 has no inferred minimum. Wrong amounts, widths, accounts, opcode, depth, zero output or failed commitment are rejected. This sample contains420opcode7 flag0,15flag1 and54opcode14 swaps.
+
+Core tests pass all633 exact positive tuples, **1,518 invalid mutations** of the extended profiles, and54 opaque quote-tail invariance checks. The initial three SolFi cases add66 invalid checks and three Saber cases add63. Immutable fixtures, raw/parsed ownership evidence, independent oracle and full tuple TSV are in [`saber-solfi-expanded`](../dex-swaps/fixtures/swap-coverage/saber-solfi-expanded). The test verifies pool, user, both mints, both exact atom amounts, native instruction identity and principal transfer identity.
+
+These results cover the selected immutable source calls. They do not establish universal historical/future support or historical reserves from current account snapshots.

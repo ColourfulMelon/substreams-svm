@@ -1,0 +1,48 @@
+{
+  "scope": "Independent original finalized RPC/PB instruction, complete runtime and token snapshot parity; exact native request/minimum, both committed classic checked principal receipts, owned market/config/vault/mint identity and all available whole-transaction user/vault ledgers.",
+  "transactions": [
+    {
+      "signature": "3fHTQWZJ7kpM3n6n8f85kxrWKriMyQZDfNo5yeAkoeSozDpkARk2Sc3C9P6DcLemVDvwyn5WXzHkATtNAgfYw1MW",
+      "slot": 456073227,
+      "source": 3,
+      "firstTransfer": 4,
+      "program": "QUayE6nexQWYNZAEqfN8FxoNwQDSu3CAzT2qq9J1ArG",
+      "pool": "9dSjvKSCBffqXB4MMXfccmW7XWWm5zhq9ofqvYfXRtpf",
+      "user": "7uuFmxngueyNi6g11FF3e1ZJE4dFG7foET7BiJs37jdU",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "147895767",
+      "outputMint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "output": "986317444386",
+      "direction": 1,
+      "observedUserLedgers": [
+        {
+          "address": "HF1fHL4MLLqPhCZAyrDeDGRm6PrHVp3RrvfpqD2LbpEa",
+          "delta": "-500317037",
+          "credit": "0",
+          "debit": "500317037"
+        },
+        {
+          "address": "7gLmgsxTUQvexco6fom6dznB9Z6dHed6JLsRBstUizMx",
+          "delta": "3333598741636",
+          "credit": "3333598741636",
+          "debit": "0"
+        },
+        {
+          "address": "DsURG9CWDhWdk1GJNuBu3FsXhXZGuiwsajrMjK6aeNuG",
+          "delta": "147895767",
+          "credit": "147895767",
+          "debit": "0"
+        },
+        {
+          "address": "3jrKr4TLh5iFadGHS45KagGQapneAugZWEuKKFHGtBMR",
+          "delta": "-986317444386",
+          "credit": "0",
+          "debit": "986317444386"
+        }
+      ],
+      "pbSha256": "5c83eb76d86ed4e3ddb61a88bda0fa4248a9a48fe90ccc5d75deebfe721055f6",
+      "rpcSha256": "7e503d70bf9fcbe8bfb965950dc449c0807564f387c3d83db9d36f69bb64d98b"
+    }
+  ],
+  "globalCoverageProven": false
+}
