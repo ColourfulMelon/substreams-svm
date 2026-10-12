@@ -1,0 +1,16 @@
+{
+  "signature": "gVYsBNnQFdyZ2Bsxpto8TihcHxFrwrtBe5N4X9CiTfAKZSFjqas7odeR3BaRifSwkw6SaCy3WA8FevF4nViX5ux",
+  "slot": 455893404,
+  "protocol": "raydium_cpmm",
+  "nativeIndex": 10,
+  "inputCpi": 11,
+  "outputCpi": 12,
+  "pool": "4QkaL7pRqBQfibtTt1j6vHoUTTo9Vgq3r3h3dtwMP6uJ",
+  "inputAtoms": "102137311202",
+  "grossOutputAtoms": "1564059",
+  "receivedOutputAtoms": "1548418",
+  "receivedOutputProof": "single incoming Token-2022 CPI, independent reserve debit, committed zero initialization and closure, withheld-fee-only harvest, and exact subsequent debit conservation",
+  "rpcSha256": "208991b9a10f467ba4ea173f4e99bb5f935315a5939b72e3f4d33b375a25fdea",
+  "firehoseSha256": "31971c891a5bf532cef099f1ee067580a11dcb3bc1f6adce4893500f5e60572e",
+  "provenance": "Original finalized Firehose transaction and finalized getTransaction RPC response; independently checked compiled calls, token transfers, reserve deltas and committed runtime ancestry."
+}

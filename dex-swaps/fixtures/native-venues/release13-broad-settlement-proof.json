@@ -1,0 +1,65 @@
+{
+  "scope": "Four original finalized Firehose/RPC transactions. Exact call/log parity, completed native/token invocation ancestry, venue-specific instruction/owner/mint/vault roles and boundaries. Output quantities are verified independently from actual settlement; the Token-2022 receipt is measured by recipient conservation rather than trusting the fee lookup.",
+  "fixtures": [
+    {
+      "signature": "49eZ2SykiCjugxQzRRDdNNkMA7yMxboGmTvhjWMJxHszxhzphELQzYVFsMbFNVth51fpeBwBDP9PezoYeCUPg5XQ",
+      "slot": 455893382,
+      "protocol": "manifest",
+      "nativeIndex": 2,
+      "inputCpi": 3,
+      "outputCpi": 4,
+      "pool": "7ecvmhGKVcK4SgxeGQJG6yVwVAhbQxLrBuaMoUmpRZ6i",
+      "inputAtoms": "96535776",
+      "grossOutputAtoms": "73976514",
+      "receivedOutputAtoms": "73976514",
+      "receivedOutputProof": "classic Token CPI and independent reserve debit",
+      "rpcSha256": "95dce9a301afc6e0bfc7678bf296deee1fc894f6af04283230d4e1c990f3d4d5",
+      "firehoseSha256": "fd0c2cf61a85da30822ea7de5e5530830e01c35e1f3c34c2a2c1972807edd417"
+    },
+    {
+      "signature": "2Q1Doho5hZWmNCVBxs5BFpd76LGvoXkU7e6REAX4dkCTvCaqJZNrvSV1ZyxkxtSPWsFtFLS4JMVvEvD51XqSh1fY",
+      "slot": 455893397,
+      "protocol": "mercurial",
+      "nativeIndex": 21,
+      "inputCpi": 22,
+      "outputCpi": 23,
+      "pool": "UXD3M3N6Hn1JjbxugKguhJVHbYm8zHvdF5pNf7dumd5",
+      "inputAtoms": "7865281",
+      "grossOutputAtoms": "7856662",
+      "receivedOutputAtoms": "7856662",
+      "receivedOutputProof": "classic Token CPI and independent reserve debit",
+      "rpcSha256": "28dd14d0d70580735945974c6645a9c9a703e473686720568015b7553bd70b0e",
+      "firehoseSha256": "c4103baff65d6bd2ada5aa23a1a39a4144d7a9872801ff4d7cc20deac0c10077"
+    },
+    {
+      "signature": "gVYsBNnQFdyZ2Bsxpto8TihcHxFrwrtBe5N4X9CiTfAKZSFjqas7odeR3BaRifSwkw6SaCy3WA8FevF4nViX5ux",
+      "slot": 455893404,
+      "protocol": "raydium_cpmm",
+      "nativeIndex": 10,
+      "inputCpi": 11,
+      "outputCpi": 12,
+      "pool": "4QkaL7pRqBQfibtTt1j6vHoUTTo9Vgq3r3h3dtwMP6uJ",
+      "inputAtoms": "102137311202",
+      "grossOutputAtoms": "1564059",
+      "receivedOutputAtoms": "1548418",
+      "receivedOutputProof": "single incoming Token-2022 CPI, independent reserve debit, committed zero initialization and closure, withheld-fee-only harvest, and exact subsequent debit conservation",
+      "rpcSha256": "208991b9a10f467ba4ea173f4e99bb5f935315a5939b72e3f4d33b375a25fdea",
+      "firehoseSha256": "31971c891a5bf532cef099f1ee067580a11dcb3bc1f6adce4893500f5e60572e"
+    },
+    {
+      "signature": "33y8q6xYBGyPUnfsMA8zAUwywz48mntXq1c7ekVG8gNXQVJcxDwMkGx4DMW4c96bXauvX8xYkFpneuD9uKpeVfKH",
+      "slot": 455893399,
+      "protocol": "manifest",
+      "nativeIndex": 6,
+      "inputCpi": 7,
+      "outputCpi": 8,
+      "pool": "4ba9bguTo7HbXFopJHaNMh8iAyApFpyQPgoufj3cSnyt",
+      "inputAtoms": "182809035",
+      "grossOutputAtoms": "182629450",
+      "receivedOutputAtoms": "182629450",
+      "receivedOutputProof": "classic Token CPI and independent reserve debit",
+      "rpcSha256": "16618b4534076b996b5685ba3e7ea7fc86e7d9375957279e2106d0ae106222d1",
+      "firehoseSha256": "72a5d09aabe732e92274391f0dc594663cbcec2681f14fd7540ae84e1fb4660f"
+    }
+  ]
+}

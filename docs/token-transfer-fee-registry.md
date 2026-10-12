@@ -142,8 +142,20 @@ original Firehose/RPC calls, actual Token CPIs and reserve deltas. The retained
 separate owner prefix. Actual input is 96,535,776 atoms, one atom below the
 96,535,777 maximum; the native contract permits unconsumed input. The output
 is exactly 73,976,514 atoms. This is wallet settlement, not a deposited-balance
-FillLog. Broader replay
-and live single-writer continuity still need to pass before deployment. This snapshot proves future metadata availability from its
+FillLog. A broader 50-block finalized replay (455893378–455893427) also completed
+cleanly. All 4,781 previous financial rows are preserved, with one descriptive
+DAMM root call-depth correction independently verified against its compiled
+instruction. Four missing legs are recovered: two Manifest wallet swaps, one
+Mercurial swap, and one Raydium CPMM Token-2022 swap. Each is independently
+checked against the original finalized RPC/Firehose transaction and reserve
+deltas. The Raydium output receiver was initialized and closed in the same
+transaction; its single incoming transfer, subsequent exact debit and committed
+zero-balance lifecycle prove 1,548,418 received atoms from a gross transfer of
+1,564,059. The retained `native-venues/release13-broad-*-proof.json` and
+original transaction fixtures document these checks. The corrected package also
+returned five finalized blocks from the newer durable-cursor window after
+replaying 66,104 metadata blocks. Live single-writer continuity still needs to
+pass before deployment. This snapshot proves future metadata availability from its
 completed boundary; it does not justify applying absent mint keys as zero-fee
 proof to older historical swaps.
 
