@@ -1671,6 +1671,10 @@ pub(crate) fn verify_with_fees(
                         rejected.push(original);
                         swap.output_amount = net;
                     }
+                    // The event CPI runs one level deeper than its swap.
+                    // Fee metadata can make that event verifiable directly,
+                    // so always retain the matched native invocation's depth.
+                    swap.stack_height = depth;
                     evidence = Some(identity);
                     break 'candidate;
                 }
@@ -1892,6 +1896,23 @@ pub(crate) fn verify_with_fees(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finalized_dlmm_native_depth_is_independent_of_fee_lookup() {
+        let tx: ConfirmedTransaction = substreams::proto::decode(&include_bytes!("../fixtures/token-fees/dlmm-native-depth.transaction.pb").to_vec()).unwrap();
+        let native = tx.walk_instructions().nth(5).unwrap();
+        assert_eq!(native.stack_height(), 2);
+        assert_eq!(native.program_id().0, &substreams_solana_idls::meteora::dlmm::PROGRAM_ID);
+        for metadata_available in [false, true] {
+            let decoded = crate::process_transaction_with_metadata(tx.clone(), Some(455893380), |_, _| None, |_, _| None,
+                |_, _| metadata_available.then_some(crate::token_fees::TransferFee { basis_points: 0, maximum_fee: 0 })).unwrap();
+            let swap = decoded.swaps.iter().find(|s| s.source_index == Some(5)).unwrap();
+            assert_eq!((swap.input_amount, swap.output_amount), (1076685, 1230636845));
+            assert_eq!(swap.source_transfer_index, Some(7));
+            assert_eq!(swap.stack_height, 2);
+            assert!(swap.transfer_verified);
+        }
+    }
 
     #[test]
     fn finalized_native_sol_multihop_buy_keeps_both_physical_curve_legs() {

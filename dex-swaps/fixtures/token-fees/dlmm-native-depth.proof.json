@@ -1,0 +1,15 @@
+{
+  "signature": "5N9gqHcArPN7PMNDfPyAcJgD9RUXtx4g6dy4Fqsp5TnYMtwwnvQhXwm2H8tcQwKgL6pKLVmqqmqEVBbbSjUJX9QG",
+  "slot": 455893380,
+  "commitment": "finalized",
+  "fixtureKind": "Protobuf reconstructed without changing instruction data, resolved accounts, compiled stack heights, runtime logs or balance arrays from the original finalized RPC response.",
+  "rpcSha256": "6d8bd6a1b16719d5a256864df60b6527d588db3cf15ead5012d5ea6d698eb2ba",
+  "protobufSha256": "1041abc43cd6fed1ccc006695c149e8f112381d44eb5c472901558137f54ddac",
+  "sourceInstructionIndex": 5,
+  "nativeDepth": 2,
+  "eventChildDepth": 3,
+  "inputCpi": 7,
+  "inputAtoms": 1076685,
+  "outputAtoms": 1230636845,
+  "reason": "Fee metadata made the raw event directly verifiable; that event child depth must not override the matched native swap depth."
+}

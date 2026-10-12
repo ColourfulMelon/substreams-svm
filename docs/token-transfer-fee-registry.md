@@ -44,7 +44,7 @@ The business logic tests include rounding/caps/u64 maximum amounts,
 epoch-delayed fee changes, superseded pending changes, mint close/re-creation,
 unproven calls, malformed owned mint data, history corruption, real repeated
 receipts, deliberately incorrect fee settings and successful children rolled
-back by failed ancestors. All 142 decoder tests and 12 SQL mapper tests pass;
+back by failed ancestors. All 143 decoder tests and 12 SQL mapper tests pass;
 the staged source also compiles for wasm32-unknown-unknown with Rust 1.85.1.
 
 ## Native DLMM receipts
@@ -116,8 +116,21 @@ lookups use the actual compiled instruction ordinal; pending, unknown and closed
 mint states cannot silently become zero-fee states. The registry test processes
 all retained records through the real update/state codecs, proving uniqueness,
 complete emission and pending-state preservation, including a skipped-slot
-completion boundary. The eight replay corpora preserve all 1,202 previous full
-financial payloads. Release WASM and all three candidate packages build.
+completion boundary. The eight replay corpora preserve all 1,202 previous amounts, pools, identities,
+execution positions and verification flags. Four descriptive DLMM call-depth
+fields are corrected against their original compiled native instructions. Release WASM and all three candidate packages build.
+
+The first packaged remote replay returned all five finalized validation blocks
+and passed the exact registry marker/count guards. It retained all 423 existing
+financial identities and amounts. It exposed a descriptive DLMM depth error:
+a directly verified event CPI supplied depth 3 instead of its native swap's depth
+2. The original finalized RPC response proves native instruction 5 has depth 2.
+The decoder now uses that matched native depth; an RPC-derived core fixture
+reproduces the error before the fix and passes with and without fee lookup after
+it. The original scan-based package timed out during remote shutdown after
+returning the five blocks. Its confirmation run was cancelled when the depth
+error was identified. Neither run establishes a clean deployment-ready replay
+of the corrected package.
 
 Finalized remote store warming and live single-writer continuity must still pass
 before deployment. This snapshot proves future metadata availability from its
