@@ -1,0 +1,480 @@
+{
+  "scope": "Program-owned pre-original deployed executables, exact swap-only native dispatch/payload and account paths, full finalized RPC/PB/runtime parity, owned initialized pool and vault/mint identity, typed exact-input principal/net-output receipts and all available global user/vault token ledgers.",
+  "programs": [
+    {
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "programData": "7mcuRHpxz7umw9qi11ZybbiDtQu9AjWMb563Yrnam6BW",
+      "deployedSlot": "451832783",
+      "elfSha256": "a8e266e48214ec4b45f2dae0acd529fcb86ec016c6fa8cfb96d17093d133f119"
+    },
+    {
+      "program": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+      "programData": "BcgzhPUCshtvZ15oYAVd8FQg9bFYdd6Q9K8yJEqdnAQU",
+      "deployedSlot": "451676554",
+      "elfSha256": "dbe5dc94e5aa4335e0611369887c6e3f932de25c9c204f90e84fb46c5b21a07d"
+    }
+  ],
+  "transactions": [
+    {
+      "signature": "2Abm3jG45RQigSUnowRNba9qcEqjd3qK2YhmVWT7AhYK9n1XsdxWp4MbsPbtWH3hmvvXZuqgh2ZCaD9gqsqvzmzs",
+      "slot": 456084783,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 7,
+      "firstTransfer": 8,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "GvPT9HAWQLF9mUsuHwrhwsUTiWPfDQXV17hVy5WjSk5y",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "300000000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputGross": "2766520874",
+      "output": "2766520874",
+      "observedUserLedgers": [
+        {
+          "address": "75ZNyYxiVVXkBdH3KcQmLJikVyniwU4H8cSCwTr1K4N1",
+          "delta": "0",
+          "credit": "300000000",
+          "debit": "300000000"
+        },
+        {
+          "address": "6v4zy7Zg4ZjhYcW1DwpU4PBvGVFTupsPYtJUaq2HV6GA",
+          "delta": "2766520874",
+          "credit": "2766520874",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "300000000",
+          "credit": "300000000",
+          "debit": "0"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "-2766520874",
+          "credit": "0",
+          "debit": "2766520874"
+        }
+      ],
+      "pbSha256": "60182c890f8c5990d86720860a654e3b3963454eeb495eceacdef5d09e5701b0",
+      "rpcSha256": "bfb28d8db37bb2fb837f9a43deebd62c13c383d5ac1b958f49a4682f19299bf9"
+    },
+    {
+      "signature": "5tYiVyD4QQmKJy6Gfy3AFbKsN3TFE98DZR9eX2jtag2UDg91MoXNDbrXKDDk47wLJnKD37wzYiwkEAZx4kamb3yU",
+      "slot": 456084829,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 7,
+      "firstTransfer": 8,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "GvPT9HAWQLF9mUsuHwrhwsUTiWPfDQXV17hVy5WjSk5y",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "300000000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputGross": "2763381547",
+      "output": "2763381547",
+      "observedUserLedgers": [
+        {
+          "address": "75ZNyYxiVVXkBdH3KcQmLJikVyniwU4H8cSCwTr1K4N1",
+          "delta": "0",
+          "credit": "300000000",
+          "debit": "300000000"
+        },
+        {
+          "address": "6v4zy7Zg4ZjhYcW1DwpU4PBvGVFTupsPYtJUaq2HV6GA",
+          "delta": "2763381547",
+          "credit": "2763381547",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "300000000",
+          "credit": "300000000",
+          "debit": "0"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "-2763381547",
+          "credit": "0",
+          "debit": "2763381547"
+        }
+      ],
+      "pbSha256": "ec80c2c15a5c74d4e020a863eadb780b128ae237380282bf5928eb4969863526",
+      "rpcSha256": "f7d53cb7bd858d3e8b8881636117bd9dcae9214dc7f6433f0b58e4e5febf1449"
+    },
+    {
+      "signature": "5kZZmtbho5hwXEsgkcwCHQ3b5q4bUX1d5yDDeroW6v4zCZJ8bUn1urZCHutKyoU3294uED1dB14cDXpb6Uu17pyA",
+      "slot": 456084840,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 7,
+      "firstTransfer": 8,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "GvPT9HAWQLF9mUsuHwrhwsUTiWPfDQXV17hVy5WjSk5y",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "300000000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputGross": "2762077353",
+      "output": "2762077353",
+      "observedUserLedgers": [
+        {
+          "address": "75ZNyYxiVVXkBdH3KcQmLJikVyniwU4H8cSCwTr1K4N1",
+          "delta": "0",
+          "credit": "300000000",
+          "debit": "300000000"
+        },
+        {
+          "address": "6v4zy7Zg4ZjhYcW1DwpU4PBvGVFTupsPYtJUaq2HV6GA",
+          "delta": "2762077353",
+          "credit": "2762077353",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "300000000",
+          "credit": "300000000",
+          "debit": "0"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "-2762077353",
+          "credit": "0",
+          "debit": "2762077353"
+        }
+      ],
+      "pbSha256": "87b6a4db928c9efb959e3c5a3508776177c8c42b927f703dabb496cdb21c6329",
+      "rpcSha256": "81f0559c6cd5cf2a2d7eaaa1669997270aa029458cafd6bea1a1a02239c7425c"
+    },
+    {
+      "signature": "PbrepLjR5YV53ZNkG2SvXa99w6WwVESayaXhq25D2DrJYkuqB7g66fS2rZbXtgHA7VkcqFCXCpFnMU3g2NDQ4Ft",
+      "slot": 456085168,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 7,
+      "firstTransfer": 8,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "ocVWRUPYoeynGgVgi9fKgsA4uf9NS5Ei3RHdWypQaVJ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "300000000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputGross": "2765656793",
+      "output": "2765656793",
+      "observedUserLedgers": [
+        {
+          "address": "7tCn2rmtzKeVK4nWrdWq78ufQ57evcmCA9yWoL4xiX9a",
+          "delta": "0",
+          "credit": "300000000",
+          "debit": "300000000"
+        },
+        {
+          "address": "FvrHNwCTnkMqioHhrW21DT17oYvKNWsjtEP3giSmUZcF",
+          "delta": "2765656793",
+          "credit": "2765656793",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "300000000",
+          "credit": "300000000",
+          "debit": "0"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "-2765656793",
+          "credit": "0",
+          "debit": "2765656793"
+        }
+      ],
+      "pbSha256": "6832b16279b459f93ae437e280f5430ef5e2620715b979bb6e6488ba2686a132",
+      "rpcSha256": "309c34ad5e5752dc0d4e621781cbc008266d0f561fd2976f9a01dcc8cd273b96"
+    },
+    {
+      "signature": "5ooeU9x28F8p2QPpFeAVnKpWWVfqU8gBoeBEfVk82sVv4oRMTW2X3Z4o7qPBTQy37go7mCTN31ojgVSDyFoXLLwE",
+      "slot": 456085508,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 7,
+      "firstTransfer": 8,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "ocVWRUPYoeynGgVgi9fKgsA4uf9NS5Ei3RHdWypQaVJ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "300000000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "outputGross": "2767539995",
+      "output": "2767539995",
+      "observedUserLedgers": [
+        {
+          "address": "Bm52AYw2vHEGxcD5VjDLdDTdBDcjNJwCRFo7823Y2Dhs",
+          "delta": "0",
+          "credit": "300000000",
+          "debit": "300000000"
+        },
+        {
+          "address": "FvrHNwCTnkMqioHhrW21DT17oYvKNWsjtEP3giSmUZcF",
+          "delta": "2767539995",
+          "credit": "2767539995",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "300000000",
+          "credit": "300000000",
+          "debit": "0"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "-2767539995",
+          "credit": "0",
+          "debit": "2767539995"
+        }
+      ],
+      "pbSha256": "07510e59f21d433525461432743c9c2d6e2130f322488ef4546662f7bb60c88d",
+      "rpcSha256": "4bb6336f274630eebb8d343ed2f2e78583c872677d8ff4574211f11128f8ff1f"
+    },
+    {
+      "signature": "5awVQ52m8kajyweLbwdWEjT44vEnQvUnenjetyKX5aT1h33xfkkVNC9uNf55c3SUJymR31UeaPpxXXqWmqE69JXn",
+      "slot": 456085234,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 5,
+      "firstTransfer": 6,
+      "program": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+      "pool": "XFWddpA74utWti2HR1Xh2mFThW88dD8tYd4Rh3yfZLC",
+      "user": "GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "3500000000",
+      "outputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+      "outputGross": "4245500",
+      "output": "4245500",
+      "observedUserLedgers": [
+        {
+          "address": "DVCeozFGbe6ew3eWTnZByjHeYqTq1cvbrB7JJhkLxaRJ",
+          "delta": "0",
+          "credit": "3500000000",
+          "debit": "3500000000"
+        },
+        {
+          "address": "Fo2gugTKh8fXhTz7f78XdjVvkAw9vRRuo2PMD3AWxN57",
+          "delta": "0",
+          "credit": "4245500",
+          "debit": "4245500"
+        },
+        {
+          "address": "BJ1jQeNesf4cw3hrePbj5K6KDoDdreukJPepqfUksjTL",
+          "delta": "3500000000",
+          "credit": "3500000000",
+          "debit": "0"
+        },
+        {
+          "address": "BKua9ocfRbA47MCxj4GGBZbk6yV8HnkxJQES3rSkC212",
+          "delta": "-4245500",
+          "credit": "0",
+          "debit": "4245500"
+        }
+      ],
+      "pbSha256": "c7101b038e5f6aa2823ebc33764cbf53cc21b6465c8b3bf1de57d1aa52b48faa",
+      "rpcSha256": "d074117018ef5e6463ba061df3fce8903148a0f8889c648c1907f06b0759cd34"
+    },
+    {
+      "signature": "2auA3DMhyCH95hwFiewguBA5KHLLHe1dUeUvGNSGD1CcDjTvh2qQ1h9EtHhnc5qWWdqk2WgrQxsFZoZXMQ8rBcs2",
+      "slot": 456085561,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 5,
+      "firstTransfer": 6,
+      "program": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+      "pool": "XFWddpA74utWti2HR1Xh2mFThW88dD8tYd4Rh3yfZLC",
+      "user": "GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "3500000000",
+      "outputMint": "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
+      "outputGross": "4249000",
+      "output": "4249000",
+      "observedUserLedgers": [
+        {
+          "address": "DVCeozFGbe6ew3eWTnZByjHeYqTq1cvbrB7JJhkLxaRJ",
+          "delta": "0",
+          "credit": "3500000000",
+          "debit": "3500000000"
+        },
+        {
+          "address": "Fo2gugTKh8fXhTz7f78XdjVvkAw9vRRuo2PMD3AWxN57",
+          "delta": "0",
+          "credit": "4249000",
+          "debit": "4249000"
+        },
+        {
+          "address": "BJ1jQeNesf4cw3hrePbj5K6KDoDdreukJPepqfUksjTL",
+          "delta": "3500000000",
+          "credit": "3500000000",
+          "debit": "0"
+        },
+        {
+          "address": "BKua9ocfRbA47MCxj4GGBZbk6yV8HnkxJQES3rSkC212",
+          "delta": "-4249000",
+          "credit": "0",
+          "debit": "4249000"
+        }
+      ],
+      "pbSha256": "cf5a0b1a2f761c8a3919f1a7b570b62968da97e19155a7ff75f19c7622b8c503",
+      "rpcSha256": "a6e66eca89f1ad0ce6f5ecd9bbeff7403e4683be62a1ce69a859bf0908d72c07"
+    },
+    {
+      "signature": "4UpWkTY6ap7v4n2tJ3Mvi1iZ6hAD9N43D2H8v3Envd1hUFi6mMbepzcyghevoSZtyR4DF4nH82knM1tj6VouwWcJ",
+      "slot": 456084906,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 13,
+      "firstTransfer": 14,
+      "program": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+      "pool": "F7mQKBd1r7gj78KdqFucxbvfE83nX1EjDco9YcBCDEFv",
+      "user": "9pq8XEcfvrZT8uD6EkSU2wBMnLtVvyHKdbnqMd8SMxrF",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "541765",
+      "outputMint": "SPCXxcqXj6e5dJDVNovHN8744zkbhM2bYudU45BimGb",
+      "outputGross": "3274",
+      "output": "3274",
+      "observedUserLedgers": [
+        {
+          "address": "HgwbDw9B6LLGdbAc2EzP4xbkkpHSQos76hnbfzeHKjYq",
+          "delta": "0",
+          "credit": "541765",
+          "debit": "541765"
+        },
+        {
+          "address": "FDqN4ZyJRGkJZWTgfqstZ4LXDW6S6m1KHguAGTMwFwqS",
+          "delta": "0",
+          "credit": "3274",
+          "debit": "3274"
+        },
+        {
+          "address": "81HDCGS4gPMqxKZiXS2ShicQngejjbRuhyP7mYBvGEbq",
+          "delta": "541765",
+          "credit": "541765",
+          "debit": "0"
+        },
+        {
+          "address": "mzXNSc9ag1GfZALUfcA1aYLgHF73Ros1kGaY4QZwYfZ",
+          "delta": "-3274",
+          "credit": "0",
+          "debit": "3274"
+        }
+      ],
+      "pbSha256": "6e4213bf7c7d05288550d5590e1ea6f9d240857faf6b4044f5227eb6c8fb1a2a",
+      "rpcSha256": "233a7cd634047b23d7966f567f292dab9f15158f20c556b9a6e238fcdc0bedd2"
+    },
+    {
+      "signature": "4SYmmVYkwhMm4WPnsgSyJUXVxHJwA23hVaaCLbdifahR4XZEaDQBtztKbyCCBxaADeDQdvGdKHtKKLrBAoPdv7q1",
+      "slot": 456082490,
+      "rpcRuntimeComplete": true,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 16,
+      "firstTransfer": 17,
+      "program": "B72M6nyCLFgWiJtAN4naUTminMiTmyGcEqQHXwVeRdht",
+      "pool": "7k7iPmeSYcvHf2qEg7c4CsDQxteHrsdKCLVaipQArU6k",
+      "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+      "inputMint": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
+      "input": "34110031",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputGross": "129051340",
+      "output": "129051340",
+      "observedUserLedgers": [
+        {
+          "address": "i63KzNWxHHjWgf9btYBJwivZvT1VGxhm8mQAj6RFp8n",
+          "delta": "0",
+          "credit": "34110031",
+          "debit": "34110031"
+        },
+        {
+          "address": "3nnVbsCfN1mwUk2XSLCnjzY3bDDTdzpnKjvRmd8nESS2",
+          "delta": "0",
+          "credit": "129051340",
+          "debit": "129051340"
+        },
+        {
+          "address": "HQFucycrW8inMW3LZLEnXGLNqao4VZspqSy3vxn3fh1D",
+          "delta": "34110031",
+          "credit": "34110031",
+          "debit": "0"
+        },
+        {
+          "address": "3s3em8Lb5xSVWHpUEkUVe6TKc6oBi6exA7adfFh27srg",
+          "delta": "-129051340",
+          "credit": "0",
+          "debit": "129051340"
+        }
+      ],
+      "pbSha256": "1534762e359711e4cf720f42c1dcdf20971373291bf27b6205590c9225662145",
+      "rpcSha256": "20e4e010d2a31d7fd89bc5c658f66254c0bb39d03ee3a6b83815de29144096f5"
+    },
+    {
+      "signature": "xNWtkPwH25exbsqgq268f8BUqWwkPjLnk1Pud6jWJXKKh9ZfusucpaJuJYd3CMAaaWsJ9Sx41Yz81qCBsWqVmfy",
+      "slot": 456081686,
+      "rpcRuntimeComplete": false,
+      "retainedPBRuntimeComplete": true,
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "source": 17,
+      "firstTransfer": 18,
+      "program": "QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv",
+      "pool": "8R5qdXKMn2KcfHBy9rEpi43KScHewqvRAcpFyqoL3wap",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "8095071",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputGross": "886913",
+      "output": "886913",
+      "observedUserLedgers": [
+        {
+          "address": "DT2krA8vSP96D68nH86eAztZHVM18YB5i4gDXjLBDXm7",
+          "delta": "0",
+          "credit": "9523614",
+          "debit": "9523614"
+        },
+        {
+          "address": "8XrtGP8RG33AnrN2yJ6H3gnXPNQ3dYXKqM72bpzhcsd6",
+          "delta": "0",
+          "credit": "1043533",
+          "debit": "1043533"
+        },
+        {
+          "address": "6ZPorXXoNedd3u2unPzZRg18LDrE4CQZcUarumuhZdbD",
+          "delta": "8095071",
+          "credit": "8095071",
+          "debit": "0"
+        },
+        {
+          "address": "9NtMwH5NvSnfbgf31CKLbQReL3cndtYyYABNE3fASmCw",
+          "delta": "-886913",
+          "credit": "0",
+          "debit": "886913"
+        }
+      ],
+      "pbSha256": "b95ed32498e8595b963dbb06f6c47b7e64f841128f868fc332f034166f3c5fb9",
+      "rpcSha256": "f50e271fb76523d0ec3baad7dcffe153021bcedc10f2d6ff54efba400ff0475b"
+    }
+  ],
+  "globalCoverageProven": false
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "repo": "dexlab-protocol/dexlab-token-swap",
+    "pin": "32fd79bcb123035a8de5e57ad68bb51115180fda",
+    "path": "dexlab-token-swap.json",
+    "file": "dexlab-protocol-dexlab-token-swap.json",
+    "sha256": "68bd9c6cfba73a6237f0120eaa526b862a0d049c7cc2931d367fcbb068f2158a"
+  },
+  {
+    "repo": "jup-ag/jupiter-amm-implementation",
+    "pin": "cc068c9d1df0060c62f9a8a4fc37ea13ea7b9b39",
+    "path": "jupiter-core/src/amms/spl_token_swap_amm.rs",
+    "file": "jup-ag-jupiter-core--src--amms--spl_token_swap_amm.rs",
+    "sha256": "73f16aee6b3dec387f87077576fb90091b9e6a99f71db06ad9c9fcf539d4e6ee"
+  },
+  {
+    "repo": "solana-labs/solana-program-library",
+    "pin": "264ca72de06b0c2b45c0b15d298000fe3f82db2e",
+    "path": "token-swap/program/src/curve/constant_product.rs",
+    "file": "solana-labs-token-swap--program--src--curve--constant_product.rs",
+    "sha256": "9c815c7f0470042daa2255242e93602c8a092536e663519f8215b5f4425183bf"
+  },
+  {
+    "repo": "solana-labs/solana-program-library",
+    "pin": "264ca72de06b0c2b45c0b15d298000fe3f82db2e",
+    "path": "token-swap/program/src/curve/calculator.rs",
+    "file": "solana-labs-token-swap--program--src--curve--calculator.rs",
+    "sha256": "dcb30bc3f527bc915f322d13e08130ab3eb18c5fec09bed4e0b8d0d7602125fa"
+  },
+  {
+    "repo": "solana-labs/solana-program-library",
+    "pin": "264ca72de06b0c2b45c0b15d298000fe3f82db2e",
+    "path": "token-swap/program/src/processor.rs",
+    "file": "solana-labs-token-swap--program--src--processor.rs",
+    "sha256": "040aea3943a9667ece391cfd5ff54a5c6f132585ff9a9d3582cfb992f25d7df5"
+  },
+  {
+    "repo": "solana-labs/solana-program-library",
+    "pin": "264ca72de06b0c2b45c0b15d298000fe3f82db2e",
+    "path": "token-swap/program/src/instruction.rs",
+    "file": "solana-labs-token-swap--program--src--instruction.rs",
+    "sha256": "20d2b8ad19b124633a6479573cbe6afb4158552f163a56589321925114544948"
+  }
+]

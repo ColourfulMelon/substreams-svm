@@ -1,0 +1,479 @@
+{
+  "scope": "Finalized original RPC/PB instructions, token balances and complete successful runtime agree. Program-owned packed pool mints/oracle, owned oracle nonce/source tails, mint/reserve/rate/vault identity, pure signed supply operations, exact physical checked receipts and available global user ledgers independently agree.",
+  "primaryABI": "jup-ag/jupiter-lend@7960a14a5a760abc41db3ed1395dc5cb56a1f8db",
+  "transactions": [
+    {
+      "signature": "46bAEwM4U9uyYvqu1WFTLJy1GM4vFNvyCedEJ6ZtAQxx44CsuDDPA66jGXsUwwWkr8yUDsiVHXbvbkdziWEzGRbo",
+      "slot": 456084679,
+      "source": 16,
+      "firstTransfer": 19,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "184246890",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "141176134",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "184244586",
+        "-141176134"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "7x4VcEX8aLd3kFsNWULTp1qFgVtDwyWSxpTGQkoMM6XX",
+          "delta": "0",
+          "credit": "184246890",
+          "debit": "184246890"
+        },
+        {
+          "address": "AvRYNtHwd26ySFHUoAX1w8iSV18usCMw2dBFX5EkxrEz",
+          "delta": "0",
+          "credit": "141176134",
+          "debit": "141176134"
+        }
+      ],
+      "pbSha256": "6446c2556b8d1d424375f3ebb9d1694df19fcfd790ae83078706039717707f0d",
+      "rpcSha256": "a96b0fc5b3adacfcaadd3242bb77b355d3e490447ea34b2bc0c16a2c4c24013c",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "423VH6ahp3STeimJwVUUZXq43zJnbzeysnJM5mCnJdYgGt54aNffHEF5RQErFChMYGCKWDsk6mdmjAZo6qRkphbi",
+      "slot": 456084662,
+      "source": 8,
+      "firstTransfer": 11,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "251712956",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "192871019",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "251709809",
+        "-192871019"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "g7dD1FHSemkUQrX1Eak37wzvDjscgBW2pFCENwjLdMX",
+          "delta": "0",
+          "credit": "251712956",
+          "debit": "251712956"
+        },
+        {
+          "address": "D4v2YWUmB2bnccRzE8MBxxRJ2wkoUdFt4HNBGYtY8TRK",
+          "delta": "0",
+          "credit": "192871019",
+          "debit": "192871019"
+        }
+      ],
+      "pbSha256": "9586e5096fc977a616c5033a098ac3be94efa36fc135cded70b05eef4ca699a8",
+      "rpcSha256": "013d8417b87cfb3371bd2f7240dab8fccc092b2f9e10b0315edd47c948816933",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "3vvmUkgpNhw5mg1HTH2wn9nfgsKFUUjD5U2tYZgX6yeLfSs3D43qcAikojiAaHU9yH3x7i8MQ9mx4pLZkhnsYhyf",
+      "slot": 456084545,
+      "source": 8,
+      "firstTransfer": 11,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "7634582",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "5849878",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "7634486",
+        "-5849878"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+          "delta": "0",
+          "credit": "7634582",
+          "debit": "7634582"
+        },
+        {
+          "address": "AqA3tWcUR3znojSHCifYaxGLFvGexq5LVDj9ShUzjXJW",
+          "delta": "0",
+          "credit": "5849878",
+          "debit": "5849878"
+        }
+      ],
+      "pbSha256": "00f98fd0272e07fbd55bab7113c8d3eed5b48ce0f86dc04de5c61b526add53f5",
+      "rpcSha256": "164168dfcc1714d4506e4688c0aca76beba5963828c9db1d81701b082d2c8f27",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "3CHRNKj9TneShPsrLrAcuoKSicN4zaAXzPyyY8EWpGxp3CEByVQ3hrMkx7wDcDvrJt6EjwLi1rbmKvBVrFztfaMV",
+      "slot": 456084273,
+      "source": 3,
+      "firstTransfer": 6,
+      "pool": "BdhXJHhhveU8WSk8Bzemnarsh87xR5GBwaZAmmwENt7m",
+      "user": "D2mScWHwB6arvb6QvfoG9ePns6oq6szANvyPNtseV5RS",
+      "inputMint": "59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw",
+      "input": "2400000000",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "2732273316",
+      "nativeAccounts": 27,
+      "oracleNonce": 75,
+      "oracleSources": [
+        8,
+        8
+      ],
+      "supplyOperations": [
+        "2399940000",
+        "-2732273316"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "6hRcheoWpeXJxkqnXcAjSuBimHd1VENK2vNvgo3EhMLn",
+          "delta": "-2400000000",
+          "credit": "0",
+          "debit": "2400000000"
+        },
+        {
+          "address": "2NSqdnxo8D9HgZea9uE25BbZ79Pt9QvDvZUjfBBo9nXj",
+          "delta": "0",
+          "credit": "2732273316",
+          "debit": "2732273316"
+        }
+      ],
+      "pbSha256": "1d8ac6a3f19255b2fdb702eae460f422caa6c0a26df8d05d8fff267ddbc00106",
+      "rpcSha256": "461a2e89cedd460deedc704a790fa0c09a43a9c9036c352b3e85b4034e002ede",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "32GcCdtYNdtQATHs3yV4qQnabAirUd53xGnJss5JsMCogA1D1dGry8p2GNKaWunZwu4VKLMyP9tehgYGNHZS2rXf",
+      "slot": 456083589,
+      "source": 11,
+      "firstTransfer": 14,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "9s4rVQwjxTS9MgAkYERGRNEwx495F5ymgQ4p7fGhitHq",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "12343750",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "9458204",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "12343595",
+        "-9458204"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "BxTS4hdSgwgR47KiiV1Xhxd7Y74CteSiVjvsWssPsGSL",
+          "delta": "9458204",
+          "credit": "9458204",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "aa5601438ed83921f89c9db660aff36f980f0617e3220c5a9723a15dc4c57eb1",
+      "rpcSha256": "99c3850e1303be41caeda138947afcc4936783028359713a7c981590af392158",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "66daBVKn2dkJr2eK3m9rk8wVvzbNq3iaELURMpKKWc6zn5gPjf99NtzUBUL827t2P7cmgbnq4bQ4KP55xz42tp8r",
+      "slot": 456083445,
+      "source": 3,
+      "firstTransfer": 6,
+      "pool": "BdhXJHhhveU8WSk8Bzemnarsh87xR5GBwaZAmmwENt7m",
+      "user": "D2mScWHwB6arvb6QvfoG9ePns6oq6szANvyPNtseV5RS",
+      "inputMint": "59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw",
+      "input": "2048653738",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "2332279174",
+      "nativeAccounts": 27,
+      "oracleNonce": 75,
+      "oracleSources": [
+        8,
+        8
+      ],
+      "supplyOperations": [
+        "2048602521",
+        "-2332279174"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "6hRcheoWpeXJxkqnXcAjSuBimHd1VENK2vNvgo3EhMLn",
+          "delta": "-2048653738",
+          "credit": "0",
+          "debit": "2048653738"
+        },
+        {
+          "address": "2NSqdnxo8D9HgZea9uE25BbZ79Pt9QvDvZUjfBBo9nXj",
+          "delta": "0",
+          "credit": "2332279174",
+          "debit": "2332279174"
+        }
+      ],
+      "pbSha256": "eec1a49340857269a3e2af083e2b54d22dba08780b016ebf920a316414b43c1b",
+      "rpcSha256": "ad87c7ca95f57425b91e335bc763ed34591f7b23dd517d59edfd6f7ac5136618",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "5ZwoLDAJfBtqWak5tAXRoNgGXkZ8mkJmFNFt8jxEwQ82B2vqGobEwNyg6J5wpgkSZAFet5xoBu3T63pcWQwRGWhB",
+      "slot": 456083091,
+      "source": 10,
+      "firstTransfer": 13,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "43481725",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "33317191",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "43481181",
+        "-33317191"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "6zAcFYmxkaH25qWZW5ek4dk4SyQNpSza3ydSoUxjTudD",
+          "delta": "0",
+          "credit": "43481725",
+          "debit": "43481725"
+        },
+        {
+          "address": "FPqvUeimA7FXTM9Qg7RttXF2Pzm8XHTpaqbaGNa3cZK",
+          "delta": "0",
+          "credit": "33317191",
+          "debit": "33317191"
+        }
+      ],
+      "pbSha256": "42798a433294e9229c5c2981fa5b4e5e0eb93b453bc60f816551e1d6c4f0430a",
+      "rpcSha256": "ee795a40f56cde502113cd2b8c7fd849e1f28978dd810d8e7a67ca2c510fb499",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "TWfm9d8HzN1UV1QV9Dvm9wCD7yJg1PchPZJfzkfAVxrbG9pubMVtKh3McTXLiwZNwtCctipFbXDf4KS7dcQrh7Q",
+      "slot": 456082979,
+      "source": 10,
+      "firstTransfer": 13,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "4jjEXcFPXw7WVGXSTb227HW6wfLprjh2RtiHty4GbetE",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "41066906",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "31466878",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "41066392",
+        "-31466878"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "974unt2bsnABEMymGbcDA1K7ynj2nLze7u4VSoKZEvTc",
+          "delta": "0",
+          "credit": "41066906",
+          "debit": "41066906"
+        },
+        {
+          "address": "H4E9GXC14opMSx2iqhLYwCypPgi9umFSRdTktQXp9G3v",
+          "delta": "31466878",
+          "credit": "31466878",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "9f2c0eafdac04e04c546ba5c0c536c9100ab2e11bdcb9e2e86e7a3e308eebcb1",
+      "rpcSha256": "d15b48b2ad075132ff93aa0e6e789059e218292b6f5eceece28ac9240cb5788c",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "3bbqUuD2pjc2LJRbbMfxgDQGDoS5rC3rNW73m6kw4BjieS4gQoBus6ouG5RtVrGRe7FUtkYQsfcpfgAAr2w7MAu4",
+      "slot": 456082910,
+      "source": 8,
+      "firstTransfer": 11,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "7638026",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "5852519",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "7637930",
+        "-5852519"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "7x4VcEX8aLd3kFsNWULTp1qFgVtDwyWSxpTGQkoMM6XX",
+          "delta": "0",
+          "credit": "7638026",
+          "debit": "7638026"
+        },
+        {
+          "address": "AvRYNtHwd26ySFHUoAX1w8iSV18usCMw2dBFX5EkxrEz",
+          "delta": "0",
+          "credit": "5852519",
+          "debit": "5852519"
+        }
+      ],
+      "pbSha256": "3c3edff74078d7fafccd88c80a15e3d2f3e0c25d438be383bc16722a4fc7b704",
+      "rpcSha256": "56f09db7975ef7273d34d386a5e5ac2dadca50506eb3b7cc51fb506651d2d20a",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "38FPQwfKMdRCRCybx7aZe54d8GbSZExqaHf7bdDu8y9scjjtnkohvHU9qptPcqQuZcE53itP91szijywzhSjqJG",
+      "slot": 456082768,
+      "source": 13,
+      "firstTransfer": 16,
+      "pool": "BdhXJHhhveU8WSk8Bzemnarsh87xR5GBwaZAmmwENt7m",
+      "user": "G7pXs34ruahPVu7xaBRZXXv7j2RSnDpVVGrduVfPZMTu",
+      "inputMint": "59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw",
+      "input": "490039698",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "557883781",
+      "nativeAccounts": 27,
+      "oracleNonce": 75,
+      "oracleSources": [
+        8,
+        8
+      ],
+      "supplyOperations": [
+        "490027447",
+        "-557883781"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "DhRjVdcT9cFM5EQhBP4xZaywWJYQubXAETrZYcxrvXdb",
+          "delta": "-491021741",
+          "credit": "0",
+          "debit": "491021741"
+        }
+      ],
+      "pbSha256": "b647287dbac9eae068cd7d3d88a5747043ba5255821707f078f0de35ede488e7",
+      "rpcSha256": "0dadbe1544d8e06138b47233757dcce58b3ee38377e412734be1d523a7bded10",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "YQd257hjLfV6kfq6c5gHigngKTQRkhPDfwA2zcuwAZN8HVCtt6WwufQs4BigjUPakQGq8TDNkn9tMrknfLe7Qax",
+      "slot": 456082722,
+      "source": 11,
+      "firstTransfer": 14,
+      "pool": "Etb72AHGeCAcD72s3PVtzdQGnkYNd2ny4ULb6YgKi58",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "9110057",
+      "outputMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "output": "6980439",
+      "nativeAccounts": 26,
+      "oracleNonce": 79,
+      "oracleSources": [
+        1
+      ],
+      "supplyOperations": [
+        "9109943",
+        "-6980439"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "7x4VcEX8aLd3kFsNWULTp1qFgVtDwyWSxpTGQkoMM6XX",
+          "delta": "0",
+          "credit": "9110057",
+          "debit": "9110057"
+        },
+        {
+          "address": "AvRYNtHwd26ySFHUoAX1w8iSV18usCMw2dBFX5EkxrEz",
+          "delta": "0",
+          "credit": "6980439",
+          "debit": "6980439"
+        }
+      ],
+      "pbSha256": "618263753a5ca812778114fae54502dce10ac934817660a811842a3afe9c3587",
+      "rpcSha256": "c88e9ed089519b980a57b75c66d31627b7053d232c10e5ba47f6c5aa26a744ae",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    },
+    {
+      "signature": "5Ezg6q4VkDRQvu8XyKySuvxtaPC3haVHkaUbC7ijnvjcjNbcVnQbfD8bBZ5rjXHabW95wpfC721MAzEs5vgpYEyV",
+      "slot": 456081887,
+      "source": 9,
+      "firstTransfer": 12,
+      "pool": "BdhXJHhhveU8WSk8Bzemnarsh87xR5GBwaZAmmwENt7m",
+      "user": "D2mScWHwB6arvb6QvfoG9ePns6oq6szANvyPNtseV5RS",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "2332746735",
+      "outputMint": "59obFNBzyTBGowrkif5uK7ojS58vsuWz3ZCvg6tfZAGw",
+      "output": "2048653738",
+      "nativeAccounts": 27,
+      "oracleNonce": 75,
+      "oracleSources": [
+        8,
+        8
+      ],
+      "supplyOperations": [
+        "2332688416",
+        "-2048653738"
+      ],
+      "observedUserLedgers": [
+        {
+          "address": "2NSqdnxo8D9HgZea9uE25BbZ79Pt9QvDvZUjfBBo9nXj",
+          "delta": "0",
+          "credit": "2332746735",
+          "debit": "2332746735"
+        },
+        {
+          "address": "6hRcheoWpeXJxkqnXcAjSuBimHd1VENK2vNvgo3EhMLn",
+          "delta": "2048653738",
+          "credit": "2048653738",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "e07906ba05e10c3fd8c6af2c2977257f934e05a390bd15a0a316ee10dcf180cd",
+      "rpcSha256": "3e44cdf45d47662861e82cc618be61967ee482c100b1f615dec080cd8759965b",
+      "rawFirehoseOriginal": true,
+      "rpcReconstructed": false,
+      "retainedPBRuntimeComplete": true
+    }
+  ],
+  "globalCoverageProven": false
+}
