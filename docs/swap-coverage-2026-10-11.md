@@ -906,5 +906,9 @@ Existing core tests now verify financial/block and diagnostic/raw row versions
 against the price, aggregate and ClickHouse package manifests. Finite replay
 also requires the expected version on every emitted row before financial
 comparison. All seven metadata hashes remain unchanged. The Tessera decoder
-and original financial evidence are unchanged. A coordinated rollout remains
-pending, and complete coverage of all swap types is still unproven.
+and original financial evidence are unchanged. The exact .19 package exits
+cleanly over the same fifty finalized blocks, validates the expected version
+on every row and preserves all 4298 prior swaps while adding the same fourteen
+original-verified legs. All parent links, sealed counters and operation ordering
+agree. A coordinated rollout remains pending, and complete coverage of all swap
+types is still unproven.

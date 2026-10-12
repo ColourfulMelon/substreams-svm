@@ -1,0 +1,31 @@
+{
+  "release": "v0.5.2-pluto.19",
+  "dbOutHash": "81f7904aa2d2486b648e16e8789db5daac8e2ceb",
+  "metadataModules": {
+    "store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075",
+    "store_token_fee_state": "9ea156073517933ea11355afd55e0029464dfb82"
+  },
+  "metadataSource": "5db51e774846de14bd4100e0243603161a98fa04",
+  "metadataBinarySha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "assetSha256": {
+    "dex-swaps-v0.5.2-pluto.19.spkg": "ce5b128a548be83129c386df1813aac7e497be2424b1ec1e002506469d1ebdde",
+    "svm-dex-v0.5.2-pluto.19.spkg": "007ceecb5906818cd463a518d38b9f920775f9bd0fc9838e20a0319be4ea80fc",
+    "svm-clickhouse-dex-v0.5.2-pluto.19.spkg": "71f8345ca5a7dc8b26bd7e8bbbf6b259527a0b0b02cdb5ea47b1f53779c60e3c",
+    "dex_swaps_metadata.wasm": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+    "metadata-binary.json": "81297ff4f029893b96f4cc067306dd78018ce88de01cfbdbdbb6dd424f28b2c8"
+  },
+  "metadataPreserved": true,
+  "finiteReplayPassed": true,
+  "published": false,
+  "deployed": false,
+  "correctsWithdrawn18VersionLabel": true,
+  "allRowVersionsValidated": true,
+  "unchangedPriorSwaps": 4298,
+  "addedOriginalVerifiedSwaps": 14,
+  "coreTestsPassed": 162
+}
