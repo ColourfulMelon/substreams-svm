@@ -1,0 +1,30 @@
+{
+  "decoderVersion": "v0.5.2-pluto.16",
+  "scope": "Actual deployed sink and stream timestamps; subsequent finalized RPC head is a sequential observation, not an atomic slot comparison.",
+  "sink": {
+    "timestamp": "2026-10-12T09:02:24.201190698Z",
+    "message": "postgres sink stats",
+    "last_block": "#455990120 (5g3SMH2YbzwycSYroYwfZt79Ji5KfLm76BfjqNwFnBzy)",
+    "drift": 5.201187098,
+    "buffered_rows": 595,
+    "flushed_rows": 1038383,
+    "time_since_last_flush": 0.850642166,
+    "db_flush_rate": "1.200 flush/s (1458 total)",
+    "db_flush_duration_rate": "229.47ms per flush (avg over 30s)",
+    "running_from_tier1": true
+  },
+  "stream": {
+    "timestamp": "2026-10-12T09:02:24.201187338Z",
+    "message": "substreams stream stats",
+    "last_block": "#455990125 (35NcnkJv5jPykZj6A4AyYE47tL8TTZSW1q6vQZKRPTco)",
+    "drift": 4.201184628,
+    "data_msg_rate": "6.167 msg/s (10398 total)"
+  },
+  "errors": 0,
+  "rpcObservation": {
+    "checkedAt": "2026-10-12T09:02:38.860606+00:00",
+    "chainFinalizedSlot": 455990172,
+    "savedPricingSlot": 455990120,
+    "slotsBehind": 52
+  }
+}

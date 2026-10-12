@@ -1,0 +1,126 @@
+{
+  "decoderVersion": "v0.5.2-pluto.16",
+  "release": "https://github.com/ColourfulMelon/substreams-svm/releases/tag/v0.5.2-pluto.16",
+  "packageSource": "ea6601738a03c8680039ba0cf3f91ffa5e6dd8bf",
+  "repairSource": "61b2360c71b82672c8f5b5e163ff94e262ceaa5f",
+  "packageSha256": "36ab6bb30e7ea30523ece25a57eea7a8982dda54428aa12d9ed62d487f03ced1",
+  "monorepoPullRequest": "https://github.com/Pluto-ZA/pluto-monorepo/pull/20",
+  "mergeCommit": "0a88a1c0cc8948efbff87484b0c1708e4a8c082f",
+  "deployedCommit": "9e6607535f256b4f96d6752a72baae7622153bbf",
+  "deploymentUuid": "5ko2ddhgcgwfvpkez0jpck1c",
+  "finishedAt": "2026-10-12T08:25:31Z",
+  "deploymentSourceDifference": "Only mobile store release workflow/Fastfiles and docs/deployment.md differ from the tested merge. No pricing build inputs changed.",
+  "oldModuleHash": "f6daada698dd6b56d4be5eb292a75a21eace75f4",
+  "newModuleHash": "73ad93159c7ad976e9c139c3100e0f8628c55152",
+  "oldDurableSlot": 455979715,
+  "oldDurableHash": "HLLRYEgoZ2CNRSVfK6iDoCVo5VehSX9BZbMWUMF4p4oR",
+  "opaqueCursorPreservedExactly": true,
+  "oldWriterCursorStableAfterStop": true,
+  "oldVersionTailCounts": {
+    "blocks": 0,
+    "swaps": 0,
+    "swap_coverage": 0,
+    "swap_coverage_transactions": 0
+  },
+  "strictMismatchMode": "error",
+  "automaticDeploySettingsRestored": {
+    "pricing": true,
+    "productionApi": true
+  },
+  "productionCustomOrdersEnabled": false,
+  "productionCustomExecutionEnabled": false,
+  "productionApiHealthy": true,
+  "productionApiDeploymentTriggeredByThisRollout": false,
+  "liveReadOnlyChecks": {
+    "oldDurableBlock": 455979715,
+    "cursors": [
+      {
+        "id": "73ad93159c7ad976e9c139c3100e0f8628c55152",
+        "block_num": 455992365
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 455979716,
+        "parent_slot": 455979715,
+        "parent_hash": "HLLRYEgoZ2CNRSVfK6iDoCVo5VehSX9BZbMWUMF4p4oR",
+        "block_hash": "8HnVd5DHb78UKxNyM5HZ5343uCzjPNNrxZJ7YEYDr5J7",
+        "timestamp": "2026-10-12 08:24:21"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 12648,
+        "unique_blocks": 12648,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 455992365,
+        "lag_seconds": 4
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 1114657,
+        "unique_events": 1114657,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "raydium_cpmm",
+        "rows": 8505,
+        "unique_events": 8505
+      },
+      {
+        "protocol": "manifest",
+        "rows": 8745,
+        "unique_events": 8745
+      },
+      {
+        "protocol": "openbook_v2",
+        "rows": 9,
+        "unique_events": 9
+      },
+      {
+        "protocol": "mercurial",
+        "rows": 19,
+        "unique_events": 19
+      }
+    ],
+    "cut": 455992265,
+    "coverage": [
+      {
+        "candidates": 60887,
+        "raw": 47301,
+        "expected_candidates": 60887,
+        "expected_raw": 47301
+      }
+    ]
+  },
+  "priming": {
+    "scope": "Continuous read-only priming; planned bounded termination, not a clean finite replay completion. Separate clean finalized 50-block package replay is retained beside the original fixture.",
+    "validatedBlocks": 9024,
+    "validatedSwapRows": 748409,
+    "lastSlot": 455979774,
+    "lastLagSeconds": 3.9786179065704346,
+    "plannedTermination": true,
+    "childExitCode": 1,
+    "financialDatabaseWrites": false,
+    "firstFiveOutputSha256": "cb1b746126ac4e372c50fbcba7eca69bb709431db6f532711baea703fdff8ed4",
+    "firstFiveVerifiedSwaps": 349
+  },
+  "validation": {
+    "coreTests": 159,
+    "pricingIntegrationTests": 12,
+    "metadataModuleHashesFrozen": 7,
+    "previousFullPayloadOccurrencesPreserved": 2405,
+    "cleanReplayBlocks": 50,
+    "cleanReplayOldSwaps": 4138,
+    "cleanReplayNewSwaps": 4139
+  },
+  "scope": "Shared pricing indexer rollout. No historical financial append or universal swap coverage claim. Live count queries are sequential. Legacy/V2 and other unverified variants remain separate work."
+}

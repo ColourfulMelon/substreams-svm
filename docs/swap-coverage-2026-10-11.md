@@ -717,7 +717,7 @@ ahead of the saved sink observation; the reads are sequential. The initial
 catchup proof remains unchanged. This observation is retained separately in
 `fixtures/native-venues/release15-freshness-proof.json`.
 
-## Pump V3 shared buyback recipients (candidate .16)
+## Pump V3 shared buyback recipients (published and deployed .16)
 
 A retained original finalized transaction at slot 455950129 contains a V3 sell
 at instruction 11 and a V3 buy at instruction 23, on distinct curves, with the
@@ -741,7 +741,7 @@ settlement and independent pool lamport equation before using an aggregate
 recipient credit. Unknown contributions, overlapping pool activity, failed
 ancestors or inconsistent credits must remain diagnostic.
 
-Candidate .16 implements that proof for V3 buys/sells on distinct curves. Each
+Release .16 implements that proof for V3 buys/sells on distinct curves. Each
 contribution requires canonical mint/token/program roles, one completed event,
 an exact committed base-token CPI, independent source-token conservation,
 proven net receipt and gross wallet funding where present. Native event amounts
@@ -768,4 +768,27 @@ Database-operation ordinals are checked against the exact two diagnostic
 removals and one swap insertion: later ordinals shift by one in that block,
 while stored execution positions and physical identities stay unchanged.
 Parent links and sealed counters match. No replay writes to live financial
-tables. Deployed .15 still has this gap until a coordinated .16 rollout.
+tables.
+
+Release .16 is published to the existing fork and its package pin is merged
+in monorepo PR #20. Deployment `5ko2ddhgcgwfvpkez0jpck1c` finished at
+2026-10-12 08:25:31 UTC. Its source commit includes a later mobile release
+workflow change; all pricing build inputs match the tested merge. The old
+writer's durable slot 455979715 and hash were preserved exactly, with no old
+rows beyond the cursor in any of the four tables. The first actual .16 block
+455979716 has that exact parent. Strict module-hash checks remain enabled,
+and original automatic-deploy settings are restored. The production API
+remains healthy with custom order creation/execution disabled; this rollout
+does not trigger a production backend deployment.
+
+After initialization and catch-up, actual sink/stream observations at
+09:02:24 UTC show 5.20/4.20 seconds of lag and no errors. A later read-only
+database check verifies 1,114,657 unique nonzero verified swaps, 12,648 unique
+linked blocks, zero invalid rows or broken parents, and matching sealed
+coverage counters, at four seconds of pricing lag. Queries are sequential.
+The evidence is retained in `fixtures/native-venues/release16-*.json`.
+Read-only priming validated 9,024 blocks and 748,409 swap rows before its
+planned bounded termination; its exit is not described as a clean replay.
+The separate finite package replay above exits cleanly. Legacy/V2 settlement,
+repeated same-curve swaps and other unverified variants still need work;
+this rollout does not establish universal coverage.
