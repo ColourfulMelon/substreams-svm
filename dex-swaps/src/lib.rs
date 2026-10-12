@@ -483,6 +483,73 @@ mod tests {
     }
 
     #[test]
+    fn stabble_nested_and_dlmm_receipts_use_each_transfers_owned_fee() {
+        let tx =
+            substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/token-fees/stabble-dlmm-shared-output.transaction.pb").to_vec())
+                .unwrap();
+        let mint = substreams_solana::b58!("8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS");
+        let bytes = include_bytes!("../fixtures/token-fees/stabble-shared-output-mint.bin");
+        let (schedule, initialized) = token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, bytes).unwrap();
+        assert!(initialized);
+        let fee = schedule.at(1055).unwrap();
+        let without_metadata = process_transaction(tx.clone()).unwrap();
+        assert!(without_metadata
+            .swaps
+            .iter()
+            .all(|swap| swap.source_index != Some(7) && swap.source_index != Some(13)));
+        let mut fee_ordinals = Vec::new();
+        let decoded = process_transaction_with_metadata(
+            tx.clone(),
+            None,
+            |_, _| None,
+            |_, _| None,
+            |address, ordinal| {
+                if address != mint {
+                    return None;
+                }
+                fee_ordinals.push(ordinal);
+                Some(fee)
+            },
+        )
+        .unwrap();
+        for (source, protocol, input, output) in [
+            (7, pb::Protocol::Stabble, 2_855_716_822, 90_210_921),
+            (13, pb::Protocol::MeteoraDlmm, 282_715_965_415, 8_913_852_960),
+        ] {
+            let legs: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(source)).collect();
+            assert_eq!(legs.len(), 1);
+            assert_eq!(legs[0].protocol, protocol as i32);
+            assert_eq!((legs[0].input_amount, legs[0].output_amount), (input, output));
+            assert_eq!(legs[0].output_mint, mint);
+            assert!(legs[0].transfer_verified);
+        }
+        assert!(fee_ordinals.contains(&10) && fee_ordinals.contains(&11) && fee_ordinals.contains(&16));
+        // The same receiver's aggregate balance cannot assign either receipt.
+        assert_eq!(90_210_921u64 + 8_913_852_960, 9_004_063_881);
+        let mut incorrect = fee;
+        incorrect.basis_points = 0;
+        let decoded =
+            process_transaction_with_metadata(tx.clone(), None, |_, _| None, |_, _| None, |address, _| (address == mint).then_some(incorrect)).unwrap();
+        assert!(decoded.swaps.iter().all(|swap| swap.source_index != Some(7) && swap.source_index != Some(13)));
+        let native_data = tx.walk_instructions().nth(7).unwrap().data().to_vec();
+        let mut undeclared_vault = tx;
+        for group in &mut undeclared_vault.meta.as_mut().unwrap().inner_instructions {
+            for instruction in &mut group.instructions {
+                if instruction.data == native_data {
+                    instruction.accounts[12] = instruction.accounts[13];
+                }
+            }
+        }
+        let decoded =
+            process_transaction_with_metadata(undeclared_vault, None, |_, _| None, |_, _| None, |address, _| (address == mint).then_some(fee)).unwrap();
+        assert!(decoded.swaps.iter().all(|swap| swap.source_index != Some(7)));
+        assert!(decoded
+            .swaps
+            .iter()
+            .any(|swap| swap.source_index == Some(13) && swap.output_amount == 8_913_852_960));
+    }
+
+    #[test]
     fn delegated_pump_routes_require_distinct_verified_physical_hops() {
         for (fixture, parent, child, hops) in [
             (include_bytes!("../fixtures/swap-coverage/pump-delegated-1.transaction.pb").as_slice(), 19, 20, 2),

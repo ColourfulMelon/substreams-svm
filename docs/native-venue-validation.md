@@ -209,6 +209,26 @@ financial payloads in the separate DLMM sample remain unchanged. Four other
 sampled DBC calls have zero output and are excluded from pricing. This source
 change has not yet been included in a live release.
 
+## Shared Stabble and DLMM fee receipts
+
+A finalized Stabble V2 withdrawal and DLMM Swap2 credit the same Token-2022
+receiver in one transaction. Its total increase of 9,004,063,881 cannot establish
+either swap's output by itself. Owner-verified mint bytes at finalized context
+455848233 retain a stable 300-bps fee schedule from epoch 1029; both the sampled
+transaction and metadata read are in epoch 1055. Applying that fee separately to
+the actual output CPIs proves receipts of 90,210,921 for Stabble and 8,913,852,960
+for DLMM. Stabble's separate fee payment remains excluded from its primary
+output. The declared vault program/opcode bounds its nested transfer scope.
+
+The retained transaction, mint bytes, raw instructions, balances and hash proof
+are in `token-fees/stabble-shared-output-proof.json`. The existing decoder already
+supports this layout; the additional evidence requires per-transfer fee metadata.
+The core regression rejects missing or inconsistent metadata and an undeclared
+vault program. Expanded fee coverage preserves all 147 prior full financial
+payloads and recovers these two legs for 149 across the 65-transaction sample.
+The separate DLMM sample preserves all 140 full payloads. This is bounded replay
+evidence; the global fee registry must be complete and warmed before live use.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains
