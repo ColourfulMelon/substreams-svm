@@ -1978,6 +1978,17 @@ mod tests {
             assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
                 s.source_index != Some(8))), "funded V3 sell mode {mode}");
         }
+        // An implicit SOL payout has no output Token/System CPI. Preserve a
+        // known sell intent for investigation even when only one mint remains
+        // visible and no event can prove proceeds.
+        let mut opaque = tx;
+        let calls = &mut opaque.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
+        calls[1].data.clear();
+        calls[3].data.clear();
+        let decoded = crate::process_transaction(opaque).unwrap();
+        assert!(decoded.swaps.iter().all(|s| s.source_index != Some(8)));
+        assert!(decoded.coverage_candidates.iter().any(|c| c.source_index == 8
+            && c.reason == "recognized_swap_without_verified_flows" && c.mints.len() == 1));
     }
 
     #[test]

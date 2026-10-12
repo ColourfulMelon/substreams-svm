@@ -593,3 +593,17 @@ PostCompleteBuy receipts still require validation and coverage work.
 Primary references: [multi-hop account and native SOL roles](https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/MULTI_HOP_SWAP.md),
 [V3 account funding and fees](https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/TRADE_V3.md)
 and [Pump IDL](https://github.com/pump-fun/pump-public-docs/blob/main/idl/pump.json).
+
+
+## Known Pump intents with missing settlement evidence (candidate .13)
+
+Coverage diagnostics now recognize typed Pump curve trades and PumpSwap trades
+through their exact existing instruction decoders and pool extractors. Native
+SOL payouts can have only one Token mint and no output System CPI; they still
+need a diagnostic row if no financial leg can be proved. The financial decoder
+and pricing gate are unchanged by this recognition. An original V3 sell core
+case with opaque funding/event evidence verifies that one visible mint produces
+`recognized_swap_without_verified_flows` and no swap for that instruction.
+All 153 core tests and release WASM builds pass. The original transaction is
+retained by the existing diagnostic sink for later repair, without publishing
+its intent as a price.

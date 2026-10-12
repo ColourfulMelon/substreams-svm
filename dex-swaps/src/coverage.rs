@@ -159,6 +159,8 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             || program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
                 && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
         let known_swap = crate::native_venues::defituna_two_hop(ix).is_some()
+            || crate::pumpfun::extract_pool(ix).is_some()
+            || crate::pumpfun_amm::extract_pool(ix).is_some()
             || crate::native_venues::layout(ix).is_some()
             || crate::rfq::layout(ix).is_some()
             || fixed.is_some()
