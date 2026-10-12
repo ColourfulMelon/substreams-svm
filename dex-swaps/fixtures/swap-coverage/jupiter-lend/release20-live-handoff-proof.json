@@ -1,0 +1,119 @@
+{
+  "oldDurableBlock": 456057992,
+  "cursors": [
+    {
+      "id": "9be0cadf1f790f814ff9bbde0ee673ab07cffd32",
+      "block_num": 456060568
+    }
+  ],
+  "firstActualBlock": [
+    {
+      "block_num": 456057993,
+      "parent_slot": 456057992,
+      "parent_hash": "8fNSazfvbydxDFvumQx1g9UPSzFcdfnEufE8cNFJHpxj",
+      "block_hash": "7BQS8naRbtoK1NGihyXvK5UF4VJXrufpMVaC1LcryKkZ",
+      "timestamp": "2026-10-12 13:09:06"
+    }
+  ],
+  "boundaryMatches": true,
+  "continuity": [
+    {
+      "blocks": 2576,
+      "unique_blocks": 2576,
+      "broken_parents": 0
+    }
+  ],
+  "health": [
+    {
+      "saved_block": 456060568,
+      "lag_seconds": 515
+    }
+  ],
+  "swaps": [
+    {
+      "rows": 281855,
+      "unique_events": 281855,
+      "invalid": 0
+    }
+  ],
+  "venues": [
+    {
+      "protocol": "humidifi",
+      "rows": 374,
+      "unique_events": 374
+    },
+    {
+      "protocol": "tesserav",
+      "rows": 2891,
+      "unique_events": 2891
+    },
+    {
+      "protocol": "jupiter_lend",
+      "rows": 247,
+      "unique_events": 247
+    }
+  ],
+  "cut": 456060468,
+  "coverage": [
+    {
+      "swaps": 270846,
+      "expected_swaps": 270846,
+      "candidates": 13654,
+      "raw": 11216,
+      "expected_candidates": 13654,
+      "expected_raw": 11216
+    }
+  ],
+  "release": "v0.5.2-pluto.20",
+  "sourceCommit": "a0d001208f7be8dc56e07fc1c224b85777d981c4",
+  "mergedDeploymentRevision": "d92788394e26b3253f67d6c1d000741816d28140",
+  "deployment": "lh69svesfhflt7rewgsxsodd",
+  "checkedAt": "2026-10-12T13:27:02.849119+00:00",
+  "oldOutputHash": "81f7904aa2d2486b648e16e8789db5daac8e2ceb",
+  "newOutputHash": "9be0cadf1f790f814ff9bbde0ee673ab07cffd32",
+  "allSixPublishedAssetsVerified": true,
+  "liveSchema": {
+    "eightProtocolColumnsReady": true,
+    "columns": [
+      {
+        "table": "mv_state_ohlc_prices",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "mv_state_pools_aggregating_by_mint_input_mint",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "mv_state_pools_aggregating_by_mint_output_mint",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "mv_state_pools_aggregating_by_pool_swaps",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "state_ohlc_prices",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "state_pools_aggregating_by_mint",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "state_pools_aggregating_by_pool",
+        "ids52to54Correct": true
+      },
+      {
+        "table": "swaps",
+        "ids52to54Correct": true
+      }
+    ]
+  },
+  "automaticDeploymentOriginalValuesRestored": true,
+  "productionCustomOrdersEnabled": false,
+  "productionCustomExecutionEnabled": false,
+  "productionApiRedeployed": false,
+  "readonlyPreparationProcessesReaped": true,
+  "liveCatchupPending": true,
+  "globalSwapCoverageProven": false
+}

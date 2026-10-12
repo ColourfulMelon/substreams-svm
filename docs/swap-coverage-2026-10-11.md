@@ -1037,8 +1037,8 @@ links, sealed counts and unique contiguous per-block insertion ordinals pass.
 `corrected_events` remains unchanged: it counts replaced prior event amounts,
 rather than independently decoded new native legs. All 164 core tests and twelve
 pricing integration tests pass, as does the deployment guard regression across
-all eight enum columns for IDs 52, 53 and 54. Live upgrade/preparation and cursor
-boundary verification remain pending. No replay writes to financial tables.
+all eight enum columns for IDs 52, 53 and 54. No replay writes to financial
+tables.
 
 
 ## Orca SwapV2 three-byte padding (post-pluto.20 source)
@@ -1063,3 +1063,18 @@ not part of the immutable `.20` release and is not yet packaged or deployed.
 It does not complete unknown/new program or native conversion coverage.
 The public typed contract is Orca's
 [SwapV2 handler](https://github.com/orca-so/whirlpools/blob/main/programs/whirlpool/src/instructions/v2/swap.rs).
+
+
+The immutable `.20` release was published and deployed from monorepo revision
+`d92788394e26b3253f67d6c1d000741816d28140`. The old writer flushed through
+456057992; the actual first `.20` block is 456057993 with that exact parent
+hash. All eight live protocol enum columns contain the correct IDs 52–54.
+An initial live audit verifies 281,855 unique financial rows across 2,576
+linked blocks with no invalid swaps or broken parents. All three committed
+financial/diagnostic counts match their sealed block counters. It includes
+247 Jupiter Lend rows. Both applications' original deployment flags were
+restored, production custom orders remain disabled, and both owned read-only
+preparation processes were reaped. The writer is advancing but was still 515
+seconds behind at this proof snapshot: freshness recovery remains pending.
+See `jupiter-lend/release20-live-handoff-proof.json`. This does not establish
+universal swap coverage.
