@@ -1102,3 +1102,15 @@ funding/runtime/balance mutations pass in the core suite (166 core tests). The
 retained host corpora preserve every previous full financial row and add exactly
 these eight swaps. This is not proof of universal coverage; packaging and live
 rollout of this repair remain pending.
+
+The exact `.22` packages preserve all seven frozen metadata module hashes and
+pass twelve pricing integration tests. A clean 447-block finalized `.21`/`.22`
+replay over requested slots 456073000–456073450 preserves all 47,767 prior full
+financial rows and execution positions, adding exactly the eight independently
+verified seeded-account sells. Four table versions, unique contiguous operation
+ordinals, parent links and every sealed row count pass. Eight resolved candidates
+and eight raw transactions are removed. Each restored sell changes one previously
+quarantined parsed gross event into a verified net receipt: `quarantined_swaps`
+decreases and `corrected_events` increases by one; no other counters change.
+All original RPC financial identities and exact input/net-output tuples agree.
+This replay is read-only; the `.22` live rollout remains pending.
