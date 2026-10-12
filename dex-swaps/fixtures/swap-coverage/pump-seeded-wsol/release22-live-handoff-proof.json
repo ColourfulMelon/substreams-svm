@@ -1,0 +1,87 @@
+{
+  "release": "v0.5.2-pluto.22",
+  "sourceCommit": "b90767b4ccba165a7b8c2b2345ac74f661635826",
+  "packageSha256": "622f4ea78d0974670bfed4d59af84df702f0ac0f3ce57ec38f51fcdd79522991",
+  "oldOutputHash": "b39c3e9016678ba7dbec4b4a71d54ba039ea025b",
+  "newOutputHash": "f2450f0739e978ea649b5d5ff5f3f888c70c3b14",
+  "monorepoMergeCommit": "3660be8ae3c7fe55b2997596cfd9e2b405f90606",
+  "moduleHashMismatchMode": "error",
+  "substreamsDevelopmentMode": true,
+  "oldWriterStoppedWithNoRowsBeyondDurableCursor": true,
+  "opaqueCursorBackedUpAndAdoptedUnchanged": true,
+  "originalAutomaticDeploymentSettingsRestored": true,
+  "productionApiRunning": true,
+  "productionCustomOrdersDisabled": true,
+  "firstActualBoundaryAndParentVerified": true,
+  "liveProof": {
+    "oldDurableBlock": 456082883,
+    "cursors": [
+      {
+        "id": "f2450f0739e978ea649b5d5ff5f3f888c70c3b14",
+        "block_num": 456083759
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 456082884,
+        "parent_slot": 456082883,
+        "parent_hash": "2Y5UgCe6LEPdLQPZyYDzgY3i8Hz5ECuEz52wK16NhLAu",
+        "block_hash": "BYBMhTgXDWdi9VwVnV9NRLPMwQq35eH6hkFN8oKpQXG1",
+        "timestamp": "2026-10-12 14:39:44"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 876,
+        "unique_blocks": 876,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 456083759,
+        "lag_seconds": 1809
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 123481,
+        "unique_events": 123481,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "humidifi",
+        "rows": 319,
+        "unique_events": 319
+      },
+      {
+        "protocol": "tesserav",
+        "rows": 2260,
+        "unique_events": 2260
+      },
+      {
+        "protocol": "jupiter_lend",
+        "rows": 291,
+        "unique_events": 291
+      }
+    ],
+    "cut": 456083659,
+    "coverage": [
+      {
+        "swaps": 111090,
+        "expected_swaps": 111090,
+        "candidates": 6226,
+        "raw": 4697,
+        "expected_candidates": 6226,
+        "expected_raw": 4697
+      }
+    ]
+  },
+  "liveFreshnessPending": true,
+  "historicalRecoveryPerformed": false,
+  "globalCoverageProven": false,
+  "checkedAt": "2026-10-12T15:13:13.169950+00:00"
+}
