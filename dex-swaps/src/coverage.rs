@@ -65,23 +65,63 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             None
         };
         let accounts = ix.accounts();
-        let missing_hop = fixed
-            .filter(|fixed| accounts.len() > *fixed && (accounts.len() - fixed) % 5 == 0)
-            .is_some_and(|fixed| {
-                let end = instructions
-                    .iter()
-                    .enumerate()
-                    .skip(index + 1)
-                    .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
-                    .map(|(end, _)| end as u32)
-                    .unwrap_or(instructions.len() as u32);
-                accounts[fixed..].chunks_exact(5).any(|group| {
-                    !swaps
-                        .iter()
-                        .any(|swap| swap.source_index.is_some_and(|source| source >= index as u32 && source < end) && &swap.amm_pool == group[2].0)
-                })
-            });
-        if !missing_hop && swaps.iter().any(|swap| swap.source_index == Some(index as u32)) {
+        let missing_hop = fixed.map(|fixed| {
+            if accounts.len() <= fixed || (accounts.len() - fixed) % 5 != 0 {
+                return true;
+            }
+            let groups = &accounts[fixed..];
+            if fixed == 16 && data.len() != 24
+                || fixed == 13
+                    && (data.get(16..20).and_then(|bytes| bytes.try_into().ok()).map(u32::from_le_bytes) != Some((groups.len() / 5) as u32)
+                        || data.len() != 20 + groups.len() / 5)
+                || data.get(8..16).and_then(|bytes| bytes.try_into().ok()).map(u64::from_le_bytes).unwrap_or(0) == 0
+            {
+                return true;
+            }
+            let end = instructions
+                .iter()
+                .enumerate()
+                .skip(index + 1)
+                .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
+                .map(|(end, _)| end as u32)
+                .unwrap_or(instructions.len() as u32);
+            let (source, destination) = if fixed == 16 { (1, 2) } else { (5, 6) };
+            let Some(mut current_mint) = mints.mint_for(accounts[source].0) else {
+                return true;
+            };
+            let mut used = BTreeSet::new();
+            for group in groups.chunks_exact(5) {
+                let output_mint = if &current_mint == group[0].0 {
+                    group[1].0
+                } else if &current_mint == group[1].0 {
+                    group[0].0
+                } else {
+                    return true;
+                };
+                // A delegated child may prove a parent hop, but a physical leg
+                // cannot prove two repeated groups in the same route.
+                let matched = swaps.iter().find_map(|swap| {
+                    let identity = (swap.source_index?, swap.source_transfer_index?);
+                    (identity.0 >= index as u32
+                        && identity.0 < end
+                        && swap.transfer_verified
+                        && swap.input_amount > 0
+                        && swap.output_amount > 0
+                        && &swap.amm_pool == group[2].0
+                        && swap.input_mint == current_mint
+                        && &swap.output_mint == output_mint
+                        && !used.contains(&identity))
+                    .then_some(identity)
+                });
+                let Some(identity) = matched else {
+                    return true;
+                };
+                used.insert(identity);
+                current_mint = output_mint.clone();
+            }
+            mints.mint_for(accounts[destination].0).as_ref() != Some(&current_mint)
+        });
+        if missing_hop == Some(false) || missing_hop.is_none() && swaps.iter().any(|swap| swap.source_index == Some(index as u32)) {
             continue;
         }
         // Phoenix can fill from already deposited balances without a Token
@@ -102,7 +142,7 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             instruction_tag: ix.data().iter().take(8).copied().collect(),
             mints: exchange_mints.into_iter().collect(),
             transfer_count,
-            reason: if missing_hop {
+            reason: if missing_hop == Some(true) {
                 "multihop_without_all_verified_pools"
             } else if orderbook_swap {
                 "orderbook_swap_requires_fill_accounting"

@@ -483,6 +483,71 @@ mod tests {
     }
 
     #[test]
+    fn delegated_pump_routes_require_distinct_verified_physical_hops() {
+        for (fixture, parent, child, hops) in [
+            (include_bytes!("../fixtures/swap-coverage/pump-delegated-1.transaction.pb").as_slice(), 19, 20, 2),
+            (include_bytes!("../fixtures/swap-coverage/pump-delegated-2.transaction.pb").as_slice(), 6, 7, 2),
+            (include_bytes!("../fixtures/swap-coverage/pump-delegated-3.transaction.pb").as_slice(), 4, 5, 1),
+            (include_bytes!("../fixtures/swap-coverage/pump-delegated-4.transaction.pb").as_slice(), 22, 23, 1),
+            (include_bytes!("../fixtures/swap-coverage/pump-delegated-5.transaction.pb").as_slice(), 27, 28, 1),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let decoded = process_transaction(tx.clone()).unwrap();
+            let legs: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(child)).cloned().collect();
+            assert_eq!(legs.len(), hops);
+            assert!(legs.iter().all(|swap| swap.transfer_verified));
+            let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            assert!(coverage::candidates(&tx, &mints, &legs).iter().all(|candidate| candidate.source_index != parent));
+            if hops == 2 {
+                let mut repeated_identity = legs.clone();
+                repeated_identity[1].source_transfer_index = repeated_identity[0].source_transfer_index;
+                assert!(coverage::candidates(&tx, &mints, &repeated_identity).iter().any(|candidate|
+                    candidate.source_index == parent && candidate.reason == "multihop_without_all_verified_pools"));
+            }
+            let parent_data = tx.walk_instructions().nth(parent as usize).unwrap().data().to_vec();
+            for malformed in 0..3 {
+                let mut altered = tx.clone();
+                for instruction in &mut altered.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions {
+                    if instruction.data == parent_data {
+                        match malformed {
+                            0 => { instruction.data.pop(); }
+                            1 => instruction.data[8..16].fill(0),
+                            _ => { instruction.accounts.pop(); }
+                        }
+                    }
+                }
+                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                    for instruction in &mut group.instructions {
+                        if instruction.data == parent_data {
+                            match malformed {
+                                0 => { instruction.data.pop(); }
+                                1 => instruction.data[8..16].fill(0),
+                                _ => { instruction.accounts.pop(); }
+                            }
+                        }
+                    }
+                }
+                let mints = token_mints::TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
+                assert!(coverage::candidates(&altered, &mints, &legs).iter().any(|candidate| candidate.source_index == parent));
+            }
+            for invalid in 0..7 {
+                let mut legs = legs.clone();
+                match invalid {
+                    0 => { legs.remove(0); }
+                    1 => legs[0].transfer_verified = false,
+                    2 => legs[0].input_amount = 0,
+                    3 => legs[0].output_mint = vec![0; 32],
+                    4 => legs[0].amm_pool = vec![0; 32],
+                    5 => legs[0].source_index = Some(0),
+                    _ => legs[0].source_transfer_index = None,
+                }
+                assert!(coverage::candidates(&tx, &mints, &legs).iter().any(|candidate|
+                    candidate.source_index == parent && candidate.reason == "multihop_without_all_verified_pools"));
+            }
+        }
+    }
+
+    #[test]
     fn phoenix_swaps_without_wallet_transfers_remain_replayable() {
         let program = substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY");
         for fixture in [

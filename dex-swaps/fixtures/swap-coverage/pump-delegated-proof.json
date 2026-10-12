@@ -1,0 +1,108 @@
+[
+  {
+    "fixture": "pump-delegated-1.transaction.pb",
+    "sha256": "39b13e42f684ba545ed1e59f38982b0195910358403b5367cd3dfec199296911",
+    "signature": "5KysyNBV7taEmUf2tgpkbQphW8o5FMTbDxkt3gjNn9hYG2sVbjkNRDjNUUp7j4h7EY5MWTt4bHQiLjLdrn7n6kDo",
+    "slot": 455832602,
+    "parent": 19,
+    "child": 20,
+    "legs": [
+      {
+        "pool": "D6yiXz3JYbX6RLC7tvk8nJgCPwnqBJD4unGzv4Zdv555",
+        "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "inputAmount": 30121784,
+        "outputMint": "8LVRmiE4Ghohfa5NRANHNVwBgbd7qZ7RmBhSPy55pump",
+        "outputAmount": 7402048311073,
+        "transfer": 21
+      },
+      {
+        "pool": "FfQvzuyZoohCnhDmKBPWc4xQo4qowbu6yjB3h559EgyB",
+        "inputMint": "8LVRmiE4Ghohfa5NRANHNVwBgbd7qZ7RmBhSPy55pump",
+        "inputAmount": 7402048311073,
+        "outputMint": "DhyRVactrWJ9K8KpSNr8QruHmcDFK4NFoLHSKvcqpump",
+        "outputAmount": 27482926772512,
+        "transfer": 24
+      }
+    ]
+  },
+  {
+    "fixture": "pump-delegated-2.transaction.pb",
+    "sha256": "ad3d248c0744a3bbb8c2b9ece4330e1ee098d6f02e07382dc9d28bf73eb3e94b",
+    "signature": "mmoX7GUnP8Zm2Hf5MHLVrB1N5Fo46Wz6Yo5zdBXSk1cAAVnJyTJiTjDCrVgP2wacoc5jwpwGZYWNq8GZU2uFJbg",
+    "slot": 455832459,
+    "parent": 6,
+    "child": 7,
+    "legs": [
+      {
+        "pool": "FfQvzuyZoohCnhDmKBPWc4xQo4qowbu6yjB3h559EgyB",
+        "inputMint": "DhyRVactrWJ9K8KpSNr8QruHmcDFK4NFoLHSKvcqpump",
+        "inputAmount": 4811043814565,
+        "outputMint": "8LVRmiE4Ghohfa5NRANHNVwBgbd7qZ7RmBhSPy55pump",
+        "outputAmount": 1260640796040,
+        "transfer": 8
+      },
+      {
+        "pool": "D6yiXz3JYbX6RLC7tvk8nJgCPwnqBJD4unGzv4Zdv555",
+        "inputMint": "8LVRmiE4Ghohfa5NRANHNVwBgbd7qZ7RmBhSPy55pump",
+        "inputAmount": 1260640796040,
+        "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "outputAmount": 5004623,
+        "transfer": 10
+      }
+    ]
+  },
+  {
+    "fixture": "pump-delegated-3.transaction.pb",
+    "sha256": "73ce28fb3a1e217868fdfb3b91ca9a3520e249a1a878ad1a6419e574e9a38ff4",
+    "signature": "ByQkZro4oGLnUnPh9JeJZbRqQfMCVbNxWGh2m6qBPV2nH5eoWqe6yzonicuLLGRY8LbWpcmEjZ9E4zB8m7S1U7E",
+    "slot": 455830356,
+    "parent": 4,
+    "child": 5,
+    "legs": [
+      {
+        "pool": "ENVFFLkC7cex92Q7cD4qbLSyyez6G4MeyBC4F7hL7Mm3",
+        "inputMint": "4rsXpUNFJkF23UA53w9K51QaUY6ficotSLDh9Au8pump",
+        "inputAmount": 18734015736283,
+        "outputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+        "outputAmount": 31228879302,
+        "transfer": 6
+      }
+    ]
+  },
+  {
+    "fixture": "pump-delegated-4.transaction.pb",
+    "sha256": "91ca8dc84e1023a519579350a73024d0c3db4d381e051b00ccf13607fca5f306",
+    "signature": "37BaJ3gna9kY3CaPuHdm3prBrx5fAMMCVuAmZhgVU1XLoSErxtM9j7AfqxEeh2xko3b98SwmghTLe3kH2nEh3erH",
+    "slot": 455830209,
+    "parent": 22,
+    "child": 23,
+    "legs": [
+      {
+        "pool": "ENVFFLkC7cex92Q7cD4qbLSyyez6G4MeyBC4F7hL7Mm3",
+        "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+        "inputAmount": 19584516600,
+        "outputMint": "4rsXpUNFJkF23UA53w9K51QaUY6ficotSLDh9Au8pump",
+        "outputAmount": 18734015736283,
+        "transfer": 24
+      }
+    ]
+  },
+  {
+    "fixture": "pump-delegated-5.transaction.pb",
+    "sha256": "dc8dcac6398035c65af1d4390da13045c2ab158154eb57160670a286506a44d7",
+    "signature": "5rk18UUKSK9jv6E5gPCWAdozCFq6NWFfvib5yzSqpbYsT7vtAzZjNek5cmpooGw32S6edatQP3PcEgchQfwiN4Xq",
+    "slot": 455827126,
+    "parent": 27,
+    "child": 28,
+    "legs": [
+      {
+        "pool": "J6GxGaaVSkMMXqUwWryNQ8gb7Q1i3oh4o42dKFAGZBPp",
+        "inputMint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+        "inputAmount": 19610642700,
+        "outputMint": "zygW1zgDNrcSwRnrDypNWXUxNXd1Yc14NsVnBj1pump",
+        "outputAmount": 24838073718813,
+        "transfer": 29
+      }
+    ]
+  }
+]
