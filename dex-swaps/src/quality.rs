@@ -606,6 +606,7 @@ pub(crate) fn verify_with_fees(
     }
 
     let mut rejected = Vec::new();
+    let mut native_sol_multihop_receipts = HashMap::new();
     if expand_native {
         for (&index, &(input_position, output_position)) in &oasis_receipts {
             let ix = &instructions[index as usize];
@@ -1288,6 +1289,119 @@ pub(crate) fn verify_with_fees(
                         && (!native_sol_buy || t.depth == depth + 1 && t.authority.as_slice() == group[2].0.as_slice()
                             && successful_invocations.contains(&t.index)))
                     .collect();
+                // A last curve hop pays native SOL directly from its own
+                // lamports. Its declared WSOL accounts are only mint witnesses.
+                // Bind one committed token receipt and native event to exact
+                // pool/buyback deltas; no current fee settings are inferred.
+                if is_curve && hop + 1 == path.len() && output_mint.as_slice() == crate::SOL_MINT
+                    && group[1].0.as_slice() == crate::SOL_MINT
+                {
+                    if inputs.len() != 1 || !outputs.is_empty()
+                        || accounts[8].0.as_slice() != token::PROGRAM_ID
+                        || accounts[9].0.as_slice() != token_2022::PROGRAM_ID
+                        || accounts[10].0.iter().any(|byte| *byte != 0)
+                        || accounts[12].0.as_slice() != pumpfun::PROGRAM_ID
+                        || !successful_invocations.contains(&(index as u32))
+                    { continue; }
+                    if path.iter().zip(&groups).any(|(leg, group)| leg.0 != *group[0].0) { continue; }
+                    let initial_inputs: Vec<_> = scoped.iter().filter(|t| t.source == *accounts[5].0
+                        && t.destination == path[0].2 && t.mint == path[0].0 && t.authority == *accounts[authority].0
+                        && t.depth == depth + 1 && instructions[t.index as usize].program_id().0 == accounts[9].0
+                        && successful_invocations.contains(&t.index)).collect();
+                    if initial_inputs.len() != 1 || initial_inputs[0].amounts[0] != amount { continue; }
+                    let input = inputs[0];
+                    // Exact source conservation independently checks gross
+                    // debits; an inferred destination fee cannot hide a bad CPI.
+                    if [&initial_inputs[0].source, &input.source].iter().any(|source| {
+                        let mint = mints.mint_for(source);
+                        if mint.is_none() || other_token_operations.contains(*source)
+                            || !observed_start.contains(*source)
+                            || !observed_end.contains(*source) && !proven_closed.contains(*source)
+                        { return true; }
+                        let mint = mint.unwrap();
+                        let incoming: Vec<_> = transfers.iter().filter(|t| &t.destination == *source && t.mint == mint).collect();
+                        if incoming.iter().any(|t| !t.net_verified) { return true; }
+                        let received: i128 = incoming.iter().map(|t| i128::from(*t.amounts.iter().min().unwrap())).sum();
+                        deltas.get(*source).copied() != Some(received - debits.get(&((*source).clone(), mint)).copied().unwrap_or(0))
+                    }) { continue; }
+                    let input_authority = if hop == 0 { accounts[authority].0 } else { groups[hop - 1][2].0 };
+                    if input.depth != depth + 1 || input.authority != *input_authority
+                        || instructions[input.index as usize].program_id().0 != accounts[9].0
+                        || !successful_invocations.contains(&input.index) || !input.net_verified
+                        || mints.mint_for(vault_in).as_ref() != Some(input_mint)
+                        || hop == 0 && input.amounts[0] != amount
+                    { continue; }
+                    let events: Vec<_> = instructions.iter().enumerate().skip(input.index as usize + 1)
+                        .take(end as usize - input.index as usize - 1).filter_map(|(position, child)| {
+                            let a = child.accounts();
+                            if child.program_id().0 != &pumpfun::PROGRAM_ID || child.stack_height() != depth + 1
+                                || a.len() != 1 || a[0].0 != accounts[11].0
+                                || !successful_invocations.contains(&(position as u32))
+                            { return None; }
+                            let event = pumpfun::events::unpack_trade_event_minimal(child.data()).ok()??;
+                            if event.is_buy || event.mint.as_slice() != input_mint.as_slice()
+                                || event.user.as_slice() != accounts[user].0.as_slice()
+                                || event.token_amount != *input.amounts.iter().min().unwrap()
+                            { return None; }
+                            let quote = pumpfun::events::unpack_quote_trade_amount(child.data()).ok()?;
+                            (quote.mint.iter().all(|byte| *byte == 0) && quote.amount == event.sol_amount).then_some(quote)
+                        }).collect();
+                    if events.len() != 1 { continue; }
+                    let quote = &events[0];
+                    let Some(net) = quote.amount.checked_sub(quote.fee).and_then(|n| n.checked_sub(quote.creator_fee)).filter(|n| *n > 0)
+                        else { continue };
+                    let pool = group[2].0;
+                    let recipient = accounts[7].0;
+                    // The buyback recipient is a WSOL account. Its native
+                    // credit uses a committed empty self-CPI before SyncNative.
+                    // Count that exact settlement helper separately from swaps.
+                    let settlements: Vec<_> = instructions.iter().enumerate().skip(input.index as usize + 1)
+                        .take(end as usize - input.index as usize - 1).filter(|(position, child)| {
+                            let a = child.accounts();
+                            child.program_id().0 == &pumpfun::PROGRAM_ID && child.stack_height() == depth + 1
+                                && child.data().as_slice() == [228, 69, 165, 46, 81, 203, 154, 29]
+                                && a.len() == 3 && a[0].0 == accounts[11].0 && a[1].0 == pool && a[2].0 == recipient
+                                && successful_invocations.contains(&(*position as u32))
+                        }).collect();
+                    if settlements.len() != 1 { continue; }
+                    let settlement_index = settlements[0].0;
+                    let Some(sync) = instructions.get(settlement_index + 1).filter(|_| settlement_index + 1 < end as usize) else { continue };
+                    let sync_accounts = sync.accounts();
+                    if sync.program_id().0 != accounts[8].0 || sync.stack_height() != depth + 1
+                        || sync.data().as_slice() != [17] || sync_accounts.len() != 1 || sync_accounts[0].0 != recipient
+                        || !successful_invocations.contains(&((settlement_index + 1) as u32))
+                        || mints.mint_for(recipient).as_deref() != Some(crate::SOL_MINT.as_slice())
+                    { continue; }
+                    if pool == recipient || instructions.iter().filter(|call| call.program_id().0 == &pumpfun::PROGRAM_ID
+                        && call.accounts().iter().any(|a| a.0 == pool)).count() != 2
+                        || instructions.iter().filter(|call| call.program_id().0 == &pumpfun::PROGRAM_ID
+                            && call.accounts().iter().any(|a| a.0 == recipient)).count() != 2
+                        || transfers.iter().any(|t| t.mint == crate::SOL_MINT
+                            && [&t.source, &t.destination].iter().any(|a| *a == pool || *a == recipient))
+                    { continue; }
+                    let Some(meta) = tx.meta.as_ref() else { continue };
+                    let resolved = tx.resolved_accounts();
+                    let Some(pool_position) = resolved.iter().position(|a| *a == pool) else { continue };
+                    let Some(recipient_position) = resolved.iter().position(|a| *a == recipient) else { continue };
+                    let Some(pool_delta) = meta.pre_balances.get(pool_position).zip(meta.post_balances.get(pool_position))
+                        .map(|(before, after)| i128::from(*before) - i128::from(*after)) else { continue };
+                    let Some(recipient_delta) = meta.post_balances.get(recipient_position).zip(meta.pre_balances.get(recipient_position))
+                        .map(|(after, before)| i128::from(*after) - i128::from(*before)) else { continue };
+                    if recipient_delta != i128::from(quote.buyback_fee)
+                        || net.checked_add(quote.buyback_fee).map(i128::from) != Some(pool_delta)
+                    { continue; }
+                    native_sol_multihop_receipts.insert(index as u32, (input.index, net, pool.clone()));
+                    swaps.push(pb::Swap {
+                        protocol: pb::Protocol::Pumpfun as i32,
+                        program_id: ix.program_id().0.clone(), amm: ix.program_id().0.clone(),
+                        amm_pool: pool.clone(), user: accounts[user].0.clone(), stack_height: depth,
+                        input_mint: input_mint.clone(), input_amount: input.amounts[0],
+                        output_mint: output_mint.clone(), output_amount: net,
+                        source_index: Some(index as u32), source_transfer_index: Some(input.index),
+                        ..Default::default()
+                    });
+                    continue;
+                }
                 if inputs.len() != 1 || outputs.len() != 1 {
                     continue;
                 }
@@ -1437,6 +1551,20 @@ pub(crate) fn verify_with_fees(
                     }
                     evidence = Some(identity);
                     break 'candidate;
+                }
+                if let Some(&(input_index, net, ref pool)) = native_sol_multihop_receipts.get(&(index as u32)).filter(|receipt| receipt.2 == swap.amm_pool) {
+                    let input = transfers.iter().find(|t| t.index == input_index).unwrap();
+                    let identity = (index as u32, input_index, input_index);
+                    if swap.protocol == pb::Protocol::Pumpfun as i32 && swap.amm_pool == *pool && swap.user == *accounts[3].0
+                        && swap.input_mint == input.mint && swap.output_mint == crate::SOL_MINT
+                        && (swap.input_amount, swap.output_amount) == (input.amounts[0], net)
+                        && !expected_transfer.is_some_and(|position| position != input_index)
+                        && !native_evidence.contains(&identity)
+                    {
+                        evidence = Some(identity);
+                        break 'candidate;
+                    }
+                    continue;
                 }
                 if ix.program_id().0 == &crate::oasis::PROGRAM_ID {
                     let Some(&(input_position, output_position)) = oasis_receipts.get(&(index as u32)) else { continue };
@@ -1911,6 +2039,112 @@ mod tests {
             assert_eq!(swap.source_transfer_index, Some(7));
             assert_eq!(swap.stack_height, 2);
             assert!(swap.transfer_verified);
+        }
+    }
+
+    #[test]
+    fn finalized_native_sol_multihop_sells_retain_exact_net_lamports() {
+        // Amounts come from independent token/reserve and buyback balance proofs.
+        let cases: &[(&[u8], u32, u32, u64, u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-1.transaction.pb"), 7, 10, 48461705044, 1954063),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-2.transaction.pb"), 5, 8, 4581765332578, 298987882),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-3.transaction.pb"), 7, 10, 2098011953543, 104373622),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-4.transaction.pb"), 7, 10, 6457640989385, 375091096),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-5.transaction.pb"), 5, 8, 18604350247708, 966350547),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-6.transaction.pb"), 7, 10, 1332355492220, 65999938),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-7.transaction.pb"), 5, 8, 223025273342, 7480281),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-8.transaction.pb"), 5, 8, 9608082829, 515882),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-9.transaction.pb"), 7, 10, 57026121234, 3014773),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-10.transaction.pb"), 7, 10, 17670471773, 1160717),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-11.transaction.pb"), 5, 8, 26741534976982, 1473276973),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-12.transaction.pb"), 5, 8, 9589486165628, 285692843),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-13.transaction.pb"), 7, 10, 1382987880258, 69102091),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-14.transaction.pb"), 7, 10, 2141497211958, 107475397),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-15.transaction.pb"), 7, 10, 1193223508861, 44832292),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-16.transaction.pb"), 5, 8, 95943653669590, 2930489199),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-17.transaction.pb"), 5, 8, 37043602365279, 1434049791),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-18.transaction.pb"), 7, 10, 1034697410229, 35057362),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-19.transaction.pb"), 5, 8, 49435474364362, 1747155080),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-20.transaction.pb"), 5, 8, 96131703973627, 2930493081),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-21.transaction.pb"), 5, 8, 49525436833680, 1747156229),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-22.transaction.pb"), 9, 12, 932631130121, 31896284),
+            (include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-23.transaction.pb"), 5, 8, 36979388876189, 1434049498),
+        ];
+        for &(bytes, native_index, transfer_index, input_atoms, net_lamports) in cases {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let decoded = crate::process_transaction(tx).unwrap();
+            let legs: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(native_index)
+                && s.output_mint == crate::SOL_MINT).collect();
+            assert_eq!(legs.len(), 1, "native SOL sell source {native_index}");
+            let leg = legs[0];
+            assert_eq!(leg.source_transfer_index, Some(transfer_index));
+            assert_eq!((leg.input_amount, leg.output_amount), (input_atoms, net_lamports));
+            assert_eq!(leg.protocol, pb::Protocol::Pumpfun as i32);
+            assert_eq!(leg.stack_height, 3);
+            assert!(leg.transfer_verified);
+            assert!(!decoded.coverage_candidates.iter().any(|c| c.reason == "multihop_without_all_verified_pools"));
+        }
+    }
+
+    #[test]
+    fn native_sol_multihop_sell_rejects_inconsistent_settlement() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-1.transaction.pb").to_vec(),
+        ).unwrap();
+        let original = &tx.meta.as_ref().unwrap().inner_instructions.iter().find(|g| g.index == 1).unwrap().instructions;
+        let native = original[1].accounts.clone();
+        let input = original[4].accounts.clone();
+        for mode in 0..33 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 1).unwrap().instructions;
+            match mode {
+                0 => calls[1].data[8] ^= 1,
+                1 => calls[4].data[1] ^= 1,
+                2 => calls[4].accounts[3] = native[3],
+                3 => calls[4].accounts[0] = native[5],
+                4 => calls[4].accounts[2] = native[7],
+                5 => calls[4].program_id_index = calls[1].program_id_index,
+                6 => calls[4].stack_height = Some(5),
+                7 => calls[7].data[16] ^= 1,
+                8 => calls[7].data[56] ^= 1,
+                9 => calls[7].data[48] ^= 1,
+                10 => calls[7].data[65] ^= 1,
+                11 => calls[7].data.truncate(16),
+                12 => calls[7].accounts[0] = native[3],
+                13 => calls[7].stack_height = Some(5),
+                14 => calls[5].data.push(0),
+                15 => calls[5].accounts[1] = native[3],
+                16 => calls[5].accounts[2] = native[6],
+                17 => calls[5].accounts[0] = native[3],
+                18 => calls[5].stack_height = Some(5),
+                19 => calls[6].data[0] = 9,
+                20 => calls[6].accounts[0] = native[6],
+                21 => calls[6].program_id_index = calls[4].program_id_index,
+                22 => calls[6].stack_height = Some(5),
+                23 => meta.post_balances[native[20] as usize] += 1,
+                24 => meta.post_balances[native[7] as usize] += 1,
+                25 | 26 => {
+                    let balances = if mode == 25 { &mut meta.pre_token_balances } else { &mut meta.post_token_balances };
+                    let account = if mode == 25 { input[0] } else { input[2] };
+                    let balance = balances.iter_mut().find(|b| b.account_index == u32::from(account)).unwrap();
+                    let amount = balance.ui_token_amount.as_mut().unwrap();
+                    amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
+                }
+                27 => calls[1].accounts[8] = native[9],
+                28 => calls[1].accounts[11] = native[3],
+                29 => calls[1].data.push(0),
+                30 => calls[1].accounts[19] = native[18],
+                31 | 32 => {
+                    let program = base58::encode(pumpfun::PROGRAM_ID);
+                    let last = meta.log_messages.iter().rposition(|l| l == &format!("Program {program} success")).unwrap();
+                    if mode == 31 { meta.log_messages.truncate(last); }
+                    else { meta.log_messages[last] = format!("Program {program} failed: custom program error: 1"); }
+                }
+                _ => unreachable!(),
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
+                !(s.source_index == Some(7) && s.output_mint == crate::SOL_MINT))), "native SOL sell mutation {mode}");
         }
     }
 

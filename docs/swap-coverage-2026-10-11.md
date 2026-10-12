@@ -607,3 +607,46 @@ case with opaque funding/event evidence verifies that one visible mint produces
 All 153 core tests and release WASM builds pass. The original transaction is
 retained by the existing diagnostic sink for later repair, without publishing
 its intent as a price.
+
+
+## Native SOL multi-hop sells (candidate .14)
+
+Twenty-three retained original finalized transactions contain missing final curve
+legs on six pools. Their Token-2022 gross input debits and reserve receipts,
+native events, pool lamport debits and buyback lamport credits were independently
+checked. The observed native buyback credit uses a committed empty self-CPI
+and the recipient's canonical WSOL SyncNative; that helper is distinct from a
+second pool swap. [Pump's multi-hop contract](https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/MULTI_HOP_SWAP.md)
+requires native SOL receipt in the user wallet on the final SOL curve sell,
+with the output WSOL account serving as a mint witness and the fee WSOL account
+receiving lamports before synchronization.
+
+The decoder retains each physical curve leg. It requires the exact original
+input amount, source authorities, canonical token programs, committed native
+and token/event ancestry, a single matching native sell event and matching
+pool/buyback deltas. Exact source-token conservation independently checks gross
+debits; actual reserve receipts check net tokens, including transfer fees.
+An extra pool-bearing call or explicit SOL flow cannot borrow the same balance
+proof. Current reserves and current fee absence never stand in for historical
+execution evidence. Remaining native settlement formats stay diagnostic.
+
+All twenty-three recovered legs match the independent original-transaction oracle.
+Two core tests cover these originals and 33 inconsistent amount/account/depth,
+fee settlement, synchronization, balance and failed/truncated-call mutations.
+All 157 core tests pass. Nine replay corpora preserve all 1,216 previous full
+financial payloads exactly and add only these fourteen legs (1,230 total).
+A separate retained 47-transaction corpus preserves all 73 previous full financial
+payloads and recovers 23 final sell legs (96 total); fourteen overlap the earlier
+corpus. Its finalized RPC/protobuf call and runtime-log parity, exact Token-2022
+debit/receipt balances, native event and pool/buyback lamport equations, and later
+owned immutable pool/vault roles are retained with the original fixtures.
+
+A read-only finalized remote replay of blocks 455929225..455929274 exits cleanly
+for both .13 and .14, preserves all 4,576 previous swap fields/keys (excluding only
+the decoder-version label), and adds one independently verified sell to reach
+4,577. Its exact input is 1,034,697,410,229 base atoms and net SOL output is
+35,057,362 lamports. Only the corresponding verified/diagnostic block counters
+change. Packaging passes. The frozen metadata binary and its seven module hashes
+remain pinned to .13's artifact; only the pricing binary changes. Controlled
+live deployment remains pending for .14. No live history is appended by this
+source change.

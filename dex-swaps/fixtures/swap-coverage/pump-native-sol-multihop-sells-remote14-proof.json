@@ -1,0 +1,58 @@
+{
+  "scope": "Identical finalized 50-block remote replay. All previous swap fields and primary keys preserved after removing only decoder_version. Block rows preserve all fields except decoder_version and the exact verified/diagnostic counts for the newly recovered sell. Both CLI processes exited 0. Read-only replay; no sink writes.",
+  "firstBlock": 455929225,
+  "stopBlockExclusive": 455929275,
+  "blocks": 50,
+  "previousFinancialRowsUnchanged": 4576,
+  "newFinancialRows": 4577,
+  "added": [
+    {
+      "signature": "3d9i2H4pPCpFJBf1Dhe5uNaqXbALKxxBpwA49GfFEGntPkUohsTMvyTSp9aP2KisPwSuVqCRuFP1wkL4YcLdQt9T",
+      "event_id": "3d9i2H4pPCpFJBf1Dhe5uNaqXbALKxxBpwA49GfFEGntPkUohsTMvyTSp9aP2KisPwSuVqCRuFP1wkL4YcLdQt9T:7:10",
+      "amm_pool": "8zSUF5pP9u29yV4H9QTXtnLSGmKtg8z7tWSCEuL5JZ6N",
+      "timestamp": "1791782456",
+      "block_hash": "Lrxdky9PxWf4ARCCFaiiXc2vXRFx4PR5GaaHQrshqpt",
+      "stack_height": "3",
+      "protocol": "pumpfun",
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "fee_payer": "EG9FyiBDGgRTTJjsiB26dtBq9j5L41S8nukZRsvpMXGp",
+      "user": "EG9FyiBDGgRTTJjsiB26dtBq9j5L41S8nukZRsvpMXGp",
+      "transfer_verified": "1",
+      "orderbook_fill_verified": "0",
+      "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "compute_units_consumed": "157553",
+      "output_amount": "35057362",
+      "block_num": "455929249",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "signers_raw": "EG9FyiBDGgRTTJjsiB26dtBq9j5L41S8nukZRsvpMXGp",
+      "input_amount": "1034697410229",
+      "fee": "6891",
+      "input_mint": "BHTDVeRsuYBqsjDjgRHzG4mupsnpXJdejrbbtDweTUSD",
+      "source_instruction_index": "7",
+      "execution_position": "10"
+    }
+  ],
+  "blockChanges": [
+    {
+      "block": 455929249,
+      "countChanges": {
+        "verified_swaps": [
+          "96",
+          "97"
+        ],
+        "coverage_candidates": [
+          "6",
+          "4"
+        ],
+        "coverage_transactions": [
+          "4",
+          "3"
+        ]
+      }
+    }
+  ],
+  "filesSha256": {
+    "baseline13": "724a366be0be90903c1614b114b566a1f27a3cc173c3ae69e2960daf3ad8cfb3",
+    "candidate": "5005f44700559492da9f5ea77c0a473e16d460c12469710b83d95c629a45aac9"
+  }
+}

@@ -91,7 +91,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             }
             let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
             row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", "v0.5.2-pluto.13")
+                .set("decoder_version", "v0.5.2-pluto.14")
                 .set("transaction_proto_hex", raw);
             set_clock(&clock, row);
         }
@@ -108,7 +108,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
                 .set("transfer_count", candidate.transfer_count)
                 .set("reason", candidate.reason.clone())
-                .set("decoder_version", "v0.5.2-pluto.13");
+                .set("decoder_version", "v0.5.2-pluto.14");
             set_clock(&clock, row);
         }
         // Row identity positions live in two coordinate domains. For a
@@ -185,7 +185,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.13")
+                .set("decoder_version", "v0.5.2-pluto.14")
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
                 .set(
                     "execution_position",
@@ -214,7 +214,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.13")
+        .set("decoder_version", "v0.5.2-pluto.14")
         .set(
             "verified_swaps",
             all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
