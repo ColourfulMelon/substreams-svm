@@ -959,3 +959,15 @@ all 2801 prior full financial occurrences, modify/drop none, and add two
 occurrences of the same independently proven HumidiFi leg. This source fix is
 not in the live .19 package; versioned package replay and rollout remain pending.
 Jupiter Lend and prediction-market normalization are still pending.
+
+
+Nine retained Tri3 originals now match finalized RPC instructions, token
+balances and exact log prefixes. Declared native inputs match their immediate
+TransferChecked debits, and immediate inventory outputs match router output
+receipts. All nine router input receipts also include outside-native fees;
+those totals must not replace native input amounts. Original evidence is in
+`dex-swaps/fixtures/swap-coverage/tri3-native/`. At context slot 456033192, all
+selected current market/maker states and outcome mints are unavailable; this
+read does not establish historical ownership or mint-fee state. Historical
+market and net receipt evidence are still pending, and no Tri3 decoder was
+added. Source/receipt differences alone are not classified as lost transactions.
