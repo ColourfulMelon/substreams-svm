@@ -511,3 +511,43 @@ and physical source identities remain identical. Replay ignores this metadata
 field when comparing previous financial payloads, so it neither reinserts these
 trades nor refreshes historical timestamps. It still refuses changed amounts,
 missing trades and reassignment of a known pool.
+
+
+## Canonical SPL Token Swap actual receipts (candidate .13)
+
+The canonical `SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8` program now
+shares the strict native receipt path with legacy Orca V1 under existing
+protocol `spl_token_swap = 19`. Its 17-byte opcode-1 instruction declares an
+input maximum and output minimum; these bounds are not actual traded amounts.
+The decoder requires exact immediate classic-Token input/output transfers,
+user/vault authorities, mint roles, invocation commitment and bounds. Between
+the transfers it permits only the declared pool-token owner fee `MintTo` and
+optional host fee `MintTo`, with the exact pool mint, recipients and authority.
+Extra/nested/foreign calls, wrong fee roles and liquidity instructions cannot
+become financial rows. The sources are SPL's pinned
+[instruction layout](https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/instruction.rs)
+and [processor](https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/processor.rs).
+
+Three original Jupiter v4 transactions prove previously missing owner-fee swaps,
+including ECH input 694,921 atoms below its declared maximum of 694,937.
+A separate finalized sample has 61 SPL legs in 60 transactions: nine no-fee
+and 52 owner-fee variants, with native call depths 2 and 3. Ten transactions
+have runtime-truncated logs; completed root children remain provable as above.
+One original creates and closes its WSOL destination within the transaction,
+so its mint is proven by explicit initialization rather than balance snapshots.
+The owner-verified initialized SwapV1 pools and authority PDAs match every
+sample's immutable vault/mint roles. Later owned state reads do not prove
+historical reserves. Six representative original protobuf transactions are
+retained; all 64 signatures, hashes and independent user/vault amount rows
+are recorded in `fixtures/native-venues/spl-swap-*`.
+
+All 151 decoder/sink core tests pass, including 99 malformed-call mutations,
+root rollback/truncation checks and both transient-output and post-marker log
+variants. Release WASM builds pass. Across seven transaction corpora, replay
+preserves all 1,061 prior financial payloads (three corrected descriptive depths
+aside) and adds exactly 64 canonical SPL legs, for 1,125 total. Each new leg
+matches the independent actual-CPI oracle in program, pool, user, mint pair,
+amounts and physical source positions. No enum migration is needed for this
+existing protocol. Positive host-fee samples, other Token Swap forks, complete
+Token-2022 metadata and historical backfill are still separate coverage work;
+this sample does not establish exhaustive coverage.

@@ -1,0 +1,64 @@
+{
+  "scope": "Original finalized transactions; strict two immediate SPL Token transfers with the declared pool-token owner-fee MintTo between them, exact user/vault/authority/mint roles, owned initialized SwapV1 pool/PDA and instruction bounds. The later owned read corroborates immutable vault/mint fields, not historical reserve amounts.",
+  "primarySources": [
+    "https://github.com/jup-ag/jupiter-amm-implementation/blob/main/jupiter-core/src/amms/spl_token_swap_amm.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/instruction.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/state.rs"
+  ],
+  "fixtures": [
+    {
+      "fixture": "spl-swap-route-1.transaction.pb",
+      "signature": "2HecL4ipouG1awzDutqLqXthUofVbkXCyDjTKWuJQGJYHbV5aZin2ZBK51FcBvc1JiVW7GfsNZ6Hyq1Dcce1BRWd",
+      "slot": 455795499,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "ownerFeeMintCpiIndex": 12,
+      "ownerFeePoolTokenAmount": "15910",
+      "ownedPoolReadContext": 455880444,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c1b9315138f160989a3bcd6aa71e7df791450f6ea087fcec83d634940bc66d9f",
+      "rpcJsonSha256": "1bb989d68fcd46224d1b73d2999dd06775cfac3056c0482d41fea79c7d8a9fc4",
+      "protobufSha256": "9aea7cd40c7c3d29d69c9d4b3ef65d6edf991c2d9295a270803d5b2de1daba03",
+      "declaredInputMaximum": "19314",
+      "declaredOutputMinimum": "0"
+    },
+    {
+      "fixture": "spl-swap-route-2.transaction.pb",
+      "signature": "2bRBfijLsu5CVnW3ZfVYwYUwVdfJbS13Cqd83v2TGuER2mBAEg9N2yFNF9YcF2JoV6SqDgvQeFTAu6yg8MDCfJEH",
+      "slot": 455858721,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 10,
+      "inputCpiIndex": 11,
+      "outputCpiIndex": 13,
+      "ownerFeeMintCpiIndex": 12,
+      "ownerFeePoolTokenAmount": "2775",
+      "ownedPoolReadContext": 455880444,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "4c99330b2d6507883b89045fefd37a61f2d7e234b3b14e7625045e49c0eab8de",
+      "rpcJsonSha256": "8b9e0031c1b4bb73e4d89627174561e707643dcc2007fec853273edc69cbe050",
+      "protobufSha256": "fe218c3c4fcb27935e27d7fc7d2fc0629688f476eb967dbb9d9dac824f48a332",
+      "declaredInputMaximum": "694937",
+      "declaredOutputMinimum": "0"
+    },
+    {
+      "fixture": "spl-swap-route-3.transaction.pb",
+      "signature": "37VrsX9XCZrxzHiUpKVFVYS4sF5o4theG1L81APMp1KSyaCLn5etfEYmq12F27LWJBuNn1f3iR9XYBHMT4PWtvwN",
+      "slot": 455785355,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 16,
+      "inputCpiIndex": 17,
+      "outputCpiIndex": 19,
+      "ownerFeeMintCpiIndex": 18,
+      "ownerFeePoolTokenAmount": "17864",
+      "ownedPoolReadContext": 455880444,
+      "poolOwner": "SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8",
+      "poolDataSha256": "c1b9315138f160989a3bcd6aa71e7df791450f6ea087fcec83d634940bc66d9f",
+      "rpcJsonSha256": "992c123325fbf4b4e4b05e8665e9e018bfd27d772492c052beae3ebcd6ea8f0f",
+      "protobufSha256": "bf7147d3e3f03e1422bee3eeab39d2bc72c5552b79028584f7d22ae8886a4233",
+      "declaredInputMaximum": "20367",
+      "declaredOutputMinimum": "0"
+    }
+  ]
+}

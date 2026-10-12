@@ -13,6 +13,7 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Humidifi, b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp")),
     (Protocol::OrcaV2, b58!("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP")),
     (Protocol::SplTokenSwap, ORCA_V1),
+    (Protocol::SplTokenSwap, substreams_solana_idls::spl::token_swap::PROGRAM_ID),
     (Protocol::Alphaq, b58!("ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA")),
     (Protocol::Kipseli, b58!("3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU")),
     (Protocol::Flux, b58!("FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK")),
@@ -72,8 +73,8 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     let raw = ix.data();
     let mut data = raw.clone();
     if protocol == Protocol::SplTokenSwap {
-        // Orca V1 uses the legacy SPL Token Swap ABI, not the later
-        // Token-2022 extension with separate mint/program accounts.
+        // Orca V1 and the canonical SwaPp program use this legacy ABI.
+        // The later Token-2022 extension has separate mint/program accounts.
         let accounts = ix.accounts();
         if data.len() != 17 || data[0] != 1 || !matches!(accounts.len(), 10 | 11)
             || accounts[9].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID

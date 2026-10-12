@@ -214,4 +214,174 @@ mod tests {
         assert_eq!(swap.output_mint, OUTPUT_MINT.to_vec());
         assert_eq!(swap.output_amount, 450);
     }
+
+    #[test]
+    fn finalized_swaps_use_actual_user_receipts_and_only_declared_lp_fee_mints() {
+        use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
+        let expected: Vec<_> = include_str!("../fixtures/native-venues/spl-swap-legs.tsv").lines().collect();
+        for (case, fixture) in [
+            include_bytes!("../fixtures/native-venues/spl-swap-route-1.transaction.pb").as_slice(),
+            include_bytes!("../fixtures/native-venues/spl-swap-route-2.transaction.pb").as_slice(),
+            include_bytes!("../fixtures/native-venues/spl-swap-route-3.transaction.pb").as_slice(),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let row: Vec<_> = expected[case].split('\t').collect();
+            let index = row[1].parse::<u32>().unwrap();
+            let native_data = tx.walk_instructions().nth(index as usize).unwrap().data().clone();
+            let input = row[6].parse::<u64>().unwrap();
+            let output = row[8].parse::<u64>().unwrap();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1);
+            let swap = swaps[0];
+            assert_eq!(swap.protocol, pb::Protocol::SplTokenSwap as i32);
+            assert_eq!(swap.amm, token_swap::PROGRAM_ID);
+            assert_eq!(swap.source_transfer_index, Some(index + 1));
+            assert_eq!(base58::encode(&swap.amm_pool), row[3]);
+            assert_eq!(base58::encode(&swap.user), row[4]);
+            assert_eq!(base58::encode(&swap.input_mint), row[5]);
+            assert_eq!(base58::encode(&swap.output_mint), row[7]);
+            assert_eq!((swap.input_amount, swap.output_amount), (input, output));
+            assert!(swap.transfer_verified);
+            assert!(decoded.coverage_candidates.iter().all(|candidate| candidate.source_index != index));
+            for mode in 0..33 {
+                let mut altered = tx.clone();
+                let meta = altered.meta.as_mut().unwrap();
+                let (group, position) = meta
+                    .inner_instructions
+                    .iter()
+                    .enumerate()
+                    .find_map(|(g, group)| group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p)))
+                    .unwrap();
+                let calls = &mut meta.inner_instructions[group].instructions;
+                let a = calls[position].accounts.clone();
+                match mode {
+                    0 => calls[position].data[1..9].copy_from_slice(&(input - 1).to_le_bytes()),
+                    1 => calls[position].data[9..17].copy_from_slice(&(output + 1).to_le_bytes()),
+                    2 => calls[position].data[0] = 2,
+                    3 => {
+                        calls[position].data.pop();
+                    }
+                    4 => calls[position].data.push(0),
+                    5 => calls[position].accounts[9] = a[0],
+                    6 => calls[position].accounts[1] = a[0],
+                    7 => calls[position].accounts[4] = a[0],
+                    8 => calls[position].accounts[2] = a[0],
+                    9 => calls[position].accounts[3] = a[0],
+                    10 => calls[position].accounts[6] = a[0],
+                    11 => calls[position].accounts[7] = a[0],
+                    12 => calls[position].accounts[8] = a[0],
+                    13 => calls[position + 1].accounts[2] = a[0],
+                    14 => calls[position + 3].accounts[2] = a[0],
+                    15 => calls[position + 2].accounts[0] = a[0],
+                    16 => calls[position + 2].accounts[1] = a[0],
+                    17 => calls[position + 2].accounts[2] = a[0],
+                    18 => calls[position + 2].data[0] = 8,
+                    19 => calls[position + 2].program_id_index = calls[position].program_id_index,
+                    20 => {
+                        calls.remove(position + 3);
+                    }
+                    21 => {
+                        let extra = calls[position + 3].clone();
+                        calls.insert(position + 4, extra);
+                    }
+                    22 => calls[position + 3].stack_height = Some(4),
+                    23 => calls[position + 3].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
+                    24 => {
+                        let mut extra = calls[position + 2].clone();
+                        extra.data[0] = 8;
+                        calls.insert(position + 3, extra);
+                    }
+                    25 => calls.swap(position + 1, position + 3),
+                    26..=29 => {
+                        let program = base58::encode(token_swap::PROGRAM_ID);
+                        let own = format!("Program {program} success");
+                        let parent = format!("Program {} success", base58::encode(substreams_solana_idls::jupiter::v4::PROGRAM_ID));
+                        let invoke = meta
+                            .log_messages
+                            .iter()
+                            .position(|log| log == &format!("Program {program} invoke [2]"))
+                            .unwrap();
+                        if mode == 29 {
+                            let success = format!("Program {} success", base58::encode(substreams_solana_idls::spl::token::PROGRAM_ID));
+                            let fee_end = meta
+                                .log_messages
+                                .iter()
+                                .enumerate()
+                                .skip(invoke)
+                                .filter(|(_, log)| **log == success)
+                                .nth(1)
+                                .map(|(i, _)| i)
+                                .unwrap();
+                            meta.log_messages[fee_end] = success.replace(" success", " failed: custom program error: 1");
+                        } else {
+                            let end = meta
+                                .log_messages
+                                .iter()
+                                .enumerate()
+                                .skip(invoke)
+                                .find(|(_, log)| **log == if mode == 28 { parent.clone() } else { own.clone() })
+                                .map(|(i, _)| i)
+                                .unwrap();
+                            if mode == 27 {
+                                meta.log_messages.truncate(end);
+                            } else {
+                                meta.log_messages[end] = meta.log_messages[end].replace(" success", " failed: custom program error: 1");
+                            }
+                        }
+                    }
+                    30 => calls[position].accounts.extend_from_slice(&a[..2]),
+                    31 => {
+                        calls[position].accounts.pop();
+                    }
+                    _ => {
+                        calls[position].accounts[8] = a[6];
+                        calls[position + 2].accounts[1] = a[6];
+                    }
+                }
+                assert!(
+                    crate::process_transaction(altered).map_or(true, |decoded| {
+                        decoded.swaps.iter().all(|swap| swap.amm.as_slice() != token_swap::PROGRAM_ID)
+                    }),
+                    "SPL case {case}, mutation {mode}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn finalized_no_fee_and_closed_output_variants_keep_exact_receipts() {
+        use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
+        let rows: Vec<_> = include_str!("../fixtures/native-venues/spl-swap-recent-legs.tsv").lines().collect();
+        for (row, fixture) in [
+            (0, include_bytes!("../fixtures/native-venues/spl-swap-recent-1.transaction.pb").as_slice()),
+            (14, include_bytes!("../fixtures/native-venues/spl-swap-recent-15.transaction.pb").as_slice()),
+            (55, include_bytes!("../fixtures/native-venues/spl-swap-recent-56.transaction.pb").as_slice()),
+        ] {
+            let expected: Vec<_> = rows[row].split('\t').collect();
+            let index = expected[1].parse::<u32>().unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            if row == 14 {
+                let accounts = tx.resolved_accounts();
+                let destination = tx.walk_instructions().nth(index as usize).unwrap().accounts()[6].0.clone();
+                let destination_position = accounts.iter().position(|a| **a == destination).unwrap();
+                let meta = tx.meta.as_ref().unwrap();
+                assert!(!meta.pre_token_balances.iter().chain(&meta.post_token_balances).any(|b| b.account_index == destination_position as u32));
+            }
+            let decoded = crate::process_transaction(tx).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1);
+            let swap = swaps[0];
+            assert_eq!(swap.protocol, pb::Protocol::SplTokenSwap as i32);
+            assert_eq!(base58::encode(&swap.amm_pool), expected[3]);
+            assert_eq!(base58::encode(&swap.user), expected[4]);
+            assert_eq!(base58::encode(&swap.input_mint), expected[5]);
+            assert_eq!(base58::encode(&swap.output_mint), expected[7]);
+            assert_eq!((swap.input_amount, swap.output_amount), (expected[6].parse().unwrap(), expected[8].parse().unwrap()));
+            assert!(swap.transfer_verified);
+        }
+    }
 }

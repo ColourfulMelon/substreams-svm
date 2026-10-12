@@ -53,6 +53,7 @@ pub(crate) fn verify_with_fees(
         || instructions.iter().any(|ix| {
             ix.program_id().0 == &token_2022::PROGRAM_ID
                 || ix.program_id().0 == &crate::native_venues::ORCA_V1
+                || ix.program_id().0 == &substreams_solana_idls::spl::token_swap::PROGRAM_ID
                 || ix.program_id().0 == &crate::mercurial::PROGRAM_ID
                 || ix.program_id().0 == &crate::oasis::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
@@ -1350,7 +1351,9 @@ pub(crate) fn verify_with_fees(
                             && accounts.iter().any(|account| account.0 == &transfer.destination)
                     })
                     .collect();
-                if ix.program_id().0 == &crate::native_venues::ORCA_V1 {
+                if ix.program_id().0 == &crate::native_venues::ORCA_V1
+                    || ix.program_id().0 == &substreams_solana_idls::spl::token_swap::PROGRAM_ID
+                {
                     let Some(layout) = crate::native_venues::layout(ix) else { continue };
                     if !successful_invocations.contains(&(index as u32)) {
                         continue;
@@ -1371,6 +1374,29 @@ pub(crate) fn verify_with_fees(
                         continue;
                     }
                     let (input, output) = (inputs[0], outputs[0]);
+                    // SPL v2 swaps mint owner/optional host fees in LP tokens,
+                    // between the user's input and output transfers. Neither
+                    // a liquidity operation nor an arbitrary MintTo is a swap.
+                    let calls = &instructions[index + 1..end as usize];
+                    if !(2..=4).contains(&calls.len()) || input.index != index as u32 + 1
+                        || output.index != end - 1 || accounts[7].0 == &input.mint || accounts[7].0 == &output.mint
+                        || calls.iter().enumerate().any(|(offset, child)| {
+                            child.stack_height() != depth + 1 || child.program_id().0 != accounts[9].0
+                                || child.data().len() != 9 || child.accounts().len() != 3
+                                || !successful_invocations.contains(&((index + offset + 1) as u32))
+                        })
+                    { continue; }
+                    let fees = &calls[1..calls.len() - 1];
+                    if fees.len() == 2 && accounts.len() != 11
+                        || fees.iter().enumerate().any(|(position, fee)| {
+                            let a = fee.accounts();
+                            let destination = if fees.len() == 2 && position == 0 { 10 } else { 8 };
+                            fee.data()[0] != 7 || a[0].0 != accounts[7].0 || a[1].0 != accounts[destination].0
+                                || a[2].0 != accounts[1].0
+                                || mints.mint_for(a[1].0).as_ref() != Some(accounts[7].0)
+                                || [3, 4, 5, 6].iter().any(|i| accounts[*i].0 == a[1].0)
+                        })
+                    { continue; }
                     let net = *output.amounts.iter().min().unwrap();
                     let identity = (index as u32, input.index, output.index);
                     if swap.amm_pool != *accounts[0].0 || swap.user != *accounts[2].0

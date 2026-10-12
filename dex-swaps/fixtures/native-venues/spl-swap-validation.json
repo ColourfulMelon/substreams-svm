@@ -1,0 +1,89 @@
+{
+  "decoderAndSinkCoreTestsPassed": 151,
+  "malformedCanonicalSwapMutationsRejected": 99,
+  "releaseWasmBuildsPassed": true,
+  "oracle": {
+    "independentlyVerifiedLegs": 64,
+    "corpora": {
+      "original": 3,
+      "recent": 61
+    },
+    "exactFields": [
+      "program",
+      "pool",
+      "user",
+      "mints",
+      "actual input/output atoms",
+      "native instruction",
+      "physical input CPI"
+    ],
+    "retainedOriginalProtobufHashesVerified": true
+  },
+  "regression": {
+    "recognized": {
+      "unchangedFullFinancialPayloads": 149,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 149
+    },
+    "dlmm": {
+      "unchangedFullFinancialPayloads": 140,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 140
+    },
+    "defituna": {
+      "unchangedFullFinancialPayloads": 111,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 111
+    },
+    "twohop": {
+      "unchangedFullFinancialPayloads": 2,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 2
+    },
+    "jupiter4": {
+      "unchangedFullFinancialPayloads": 302,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 3,
+      "totalFinancialRows": 305
+    },
+    "bonk": {
+      "unchangedFullFinancialPayloads": 175,
+      "metadataCorrections": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 175
+    },
+    "spl": {
+      "unchangedFullFinancialPayloads": 182,
+      "metadataCorrections": 3,
+      "additionalFinancialRows": 61,
+      "totalFinancialRows": 243
+    },
+    "verifiedStackHeightCorrections": [
+      {
+        "signature": "5gcGVggC6McJXgjnFfgxzvkq7drhUGTPazVUUGmr3V2nWoJ4WpZHFv99AMcfyebQynyfG5eKtmnoVHXvSfqST1nq",
+        "sourceIndex": 18,
+        "previousStackHeight": 3,
+        "correctStackHeight": 2,
+        "allOtherFieldsUnchanged": true
+      },
+      {
+        "signature": "d84rjZNFD27XGS24rbEVPWTUyQQRNdHZynMD7gRNumEVTDSANHEZsKAgoHe4XJtLWFEtFWqLuhqBRJUUExYKNUH",
+        "sourceIndex": 9,
+        "previousStackHeight": 3,
+        "correctStackHeight": 2,
+        "allOtherFieldsUnchanged": true
+      },
+      {
+        "signature": "5gcGVggC6McJXgjnFfgxzvkq7drhUGTPazVUUGmr3V2nWoJ4WpZHFv99AMcfyebQynyfG5eKtmnoVHXvSfqST1nq",
+        "sourceIndex": 12,
+        "previousStackHeight": 3,
+        "correctStackHeight": 2,
+        "allOtherFieldsUnchanged": true
+      }
+    ]
+  }
+}
