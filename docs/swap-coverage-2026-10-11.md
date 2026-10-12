@@ -551,3 +551,45 @@ amounts and physical source positions. No enum migration is needed for this
 existing protocol. Positive host-fee samples, other Token Swap forks, complete
 Token-2022 metadata and historical backfill are still separate coverage work;
 this sample does not establish exhaustive coverage.
+
+
+## Native SOL Pump curve buys and funded V3 sells (candidate .13)
+
+A finalized native SOL curve run at slot 455884188 had only its token-to-token
+leg indexed. The documented multi-hop interface passes WSOL accounts as mint
+witnesses while actually debiting the user's wallet into the curve account;
+the curve's WSOL vault need not exist. The native receipt path now requires the
+exact committed immediate wallet-to-curve System transfer and curve-authorized
+base-token receipt, instruction amount, mint path and original physical source
+positions. Additional wallet/curve SOL flows invalidate this proof. Delegated
+PumpSwap wrappers still do not duplicate or relabel their child curve legs.
+The restored first leg is 31,238,843 lamports to 896,182,574,050 token atoms.
+Its previously indexed second leg remains unchanged.
+
+A separate finalized V3 sell at slot 455884113 funds the curve with 76,200
+lamports before transferring base tokens. The old proof rejected every explicit
+pool-touching System transfer. The new proof accepts exactly one committed
+wallet-to-curve funding CPI before the committed token input and requires the
+original event CPI to commit too. Pool debit plus funding must exactly equal
+net sale proceeds plus the declared buyback recipient's observed credit. Other
+pool-bearing calls, repeated/outgoing/foreign/nested funding, failed event or
+transfer frames, and mismatched pool/recipient deltas remain unverified. The
+sale is 71,818,190,491 base atoms to 1,988,665 lamports; the funding is excluded
+from sale proceeds. Independent original RPC/protobuf instruction/log parity,
+user/vault atom deltas, pool/recipient lamport equations, derived curve/vault
+PDAs and later owned immutable quote fields are retained in
+`fixtures/swap-coverage/pump-native-sol-*`. Later state does not prove past
+reserves or fees.
+
+All 153 decoder/sink core tests pass, including 31 mutations of these originals.
+Release WASM builds pass. Eight-corpus replay preserves all 1,200 earlier full
+financial payloads, adding exactly these two native SOL legs (1,202 total), with
+no other changes. Existing protocol 9 already feeds indexed pricing.
+A wider 48-hour retained multi-hop sample has 90 original candidates in 59
+transactions and still has 28 parent/child diagnostic rows after these fixes.
+Those remaining routes, native SOL multi-hop sells, synthetic migrations and
+PostCompleteBuy receipts still require validation and coverage work.
+
+Primary references: [multi-hop account and native SOL roles](https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/MULTI_HOP_SWAP.md),
+[V3 account funding and fees](https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/TRADE_V3.md)
+and [Pump IDL](https://github.com/pump-fun/pump-public-docs/blob/main/idl/pump.json).

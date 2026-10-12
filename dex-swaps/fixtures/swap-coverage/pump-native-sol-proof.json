@@ -1,0 +1,53 @@
+{
+  "scope": "Two original finalized transactions, exact RPC/protobuf call and log parity, native wallet funding/debit plus pool/buyback lamport equations and actual Token-2022 debit/receipt deltas. Derived curve/base vaults and later program-owned immutable quote fields corroborate roles, not historical reserves. Account funding is excluded from sale proceeds.",
+  "primarySources": [
+    "https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/MULTI_HOP_SWAP.md",
+    "https://github.com/pump-fun/pump-public-docs/blob/main/docs/instructions/TRADE_V3.md",
+    "https://github.com/pump-fun/pump-public-docs/blob/main/idl/pump.json"
+  ],
+  "primaryIdlSha256": "6a19bad7758fb822cee79a91575e51a7bd60391c670200408676643e00a79a6d",
+  "fixtures": [
+    {
+      "fixture": "pump-native-sol-multihop-buy.transaction.pb",
+      "signature": "3DahypjrLPr7ZW5xAr78iFrxQxtoWq5s9kmVJKV9XC1cRiGLJ1FV88aJWzuc2Xq5U5gdrNhNg2neqsAc7CoeNFTQ",
+      "slot": 455884188,
+      "commitment": "finalized",
+      "sourceIndex": 9,
+      "physicalInputCpi": 10,
+      "ownedPoolContext": 455888537,
+      "poolOwner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "2s22ywUJurs3x75JMNDhWhJNcS3BKkZ5YegPyqFnPQH2",
+      "baseMint": "9dP92qjgTAroJNMHof9uoe4qcdxVY5wQ2UcoLWkDpump",
+      "quoteMint": "11111111111111111111111111111111",
+      "derivedBaseVault": "6V7ENGHs3N2MiqTN2FjMSPz6UxWffPhGWaq6M83doaWw",
+      "protobufSha256": "a017dbe1f812a739672460c9e0d696f045ea2f6e277b80eda55af6074758a711",
+      "rpcJsonSha256": "50b7e04124f7d2ed376a1714f0809b8e13bdc69b02b6e0376c44c731678404fa",
+      "poolDataSha256": "b057f6d8017d27aa777dc63a7045754f7871c91d5f4e9b28b64c96c65ae91428",
+      "fundingLamports": "0",
+      "buybackLamports": "146988",
+      "inputAtoms": "31238843",
+      "outputAtoms": "896182574050"
+    },
+    {
+      "fixture": "pump-native-sol-sell-funded.transaction.pb",
+      "signature": "2rgD331L3g6ABvd95zcznrLSWwc3TBgYEpYjHSUKcwU9fB8dP5VdGZDC3pzHVfWLTKN83Q4QiPyngmQ7bRrkLGp3",
+      "slot": 455884113,
+      "commitment": "finalized",
+      "sourceIndex": 8,
+      "physicalInputCpi": 10,
+      "ownedPoolContext": 455888537,
+      "poolOwner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "CUq5reZxPLh8uz6RJUrhebu1edEVgzm9xP78PJPW29Kt",
+      "baseMint": "GKdBAxdAuK8MxvPgunJbKyMH2BdYxrkrKGaR6hEfpump",
+      "quoteMint": "11111111111111111111111111111111",
+      "derivedBaseVault": "FCqMN3kgMCHKPszL6KoFiGjBjMjw9d5RUn2tyLoLEAMq",
+      "protobufSha256": "935576a6bedb942a0541db0f99acb03d80a9f7e6915a0dad9b3f35eaa93d1281",
+      "rpcJsonSha256": "543dd1e02e2c2af13a850b48effa22b65f92c26f0f85d2360a64bf3f49f29c57",
+      "poolDataSha256": "7b55d3969af5606a0afe5ebec41d532a19ba7ee89b60cd0ece8633c0086bd513",
+      "fundingLamports": "76200",
+      "buybackLamports": "9566",
+      "inputAtoms": "71818190491",
+      "outputAtoms": "1988665"
+    }
+  ]
+}

@@ -57,6 +57,8 @@ pub(crate) fn verify_with_fees(
                 || ix.program_id().0 == &crate::mercurial::PROGRAM_ID
                 || ix.program_id().0 == &crate::oasis::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
+                || ix.program_id().0 == &pumpfun::PROGRAM_ID && (ix.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
+                    || ix.data().starts_with(&pumpfun::instructions::SELL_V3))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
         }) {
         crate::logs::successful_invocations(tx)
@@ -1254,7 +1256,19 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input_mint, output_mint, vault_in, vault_out) = &path[hop];
-                let source = if hop == 0 { accounts[source].0 } else { &path[hop - 1].3 };
+                // A native-SOL curve buy debits the wallet into the curve
+                // itself. Its declared WSOL accounts are mint witnesses only;
+                // the curve's WSOL vault may not even exist.
+                let native_sol_buy = is_curve && hop == 0 && input_mint.as_slice() == crate::SOL_MINT
+                    && group[1].0.as_slice() == crate::SOL_MINT;
+                if native_sol_buy && (accounts[8].0.as_slice() != token::PROGRAM_ID
+                    || accounts[9].0.as_slice() != token_2022::PROGRAM_ID
+                    || accounts[10].0.iter().any(|byte| *byte != 0)
+                    || accounts[12].0.as_slice() != pumpfun::PROGRAM_ID
+                    || !successful_invocations.contains(&(index as u32)))
+                { continue; }
+                let vault_in = if native_sol_buy { group[2].0 } else { vault_in };
+                let source = if native_sol_buy { accounts[user].0 } else if hop == 0 { accounts[source].0 } else { &path[hop - 1].3 };
                 let destination = if hop + 1 == path.len() { accounts[destination].0 } else { &path[hop + 1].2 };
                 let inputs: Vec<_> = scoped
                     .iter()
@@ -1262,20 +1276,27 @@ pub(crate) fn verify_with_fees(
                         &t.source == source
                             && &t.destination == vault_in
                             && &t.mint == input_mint
-                            && (hop > 0 || t.authority.as_slice() == accounts[authority].0.as_slice())
+                            && (hop > 0 || if native_sol_buy { t.source.as_slice() == accounts[authority].0.as_slice() }
+                                else { t.authority.as_slice() == accounts[authority].0.as_slice() })
+                            && (!native_sol_buy || t.depth == depth + 1 && successful_invocations.contains(&t.index)
+                                && instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0))
                     })
                     .collect();
                 let outputs: Vec<_> = scoped
                     .iter()
-                    .filter(|t| &t.source == vault_out && &t.destination == destination && &t.mint == output_mint)
+                    .filter(|t| &t.source == vault_out && &t.destination == destination && &t.mint == output_mint
+                        && (!native_sol_buy || t.depth == depth + 1 && t.authority.as_slice() == group[2].0.as_slice()
+                            && successful_invocations.contains(&t.index)))
                     .collect();
                 if inputs.len() != 1 || outputs.len() != 1 {
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
                 if (hop == 0 && input.amounts[0] != amount)
+                    || native_sol_buy && scoped.iter().any(|t| t.index != input.index && t.mint == crate::SOL_MINT
+                        && (t.source == *accounts[user].0 || t.destination == *group[2].0))
                     || (output.fee_token && !output.net_verified)
-                    || mints.mint_for(vault_in).as_ref() != Some(input_mint)
+                    || !native_sol_buy && mints.mint_for(vault_in).as_ref() != Some(input_mint)
                     || mints.mint_for(vault_out).as_ref() != Some(output_mint)
                 {
                     continue;
@@ -1469,7 +1490,7 @@ pub(crate) fn verify_with_fees(
                 // Pump's sell instruction debits program-owned lamports
                 // directly, without a System CPI. Only accept its exact pool
                 // balance delta when this is the sole pool-bearing invocation
-                // and there are no explicit SOL transfers touching that pool.
+                // and no ambiguous explicit SOL transfers touch that pool.
                 if swap.protocol == pb::Protocol::Pumpfun as i32
                     && swap.output_mint == crate::SOL_MINT
                     && matches!(
@@ -1496,7 +1517,6 @@ pub(crate) fn verify_with_fees(
                     // user proceeds against both exact lamport deltas; the
                     // event's gross quote alone cannot verify this variant.
                     if calls == 1
-                        && !explicit_sol
                         && matches!(
                             pumpfun::instructions::unpack(ix.data()),
                             Ok(pumpfun::instructions::PumpFunInstruction::SellV3(_))
@@ -1504,10 +1524,12 @@ pub(crate) fn verify_with_fees(
                     {
                         let amounts = instructions
                             .iter()
+                            .enumerate()
                             .skip(index + 1)
                             .take(end as usize - index - 1)
-                            .filter(|child| child.program_id().0 == &pumpfun::PROGRAM_ID)
-                            .find_map(|child| {
+                            .filter(|(index, child)| child.program_id().0 == &pumpfun::PROGRAM_ID
+                                && successful_invocations.contains(&(*index as u32)))
+                            .find_map(|(_, child)| {
                                 let event = pumpfun::events::unpack_trade_event_minimal(child.data()).ok()??;
                                 if event.is_buy || event.mint != swap.input_mint.as_slice() || event.user != swap.user.as_slice() {
                                     return None;
@@ -1515,6 +1537,23 @@ pub(crate) fn verify_with_fees(
                                 pumpfun::events::unpack_quote_trade_amount(child.data()).ok()
                             });
                         let proven = amounts.and_then(|amounts| {
+                            // V3 can grow an older curve account before selling.
+                            // A committed wallet-to-curve System transfer is
+                            // funding, not proceeds. Add it back to the pool's
+                            // net debit; every other pool-touching SOL flow is
+                            // still ambiguous and rejected.
+                            let (funding, funding_index) = if explicit_sol {
+                                let touches: Vec<_> = transfers.iter().filter(|t| t.mint == crate::SOL_MINT
+                                    && (t.source == swap.amm_pool || t.destination == swap.amm_pool)).collect();
+                                if touches.len() != 1 { return None; }
+                                let t = touches[0];
+                                if accounts.len() != 17 || t.source != swap.user || t.destination != swap.amm_pool
+                                    || t.index <= index as u32 || t.index >= end || t.depth != depth + 1
+                                    || !instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                                    || !successful_invocations.contains(&(index as u32)) || !successful_invocations.contains(&t.index)
+                                { return None; }
+                                (t.amounts[0], Some(t.index))
+                            } else { (0, None) };
                             let net = amounts.amount.checked_sub(amounts.fee)?.checked_sub(amounts.creator_fee)?;
                             let recipient = accounts.get(13)?.0;
                             let recipient_calls = instructions
@@ -1531,7 +1570,7 @@ pub(crate) fn verify_with_fees(
                                 || recipient_calls != 1
                                 || explicit_recipient_sol
                                 || delta != i128::from(amounts.buyback_fee)
-                                || pool_delta != Some(i128::from(net.checked_add(amounts.buyback_fee)?))
+                                || pool_delta.map(|delta| delta + i128::from(funding)) != Some(i128::from(net.checked_add(amounts.buyback_fee)?))
                             {
                                 return None;
                             }
@@ -1544,7 +1583,9 @@ pub(crate) fn verify_with_fees(
                                     && &t.source == source
                                     && &t.destination == destination
                                     && t.authority == swap.user
+                                    && (funding == 0 || successful_invocations.contains(&t.index))
                             })?;
+                            if funding_index.is_some_and(|index| index >= input.index) { return None; }
                             Some((net, input.index))
                         });
                         if let Some((net, input_index)) = proven {
@@ -1851,6 +1892,93 @@ pub(crate) fn verify_with_fees(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finalized_native_sol_multihop_buy_keeps_both_physical_curve_legs() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-buy.transaction.pb").to_vec(),
+        ).unwrap();
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        assert_eq!(decoded.swaps.len(), 2);
+        let first = &decoded.swaps[0];
+        assert_eq!((first.protocol, first.source_index, first.source_transfer_index), (pb::Protocol::Pumpfun as i32, Some(9), Some(10)));
+        assert_eq!((first.input_amount, first.output_amount), (31_238_843, 896_182_574_050));
+        assert_eq!(first.input_mint, crate::SOL_MINT);
+        assert_eq!((decoded.swaps[1].input_amount, decoded.swaps[1].output_amount), (896_182_574_050, 3_898_557_180_441));
+        assert_eq!(decoded.swaps[1].source_transfer_index, Some(14));
+        assert!(!decoded.coverage_candidates.iter().any(|c| c.reason == "multihop_without_all_verified_pools"));
+        for mode in 0..17 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
+            let a = calls[1].accounts.clone();
+            match mode {
+                0 => calls[1].data[8] ^= 1,
+                1 => calls[2].data[4] ^= 1,
+                2 => calls[2].accounts[0] = a[15],
+                3 => calls[2].accounts[1] = a[3],
+                4 => calls[2].stack_height = Some(5),
+                5 => calls[6].data[1..9].fill(0),
+                6 => calls[6].accounts[3] = a[3],
+                7 => calls[6].accounts[0] = a[6],
+                8 => calls[6].stack_height = Some(5),
+                9 => { let duplicate = calls[2].clone(); calls.insert(3, duplicate); }
+                10 | 11 | 12 | 13 => {
+                    let program = if mode == 12 { base58::encode(substreams_solana_idls::pumpswap::PROGRAM_ID) }
+                        else if mode == 13 { base58::encode(token_2022::PROGRAM_ID) } else { base58::encode(pumpfun::PROGRAM_ID) };
+                    let end = if mode == 12 || mode == 13 { meta.log_messages.iter().position(|l| l == &format!("Program {program} success")).unwrap() }
+                        else { meta.log_messages.iter().rposition(|l| l == &format!("Program {program} success")).unwrap() };
+                    if mode == 10 { meta.log_messages.truncate(end); }
+                    else { meta.log_messages[end] = format!("Program {program} failed: custom program error: 1"); }
+                }
+                14 => calls[1].accounts[8] = a[9],
+                15 => calls[1].data.push(0),
+                _ => calls[1].accounts[14] = a[13],
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
+                !(s.source_index == Some(9) && s.input_mint == crate::SOL_MINT))), "native SOL multi-hop mode {mode}");
+        }
+    }
+
+    #[test]
+    fn finalized_v3_sell_separates_curve_funding_from_sale_proceeds() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-native-sol-sell-funded.transaction.pb").to_vec(),
+        ).unwrap();
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        let sell = decoded.swaps.iter().find(|s| s.source_index == Some(8)).unwrap();
+        assert_eq!((sell.input_amount, sell.output_amount, sell.source_transfer_index), (71_818_190_491, 1_988_665, Some(10)));
+        assert_eq!(sell.output_mint, crate::SOL_MINT);
+        assert_eq!(decoded.swaps.iter().filter(|s| s.source_index == Some(8)).count(), 1);
+        for mode in 0..14 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
+            let a = calls[0].accounts.clone();
+            match mode {
+                0 => calls[1].data[4] ^= 1,
+                1 => calls[1].accounts[0] = a[5],
+                2 => calls[1].accounts[1] = a[8],
+                3 => calls[1].stack_height = Some(4),
+                4 => calls[2].data[1] ^= 1,
+                5 => calls[2].accounts[3] = a[5],
+                6 => meta.post_balances[a[5] as usize] += 1,
+                7 => meta.post_balances[a[13] as usize] += 1,
+                8 | 9 => {
+                    let program = if mode == 8 { base58::encode(pumpfun::PROGRAM_ID) } else { base58::encode([0; 32]) };
+                    let start = meta.log_messages.iter().position(|l| l == &format!("Program {} invoke [2]", base58::encode(pumpfun::PROGRAM_ID))).unwrap();
+                    let end = meta.log_messages.iter().enumerate().skip(start).find(|(_, l)| **l == format!("Program {program} success")).unwrap().0;
+                    meta.log_messages[end] = format!("Program {program} failed: custom program error: 1");
+                }
+                10 => { let duplicate = calls[1].clone(); calls.insert(2, duplicate); }
+                11 => calls.swap(1, 2),
+                12 => calls[0].accounts[13] = a[8],
+                _ => calls[1].program_id_index = calls[2].program_id_index,
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
+                s.source_index != Some(8))), "funded V3 sell mode {mode}");
+        }
+    }
 
     #[test]
     fn observed_accounts_burned_and_closed_after_a_swap_prove_the_receipt() {
