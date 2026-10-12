@@ -1225,3 +1225,16 @@ quarantine decreases by 22. All four table versions, parent chains, sealed
 counts and unique contiguous operation ordinals pass. Metadata bytes and all
 seven module hashes remain unchanged. This replay writes no live rows. Live
 rollout is pending, and full swap coverage remains unproven.
+
+The .24 release was deployed from monorepo commit
+`e4c4f80922f46c2bb0ec8cf67e10b67fecc6ca03` on 2026-10-12 at 16:33 UTC.
+The stopped .23 writer ended at durable slot 456103035 with zero rows beyond
+its cursor in all four tables. Its unchanged opaque cursor was backed up and
+adopted under the new module hash with strict checking. Actual .24 block
+456103036 points to the exact prior block/hash. The first persisted live proof
+contains 601 linked blocks and 65,544 unique valid swaps with sealed financial,
+candidate and raw counts agreeing. Original automatic deployment settings were
+restored; production API and disabled custom orders are preserved. The stream
+is advancing but pricing remains about 44 minutes behind. Catch-up and universal
+swap coverage remain unproven. The immutable release tag still points to the
+exact tested source and packaged replay evidence.

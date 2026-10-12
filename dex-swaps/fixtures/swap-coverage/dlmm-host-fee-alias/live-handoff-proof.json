@@ -1,0 +1,104 @@
+{
+  "deployment": "gbctr4mirxsz32tzmdjinxzc",
+  "monorepoCommit": "e4c4f80922f46c2bb0ec8cf67e10b67fecc6ca03",
+  "checkedAt": "2026-10-12T16:41:43.834529+00:00",
+  "oldWriterStable": {
+    "stable": true,
+    "savedBlock": 456103035,
+    "oldCursor": [
+      {
+        "block_num": 456103035,
+        "block_id": "GMQ9JZpekQt3yVvNZ4ucjkWN4h8m6bN6oeXrzoj9cNR1"
+      }
+    ],
+    "oldVersionTail": [
+      {
+        "t": "blocks",
+        "n": 0
+      },
+      {
+        "t": "swap_coverage",
+        "n": 0
+      },
+      {
+        "t": "swap_coverage_transactions",
+        "n": 0
+      },
+      {
+        "t": "swaps",
+        "n": 0
+      }
+    ]
+  },
+  "live": {
+    "oldDurableBlock": 456103035,
+    "cursors": [
+      {
+        "id": "1503b8dc02f0a0cfc700718d6ec62f6358322f08",
+        "block_num": 456103611
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 456103036,
+        "parent_slot": 456103035,
+        "parent_hash": "GMQ9JZpekQt3yVvNZ4ucjkWN4h8m6bN6oeXrzoj9cNR1",
+        "block_hash": "vv6Jps63MULVo1c2JL9oDDPMzu8oHNEjZX233hiqDQR",
+        "timestamp": "2026-10-12 15:53:40"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 601,
+        "unique_blocks": 601,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 456103611,
+        "lag_seconds": 2652
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 65544,
+        "unique_events": 65544,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "humidifi",
+        "rows": 98,
+        "unique_events": 98
+      },
+      {
+        "protocol": "tesserav",
+        "rows": 795,
+        "unique_events": 795
+      },
+      {
+        "protocol": "jupiter_lend",
+        "rows": 128,
+        "unique_events": 128
+      }
+    ],
+    "cut": 456103511,
+    "coverage": [
+      {
+        "swaps": 50443,
+        "expected_swaps": 50443,
+        "candidates": 2913,
+        "raw": 2310,
+        "expected_candidates": 2913,
+        "expected_raw": 2310
+      }
+    ]
+  },
+  "strictModuleChecking": true,
+  "productionApiHealthyCustomOrdersDisabled": true,
+  "pricingFreshnessPending": true,
+  "globalCoverageProven": false
+}
