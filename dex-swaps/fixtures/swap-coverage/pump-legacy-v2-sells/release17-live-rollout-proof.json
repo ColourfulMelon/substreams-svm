@@ -27,7 +27,7 @@
     "cursors": [
       {
         "id": "7d3dde68ae1dba2553125c5a32101d8cbf33dcb0",
-        "block_num": 456008865
+        "block_num": 456016650
       }
     ],
     "firstActualBlock": [
@@ -42,43 +42,58 @@
     "boundaryMatches": true,
     "continuity": [
       {
-        "blocks": 2297,
-        "unique_blocks": 2297,
+        "blocks": 10088,
+        "unique_blocks": 10088,
         "broken_parents": 0
       }
     ],
     "health": [
       {
-        "saved_block": 456008865,
-        "lag_seconds": 421
+        "saved_block": 456016655,
+        "lag_seconds": 4
       }
     ],
     "swaps": [
       {
-        "rows": 189695,
-        "unique_events": 189695,
+        "rows": 859331,
+        "unique_events": 859331,
         "invalid": 0
       }
     ],
     "venues": [
       {
         "protocol": "raydium_cpmm",
-        "rows": 1608,
-        "unique_events": 1608
+        "rows": 8289,
+        "unique_events": 8289
       },
       {
         "protocol": "manifest",
-        "rows": 1276,
-        "unique_events": 1276
+        "rows": 5880,
+        "unique_events": 5880
+      },
+      {
+        "protocol": "openbook_v2",
+        "rows": 3,
+        "unique_events": 3
+      },
+      {
+        "protocol": "mercurial",
+        "rows": 8,
+        "unique_events": 8
+      },
+      {
+        "protocol": "oasis",
+        "rows": 1,
+        "unique_events": 1
       }
     ],
-    "cut": 456008765,
+    "cut": 456016550,
     "coverage": [
       {
-        "candidates": 9730,
-        "raw": 7519,
-        "expected_candidates": 9730,
-        "expected_raw": 7519
+        "candidates": 47141,
+        "raw": 36739,
+        "expected_candidates": 47141,
+        "expected_raw": 36739
       }
     ]
   },
@@ -91,14 +106,18 @@
     "termination": "Owned read-only primer stopped after actual live writes and exact restart boundary were verified; child exit 1 is the expected SIGTERM, parent reaped 0. This is separate from the clean-exit finite package replay."
   },
   "freshness": {
-    "sinkTimestamp": "2026-10-12T10:17:15.800625578Z",
-    "sinkLagSeconds": 428.800622748,
-    "streamTimestamp": "2026-10-12T10:17:15.800706227Z",
-    "streamLagSeconds": 423.800705777,
-    "streamBlockRate": "6.100 msg/s (2246 total)",
+    "sinkTimestamp": "2026-10-12T10:37:45.80124133Z",
+    "sinkLagSeconds": 3.80123819,
+    "streamTimestamp": "2026-10-12T10:37:45.80124137Z",
+    "streamLagSeconds": 3.80123918,
+    "streamBlockRate": "5.633 msg/s (9812 total)",
     "reportedErrors": 0,
-    "complete": false,
-    "status": "Verified writes and decreasing lag; catch-up still ongoing. Advancing cursor is not proof of freshness."
+    "complete": true,
+    "checkedAt": "2026-10-12T10:37:50.012616+00:00",
+    "savedSlot": 456016380,
+    "laterFinalizedChainSlot": 456016382,
+    "slotsBehind": 2,
+    "status": "Actual wall-clock freshness recovered without restarting the advancing writer; later database financial integrity and boundary checks pass."
   },
   "universalSwapCoverageEstablished": false
 }

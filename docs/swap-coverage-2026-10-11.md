@@ -852,9 +852,10 @@ rows were appended. The separate read-only primer verified 5163 blocks and 42902
 swaps before deliberate termination after live boundary validation; it is not a
 clean finite replay.
 
-Freshness recovery is still pending: sink lag was 428.8 seconds and stream lag
-423.8 seconds at 10:17:15 UTC, down from about 512 seconds. The saved cursor is
-advancing with no reported errors, but these prices are not yet current. Retain
-the ongoing stream and verify actual wall-clock freshness. This rollout does not
-establish universal swap coverage; the remaining independently unverified formats
-still need work.
+Freshness recovered without restarting the advancing stream: at 10:37:45 UTC,
+sink and stream drift were about 3.8 seconds, with no reported errors. A later
+finalized RPC read put the saved cursor two slots behind. The retained live
+proof contains the subsequent financial uniqueness, exact restart boundary,
+parent-chain and sealed-counter validation. This establishes actual freshness
+for this rollout, not universal swap coverage; the remaining independently
+unverified formats still need work.
