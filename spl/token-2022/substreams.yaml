@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: spl_token_2022
-  version: v1.0.0
+  version: v1.1.0
   url: https://github.com/pinax-network/substreams-svm
   description: SPL Token-2022
   image: ../../image.png
@@ -25,7 +25,8 @@ modules:
     kind: map
     doc: SPL Token-2022
     inputs:
-      - map: solana_common:blocks_without_votes
+      # Unfiltered blocks, so transaction indexes are original block positions.
+      - source: sf.solana.type.v1.Block
     blockFilter:
       module: solana_common:program_ids_without_votes
       query:

@@ -13,4 +13,9 @@ substreams-solana = { workspace = true }
 substreams-solana-program-instructions = { workspace = true }
 spl-token-metadata-interface = "0.7.0"
 proto = { path = "../../proto" }
+spl-transfers = { path = "../transfers" }
 common = { path = "../../common" }
+
+[dev-dependencies]
+flate2 = "1"
+prost = { workspace = true }

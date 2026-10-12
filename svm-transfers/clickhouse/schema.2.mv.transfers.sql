@@ -3,6 +3,9 @@ COMMENT 'SPL Token 2022 transfers';
 
 -- SPL Token Transfers --
 ALTER TABLE transfers
+    -- ordering (tables created before the column existed) --
+    ADD COLUMN IF NOT EXISTS inner_instruction_index UInt32,
+
     -- require `decimals` to be present for token transfers
     DROP COLUMN IF EXISTS decimals_raw,
     ADD COLUMN decimals Nullable(UInt8),

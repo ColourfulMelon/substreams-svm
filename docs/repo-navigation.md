@@ -37,6 +37,12 @@ This guide is a quick map for contributors and coding agents working in this mon
 - Domain crates: `svm-balances`, `svm-transfers`, `svm-accounts`, `svm-metadata`, `svm-native`, `svm-spl`, `svm-nfts`, `svm-staking`, `svm-dex`.
 - Entry point is typically `src/lib.rs` plus per-protocol files in `src/*.rs`.
 
+### Native (non-WASM) projectors
+
+- `spl/transfers` (`spl-transfers`): storage-independent SPL transfer projection over complete blocks, callable from native Rust (Pinax Streams, Firehose Parquet). It has no protobuf or Substreams dependency: callers pass a borrowed `model::Block` built with `block_view!` from any generated `sf.solana.type.v1` model. Fixtures, coverage and validation rules are in its README.
+- `spl/transfers-substreams`: the `spl_transfers` Substreams package, a thin wrapper over `spl_transfers::project` (handler exported only on wasm32).
+- `spl/token-common` uses the same `spl_transfers::decode` for amount-moving instructions, so `spl_token`, `svm-transfers` and the native projector agree.
+
 ### Work on sink schemas
 
 - ClickHouse: `svm-*/clickhouse/schema.*.sql` and `Makefile`.
@@ -57,6 +63,7 @@ This guide is a quick map for contributors and coding agents working in this mon
 ### Non-DEX protocol crates
 
 - `spl/token`, `spl/token-2022`, `spl/token-swap`, `spl/token-lending`
+- `spl/token-common` (shared SPL Token parsing), `spl/transfers` (native projector), `spl/transfers-substreams`
 - `native/system`, `native/stake`, `native/vote`
 - `nft/magiceden/m2`, `nft/magiceden/m3`, `nft/tensor`
 - `staking/marinade`
@@ -80,4 +87,6 @@ This guide is a quick map for contributors and coding agents working in this mon
 
 - Many historical docs still mention old `db-svm-*` folder names; current structure is `svm-*`.
 - Root `README.md` previously under-described current module coverage.
+- `proto/src/pb/mod.rs` does not declare every generated module (e.g. `aldrin`, `orca`, `magiceden`, `tensor`, `marinade`), so about 30 crates fail to compile for wasm32 until it is regenerated or completed. `cargo build --workspace --keep-going` lists them.
+- `substreams run` fails on manifests importing `substreams-sink-sql-protodefs-v1.0.7.spkg` with substreams CLI 1.25.0 (`deprecated.proto` name conflict over `sf.substreams.sink.sql.v1.Service`); dropping that import from a local copy works around it for verification.
 - `scripts/gen-dex.sh` uses a hard-coded base path (`/data/workspace/substreams-svm`), so it may require adaptation before use in other environments.

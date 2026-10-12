@@ -32,6 +32,9 @@ pub struct Transaction {
     /// Token balances after the transaction.
     #[prost(message, repeated, tag="8")]
     pub post_token_balances: ::prost::alloc::vec::Vec<TokenBalance>,
+    /// Original index of the transaction in the block, votes and failures included.
+    #[prost(uint32, tag="9")]
+    pub transaction_index: u32,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -43,6 +46,12 @@ pub struct Instruction {
     /// Indicates if this instruction is a root instruction.
     #[prost(bool, tag="3")]
     pub is_root: bool,
+    /// Original index of the outer (top-level) instruction.
+    #[prost(uint32, tag="4")]
+    pub instruction_index: u32,
+    /// Original index among the inner instructions of instruction_index; absent for an outer instruction.
+    #[prost(uint32, optional, tag="5")]
+    pub inner_instruction_index: ::core::option::Option<u32>,
     #[prost(oneof="instruction::Instruction", tags="10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26")]
     pub instruction: ::core::option::Option<instruction::Instruction>,
 }
@@ -51,11 +60,15 @@ pub mod instruction {
     #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Instruction {
-        /// Transfers
+        /// Amount-moving operations, each with its explicit kind.
+        ///
+        /// Transfer and TransferChecked
         #[prost(message, tag="10")]
         Transfer(super::Transfer),
+        /// MintTo and MintToChecked: no source
         #[prost(message, tag="11")]
         Mint(super::Transfer),
+        /// Burn and BurnChecked: no destination
         #[prost(message, tag="12")]
         Burn(super::Transfer),
         /// Permissions
@@ -121,22 +134,28 @@ pub struct TokenBalance {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Transfer {
     /// -- authority --
+    ///
+    /// Owner, delegate or mint authority.
     #[prost(bytes="vec", tag="1")]
     pub authority: ::prost::alloc::vec::Vec<u8>,
+    /// Accounts after the authority.
     #[prost(bytes="vec", repeated, tag="2")]
     pub multisig_authority: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
     /// -- event --
+    ///
+    /// Source token account; empty for mints.
     #[prost(bytes="vec", tag="10")]
     pub source: ::prost::alloc::vec::Vec<u8>,
+    /// Destination token account; empty for burns.
     #[prost(bytes="vec", tag="11")]
     pub destination: ::prost::alloc::vec::Vec<u8>,
+    /// Exact raw amount; zero amounts are kept.
     #[prost(uint64, tag="12")]
     pub amount: u64,
-    #[prost(bytes="vec", tag="13")]
-    pub mint: ::prost::alloc::vec::Vec<u8>,
-    /// SPL-2022
-    ///
-    /// uint8
+    /// Absent for unchecked Transfer, which does not name the mint.
+    #[prost(bytes="vec", optional, tag="13")]
+    pub mint: ::core::option::Option<::prost::alloc::vec::Vec<u8>>,
+    /// uint8, from checked instructions only.
     #[prost(uint32, optional, tag="14")]
     pub decimals: ::core::option::Option<u32>,
 }

@@ -1,0 +1,20 @@
+[package]
+name = "spl-transfers"
+description = "Native, storage-independent SPL token transfer projection over complete Solana blocks"
+edition = { workspace = true }
+version = "0.1.0"
+license = { workspace = true }
+
+[lib]
+crate-type = ["rlib"]
+
+# No protobuf runtime and no Substreams runtime: callers hand in a borrowed
+# view of whichever `sf.solana.type.v1` model they decoded (see `block_view!`).
+[dependencies]
+bs58 = { workspace = true }
+
+[dev-dependencies]
+bytes = "1"
+flate2 = "1"
+prost = { workspace = true }
+substreams-solana = { workspace = true }

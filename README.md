@@ -19,6 +19,7 @@ For a practical contributor map, start here:
 - `svm-*`: aggregate domain packages that emit `DatabaseChanges`
 - `svm-*/clickhouse`: ClickHouse sink manifests + schema files
 - `proto/`: shared protobuf schemas
+- `spl/transfers/`: native, storage-independent SPL transfer projector (no Substreams runtime), wrapped by `spl/transfers-substreams`
 - `common/`: shared Rust helpers
 - `spkg/`: local SPKG dependencies used by aggregate packages
 

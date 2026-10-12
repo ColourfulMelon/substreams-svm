@@ -30,6 +30,18 @@ pub fn common_key_v2(clock: &Clock, transaction_index: usize, instruction_index:
     ]
 }
 
+/// Primary key from original positions. `inner_instruction_index` is 0 for an
+/// outer instruction, else 1 + the position among the inner instructions of
+/// `instruction_index`, so the key orders rows in execution order.
+pub fn instruction_key(clock: &Clock, transaction_index: u32, instruction_index: u32, inner_instruction_index: Option<u32>) -> [(&'static str, String); 4] {
+    [
+        ("block_hash", clock.id.to_string()),
+        ("transaction_index", transaction_index.to_string()),
+        ("instruction_index", instruction_index.to_string()),
+        ("inner_instruction_index", inner_instruction_index.map_or(0, |index| index + 1).to_string()),
+    ]
+}
+
 pub fn set_raydium_transaction_v2(transaction: &raydium::Transaction, row: &mut Row) {
     row.set("signature", base58::encode(&transaction.signature))
         .set("fee_payer", base58::encode(&transaction.fee_payer))

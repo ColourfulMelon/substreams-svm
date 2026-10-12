@@ -1,0 +1,39 @@
+specVersion: v0.1.0
+package:
+  name: spl_transfers
+  version: v0.1.0
+  url: https://github.com/pinax-network/substreams-svm
+  description: Validated SPL token transfers with original block positions; a thin wrapper over the native spl-transfers projector.
+  image: ../../image.png
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ../../target/wasm32-unknown-unknown/release/spl_transfers_substreams.wasm
+
+protobuf:
+  files:
+    - v1/spl/spl-transfers.proto
+  importPaths:
+    - ../../proto
+
+modules:
+  - name: map_events
+    kind: map
+    doc: |
+      Complete-block SPL token operations of successful transactions, with
+      original transaction, outer and inner instruction indexes. Reads every
+      block unfiltered so positions are original and empty blocks still emit a
+      clock. Params: comma-separated coverage flags (token_2022,
+      inner_instructions, unchecked_transfers, mint_burn, or all); empty is
+      classic Token program TransferChecked in top-level instructions.
+    inputs:
+      - params: string
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:solana.spl.transfers.v1.Events
+
+params:
+  map_events: ""
+
+network: solana
