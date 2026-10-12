@@ -1194,6 +1194,119 @@ mod tests {
     }
 
     #[test]
+    fn damm_referrals_do_not_replace_or_inflate_the_main_swap_receipt() {
+        use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+        for (fixture, mint_data, mint, native_index, input_amount, output_amount) in [
+            (
+                include_bytes!("../fixtures/token-fees/damm-swap2-referral.transaction.pb").as_slice(),
+                include_bytes!("../fixtures/token-fees/damm-swap2-referral.mint.bin").as_slice(),
+                "Cy5TzDyJ4mo6MBAbpwUcAgdfNiXYKrYUPrvhPGVU6XMR",
+                8,
+                529_168_408,
+                10_544_991_067,
+            ),
+            (
+                include_bytes!("../fixtures/token-fees/damm-swap-referral.transaction.pb").as_slice(),
+                include_bytes!("../fixtures/token-fees/damm-swap-referral.mint.bin").as_slice(),
+                "44sHXMkPeciUpqhecfCysVs7RcaxeM24VPMauQouBREV",
+                9,
+                30_620_368_359,
+                13_766_846_830_718,
+            ),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let mint = base58::decode(mint).unwrap();
+            let schedule = owned_mint(&token_2022::PROGRAM_ID, mint_data).unwrap().0;
+            let decode = |transaction| {
+                crate::process_transaction_with_metadata(
+                    transaction,
+                    None,
+                    |_, _| None,
+                    |_, _| None,
+                    |key, _| (key == mint).then(|| schedule.at(1055)).flatten(),
+                )
+                .unwrap()
+            };
+            let decoded = decode(tx.clone());
+            let rows: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(native_index)).collect();
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDaam as i32);
+            assert_eq!((rows[0].input_amount, rows[0].output_amount), (input_amount, output_amount));
+            assert_eq!(rows[0].source_transfer_index, Some(native_index + 1));
+            assert!(rows[0].transfer_verified);
+            let no_fee = crate::process_transaction_with_metadata(tx.clone(), None, |_, _| None, |_, _| None, |_, _| None).unwrap();
+            assert!(no_fee.swaps.iter().all(|swap| swap.source_index != Some(native_index)));
+
+            let native_data = tx.walk_instructions().nth(native_index as usize).unwrap().data().to_vec();
+            let output_data = tx.walk_instructions().nth(native_index as usize + 2).unwrap().data().to_vec();
+            let referral_data = tx.walk_instructions().nth(native_index as usize + 3).unwrap().data().to_vec();
+            for role in [0, 2, 3, 8, 9, 10, 11] {
+                let mut altered = tx.clone();
+                let mut changed = 0;
+                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                    for instruction in &mut group.instructions {
+                        if instruction.data == native_data {
+                            instruction.accounts[role] = instruction.accounts[1];
+                            changed += 1;
+                        }
+                    }
+                }
+                assert_eq!(changed, 1);
+                assert!(decode(altered).swaps.iter().all(|swap| swap.source_index != Some(native_index)), "role {role}");
+            }
+            for (data, role) in [(&output_data, 0), (&output_data, 3), (&referral_data, 0), (&referral_data, 3)] {
+                let mut altered = tx.clone();
+                let mut changed = 0;
+                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                    for instruction in &mut group.instructions {
+                        if &instruction.data == data {
+                            instruction.accounts[role] = instruction.accounts[2];
+                            changed += 1;
+                        }
+                    }
+                }
+                assert_eq!(changed, 1);
+                assert!(decode(altered).swaps.iter().all(|swap| swap.source_index != Some(native_index)));
+            }
+            let mut hidden_event = tx.clone();
+            let mut hidden = 0;
+            for group in &mut hidden_event.meta.as_mut().unwrap().inner_instructions {
+                for instruction in &mut group.instructions {
+                    if matches!(
+                        substreams_solana_idls::meteora::daam::anchor_cpi_event::unpack(&instruction.data),
+                        Ok(substreams_solana_idls::meteora::daam::anchor_cpi_event::MeteoraDammAnchorCpiEvent::EvtSwap2(_))
+                    ) {
+                        instruction.data[8..16].fill(0);
+                        hidden += 1;
+                    }
+                }
+            }
+            assert!(hidden > 0);
+            let independent = decode(hidden_event);
+            let rows: Vec<_> = independent.swaps.iter().filter(|swap| swap.source_index == Some(native_index)).collect();
+            assert_eq!(rows.len(), 1);
+            assert_eq!((rows[0].input_amount, rows[0].output_amount), (input_amount, output_amount));
+            // The actual primary transfer remains first, even when zero; the
+            // positive referral cannot be reclassified as the swap output.
+            let mut zero_output = tx.clone();
+            let mut changed = 0;
+            for group in &mut zero_output.meta.as_mut().unwrap().inner_instructions {
+                for instruction in &mut group.instructions {
+                    if instruction.data == output_data {
+                        instruction.data[1..9].fill(0);
+                        changed += 1;
+                    }
+                }
+            }
+            assert_eq!(changed, 1);
+            assert!(decode(zero_output).swaps.iter().all(|swap| swap.source_index != Some(native_index)));
+            let mut missing_logs = tx;
+            missing_logs.meta.as_mut().unwrap().log_messages.clear();
+            assert!(decode(missing_logs).swaps.iter().all(|swap| swap.source_index != Some(native_index)));
+        }
+    }
+
+    #[test]
     fn typed_dlmm_swaps_survive_missing_legacy_events_without_duplicate_rows() {
         use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
         let dew = base58::decode("DEW9dSN6QpWyNthphCpMmAbZP1Q4cEKR9xQXAri98WDP").unwrap();

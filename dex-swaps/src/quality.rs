@@ -303,8 +303,151 @@ pub(crate) fn verify_with_fees(
         }
     }
 
+    // DAMM v2 a85c926607433f23f0ea60f4ca7b1ae92f4156cb sends input,
+    // then the swap output, then an optional current-swap referral payment.
+    // A referral may alias either user account. Bind the first two actual
+    // transfer instructions, including zero-amount calls, so a referral can
+    // never stand in for a zero output or become a second financial swap.
+    let mut damm_receipts = HashMap::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        if ix.program_id().0 != &substreams_solana_idls::meteora::daam::PROGRAM_ID || (caught_failure && !successful_invocations.contains(&(index as u32))) {
+            continue;
+        }
+        let Some(layout) = crate::native_venues::layout(ix) else { continue };
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        if depth == 0 {
+            continue;
+        }
+        let end = instructions
+            .iter()
+            .enumerate()
+            .skip(index + 1)
+            .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
+            .map_or(instructions.len(), |(position, _)| position);
+        let calls: Vec<_> = instructions
+            .iter()
+            .enumerate()
+            .take(end)
+            .skip(index + 1)
+            .filter(|(_, child)| {
+                let program = child.program_id().0;
+                let data = child.data();
+                child.stack_height() == depth + 1
+                    && (program == &token::PROGRAM_ID || program == &token_2022::PROGRAM_ID)
+                    && ((data.first() == Some(&3) && data.len() == 9)
+                        || (data.first() == Some(&12) && data.len() == 10)
+                        || (data.len() == 19 && data[..2] == [26, 1]))
+            })
+            .collect();
+        if !matches!(calls.len(), 2 | 3)
+            || calls
+                .iter()
+                .any(|(position, _)| caught_failure && !successful_invocations.contains(&(*position as u32)))
+        {
+            continue;
+        }
+        let Some((input_position, input)) = transfers.iter().enumerate().find(|(_, t)| t.index == calls[0].0 as u32) else {
+            continue;
+        };
+        let Some((output_position, output)) = transfers.iter().enumerate().find(|(_, t)| t.index == calls[1].0 as u32) else {
+            continue;
+        };
+        let accounts = ix.accounts();
+        let (input_vault, output_vault, input_program, output_program, output_mint) = if input.mint == *accounts[6].0 {
+            (4, 5, 9, 10, 7)
+        } else if input.mint == *accounts[7].0 {
+            (5, 4, 10, 9, 6)
+        } else {
+            continue;
+        };
+        if input.source != *accounts[2].0
+            || input.destination != *accounts[input_vault].0
+            || input.authority != *accounts[8].0
+            || output.source != *accounts[output_vault].0
+            || output.destination != *accounts[3].0
+            || output.authority != *accounts[0].0
+            || output.mint != *accounts[output_mint].0
+            || input.mint == output.mint
+            || !output.net_verified
+            || calls[0].1.program_id().0 != accounts[input_program].0
+            || calls[1].1.program_id().0 != accounts[output_program].0
+            || input.amounts[0] > layout.amount
+            || (layout.exact_input && !layout.input_limit && input.amounts[0] != layout.amount)
+            || *output.amounts.iter().min().unwrap() < layout.minimum_output
+        {
+            continue;
+        }
+        if calls.len() == 3 {
+            let referral = calls[2].1;
+            let data = referral.data();
+            let a = referral.accounts();
+            let checked = data.first() != Some(&3);
+            let destination = if checked { 2 } else { 1 };
+            let Some(source) = a.first() else { continue };
+            let (mint, program) = if source.0 == accounts[4].0 {
+                (6, 9)
+            } else if source.0 == accounts[5].0 {
+                (7, 10)
+            } else {
+                continue;
+            };
+            if a.len() <= destination + 1
+                || a[destination].0 != accounts[11].0
+                || a[destination + 1].0 != accounts[0].0
+                || referral.program_id().0 != accounts[program].0
+                || (checked && a[1].0 != accounts[mint].0)
+                || mints.mint_for(source.0).as_ref() != Some(accounts[mint].0)
+            {
+                continue;
+            }
+        }
+        damm_receipts.insert(index as u32, (input_position, output_position));
+    }
+
     let mut rejected = Vec::new();
     if expand_native {
+        for (index, ix) in instructions.iter().enumerate() {
+            let Some(&(input_position, output_position)) = damm_receipts.get(&(index as u32)) else {
+                continue;
+            };
+            let (input, output) = (&transfers[input_position], &transfers[output_position]);
+            let a = ix.accounts();
+            let native = pb::Swap {
+                protocol: pb::Protocol::MeteoraDaam as i32,
+                program_id: ix.program_id().0.clone(),
+                amm: ix.program_id().0.clone(),
+                stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+                amm_pool: a[1].0.clone(),
+                user: a[8].0.clone(),
+                input_mint: input.mint.clone(),
+                input_amount: input.amounts[0],
+                output_mint: output.mint.clone(),
+                output_amount: *output.amounts.iter().min().unwrap(),
+                source_index: Some(index as u32),
+                source_transfer_index: Some(input.index.min(output.index)),
+                ..Default::default()
+            };
+            if let Some(existing) = swaps.iter_mut().find(|swap| {
+                swap.source_index.is_none()
+                    && swap.protocol == native.protocol
+                    && swap.amm_pool == native.amm_pool
+                    && swap.user == native.user
+                    && swap.input_mint == native.input_mint
+                    && swap.output_mint == native.output_mint
+            }) {
+                if (existing.input_amount, existing.output_amount) != (native.input_amount, native.output_amount) {
+                    let mut original = existing.clone();
+                    original.source_index = native.source_index;
+                    original.source_transfer_index = native.source_transfer_index;
+                    original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                    rejected.push(original);
+                }
+                *existing = native;
+            } else {
+                swaps.push(native);
+            }
+        }
+
         // New native venues are normalized from recognized instruction layouts
         // and exact, immediate token CPIs. Never synthesize a trade from arbitrary
         // same-program transfers (deposit, withdraw, lending, quote update).
@@ -315,6 +458,9 @@ pub(crate) fn verify_with_fees(
             let Some(layout) = crate::native_venues::layout(ix) else {
                 continue;
             };
+            if layout.protocol == pb::Protocol::MeteoraDaam {
+                continue;
+            }
             let depth = if ix.is_root() { 1 } else { ix.stack_height() };
             if depth == 0 {
                 continue;
@@ -1108,6 +1254,36 @@ pub(crate) fn verify_with_fees(
                         rejected.push(original);
                         swap.output_amount = net;
                     }
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
+                if ix.program_id().0 == &substreams_solana_idls::meteora::daam::PROGRAM_ID {
+                    let Some(&(input_position, output_position)) = damm_receipts.get(&(index as u32)) else {
+                        continue;
+                    };
+                    let (input, output) = (&transfers[input_position], &transfers[output_position]);
+                    if swap.amm_pool != *accounts[1].0
+                        || swap.user != *accounts[8].0
+                        || swap.input_mint != input.mint
+                        || swap.output_mint != output.mint
+                        || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
+                    {
+                        continue;
+                    }
+                    let identity = (index as u32, input.index, output.index);
+                    if native_evidence.contains(&identity) {
+                        continue;
+                    }
+                    let net = *output.amounts.iter().min().unwrap();
+                    if (swap.input_amount, swap.output_amount) != (input.amounts[0], net) {
+                        let mut original = swap.clone();
+                        original.source_index = Some(index as u32);
+                        original.source_transfer_index = Some(input.index.min(output.index));
+                        original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                        rejected.push(original);
+                    }
+                    swap.input_amount = input.amounts[0];
+                    swap.output_amount = net;
                     evidence = Some(identity);
                     break 'candidate;
                 }

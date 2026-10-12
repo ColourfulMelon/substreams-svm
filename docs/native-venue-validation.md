@@ -123,6 +123,34 @@ forms, both directions, exact-in/exact-out and invalid payload/account prefixes.
 
 This source change has not yet been included in a live release.
 
+## DAMM referral receipts (staged after pluto.12)
+
+The official DAMM v2 program at
+[`a85c926607433f23f0ea60f4ca7b1ae92f4156cb`](https://github.com/MeteoraAg/damm-v2/tree/a85c926607433f23f0ea60f4ca7b1ae92f4156cb)
+sends the input, then the primary swap output, then an optional referral payment.
+The referral account may be the same account as the user's output. The decoder
+binds the first two actual direct token transfer instructions to the declared
+user, vault, mint, authority and token-program roles, and separately validates
+the referral's declared destination. The financial output is the primary net
+receipt after its own transfer fee; the referral is excluded. Zero primary
+output cannot be replaced by a positive referral, even if an event is present.
+
+In the same 65 finalized transactions, this restores six additional DAMM legs
+and preserves all 137 earlier full financial payloads. The resulting 143 legs
+include 66 beyond the original no-fee-metadata baseline of 77; each additional
+amount pair was independently checked against finalized raw token CPI bytes.
+All 140 full financial payloads in the separate 38-transaction DLMM sample also
+remain unchanged. These are bounded regression results, not a complete-coverage
+claim.
+
+Two original transaction fixtures, independently owned fee-mint bytes and
+`damm-referral-proof.json` are retained in `fixtures/token-fees`. The existing
+core fee test covers both swap formats, exact primary receipts, one row per
+swap, recovery without the swap event, wrong declared or CPI account roles,
+zero primary output and missing fee evidence/runtime logs.
+
+This source change has not yet been included in a live release.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains
