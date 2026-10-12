@@ -859,3 +859,40 @@ proof contains the subsequent financial uniqueness, exact restart boundary,
 parent-chain and sealed-counter validation. This establishes actual freshness
 for this rollout, not universal swap coverage; the remaining independently
 unverified formats still need work.
+
+## Verified Tessera checked-transfer variant (.18 candidate)
+
+A bounded 2901-slot .17 diagnostic range (456009160–456012060) retained 52
+DFlow candidate transactions and 124 per-leg CPI receipts. Nine Tessera legs
+were absent from stored swaps. Original finalized RPC instruction and token
+balance parity, exact direct TransferChecked amounts/roles and owned market
+accounts independently prove these omissions. DFlow wrapper fees and already
+indexed native legs are not counted again. Other unmatched receipts remain
+under investigation, including prediction-market legs and amount disagreements;
+they are not all classified as missing trades.
+
+The new Tessera opcode 17 uses nineteen bytes and fourteen accounts. Only the
+observed zero trailing flag is supported. Direction, declared input/minimum,
+market/user/vault/mint/program roles, output authority and completed invocations
+must match its two immediate token transfers. Unknown flags, malformed payloads,
+wrong roles and failed/incomplete calls remain excluded. Opcode 16 is unchanged.
+
+Twelve original core fixtures (nine recent and three previously retained) pass
+252 negative mutations. All 162 core Rust tests pass. Seventeen overlapping
+corpora preserve every financial field of all 2787 prior occurrences, change
+and drop none, and add twelve occurrences. Original RPC reads can truncate
+logs; the proof compares their exact prefix before the first truncation marker
+and all instructions/token balances, retaining the full original response.
+
+The exact .18 package exits cleanly on finalized slots 456009180–456009229:
+4298 prior swaps retain every field/key except decoder_version and fourteen
+original RPC/owned-market-proven Tessera swaps are added. Fourteen resolved
+candidate rows and twelve no-longer-needed raw rows are removed; all other
+diagnostic fields/keys are unchanged. Parent links, sealed counters and unique
+contiguous per-block database insertion ordinals agree. A second clean replay
+has identical bytes. All seven metadata hashes and the frozen artifact remain
+unchanged. Full proofs and original data are retained under
+`dex-swaps/fixtures/native-venues/tessera-checked/`.
+
+This candidate is ready for publication and coordinated cursor adoption. It is
+not deployed yet and does not establish complete coverage of all swap types.
