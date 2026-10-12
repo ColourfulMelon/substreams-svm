@@ -1078,3 +1078,15 @@ preparation processes were reaped. The writer is advancing but was still 515
 seconds behind at this proof snapshot: freshness recovery remains pending.
 See `jupiter-lend/release20-live-handoff-proof.json`. This does not establish
 universal swap coverage.
+
+
+The separately versioned `.21` candidate passes 165 core tests and has all three
+manifest versions plus the shared four-table row label set to `.21`. Its seven
+metadata module hashes and frozen metadata bytes match `.20`. A clean finite
+201-block finalized `.20`/`.21` packaged replay (456055080–456055280) preserves
+all 16,477 prior financial rows and execution positions, adding only the three
+independently RPC-verified Orca tuples. Three resolved candidates and their
+three raw transactions are removed; no other diagnostics change. All four
+actual row versions, parent chains, sealed counts and contiguous per-block
+operation ordinals pass. The package is not yet published or deployed at this
+proof snapshot. No replay writes to financial tables.
