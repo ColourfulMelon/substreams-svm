@@ -5,7 +5,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.20";
+const DECODER_VERSION: &str = "v0.5.2-pluto.21";
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
