@@ -1210,3 +1210,18 @@ add 77 occurrences representing the 45 independently verified originals.
 Evidence is in `dex-swaps/fixtures/swap-coverage/dlmm-host-fee-alias/`. The
 packaged replay and rollout of this candidate remain pending. The live writer
 is .23; no universal swap coverage claim is made.
+
+The complete 921-block .23/.24 packaged replay at finalized slots
+456084760–456085680 preserves every one of 130,177 previous full financial rows
+and execution positions and restores exactly 22 DLMM swaps across 11 owned
+pools. Every added tuple and its transaction metadata independently matches
+finalized RPC/PB/runtime instructions, both complete event versions, exact
+principal/host CPI flows and all 44 user ledgers. The baseline is the retained
+clean immutable .23 replay with independently checked output-file hash.
+Twenty-two candidates and 19 raw records resolve; remaining candidates in
+three multi-gap transactions retain their original bytes. Those legacy events
+already report primary receipts, so correction counts stay unchanged and
+quarantine decreases by 22. All four table versions, parent chains, sealed
+counts and unique contiguous operation ordinals pass. Metadata bytes and all
+seven module hashes remain unchanged. This replay writes no live rows. Live
+rollout is pending, and full swap coverage remains unproven.
