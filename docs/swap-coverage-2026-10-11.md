@@ -413,3 +413,40 @@ ancestors. All 145 core tests pass. Full payload comparison preserves all 690
 previous audited financial rows and adds precisely the two oracle-proven legs;
 the two Orca V1 unclassified candidates disappear from that 60-transaction
 sample. Other unclassified programs remain and are not covered by this result.
+
+## Mercurial N-coin exchanges (pluto.13 candidate)
+
+Two unclassified finalized legs execute in Mercurial's stable-swap program
+(`MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky`). Its published instruction
+and state source at `bd691381904564135681d29f182adf5f29abcdf8` defines opcode 4,
+an input amount/minimum output and a two-to-four-vault array. User source and
+destination follow that entire array. The decoder recognizes that layout and
+normalizes executed exchanges as the appended protocol `MERCURIAL` (52);
+existing IDs remain unchanged and Rust bindings are regenerated from the schema.
+
+Exact, committed immediate classic-Token CPIs establish the user debit and
+receipt, declared user/pool authority, distinct declared vaults and vault/mint
+roles. Both transfers must exist in order, the debit must equal the input
+argument and the receipt must meet minimum output. Extra token operations,
+ambiguous/missing legs, unrelated vaults, liquidity opcodes and failed or
+incomplete ancestors cannot be priced. Routed events use the same receipts.
+
+The independent proof retains two original finalized transactions, owned SwapV2
+pool state/PDA and three owned Token vaults. Current reads corroborate immutable
+roles, not historical reserves or admin flags. The restored transfers are
+20,072 USDT atoms into 20,105 USDC atoms and 21,123 into 21,195. Fifty mutations
+across the two fixtures cover settlement bounds, roles, operation identity,
+additional token calls and failure/trace completeness. Constructed ABI checks
+cover two-, three- and four-vault positions; observed positive fixtures are
+three-vault exchanges. All 147 core tests pass, and full payload comparison
+preserves 692 prior financial rows while adding exactly those two verified legs.
+
+The SQL sink maps protocol 52 to `mercurial`. Both standalone and startup schemas
+extend all four financial enum columns before accepting new rows. An isolated
+existing-schema upgrade preserves the prior aggregate and all 5,525 replayed
+rows, verifies eight dependent enum columns and passes 21 price assertions,
+including the Mercurial amounts in verified recent pairs, pool/mint counts and
+all eight candle intervals. Only these isolated price checks assign controlled
+current timestamps; historical source transaction timestamps are not refreshed.
+The temporary database was removed. Live pluto.12 and its schema are unchanged;
+apply the companion migration before the controlled pluto.13 rollout.

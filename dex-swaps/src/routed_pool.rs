@@ -46,6 +46,7 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
         .or_else(|| crate::pumpfun::extract_pool(ix))
         .or_else(|| crate::raydium_launchpad::extract_pool(ix))
         .or_else(|| crate::native_venues::extract_pool(ix))
+        .or_else(|| crate::mercurial::layout(ix).map(|_| ix.accounts()[0].0.clone()))
 }
 
 #[cfg(test)]

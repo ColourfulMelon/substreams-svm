@@ -1,0 +1,59 @@
+{
+  "scope": "Original finalized transactions; independently verified two immediate SPL Token transfers, exact user/authority/vault/mint roles, owned SwapV2 pool/PDA and three owned classic Token vaults. Later reads corroborate immutable roles, not historical reserves or flags.",
+  "primarySource": "https://github.com/mercurial-finance/stable-swap-n-pool-instructions/tree/bd691381904564135681d29f182adf5f29abcdf8",
+  "ownedReadContext": 455867686,
+  "ownedAccounts": [
+    {
+      "address": "UST3iPxDFwUUiToMyLF7DYqSP9uaoz7Mzs2LxRYxVJG",
+      "owner": "MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky",
+      "sha256": "676e29705fd5b06fa35498ce1cc1fbd6a1d7165e8f2c1808e5af6475eeff0d28"
+    },
+    {
+      "address": "65sR8agQm768HYCjktunDJG3bbQszi7U8VD4pAKEYiXW",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "sha256": "00585a8be7641be711e5a77b39907aa1a67bc41e56d97ecefb090fe153d9d25d"
+    },
+    {
+      "address": "G5Q7dTUPYw5pEXbfzZbAFSaPstP9bdFmEJ7XXcyrkxVJ",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "sha256": "1d8fdfffaaef1cbd118579136a94faf5728502d517844f3b28b79f38df27c4d9"
+    },
+    {
+      "address": "EZd87x1Fu1ufV7pVRuXAEcL9y6aEMWWqtpcr7AHdU8ms",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "sha256": "eceae110950c280b5e6ef0dc5e6afd51a91a72f8f18b4fdc5b07481103057803"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture": "mercurial-route-1.transaction.pb",
+      "signature": "2HecL4ipouG1awzDutqLqXthUofVbkXCyDjTKWuJQGJYHbV5aZin2ZBK51FcBvc1JiVW7GfsNZ6Hyq1Dcce1BRWd",
+      "slot": 455795499,
+      "commitment": "finalized",
+      "nativeIndex": 14,
+      "inputCpiIndex": 15,
+      "outputCpiIndex": 16,
+      "inputVault": "EZd87x1Fu1ufV7pVRuXAEcL9y6aEMWWqtpcr7AHdU8ms",
+      "outputVault": "G5Q7dTUPYw5pEXbfzZbAFSaPstP9bdFmEJ7XXcyrkxVJ",
+      "rpcJsonSha256": "1bb989d68fcd46224d1b73d2999dd06775cfac3056c0482d41fea79c7d8a9fc4",
+      "protobufSha256": "9aea7cd40c7c3d29d69c9d4b3ef65d6edf991c2d9295a270803d5b2de1daba03",
+      "declaredInput": "20072",
+      "minimumOutput": "0"
+    },
+    {
+      "fixture": "mercurial-route-2.transaction.pb",
+      "signature": "37VrsX9XCZrxzHiUpKVFVYS4sF5o4theG1L81APMp1KSyaCLn5etfEYmq12F27LWJBuNn1f3iR9XYBHMT4PWtvwN",
+      "slot": 455785355,
+      "commitment": "finalized",
+      "nativeIndex": 20,
+      "inputCpiIndex": 21,
+      "outputCpiIndex": 22,
+      "inputVault": "EZd87x1Fu1ufV7pVRuXAEcL9y6aEMWWqtpcr7AHdU8ms",
+      "outputVault": "G5Q7dTUPYw5pEXbfzZbAFSaPstP9bdFmEJ7XXcyrkxVJ",
+      "rpcJsonSha256": "992c123325fbf4b4e4b05e8665e9e018bfd27d772492c052beae3ebcd6ea8f0f",
+      "protobufSha256": "bf7147d3e3f03e1422bee3eeab39d2bc72c5552b79028584f7d22ae8886a4233",
+      "declaredInput": "21123",
+      "minimumOutput": "0"
+    }
+  ]
+}

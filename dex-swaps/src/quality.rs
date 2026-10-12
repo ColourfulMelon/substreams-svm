@@ -53,6 +53,7 @@ pub(crate) fn verify_with_fees(
         || instructions.iter().any(|ix| {
             ix.program_id().0 == &token_2022::PROGRAM_ID
                 || ix.program_id().0 == &crate::native_venues::ORCA_V1
+                || ix.program_id().0 == &crate::mercurial::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || crate::native_venues::defituna_two_hop(ix).is_some()
         }) {
@@ -452,6 +453,47 @@ pub(crate) fn verify_with_fees(
         damm_receipts.insert(index as u32, (input_position, output_position));
     }
 
+    let mut mercurial_receipts = HashMap::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some(exchange) = crate::mercurial::layout(ix) else { continue };
+        if !successful_invocations.contains(&(index as u32)) {
+            continue;
+        }
+        let accounts = ix.accounts();
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        let end = instructions.iter().enumerate().skip(index + 1)
+            .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
+            .map_or(instructions.len() as u32, |(end, _)| end as u32);
+        let scoped: Vec<_> = transfers.iter().enumerate().filter(|(_, t)| {
+            t.index > index as u32 && t.index < end && t.depth == depth + 1
+                && successful_invocations.contains(&t.index)
+        }).collect();
+        let token_calls: Vec<_> = instructions.iter().enumerate().skip(index + 1).take(end as usize - index - 1)
+            .filter(|(_, child)| child.stack_height() == depth + 1
+                && [token::PROGRAM_ID.as_slice(), token_2022::PROGRAM_ID.as_slice()].contains(&child.program_id().0.as_slice()))
+            .map(|(i, _)| i as u32).collect();
+        if scoped.len() != 2 || token_calls != scoped.iter().map(|(_, t)| t.index).collect::<Vec<_>>() {
+            continue;
+        }
+        let (input_position, input) = scoped[0];
+        let (output_position, output) = scoped[1];
+        let vaults = &accounts[4..exchange.source];
+        if input.source != *accounts[exchange.source].0 || input.authority != *accounts[3].0
+            || output.destination != *accounts[exchange.destination].0 || output.authority != *accounts[2].0
+            || !vaults.iter().any(|vault| vault.0 == &input.destination)
+            || !vaults.iter().any(|vault| vault.0 == &output.source)
+            || input.destination == output.source || input.mint == output.mint
+            || mints.mint_for(&input.destination).as_ref() != Some(&input.mint)
+            || mints.mint_for(&output.source).as_ref() != Some(&output.mint)
+            || instructions[input.index as usize].program_id().0 != accounts[1].0
+            || instructions[output.index as usize].program_id().0 != accounts[1].0
+            || input.amounts[0] != exchange.amount || output.amounts[0] < exchange.minimum_output
+        {
+            continue;
+        }
+        mercurial_receipts.insert(index as u32, (input_position, output_position));
+    }
+
     let mut two_hop_receipts = HashMap::new();
     for (index, ix) in instructions.iter().enumerate() {
         let Some((amount, threshold, exact_input)) = crate::native_venues::defituna_two_hop(ix) else {
@@ -521,6 +563,22 @@ pub(crate) fn verify_with_fees(
 
     let mut rejected = Vec::new();
     if expand_native {
+        for (&index, &(input_position, output_position)) in &mercurial_receipts {
+            let ix = &instructions[index as usize];
+            let accounts = ix.accounts();
+            let (input, output) = (&transfers[input_position], &transfers[output_position]);
+            swaps.push(pb::Swap {
+                protocol: pb::Protocol::Mercurial as i32,
+                program_id: crate::mercurial::PROGRAM_ID.to_vec(),
+                amm: crate::mercurial::PROGRAM_ID.to_vec(),
+                amm_pool: accounts[0].0.clone(), user: accounts[3].0.clone(),
+                stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+                input_mint: input.mint.clone(), input_amount: input.amounts[0],
+                output_mint: output.mint.clone(), output_amount: output.amounts[0],
+                source_index: Some(index), source_transfer_index: Some(input.index),
+                ..Default::default()
+            });
+        }
         for (&index, legs) in &two_hop_receipts {
             let ix = &instructions[index as usize];
             let accounts = ix.accounts();
@@ -1276,6 +1334,21 @@ pub(crate) fn verify_with_fees(
                     }
                     evidence = Some(identity);
                     break 'candidate;
+                }
+                if ix.program_id().0 == &crate::mercurial::PROGRAM_ID {
+                    let Some(&(input_position, output_position)) = mercurial_receipts.get(&(index as u32)) else { continue };
+                    let (input, output) = (&transfers[input_position], &transfers[output_position]);
+                    let identity = (index as u32, input.index, output.index);
+                    if swap.amm_pool == *accounts[0].0 && swap.user == *accounts[3].0
+                        && swap.input_mint == input.mint && swap.output_mint == output.mint
+                        && (swap.input_amount, swap.output_amount) == (input.amounts[0], output.amounts[0])
+                        && !expected_transfer.is_some_and(|transfer| transfer != input.index)
+                        && !native_evidence.contains(&identity)
+                    {
+                        evidence = Some(identity);
+                        break 'candidate;
+                    }
+                    continue;
                 }
                 if let Some(legs) = two_hop_receipts.get(&(index as u32)) {
                     for hop in 0..2 {

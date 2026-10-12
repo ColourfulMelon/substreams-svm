@@ -66,6 +66,9 @@ pub struct Swap {
     pub stack_height: u32,
     #[prost(bytes="vec", tag="4")]
     pub amm: ::prost::alloc::vec::Vec<u8>,
+    /// Actual AMM pool, orderbook market, or RFQ maker account.
+    /// RFQ maker identities are distinguished by PROTOCOL_JUPITER_RFQ; each
+    /// token pair remains separate in price aggregates.
     #[prost(bytes="vec", tag="5")]
     pub amm_pool: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes="vec", tag="6")]
@@ -97,6 +100,23 @@ pub struct Swap {
     /// Position in runtime log_messages; distinct from compiled instruction positions.
     #[prost(uint32, optional, tag="17")]
     pub source_log_index: ::core::option::Option<u32>,
+}
+/// Deterministic mint metadata, separate from financial swap events.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TokenFeeUpdates {
+    #[prost(message, repeated, tag="1")]
+    pub changes: ::prost::alloc::vec::Vec<TokenFeeUpdate>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TokenFeeUpdate {
+    #[prost(uint64, tag="1")]
+    pub ordinal: u64,
+    #[prost(bytes="vec", tag="2")]
+    pub mint: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="3")]
+    pub change: ::prost::alloc::vec::Vec<u8>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -153,6 +173,7 @@ pub enum Protocol {
     JupiterRfq = 49,
     Phoenix = 50,
     OpenbookV2 = 51,
+    Mercurial = 52,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -213,6 +234,7 @@ impl Protocol {
             Protocol::JupiterRfq => "PROTOCOL_JUPITER_RFQ",
             Protocol::Phoenix => "PROTOCOL_PHOENIX",
             Protocol::OpenbookV2 => "PROTOCOL_OPENBOOK_V2",
+            Protocol::Mercurial => "PROTOCOL_MERCURIAL",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -270,23 +292,9 @@ impl Protocol {
             "PROTOCOL_JUPITER_RFQ" => Some(Self::JupiterRfq),
             "PROTOCOL_PHOENIX" => Some(Self::Phoenix),
             "PROTOCOL_OPENBOOK_V2" => Some(Self::OpenbookV2),
+            "PROTOCOL_MERCURIAL" => Some(Self::Mercurial),
             _ => None,
         }
     }
 }
 // @@protoc_insertion_point(module)
-
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TokenFeeUpdates {
-    #[prost(message, repeated, tag="1")]
-    pub changes: ::prost::alloc::vec::Vec<TokenFeeUpdate>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TokenFeeUpdate {
-    #[prost(uint64, tag="1")]
-    pub ordinal: u64,
-    #[prost(bytes="vec", tag="2")]
-    pub mint: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="3")]
-    pub change: ::prost::alloc::vec::Vec<u8>,
-}
