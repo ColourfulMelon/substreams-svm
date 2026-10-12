@@ -1,0 +1,822 @@
+{
+  "scope": "Clean-exit finalized db_out replay. Every prior financial field/key and row operation is compared; only decoder_version is excluded. All 85 output-only fee corrections independently match original finalized RPC token/fee/pool/user settlement. Stored physical identity and execution positions are never excluded. Operation ordinals follow exactly the one diagnostic-removal/swap-insertion shift.",
+  "firstSlot": 455948150,
+  "lastSlot": 455948199,
+  "sourceCommit": "3282d8c2c050336d2e4965dbc11e4143286c48d2",
+  "outputs": {
+    "baseline16": {
+      "cleanExit": true,
+      "sha256": "cee61dfee61529c1e6498da5d7022cb1469168f58b28abf8cc7537cd21939ebf",
+      "blocks": 50,
+      "tables": {
+        "swaps": 3409,
+        "swap_coverage_transactions": 189,
+        "swap_coverage": 253,
+        "blocks": 50
+      }
+    },
+    "candidate": {
+      "cleanExit": true,
+      "sha256": "353f20e6ba3a62028ca1593ecc49f227671d8d664b1a19dd16c278d0dc2ee32f",
+      "blocks": 50,
+      "tables": {
+        "swaps": 3410,
+        "swap_coverage_transactions": 188,
+        "swap_coverage": 252,
+        "blocks": 50
+      }
+    }
+  },
+  "missingPriorSwaps": 0,
+  "unchangedPriorFinancialRows": 3324,
+  "outputOnlyCorrections": [
+    {
+      "eventId": "2pfhJWCSJjPZWL6NUNaMZVHWRKE7HVBkWZxn92XSvzxHjpB1J8E513Ds6EdWSUrdiY4iCwvysijqXS8WzWPh4sM7:4:6",
+      "slot": 455948153,
+      "oldGrossLamports": "2149659006",
+      "netLamports": "2122788267"
+    },
+    {
+      "eventId": "2vK5WX9ARgpuf8VV5n3AS6kt4TGdR7njavJ1odDpHJvSew7gZoy6W1uH4UUWjQ9wbg52g1Uy4zSARuTD1vgV8x4b:2:4",
+      "slot": 455948155,
+      "oldGrossLamports": "982808712",
+      "netLamports": "970523602"
+    },
+    {
+      "eventId": "54eAq5RuDhmBHhq4z8jVKr3kUh1Nftidggap3gA27j3ADFJSBTEWdSoVeKiadttE2ctKaAcHw5Py8Vjzi9JSaeEA:3:5",
+      "slot": 455948155,
+      "oldGrossLamports": "71110728",
+      "netLamports": "70221843"
+    },
+    {
+      "eventId": "4HUBuB1rtKBASCoBAHfhTW3NojJxJ1A2CiZ9Zb8o4tc9ZEUTfZ1XRkoTZzBNQ49vDrfXZA4UAnkTcCiWXYeDfPsG:3:5",
+      "slot": 455948155,
+      "oldGrossLamports": "66001727",
+      "netLamports": "65176704"
+    },
+    {
+      "eventId": "2ZcjSbje2h9fzs9vwgvyFKfY2gR6KcZ3cVQ7qCqpHUXLSZPiNhCXqLVq78HA1VE36FJvVFUTt7HeSPVMczoTFiXj:3:5",
+      "slot": 455948155,
+      "oldGrossLamports": "289212773",
+      "netLamports": "285597612"
+    },
+    {
+      "eventId": "2bGsk29gUXDwTiD4swxBvbNLT5GKKZMVptj5W3C4DPgEK9RRRxoYfpkpbbhGgKHFakgkN9SCaad4r9EHKtQvaERm:3:5",
+      "slot": 455948156,
+      "oldGrossLamports": "196274480",
+      "netLamports": "193821048"
+    },
+    {
+      "eventId": "5PNGHUNbdfmo3jQa97rTRHdWSTY75m5yEdYa8LMmRxsWeaKWJ2XEhPMjAAsSRbdNGjajcNh7N4oeP1NFWozqMTam:1:3",
+      "slot": 455948156,
+      "oldGrossLamports": "75255722",
+      "netLamports": "74315024"
+    },
+    {
+      "eventId": "4ttd3Rv9h8Yo99t538KDTZqjjn7Jqz6oVzKh6tbz2ZvdrPPQkBkdxm8Jk1b25yTiELP7zga892gsN27GbngY5X3i:3:6",
+      "slot": 455948156,
+      "oldGrossLamports": "50192824",
+      "netLamports": "49565413"
+    },
+    {
+      "eventId": "2kVSfRdQ1Q1neNw8aFk1NzmD1Asw2ZjhS3KGVwPWRVZHBC75vVkrNQ9EKaDdiWekXoi9ogXdqscoJJRTUCFqMpZJ:3:5",
+      "slot": 455948157,
+      "oldGrossLamports": "112624718",
+      "netLamports": "111216908"
+    },
+    {
+      "eventId": "2XumGZe124e3q25ZZXw6hFEiGA9mvmrb8zhth8sThTHpi56PE5tTugZMnHD6bf261vVpaAurMwKVW8Q7bdhGgw2r:3:5",
+      "slot": 455948159,
+      "oldGrossLamports": "4948309",
+      "netLamports": "4886455"
+    },
+    {
+      "eventId": "4Yu5wMqDZWyq1UHHqzF9gYYbcXbpeHNbTMt72PQNk29vfRfGkimyrDP9bmEpPMt1tQGqeeR9UeEUvNt6sxND7kVQ:9:11",
+      "slot": 455948159,
+      "oldGrossLamports": "329822727",
+      "netLamports": "325699942"
+    },
+    {
+      "eventId": "4kob1Rk73EmdKz6YiFacByxkM98sZUcJCgtAVZ3HqNk2g3Zp6jBTyQTJZzv7x6pqAB2RtanAeDLhmie3FCNAK88w:4:6",
+      "slot": 455948160,
+      "oldGrossLamports": "107305881",
+      "netLamports": "105964557"
+    },
+    {
+      "eventId": "4havsfjZo5i5QuuVa7z3muY2Gxne5GFyELugKkXALjV7WsxQueqimNsBa6k8hHDVjzTupY9KeThdVAK8QdwjcBQK:3:5",
+      "slot": 455948160,
+      "oldGrossLamports": "21609254",
+      "netLamports": "21339138"
+    },
+    {
+      "eventId": "4KvFKsDprbxGskAX2y9SzE3Drk42mnTV5iQ4hpkMEAmgBvcYDQm4XLxdmDpzZugFspbirhhfiQZu2pueu7r8gzno:3:5",
+      "slot": 455948161,
+      "oldGrossLamports": "11588108",
+      "netLamports": "11443255"
+    },
+    {
+      "eventId": "5N6n5NDNiWrE4bRu1TnFiqWYurbeAXM8kooAqEFGcqYPUVEtRVpHBNLSc2aapjyRr89vhGwXBtUxrvbuY7ACh9L9:9:13",
+      "slot": 455948161,
+      "oldGrossLamports": "19447676",
+      "netLamports": "19204579"
+    },
+    {
+      "eventId": "4HxE9YFKFARKN2gg7FR2NVaj3cAqphgGiq6JH2HE8rscREVZxkhcsc1pQVmMFTYPC5dGzojVZq2aXLtJpccS7fY6:3:5",
+      "slot": 455948164,
+      "oldGrossLamports": "631603457",
+      "netLamports": "623708413"
+    },
+    {
+      "eventId": "22q3wP9h5kfu7jP6emR8PjRmtfyCGjf72fSjHr4CTkmw2b31yrqPmLCiEYgMS1DD91re6oDPFzB7FpoaKqgmyLx5:1:3",
+      "slot": 455948164,
+      "oldGrossLamports": "734834",
+      "netLamports": "725648"
+    },
+    {
+      "eventId": "5UVF1JkWEXJzpFoumADUZymMdWRKgab7f5mgzhmCqNZpzQ3DSCZq2L7fixoEvwTTV3VgY8qbrRzhDRs8rLWKU1Ur:9:11",
+      "slot": 455948164,
+      "oldGrossLamports": "21039744",
+      "netLamports": "20776746"
+    },
+    {
+      "eventId": "2QmNNvAgnwCtptpn4GoefcBQy5cexMAYGwgVMNQZ7K6T35YGQBWpxoXfoYqQcKD3GgTiXmX1JEgJYbruRcwbMe5e:2:4",
+      "slot": 455948165,
+      "oldGrossLamports": "19955716",
+      "netLamports": "19706268"
+    },
+    {
+      "eventId": "5NUrG59FMhT1zUep12sX8D9GQQQu2qKc4m4DZx3f65L81FtXVtuEzrU3ShddQEFX55LEdhFJHDwTxyEWoUb9sz8P:4:6",
+      "slot": 455948167,
+      "oldGrossLamports": "3950617282",
+      "netLamports": "3901234565"
+    },
+    {
+      "eventId": "2qDNdqG2enxTkmkbaxeBjbyZBh9zDaEnc9D5f2ZP5a2KeQXFbk7ZXY8sboT6nG8EL2em7CkUBKJh8xytohCkUnTF:4:6",
+      "slot": 455948167,
+      "oldGrossLamports": "1848301076",
+      "netLamports": "1825197311"
+    },
+    {
+      "eventId": "4hnJwumhcQXH6dcx39R54EG1HHguThDTDT3Pe1iU8jLeGhuaMPU3EnemMLQGRCdwz3nNvUxFVWzrpYHQVYMKsGMq:3:5",
+      "slot": 455948167,
+      "oldGrossLamports": "1348843520",
+      "netLamports": "1331982975"
+    },
+    {
+      "eventId": "64ddFF12oQoDkEVvSaNvSZ9dybquynpt4HvWc4GPYqr7b5WFE4iw68wydMeHHAjH11pj1EjdE4T58P72eZeqEa4K:3:5",
+      "slot": 455948167,
+      "oldGrossLamports": "840446215",
+      "netLamports": "829940636"
+    },
+    {
+      "eventId": "39wwQraVkt6BWw3ySiBxj7vagXgUmWAk2LKLX5RfjQjPrXtymTztxpR2Z8NXYavGDdhSDAMe3cU8jTMZ98W9ptPi:3:5",
+      "slot": 455948168,
+      "oldGrossLamports": "57080871",
+      "netLamports": "56367359"
+    },
+    {
+      "eventId": "PknLskFKtYkKnDE2jPtvHqhQkcsoSvbzw2eRQeJeP2kM3GxwmWrMarEooDuz3RUiuBnDuia4SuBdT7iFqA8bsCc:6:8",
+      "slot": 455948169,
+      "oldGrossLamports": "70355971",
+      "netLamports": "69476521"
+    },
+    {
+      "eventId": "4TRtidp3QrvBczY8VYqTvv6h7VuGYFssBbyD28YFjbfVXSZfC7W3yzU5hYVfiwzvZFR5oU47jrzvzmKes9qnxzRk:4:6",
+      "slot": 455948169,
+      "oldGrossLamports": "1446375922",
+      "netLamports": "1428296222"
+    },
+    {
+      "eventId": "2rhjApn6y46RqNWknFdSiepkRsxXpan8MLMePkBjjFcUabouP55sRSZbie8DCuXSkAvrRXFRYg5cURSW8w5RdenA:3:5",
+      "slot": 455948169,
+      "oldGrossLamports": "897677862",
+      "netLamports": "886456888"
+    },
+    {
+      "eventId": "hqhaVKvVDcP9S4gS3ngJdzGDZGN2iVZmUr9FYfw4PKmZDmSqK2S2kg6dC12bbu1fcSQDyj9L7FdLtDhqvmp8g4Q:0:2",
+      "slot": 455948170,
+      "oldGrossLamports": "376422708",
+      "netLamports": "371717423"
+    },
+    {
+      "eventId": "3H6h5sBbBut75aLXXQAUx2WJiXT1k5t8hCiijm5EfkSCf7ktVULrM31fZQ4A4BHuhzyR9qs4Rb863SAnpPyLVuPs:9:11",
+      "slot": 455948170,
+      "oldGrossLamports": "857148566",
+      "netLamports": "846434208"
+    },
+    {
+      "eventId": "4VWZ8p8tsBvnunpwWyM1f2Zf9rvYneaPDLdSGG7WUBGjtvRBqfZ4MQxfnvX6eN5bar2FYgCGpyBv3t4JBZB6w7Ak:9:11",
+      "slot": 455948171,
+      "oldGrossLamports": "903007580",
+      "netLamports": "891719984"
+    },
+    {
+      "eventId": "2DUXDHJZ9efZj9NcX8sq59GZwracCxoAcK5jEbo213BqHVcCpBM5DhS6KeHnn2K5HG9faA62u8wRwxworBVdtiVs:4:6",
+      "slot": 455948172,
+      "oldGrossLamports": "1210303223",
+      "netLamports": "1195174432"
+    },
+    {
+      "eventId": "wAdBXJ3M6F6Vw7oeUhwpE39dg1yCw3Y8edjgwhorFm4JAyadJxH9C5rS6eZvuv1UAcF8pJzHLqdZxr3HqKFfAHG:4:6",
+      "slot": 455948172,
+      "oldGrossLamports": "782102512",
+      "netLamports": "772326230"
+    },
+    {
+      "eventId": "4yQEqCXjHWbYAW5vBPoFSzwTG4mEPS8poLuECM4U5CkPXQALtMaqxvKX323a2FcHJC3abNvMSkx9h2mBb5xf9gt3:3:5",
+      "slot": 455948172,
+      "oldGrossLamports": "1755989",
+      "netLamports": "1734039"
+    },
+    {
+      "eventId": "5rHYAc99AguSWJ4DPYvkTzcxXmabtk4pUqGAGYvrWnQPh31sPCBxrye1YiMBu53AsttPW8iw1Y2cTT58HRRYDZpQ:5:7",
+      "slot": 455948173,
+      "oldGrossLamports": "353266422",
+      "netLamports": "348850590"
+    },
+    {
+      "eventId": "45cteXqR3HPLztEGmskGbNWzx2AXjcpqJ2SN59tRu9HJwZdLk5oLytUVyLn9MnhDUGMGxGu4YqyNmThi6VykNs3J:3:5",
+      "slot": 455948173,
+      "oldGrossLamports": "76424413",
+      "netLamports": "75469107"
+    },
+    {
+      "eventId": "5cDWWMyheVVytfGs2YX5UGKoratY5K1JEFGWec5VmmQGoKDPCnBuen8xViNqWptszWaru85koZB3VMcmwL99eXWy:3:5",
+      "slot": 455948173,
+      "oldGrossLamports": "543183626",
+      "netLamports": "536393830"
+    },
+    {
+      "eventId": "5wVAKqGkgUuCwutoyEbHdhM7wiCrmgZcNjVAoBnnDiAon7uEZx4uJZu9G5mBAY1vrPJD3XsFLejvK7c8ACpoDK5y:3:5",
+      "slot": 455948173,
+      "oldGrossLamports": "924251064",
+      "netLamports": "912697924"
+    },
+    {
+      "eventId": "129HufSo1pdBYmoNpW1jMRqkW1qSd1SiN34efVrVWPckSFXSzJAjw1F3N3beo5impo36Q77yLhiUJGLePX25dTVG:3:5",
+      "slot": 455948173,
+      "oldGrossLamports": "54793523",
+      "netLamports": "54108603"
+    },
+    {
+      "eventId": "3BHxQBFasiCBJN4aY1TCsQcYkEYUXUUGh1SgiKgGvMTvxMaPZgvWeAs22kEGfFSEnywtDSYMqubJziM7iVzKm8yz:3:5",
+      "slot": 455948174,
+      "oldGrossLamports": "36528848",
+      "netLamports": "36072236"
+    },
+    {
+      "eventId": "q4VcvskkrjPBqgQWp8QB6tgrVjeDGB6KiomNLVATfwKL17DFHoKjUzkiu3o4ukv1v2MrFWtGboTg7aTiYx7hNg2:3:5",
+      "slot": 455948175,
+      "oldGrossLamports": "40999267",
+      "netLamports": "40486775"
+    },
+    {
+      "eventId": "4XsCs5wkC5EANW1MTGhv1LhDeGYHuz9xxs8Bo5zoFyzRQPNEA52KHZk5QizGN75BWh6imD7V6vbkpGAD36pT6jck:3:5",
+      "slot": 455948176,
+      "oldGrossLamports": "1308966897",
+      "netLamports": "1292604810"
+    },
+    {
+      "eventId": "3L8DfqF8Z65sTDeyWFqm8aV9cCrZWEP21xEiCE5hoeerB2QJdLmmaUZpACrLz8HYs4kY2vZnuxmo7HzsKLa56Adn:0:2",
+      "slot": 455948176,
+      "oldGrossLamports": "78604411",
+      "netLamports": "77621855"
+    },
+    {
+      "eventId": "29eww4fNjAai4zMKoA7HsQR2foH3nT4UVG6w5TbiN451S7Mpu1utnJEjbPEW6MYJVJgPuU1EWjW4Dh7cYf2QT436:2:4",
+      "slot": 455948176,
+      "oldGrossLamports": "11063438",
+      "netLamports": "10925144"
+    },
+    {
+      "eventId": "27kewmGR9RcP1WCzHcXYQNG8kZhBXXjBAQuJPnPDsH2wm5KzNMio9mZKBPUrTiapQujoKQHMviVvWMCiy1cRuxbW:3:5",
+      "slot": 455948176,
+      "oldGrossLamports": "1090427119",
+      "netLamports": "1076796779"
+    },
+    {
+      "eventId": "NZbN2TkQ7t7NkA7THoBp2Sr2vjzhXSjooKte4Y616WyAmGSFgiFnMtP3mVrsg4kFzECABWs1W5U2yNPJBPJKTtw:3:5",
+      "slot": 455948176,
+      "oldGrossLamports": "22951421",
+      "netLamports": "22664527"
+    },
+    {
+      "eventId": "43kFWAv69njdbodyEGTy3WajN7iEsPRzHD2k4zfAsKyD1ua577yJ1FL9qN3223JGLyNpLTKBj4sW7P94RSRvBWe:8:10",
+      "slot": 455948177,
+      "oldGrossLamports": "54832020",
+      "netLamports": "54146618"
+    },
+    {
+      "eventId": "2JUWLKsGUW4UHVJRBQ4gq1n8nEsTzpVMcT9c3XCydNFY7aWHXnfY5ZWG4W8sJfnXWFy8xb55woN4hYTPqZqZQN7Y:0:2",
+      "slot": 455948177,
+      "oldGrossLamports": "186710544",
+      "netLamports": "184376661"
+    },
+    {
+      "eventId": "ikW2GM74tR5U6dbykZSWKtfSxZrfBnr6yvXroJp3YY4g95mahyQvswJtCCea5rtazt3FSanTyBtd4J6rCUisxyR:2:4",
+      "slot": 455948178,
+      "oldGrossLamports": "227298600",
+      "netLamports": "224457367"
+    },
+    {
+      "eventId": "478rSasUdZJo8jHoQtePqzevLVdGEBmDDwwtWLFKPN63e4DXfWTBJZiRWzpvjP1cXsMBGLkjEdAWZgfU4znpWGex:1:3",
+      "slot": 455948178,
+      "oldGrossLamports": "295713258",
+      "netLamports": "292016842"
+    },
+    {
+      "eventId": "4dCbKeeKwiK6KopPocbXE7MUm1Wz5R42nHebfzABMde7md8teNaSXJau78EywXDzDeCWsE4uFVFLGkW4S8NuxG8W:2:4",
+      "slot": 455948179,
+      "oldGrossLamports": "277835443",
+      "netLamports": "274362499"
+    },
+    {
+      "eventId": "3U2Y7P6Nqj8CuXK2YCq3mz2Ef4VVFSZ9B1HEU2zhrExyLdBeKcSwz9pHaqPMRNzMXoYK7k9JVdC2pWXznzajbEuM:0:2",
+      "slot": 455948179,
+      "oldGrossLamports": "56241249",
+      "netLamports": "55538233"
+    },
+    {
+      "eventId": "4pfog3vctCtdtmxCTpsJDPH5aqKJpXnMePDZbv3ZbFSo7ZWvhmVEDhZMhKQ6ZPTDbDicKYAaJGuV6NeXthmi457K:3:5",
+      "slot": 455948179,
+      "oldGrossLamports": "10892255",
+      "netLamports": "10756101"
+    },
+    {
+      "eventId": "4SKn2j6tmmnMK39FJ89Ji8FGHUQVR9Kbaig2ya7yDxs4rAcZqfjRVYZ1vg3z8eWEqdrarJffZervN3jTd22wSQ3t:2:4",
+      "slot": 455948179,
+      "oldGrossLamports": "21025131",
+      "netLamports": "20762316"
+    },
+    {
+      "eventId": "5ja7EXsbxxZZRjK3jv2pcv1FsuoBJMuAHfkYgVMM41qCgvZ2pqcJLxJb3gdLb59PcsRv7wAQsFcCNWSThNtKJM2V:2:4",
+      "slot": 455948180,
+      "oldGrossLamports": "221353431",
+      "netLamports": "218586512"
+    },
+    {
+      "eventId": "5fFcJ5HR1iYjQiXrXsaHu745NsXCMnZTeTDwoZbgpQufnuw599ahJzDrprXxRYietb28dWqRtcaZjKpA5JK8DtTZ:3:5",
+      "slot": 455948181,
+      "oldGrossLamports": "303355687",
+      "netLamports": "299563739"
+    },
+    {
+      "eventId": "3HgnsxzHW2CZxVWVvRdXVj7FQMFWosTFBrn1bmxEQJ8ZYLsK43xsSXUzVidTSoRxPDd75JNkgVbB987vcvX6Rhbf:7:9",
+      "slot": 455948181,
+      "oldGrossLamports": "1063268332",
+      "netLamports": "1049977477"
+    },
+    {
+      "eventId": "57nvJ5KY9S4ZBKKzM4rmW1qdct5PynBMeUQfbnA9KjSy3jxCC71zVo8bVym7A1B4Few6EaeK1MUBwdvKtVHbHoLa:6:8",
+      "slot": 455948181,
+      "oldGrossLamports": "136051438",
+      "netLamports": "134350794"
+    },
+    {
+      "eventId": "2yPUEJZUCUTDStebZ5ApfBzJNS1K1SEydcb3fCZo7VnNQQpnj8LDdshdXroVNwDCZHDimaCYKJL9ajE1gUwasfX5:6:8",
+      "slot": 455948182,
+      "oldGrossLamports": "675824416",
+      "netLamports": "667376610"
+    },
+    {
+      "eventId": "5WiTSo69bLzAYCPRosK4FEmtBsLnKKAS2A2pbnzguB1G6isLxWypMdMV41JB2EmBRj2yrRs5bNCRvubfAf8jBkBo:4:6",
+      "slot": 455948182,
+      "oldGrossLamports": "488549701",
+      "netLamports": "482442828"
+    },
+    {
+      "eventId": "3mcRnPTXdrZmPeLetSFwKV4opqKybATUQsPccGRYMXzvVNJte5XZGCksddjo9VPajAkYfJERSk64SSuphxdXK1zh:3:5",
+      "slot": 455948183,
+      "oldGrossLamports": "12160766",
+      "netLamports": "12008755"
+    },
+    {
+      "eventId": "5GG5BmnzpAZtPPfi5V9vwo1pVnHJgBifCr5iRHPM1MecypmTKq91RDzEkscfuViWApQgFzzE8n5i3iPRuLJzWdVa:3:5",
+      "slot": 455948184,
+      "oldGrossLamports": "30709401",
+      "netLamports": "30325532"
+    },
+    {
+      "eventId": "4Gj5zHMu74dnSgbo4vpGY1w97F4C7EX5Cyr3z3LGvygjwxbJEEJ1ByemYMQy2rMWQoa8QPazYY9WBXBzsJ9Rj9Rh:3:5",
+      "slot": 455948184,
+      "oldGrossLamports": "455285350",
+      "netLamports": "449594282"
+    },
+    {
+      "eventId": "5SLGdoGiCV1UNj5U5TPDw62PFcyZekPuYtAbpefVEo7yHEVpWp5H9QhqLTHSfSvTDctW8xFo2f8mCHP4wuNsafwG:2:4",
+      "slot": 455948184,
+      "oldGrossLamports": "347522657",
+      "netLamports": "343178623"
+    },
+    {
+      "eventId": "iE2SNof4VjsPwTb93TZKTmXgKaaL5fGHJgDhYyoBDzNC1BXtRAifzbAamAoHYSxLrUmte37FKaU3Va9R2oGvLmn:13:17",
+      "slot": 455948185,
+      "oldGrossLamports": "128827433",
+      "netLamports": "127217089"
+    },
+    {
+      "eventId": "5yaivSi6QFrfdkmo2LiwXXPqeZxfi32xVHvahhUhetp8g6G5ACMEvgcapGs9oumtVfYgJhbs7r4j9CKNWJVeUM7H:4:6",
+      "slot": 455948185,
+      "oldGrossLamports": "523155677",
+      "netLamports": "516616230"
+    },
+    {
+      "eventId": "2xya3PqMyCi8Rg4wX4r7xCM8cBLpLBz5M7SzHeY1iVcuaWr3ZDUDn56n7WxxaZjyhbCj4DiebRUvKg49UCv11cHb:3:5",
+      "slot": 455948185,
+      "oldGrossLamports": "6400071",
+      "netLamports": "6320069"
+    },
+    {
+      "eventId": "32WQyCMaJbY6x5UZinDiHAycB5M4mECeN9dzm3aRW6oNv6e7i2458vu6B5fmNLtZDsgtrsUCRGYR3gKxPSsMC2sN:5:9",
+      "slot": 455948185,
+      "oldGrossLamports": "504634390",
+      "netLamports": "498326459"
+    },
+    {
+      "eventId": "6tthtGfFUHka16pTDnjBtXXZ6rT8tfaFYoCVehdYFQB4XnWGg9WvVjwKATodnrg61rTau22ojnBVKa4CQ9UbXRc:6:8",
+      "slot": 455948187,
+      "oldGrossLamports": "87644900",
+      "netLamports": "86549338"
+    },
+    {
+      "eventId": "4PLVAKMMo81vpRRkacZeZkQDgHgzMNSm5HQ1BRvd9xn6E2bDYheR2TMC8UJaZs1DVi7rBWc2f8aK9KtuYYknHqNK:3:5",
+      "slot": 455948188,
+      "oldGrossLamports": "37979815",
+      "netLamports": "37505066"
+    },
+    {
+      "eventId": "3XzzRQvHDeao18VWzkPQGhLDgJuJYKstKUVWyJf51SaixS1VqkhQuZagGU8EKfo4wZyq7QmuwrK3zoDH2nuEmtqD:9:11",
+      "slot": 455948189,
+      "oldGrossLamports": "199230840",
+      "netLamports": "196740454"
+    },
+    {
+      "eventId": "3yUh1dfTJscbopt4cHoeCb3nzcswR5ogYXLcMgHt4GhrwjBUk3rj2JFHJ2KzBrcENHERnnCb3qWn79Fora28aZCS:6:8",
+      "slot": 455948189,
+      "oldGrossLamports": "22479771",
+      "netLamports": "22198773"
+    },
+    {
+      "eventId": "QUEnQyuaBDGRcnvsrv2diRB3ovH8AodK3fhUCjBewqVoUmdEfjWfotMEPV7ZYWHY7GcX2LtPVSyXBmmz5pFFcvq:3:5",
+      "slot": 455948190,
+      "oldGrossLamports": "423348051",
+      "netLamports": "418056199"
+    },
+    {
+      "eventId": "3wjYJJGkJerTz26FKmBQCkVGgGkkBVyhQnDzuyGTk7CrbypZtTr9PYQwxnmJYAUJkR1XnmbpbBowaRCh32ozWoGL:3:5",
+      "slot": 455948190,
+      "oldGrossLamports": "1116392897",
+      "netLamports": "1102437985"
+    },
+    {
+      "eventId": "5N5dHyhfy7AJhsgkUe5ew2gCiiighmt2KbnVauR74pA8EM6eN5296UyYwpWJpeUVKLevV7HutmRq2JSGCNDCiJBC:2:4",
+      "slot": 455948191,
+      "oldGrossLamports": "206625690",
+      "netLamports": "204042867"
+    },
+    {
+      "eventId": "23T73U58cW1u7aqL61rL4M8TQswBkAFEK4dqnxUE3sPy5QZiX4yB1PgwKmDqRA3s9uiH1Uy8KQwdxq8qtYmRZLAL:3:5",
+      "slot": 455948191,
+      "oldGrossLamports": "123664254",
+      "netLamports": "122118450"
+    },
+    {
+      "eventId": "25rN3J8wz6Y8t5g3S31Hv2AkNzPCpQoqWSkpfSPTPfoEuJf2PN6p9MZxFHgH26wowPSSAryKKWrdrjkXnHh2EjxJ:3:5",
+      "slot": 455948192,
+      "oldGrossLamports": "7164036",
+      "netLamports": "7074484"
+    },
+    {
+      "eventId": "4uziekXLYAWZwusvUM9fKoPFsSKBNgceiSRvCrirMWjHs8dkdnNDyarXobJ1TtsBPtwYfeYmgay46vXge3WCwfZq:4:6",
+      "slot": 455948192,
+      "oldGrossLamports": "314428449",
+      "netLamports": "310498092"
+    },
+    {
+      "eventId": "5iopv5h184ZkFMAsCQjB5t5RwCV3k2s8xTehkWFRiSw9hVCrZ3iojKLTN9cmZ1ETp8WhrqLuCqxKryy1zjvKCawq:4:6",
+      "slot": 455948192,
+      "oldGrossLamports": "208537275",
+      "netLamports": "205930558"
+    },
+    {
+      "eventId": "3DKdwFdmE9t1YACBUQEnDZ6KBJp2MkuPGXEotUtPfXLRVoEurhQYQLHsePUQHAfQMcc1Vxjf4nt38FEcTNv82SRW:3:5",
+      "slot": 455948193,
+      "oldGrossLamports": "4408382",
+      "netLamports": "4353276"
+    },
+    {
+      "eventId": "YbVswcS2DxQGS5MVEZ77QuQni7xjR8oSfpuvc7ajscLhZgLH9Xqg4m7KmqEEYkYyDRaBGYVaNit2P9dJEteEgMG:8:10",
+      "slot": 455948194,
+      "oldGrossLamports": "23592323",
+      "netLamports": "23297418"
+    },
+    {
+      "eventId": "bmfhuMYseY4AS5p7r59YCjptF24FSiYy6L7Jn8TZUskXbztufCd4TqNNhBQaJVQaLQYykPMMkTfPutUgtnNkSAB:3:5",
+      "slot": 455948194,
+      "oldGrossLamports": "499413861",
+      "netLamports": "493171187"
+    },
+    {
+      "eventId": "vSVm9QcAz1MTzWuHdaiFpiGTrT4Z529RtZuEuhc8NQ4PgpDGqJiVJXjzE7AGccPuTz3hfn9vCp8KrUPxG45vm1x:3:5",
+      "slot": 455948195,
+      "oldGrossLamports": "874139535",
+      "netLamports": "863212790"
+    },
+    {
+      "eventId": "4jaQ6JV9xBoQYqXs8tai5uk2sf1ZcQppFTJxj3SanSV9tDR7UYysbp8HjqZ57M76wArDBr3oazNzRU6JkJ1HDH1n:4:6",
+      "slot": 455948196,
+      "oldGrossLamports": "257009115",
+      "netLamports": "253796500"
+    },
+    {
+      "eventId": "51Q9rpi8z6AJEgP5NersQV5byjtnqqi4vUUAQMqowNewJ3WRjDzbonbU5KWUuLuySXRuUreUhHxendr8y3e1VHST:3:5",
+      "slot": 455948196,
+      "oldGrossLamports": "3931373",
+      "netLamports": "3882229"
+    },
+    {
+      "eventId": "86S9T2btAy3KSDeD8mvJSGtPsLbYMCXg5jb4JzrCSgxQpfXe36m6tYWaW4csupAhZ9qJhDZLozDfAH81LMmsN6W:3:5",
+      "slot": 455948196,
+      "oldGrossLamports": "49913046",
+      "netLamports": "49289132"
+    }
+  ],
+  "additionalVerifiedLeg": {
+    "user": "6eo4u85fHQ5WLDJs4AHNRFcc8vJhS8AEqYC2us7tgEg4",
+    "fee_payer": "6eo4u85fHQ5WLDJs4AHNRFcc8vJhS8AEqYC2us7tgEg4",
+    "timestamp": "1791786575",
+    "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "input_mint": "93c3eiQdYmNkUZa7t8F6kN34b7AQPviGjDRQG6oWfSMY",
+    "output_amount": "3710455",
+    "output_mint": "So11111111111111111111111111111111111111112",
+    "block_num": "455948165",
+    "protocol": "pumpfun",
+    "event_id": "4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn:3:6",
+    "signers_raw": "6eo4u85fHQ5WLDJs4AHNRFcc8vJhS8AEqYC2us7tgEg4",
+    "signature": "4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn",
+    "fee": "9000",
+    "orderbook_fill_verified": "0",
+    "source_instruction_index": "3",
+    "stack_height": "3",
+    "transfer_verified": "1",
+    "compute_units_consumed": "113401",
+    "amm_pool": "F2ocLJw8eScM8X29XHYVD7Le8aAbqRfmDFJr1bcmvXNF",
+    "block_hash": "4eZFRfxv9P1MG75JBEL2d2SiCBVvUNCf8sVtrTL3f95a",
+    "input_amount": "133963973296",
+    "execution_position": "6",
+    "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+  },
+  "onlyResolvedDiagnosticsRemoved": true,
+  "blockCounterChanges": [
+    {
+      "slot": 455948153,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948155,
+      "deltas": {
+        "corrected_events": 4
+      }
+    },
+    {
+      "slot": 455948156,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948157,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948159,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948160,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948161,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948164,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948165,
+      "deltas": {
+        "corrected_events": 2,
+        "verified_swaps": 1,
+        "coverage_candidates": -1,
+        "coverage_transactions": -1,
+        "quarantined_swaps": -1
+      }
+    },
+    {
+      "slot": 455948167,
+      "deltas": {
+        "corrected_events": 4
+      }
+    },
+    {
+      "slot": 455948168,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948169,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948170,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948171,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948172,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948173,
+      "deltas": {
+        "corrected_events": 5
+      }
+    },
+    {
+      "slot": 455948174,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948175,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948176,
+      "deltas": {
+        "corrected_events": 5
+      }
+    },
+    {
+      "slot": 455948177,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948178,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948179,
+      "deltas": {
+        "corrected_events": 4
+      }
+    },
+    {
+      "slot": 455948180,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948181,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948182,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948183,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948184,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948185,
+      "deltas": {
+        "corrected_events": 4
+      }
+    },
+    {
+      "slot": 455948187,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948188,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948189,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948190,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948191,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948192,
+      "deltas": {
+        "corrected_events": 3
+      }
+    },
+    {
+      "slot": 455948193,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948194,
+      "deltas": {
+        "corrected_events": 2
+      }
+    },
+    {
+      "slot": 455948195,
+      "deltas": {
+        "corrected_events": 1
+      }
+    },
+    {
+      "slot": 455948196,
+      "deltas": {
+        "corrected_events": 3
+      }
+    }
+  ],
+  "parentLinksAndSealedCountersValid": true,
+  "ordinalProof": {
+    "affectedSlot": 455948165,
+    "removedOrdinals": [
+      9,
+      10
+    ],
+    "addedOrdinal": 9,
+    "subsequentShift": -1,
+    "affectedRowsByTable": {
+      "swaps": 39,
+      "swap_coverage_transactions": 3,
+      "swap_coverage": 3,
+      "blocks": 1
+    },
+    "allOtherOrdinalsUnchanged": true
+  },
+  "liveFinancialWrites": false
+}

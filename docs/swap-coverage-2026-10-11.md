@@ -827,3 +827,13 @@ the committed service-fee transfer, so the destroyed remainder returns to the
 original funder. Ten mutations reject inconsistent ownership, access, refund and
 alternative-destination balances. The enlarged retained corpus adds that original
 previously gross-priced sell as a fourth output-only correction.
+
+The final .17 package exits cleanly on slots 455948150 through 455948199:
+3409 prior swaps become 3410. All 3324 unaffected rows retain every field/key
+except decoder_version; 85 original RPC-proven sells change output_amount alone.
+One independently proven sell is added. Only its resolved raw/candidate diagnostics
+are removed, corresponding counters change and database operation ordinals follow
+the exact insertion/removal shift. Physical trade positions remain unchanged.
+All parent links and sealed counts agree. The frozen metadata binary and all
+seven module hashes are unchanged. The package is validated for publication;
+.16 remains the active writer until a coordinated strict-cursor rollout.
