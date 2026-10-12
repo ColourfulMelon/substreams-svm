@@ -1,0 +1,144 @@
+{
+  "results": {
+    "recognized": {
+      "priorFinancialRows": 149,
+      "unchangedFullFinancialRows": 149,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 149
+    },
+    "dlmm": {
+      "priorFinancialRows": 140,
+      "unchangedFullFinancialRows": 140,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 1,
+      "totalFinancialRows": 141
+    },
+    "defituna": {
+      "priorFinancialRows": 111,
+      "unchangedFullFinancialRows": 111,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 111
+    },
+    "twohop": {
+      "priorFinancialRows": 2,
+      "unchangedFullFinancialRows": 2,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 2
+    },
+    "jupiter4": {
+      "priorFinancialRows": 305,
+      "unchangedFullFinancialRows": 305,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 305
+    },
+    "bonk": {
+      "priorFinancialRows": 175,
+      "unchangedFullFinancialRows": 175,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 175
+    },
+    "spl": {
+      "priorFinancialRows": 243,
+      "unchangedFullFinancialRows": 243,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 243
+    },
+    "pump": {
+      "priorFinancialRows": 88,
+      "unchangedFullFinancialRows": 88,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 88
+    },
+    "legacy_native_sells": {
+      "priorFinancialRows": 16,
+      "unchangedFullFinancialRows": 16,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 16
+    },
+    "native_sol_sells": {
+      "priorFinancialRows": 28,
+      "unchangedFullFinancialRows": 28,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 28
+    },
+    "published_core": {
+      "priorFinancialRows": 1045,
+      "unchangedFullFinancialRows": 1045,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 1045
+    },
+    "recent_native_sol_sells": {
+      "priorFinancialRows": 96,
+      "unchangedFullFinancialRows": 96,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 96
+    },
+    "recent_recognized": {
+      "priorFinancialRows": 46,
+      "unchangedFullFinancialRows": 46,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 46
+    },
+    "one_dex_alias": {
+      "priorFinancialRows": 4,
+      "unchangedFullFinancialRows": 4,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 4
+    },
+    "dflow_recent": {
+      "priorFinancialRows": 103,
+      "unchangedFullFinancialRows": 103,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 9,
+      "totalFinancialRows": 112
+    },
+    "published_native": {
+      "priorFinancialRows": 224,
+      "unchangedFullFinancialRows": 224,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 1,
+      "totalFinancialRows": 225
+    },
+    "published_fees": {
+      "priorFinancialRows": 12,
+      "unchangedFullFinancialRows": 12,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 1,
+      "totalFinancialRows": 13
+    }
+  },
+  "changed": [],
+  "missing": [],
+  "scope": "Every Debug field compared with pluto.17; immutable keys include signature/source/execution position. Overlapping corpora count occurrences, not transaction traffic.",
+  "baselineSource": "23b2d3773f17a1fc4c41c3b77dc436453b44b47b"
+}

@@ -100,6 +100,24 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             *byte ^= key[i % 8] ^ position.to_le_bytes()[i % 2];
         }
     }
+    if protocol == Protocol::Tesserav && data.first() == Some(&17) {
+        // Finalized checked-transfer calls pin the newer ABI. Only its
+        // observed zero trailing flag and fourteen-account shape are known.
+        let accounts = ix.accounts();
+        if data.len() != 19 || data[1] > 1 || data[18] != 0 || accounts.len() != 14
+            || ![9, 10].iter().all(|index| [substreams_solana_idls::spl::token::PROGRAM_ID.as_slice(),
+                substreams_solana_idls::spl::token_2022::PROGRAM_ID.as_slice()].contains(&accounts[*index].0.as_slice()))
+        { return None; }
+        let a = usize::from(data[1] == 0);
+        let b = 1 - a;
+        let amount = u64::from_le_bytes(data[2..10].try_into().ok()?);
+        if amount == 0 { return None; }
+        return Some(Layout {
+            protocol, pool: 1, authority: 2, users: [5 + a, 5 + b], vaults: [3 + a, 3 + b],
+            amount, minimum_output: u64::from_le_bytes(data[10..18].try_into().ok()?),
+            exact_input: true, input_limit: false, input_first: true, fixed_users: true,
+        });
+    }
     if protocol == Protocol::OpenbookV2 {
         // Deployed v1.7: global:place_take_order (snake_case). The old
         // OpenBook IDL hashes camelCase and does not match on-chain calls.
@@ -1274,6 +1292,66 @@ mod tests {
             }
             assert_eq!(changed, 1);
             assert!(crate::process_transaction(wrong_output_program).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(index))));
+        }
+    }
+
+    #[test]
+    fn finalized_tessera_checked_swaps_require_exact_roles_amounts_and_committed_cpis() {
+        for line in include_str!("../fixtures/native-venues/tessera-checked/cases.tsv").lines() {
+            let fields: Vec<_> = line.split('\t').collect();
+            let bytes = std::fs::read(format!("{}/fixtures/native-venues/tessera-checked/{}", env!("CARGO_MANIFEST_DIR"), fields[0])).unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+            assert_eq!(base58::encode(tx.hash()), fields[1]);
+            let source = fields[2].parse::<u32>().unwrap();
+            let native_data = tx.walk_instructions().nth(source as usize).unwrap().data().clone();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(source)).collect();
+            assert_eq!(swaps.len(), 1, "{}", fields[0]);
+            let swap = swaps[0];
+            assert_eq!(swap.protocol, Protocol::Tesserav as i32);
+            assert!(swap.transfer_verified);
+            assert_eq!(base58::encode(&swap.amm_pool), fields[3]);
+            assert_eq!(base58::encode(&swap.user), fields[4]);
+            assert_eq!(base58::encode(&swap.input_mint), fields[5]);
+            assert_eq!(swap.input_amount, fields[6].parse::<u64>().unwrap());
+            assert_eq!(base58::encode(&swap.output_mint), fields[7]);
+            assert_eq!(swap.output_amount, fields[8].parse::<u64>().unwrap());
+            assert_eq!(swap.source_transfer_index, fields[9].parse::<u32>().ok());
+            for mode in 0..19 {
+                let mut wrong = tx.clone();
+                let mut changed = 0;
+                for group in &mut wrong.meta.as_mut().unwrap().inner_instructions {
+                    for ix in &mut group.instructions {
+                        if ix.data != native_data { continue; }
+                        match mode {
+                            0 => ix.data[0] = 18,
+                            1 => ix.data[1] ^= 1,
+                            2 => ix.data[2..10].copy_from_slice(&(swap.input_amount + 1).to_le_bytes()),
+                            3 => ix.data[10..18].copy_from_slice(&(swap.output_amount + 1).to_le_bytes()),
+                            4 => ix.data[18] = 1,
+                            5 => { ix.data.pop(); },
+                            6 => ix.data.push(0),
+                            7 => { ix.accounts.pop(); },
+                            8 => ix.accounts[1] = ix.accounts[2],
+                            9 => ix.accounts[2] = ix.accounts[0],
+                            _ => ix.accounts[[0, 3, 4, 5, 6, 7, 8, 9, 10][mode - 10]] = ix.accounts[2],
+                        }
+                        changed += 1;
+                    }
+                }
+                assert_eq!(changed, 1);
+                assert!(crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(source))),
+                    "{} mutation {mode}", fields[0]);
+            }
+            for failure in [false, true] {
+                let mut wrong = tx.clone();
+                let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                let exit = logs.iter().position(|log| log == "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH success").unwrap();
+                if failure { logs[exit] = "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH failed: custom program error: 1".into(); }
+                else { logs.truncate(exit); }
+                assert!(crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(source))),
+                    "{} unsuccessful invocation", fields[0]);
+            }
         }
     }
 

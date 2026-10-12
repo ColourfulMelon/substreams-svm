@@ -73,6 +73,7 @@ pub(crate) fn verify_with_fees(
                     || matches!(pumpfun::instructions::unpack(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
                         | pumpfun::instructions::PumpFunInstruction::SellV2(_))))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
+                || ix.program_id().0.as_slice() == substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") && ix.data().first() == Some(&17)
         }) {
         crate::logs::successful_invocations(tx)
     } else {
@@ -794,6 +795,18 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::Tesserav && ix.data().first() == Some(&17) {
+                    let a = usize::from(ix.data()[1] == 0);
+                    let b = 1 - a;
+                    if scoped.len() != 2 || output.authority != *accounts[0].0
+                        || [0, 2, 3, 4, 5, 6, 7, 8].iter().any(|role| accounts[1].0 == accounts[*role].0)
+                        || input.mint != *accounts[7 + a].0 || output.mint != *accounts[7 + b].0
+                        || instructions[input.index as usize].program_id().0 != accounts[9 + a].0
+                        || instructions[output.index as usize].program_id().0 != accounts[9 + b].0
+                        || !successful_invocations.contains(&(index as u32))
+                        || !successful_invocations.contains(&input.index) || !successful_invocations.contains(&output.index)
+                    { continue; }
+                }
                 if layout.protocol == pb::Protocol::Fluxbeam
                     && (output.authority != *accounts[1].0
                         || input.mint != *accounts[9].0

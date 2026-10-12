@@ -749,7 +749,7 @@ mod tests {
             (
                 include_bytes!("../fixtures/token-fees/two-receipts.transaction.pb").as_slice(),
                 vec![(17, 97_440_081_616), (23, 61_733_540_292)],
-                1,
+                2,
             ),
             (
                 include_bytes!("../fixtures/token-fees/three-receipts.transaction.pb").as_slice(),
