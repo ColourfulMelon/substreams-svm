@@ -1,0 +1,2468 @@
+{
+  "originals": [
+    {
+      "signature": "5bUWiu7hxfmMG4wU9SavVfvfWx8keRerbSDAXyW9yY3Z5T8AxXTnxkGyawmY4vJqN1JFoQgNyzcVst5r2v7CpSqT",
+      "instruction_index": 19,
+      "block_num": 456081826,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 985,
+      "block_hash": "AQgqQNgacBx87VhbMK5iDQNnYkcogwVyugmpHRYsQcFJ",
+      "timestamp": 1791815753,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "3zKMRRb33CxRSN6LzDmzoQik7ZXE1w93jGU266w5bUdy",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "10106188",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "10095997",
+      "sourceTransfer": 20,
+      "principalTransfer": 21,
+      "eventProof": {
+        "logIndex": 64,
+        "dataHex": "9388d50b96178d984c359a00000000007d0d9a000000000000000000000000002c663b11e854b4fa2109d988a5a406ef949e3c9ffa36ac1777cd3613f7cd073c01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "Es2JVME523SwBTyqNyUsx2NZyYBKJAG2Qf6owA5ZXVZG",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "10106188",
+          "debit": "10106188",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9QKN2msxRdpuRXiuzq84USVJjkgYVeT9oWkYMow2j7Xn",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "5407486",
+          "closing": "232076436",
+          "credit": "226895845",
+          "debit": "226895",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "987a6ed4ebd9250b1722afc5ed8437838569020a3be7c21774f8fee942195102",
+      "rpcSha256": "320d55a82994ee0f64e6a247ac8bef78b5281718c0af706df64ba72ce1cf998e",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "57P1vnLcM6cEZvun5qVdcKP3bHwMHYR132NwqibSVJ6HeufR2Qu7CE6Kb3ufgKiNFScKzW44QRx7RrKnHzsU1tWR",
+      "instruction_index": 10,
+      "block_num": 456082251,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 366,
+      "block_hash": "7dKNKZ49HBRwoxYuEwUXwoWLbgGt2snihWizpVS1gMyc",
+      "timestamp": 1791815847,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "1000",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "999",
+      "sourceTransfer": 11,
+      "principalTransfer": 12,
+      "eventProof": {
+        "logIndex": 31,
+        "dataHex": "9388d50b96178d98e803000000000000e70300000000000000000000000000008297e544ff44406a13b7fa64c2cffa3ec6e15df8935e00c74170deaef013f37d01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "HTm4PDMyKh6Wv7GQpvTpdWxYr2QT9Q8WYjnFewf4x8Ev",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "700000",
+          "closing": "700000",
+          "credit": "1000",
+          "debit": "1000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "EXrqY7jLTLp83H38L8Zw3GvGkk1KoQbYTckPGBghwD8X",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "1193596",
+          "closing": "1193596",
+          "credit": "999",
+          "debit": "999",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "bdf89cdf5f1180809a74b1f8fdc473ff221b1ee05c0a86922dee5de4d417a4de",
+      "rpcSha256": "652d3e8a6e3d7f4ea4be998ce39e0b71ab0d97d9c9e039b3196c760352b60821",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "32rRPMqT2hkEdxAuYHsr2SqwUux85ba1MyHduXnh9jHDPNMhxCenoMm14HcKxnhyX3Z8A1zmivG2uzLtCYorfM6W",
+      "instruction_index": 6,
+      "block_num": 456082853,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 492,
+      "block_hash": "DpabowKJkjj7h9vLThNcCRaHEKdLk5jzaaj5xQzxP6cp",
+      "timestamp": 1791815978,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "A2R6ydBWCfmJBAjF8GPedypA8BmCgFzHYV7oW3Yhnzpz",
+      "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "input": "44692831",
+      "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output": "44737980",
+      "sourceTransfer": 7,
+      "principalTransfer": 7,
+      "eventProof": {
+        "logIndex": 19,
+        "dataHex": "9388d50b96178d985ff5a90200000000bca5aa020000000000000000000000008616043bef5e38fed76ed83b7d1a1c868ca1f50a27232fd0f79eb1faf2e448cb02011cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "Gjvxbg9a6Lq2mCpLqH2faT9MeXWBrWBThYgu2oraXx3t",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "44692831",
+          "debit": "44692831",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DBZMfggNt16zaoziwh8e1v9WwG2phVEXFfhzLZUyNNUj",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "147167",
+          "closing": "147167",
+          "credit": "44737980",
+          "debit": "44737980",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "48f8132c124a3628671f79709dfd4e6e9cd426ed3e57fcda67304cc777002be3",
+      "rpcSha256": "cbc795fc2d473e04060a3b11849b45eb718fefb3877f6213186d5f8f851d8c1c",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "2qoKj2c9THmM97ugyVnNBBB6YL7mvTvz8o9zjqutyYSZyq2xKmDgxJKhzUv5AXCgkigd22EQpTvvGdu6KspXasYR",
+      "instruction_index": 31,
+      "block_num": 456082887,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 36,
+      "block_hash": "9D2UKtREyJCGtHTLKHDLb7Ns8cUbKghs7aBsnsHcPCQ2",
+      "timestamp": 1791815985,
+      "sourceSelectionOnly": true,
+      "pool": "5M7McNWX7yBBGrZGB6XhmHYhFwWwwB2ckrA1HEpkf3SA",
+      "user": "ATRt7XZX8xfWWG9cMfiqcVsMW7MrrsGxsdSuohk3HoTU",
+      "inputMint": "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+      "input": "1576613",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1576499",
+      "sourceTransfer": 32,
+      "principalTransfer": 32,
+      "eventProof": {
+        "logIndex": 114,
+        "dataHex": "9388d50b96178d98a50e180000000000330e18000000000000000000000000008c7e6aac619a95fdc87b5ccdd28f66272adbfdf65dc4a33bdd86019357844bf7010040958cc5ed8533df954029194e7530c9ee6cc6ec240348bf4ffbc67744a07b3b"
+      },
+      "ledger": [
+        {
+          "address": "Cxc7azymTmS4Y7fj8CBfbnQxYGvHdNGGLAwJaQvqxW2R",
+          "mint": "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1576613",
+          "debit": "1576613",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        },
+        {
+          "address": "9LKDGMesxsnk7JFXEbWfn8KeUxAiiyNoFBHXXPMZ9rGA",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1576499",
+          "debit": "1576499",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": true
+        }
+      ],
+      "pbSha256": "6bcad13e531eeb1b3d4163ab65b828fd001d0af578a260bb2fb2f9ef7da032f8",
+      "rpcSha256": "946e86d8581dd2423cf8227456d1f3763647e3f464e6a84d9497bd5a1488da10",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "3Xxp5LD8awxKYYuUNq5A6UjqRxhj41YnTaYwGVDryUKPHAeXFQTsWobEBj49tiDsVyGFh36eafD2p6fQWCVzDzyk",
+      "instruction_index": 6,
+      "block_num": 456082976,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1307,
+      "block_hash": "6B1Xn5TMnwvANCftkrrruANwJQyuWmRCvEBrkLkCD3Mu",
+      "timestamp": 1791816004,
+      "sourceSelectionOnly": true,
+      "pool": "D99Hw2auf97WjzKPXZnpxTvJBt2TD6pPnk3a7uHceHqj",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "AUSD1jCcCyPLybk1YnvPWsHQSrZ46dxwoMniN4N2UEB9",
+      "input": "524152",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "522664",
+      "sourceTransfer": 7,
+      "principalTransfer": 7,
+      "eventProof": {
+        "logIndex": 21,
+        "dataHex": "9388d50b96178d9878ff070000000000a8f9070000000000000000000000000043b33a18a868c2d1b84b3ea289698fddc7709ee5bf5387c051bc0342abe9b7bc0100b46243ea67e95f36df1a177f7f0407eb496ec71c6726545118822000a9b51542"
+      },
+      "ledger": [
+        {
+          "address": "FVhPe9Fpcr5b6o531yVPcmUnBft1UNei1SG8dDwa1iya",
+          "mint": "AUSD1jCcCyPLybk1YnvPWsHQSrZ46dxwoMniN4N2UEB9",
+          "opening": "0",
+          "closing": "0",
+          "credit": "524152",
+          "debit": "524152",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "ErJ3r41RKZ987YVvvx3p83yQ2iCa8Y57hjRH24oTKr1L",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "36376429",
+          "closing": "36376429",
+          "credit": "522664",
+          "debit": "522664",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "cfb81aba6ae8038ffc38d8fc19c279a404dbb37e4793ebc61224a418e9cea5c5",
+      "rpcSha256": "ab2af87a46e5e118cb4e14f6440a2eeba8324e496191905e7c53ede5d4efcac2",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "5UgxAVe9izDv4wj8FQQXYHaeca3fB325zCM39RiU4Y3r5X3Cy7jcyP5qjM9T9eYMDAb2qjBHjBiC4sDesWuyubNa",
+      "instruction_index": 19,
+      "block_num": 456083088,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 616,
+      "block_hash": "J39YN9SHzKCjaw58k9xkxr4uZG8NuyGH8Yj7PG7LrhH7",
+      "timestamp": 1791816029,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "86626538",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "86539005",
+      "sourceTransfer": 20,
+      "principalTransfer": 21,
+      "eventProof": {
+        "logIndex": 68,
+        "dataHex": "9388d50b96178d98ead0290500000000fd7a28050000000000000000000000009a800bff4c87368896c20fc14073ebf1cb5aa375fe81fe4dbdc82ba4dfb75e7801001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "6pXVFSACE5BND2C3ibGRWMG1fNtV7hfynWrfNKtCXhN3",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "127391966",
+          "debit": "127391966",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "368858",
+          "closing": "368858",
+          "credit": "127263386",
+          "debit": "127263386",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "9ee965decc19c35d7ead178fb7180bf895de5b2668054141f2c0ed49d9848802",
+      "rpcSha256": "d77d8bac5f47b67644d2e48cc20b2619a8971790fc2bc1908db42c10257f61cf",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "2s5UM5CJw9QiRacUuaF8ukFs54ZrsY9UAM9cGRR3K1aJ8y6mf2cXZjWT7NiMNUAHw8XDraqtXXStjVrKTmmBzyYR",
+      "instruction_index": 13,
+      "block_num": 456083089,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 26,
+      "block_hash": "3VrAExY8qkeywqY7mgK36E9dG4XMkeufyiYDmPT1MbYr",
+      "timestamp": 1791816029,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "82545772",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "82461725",
+      "sourceTransfer": 14,
+      "principalTransfer": 15,
+      "eventProof": {
+        "logIndex": 41,
+        "dataHex": "9388d50b96178d986c8ceb04000000001d44ea04000000000000000000000000140c09c3886c1c6a844f32931bcf04aac3178519b1c0fe53d4ff2a710eb4de3c01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "F3Hej7eXZMWTr141APvCiNM7ZUn22cD9b1p8EcfFH8vn",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "700000",
+          "closing": "700000",
+          "credit": "250062927",
+          "debit": "250062927",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "JSvtokJbtGsYhneKomFBjnJh4djEQLdHV2kAeS43bBZ",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "317109",
+          "closing": "317109",
+          "credit": "249809254",
+          "debit": "249809254",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "18ec57a11ddf593d589657acc3e7697d191bf9082ce9bb15e86b67c99ea39a61",
+      "rpcSha256": "58949bba36e97c5dbe9526776c051e14a57ef1766fcf284ffdf3d256cea00b33",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4PykYvuLDcMumbfnAav8dzgvRrmNpZCaWaPogMG9xhQ9vUM3f3GEzzw5QnL91AAVzvWujp8DCTa9SSXEFoZ1sK1t",
+      "instruction_index": 12,
+      "block_num": 456083097,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 764,
+      "block_hash": "DgAc5uwkJjVHtpCo8VXLnmkw9CrWYfktGgtNugJLzpsS",
+      "timestamp": 1791816031,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "E3RzdGTu9JdeUZcB4NikV4W1txEGPHEXFHbC7gVNxE6Z",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "30000000",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "29963559",
+      "sourceTransfer": 13,
+      "principalTransfer": 14,
+      "eventProof": {
+        "logIndex": 44,
+        "dataHex": "9388d50b96178d9880c3c901000000002735c901000000000000000000000000c1c75a191f906ef294e88da8f29ef16c944552817188705e2313343d5ad0dc3e01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "3kyRXzNirNkoEifcdSQ59s5ujeSoaYRYDPxCAE5JA6i3",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "279771937",
+          "closing": "249771937",
+          "credit": "0",
+          "debit": "30000000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7LkzEPprqWBsqpzvHWFdWh6SuUWWM6BTTve6QJfDgnPP",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "29963559",
+          "debit": "29963559",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        }
+      ],
+      "pbSha256": "0b0767502b37f9d9849e5a8b05152a3c99e4cfb6b7051e5bd8e37e9ef94ab794",
+      "rpcSha256": "477933c112a9736cc062916b239cbc587d4670e6bd88e5462669bb53150f03d6",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "544Jgy6ZQd2Q4mdzWQM9EcYZUBDSqVUrTR7uJRx7BwvhZvKRFx9cygZi39hagqqLY5RSpBs3XuZn4y8XgGaPtCZ7",
+      "instruction_index": 6,
+      "block_num": 456083154,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 665,
+      "block_hash": "2YJE1qCw5aPCVSuVq9LkpzLaUkkPKceUEUko954EQ3yf",
+      "timestamp": 1791816043,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "F7yD9Uk47rhxRwet5xh7t8rZS4wN5iE16y2o64KoiQYX",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "18251918",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "18229685",
+      "sourceTransfer": 7,
+      "principalTransfer": 8,
+      "eventProof": {
+        "logIndex": 20,
+        "dataHex": "9388d50b96178d988e80160100000000b5291601000000000000000000000000d1cca87395168e2eaf8e30d07993175675fc55bdc5fbad1014d2600ef1ab5b2801021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "Eccn3N4skcwTcLwBzC8Y96rKkV8gBLt3MmZgVsseFBtJ",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "170540",
+          "closing": "170540",
+          "credit": "18251918",
+          "debit": "18251918",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "BVr4y9Cz9Ez9T9XSUSutBmTNQzxGbUUurTapTemtuonr",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "18229685",
+          "debit": "18229685",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "3f5776cdd0ab8879650f67e2a46db83a63b0345d8ffc5ecdeff4cfcf61046b79",
+      "rpcSha256": "d7d94134ecb4df5d042d516dd58110d3b6e1a9409ff0f5f789636002848d74ec",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "29Qayhr6w27TBjLfdMttE6UrfYvsyrP5vJa43EHGnWF1LYx6tSpendf4sKzN5KcULukiz64cw8scC2cBUR4zYkF6",
+      "instruction_index": 23,
+      "block_num": 456083236,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 548,
+      "block_hash": "5H6jczq6f1QEAHH5akfAotGQFDRkdXHypayXok5t9zY",
+      "timestamp": 1791816061,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "BSzpGGB3AMwtW126RT3Z27STSBrVjKV5A96H4BsUKdtD",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "45209044",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "45162637",
+      "sourceTransfer": 24,
+      "principalTransfer": 25,
+      "eventProof": {
+        "logIndex": 80,
+        "dataHex": "9388d50b96178d98d4d5b102000000008d20b1020000000000000000000000009b3dc2cff06c79b793dbb3e77099006f8135d9ad516a1f1655b18fb663f0ed6a01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "EmW1p7V12oHXi1noCteSLr39ERcuxpxUbFRnkvSfWcwK",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "45209044",
+          "debit": "45209044",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        },
+        {
+          "address": "3X3NYaBx6kH7jgyyi3QpBwXHi1mGiiK2TCPGMnQtUgJX",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "988137",
+          "closing": "988137",
+          "credit": "217337215",
+          "debit": "217337215",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "3c1cf817f418fd7d04426c3632c5360a401a1bd12046f4bae8019d6ac3a951ed",
+      "rpcSha256": "1d678534c8522ad0820c5625d6f16f73dfc30f4c2e0e7e24dfe7316b0867ebd8",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": true,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4YhzQ5H535UMvfnJJksxCfNYbufKAozAgdPhmF78nny8gNQmAnVdGyLKtLzRznrzXEvisbQuMmeHfxZHFG8SegvD",
+      "instruction_index": 13,
+      "block_num": 456083249,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1502,
+      "block_hash": "C86uzfcaGVdePQtKzvGamFY2v9SYJ3DWKu1HuEZxV4Zn",
+      "timestamp": 1791816064,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "EGtikJMuK1dWGGLu2s14dou6puMjSFyKkC3JvqMRvshS",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "76000000",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "75906740",
+      "sourceTransfer": 14,
+      "principalTransfer": 15,
+      "eventProof": {
+        "logIndex": 50,
+        "dataHex": "9388d50b96178d9800ab870400000000b43e8604000000000000000000000000c53a1f3547bbdc6e3b217783ef074aafedbc98af8504b63316f17e9b44dacff901021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "DQ6GwEQP8SXfogC4fZLosWJmLeYbSTNCvVVxdG81c1m4",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "4004542407",
+          "closing": "4542407",
+          "credit": "0",
+          "debit": "4000000000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9M6CBdYjuRsBTSCszeyjbbY93Haqhx5uak9eV5KKFdDR",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "75906740",
+          "debit": "75906740",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        }
+      ],
+      "pbSha256": "c06b522dc070e83c14399670fcb184db18a9bfd0b3d4fa173cab54cdd2408238",
+      "rpcSha256": "ac2b913de49a9646d7bfb91027fbcd003b5ef03331746f70a25179210d0f6a44",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "2K4fbig11JQJ8NY1ocGMoXUwEGxDnoGLj5k5Er1N44fAjvsJ3WhcsapmJ2BWVr2X7sxPaW6CQSEgAQJcwDy4wM89",
+      "instruction_index": 25,
+      "block_num": 456083285,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 322,
+      "block_hash": "QRDMTBHKSnyc9C5aDwiYaM5b1xHrMjLoXDUtSMqS2Bv",
+      "timestamp": 1791816072,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "8oAdJmxAAVnNBc8o18Mt1G9tiTgfjcjUuCwqRkNi8iU8",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "402080",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "401666",
+      "sourceTransfer": 26,
+      "principalTransfer": 27,
+      "eventProof": {
+        "logIndex": 85,
+        "dataHex": "9388d50b96178d98a0220600000000000221060000000000000000000000000073d568ea49052e0e4f14ad2712bca1c67651f9f00ed699363d68c317b0c1467101001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "BjHrtfXmkQdvNLhodBLcHCAu1Q9bgmNWSDXgNjJeMuBC",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "402080",
+          "debit": "402080",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        },
+        {
+          "address": "DCiRU66EVm1489mPFyRNx4LLsufV3T9vEJXZH2HQhici",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "1349",
+          "closing": "1349",
+          "credit": "2332334",
+          "debit": "2332334",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "c8a27750b626f2fd42e526e584b05da4ce36b87c38bf2bec3782144593d8c7a1",
+      "rpcSha256": "495efb0344158fb8fba5265dc24c3423a20c3d781e388e4298b69929b76aa6ce",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": true,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "txF1gtZdNXidNn911JMxuX8eRo7acySeQgf6VdvUSrQNVnFXvB6uDjYBeTuoovhRzRYEMG65G7hRkY6PwXyqdfS",
+      "instruction_index": 23,
+      "block_num": 456083287,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 131,
+      "block_hash": "Gu5QNQktSifHM2dmWQJJKUZ5d9UPhmK3mPZFHYs28M7W",
+      "timestamp": 1791816072,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "251943",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "251682",
+      "sourceTransfer": 24,
+      "principalTransfer": 25,
+      "eventProof": {
+        "logIndex": 75,
+        "dataHex": "9388d50b96178d9827d803000000000022d70300000000000000000000000000ac1ae3d087f29237062548f70c4c04aec2a995694986e7cbb467520621d3863001001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "GQuvMWcBF1M2wgh2sbxkonq7FtBc6UNurtHjREMRAL1x",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "946000",
+          "closing": "946000",
+          "credit": "251943",
+          "debit": "251943",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "Gjmjory7TWKJXD2Jc6hKzAG991wWutFhtbXudzJqgx3p",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "3892035",
+          "closing": "3892035",
+          "credit": "993624",
+          "debit": "993624",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "2ae31acd2857a64e07998f796f7263488ff627ddccc8b6a59df4353abecf2c81",
+      "rpcSha256": "242933e924f1239040db664964f2117ed45ea9de809d603493e7217ed34a992a",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "34HLTcxn9DjhLsDad4NuSboJNUdA9j6arnJ2VMm45vdSWg82R8qM9CgNzwUWvPgvBdTxr75e7TS4K4U6Q17TEtzH",
+      "instruction_index": 13,
+      "block_num": 456083364,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 689,
+      "block_hash": "9SuzKxKxeBjgDmLdn6V61W1wcLrgj4vpnCTaaZwet4t9",
+      "timestamp": 1791816089,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "7EsA3cjACSXqBjoZAG8HdZU6u6i8nbBj9i7hiFg45bkQ",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "20700134",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "20678740",
+      "sourceTransfer": 14,
+      "principalTransfer": 15,
+      "eventProof": {
+        "logIndex": 48,
+        "dataHex": "9388d50b96178d98e6db3b010000000054883b010000000000000000000000005cb36232edd2631b4e9d06223472fc150f9fba80a5bf7d2dce9c67b58d47b1cd01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "ERtZ6NRMNfxo2wQzA1Kjae5XtQMmJGj92F3yF18oRJYH",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "20741617",
+          "closing": "0",
+          "credit": "0",
+          "debit": "20741617",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "AXRZ11NYwwjhc7cYtdh58vkDXUQmh3HMzBkqZZjVmCnX",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "112558485",
+          "closing": "112558485",
+          "credit": "20678740",
+          "debit": "20678740",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "89e7fa6af9dbbb30653c2b987767e7cd5e8285718340742786a7ed50115e7db1",
+      "rpcSha256": "831ddd854860e961cf29f24366129d1105ea7c101ac794838abb189ba500dbb1",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "43M2vXi6ubXK51RdzzLnd2MKmAG2eitXVWZp1SSjG6sYqssseaQ3zv5BmrVhAPkkXwepFdh5Aycv2r4aH9TecQWv",
+      "instruction_index": 8,
+      "block_num": 456083419,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 147,
+      "block_hash": "2W5tbau6Dax2MUyEgPaDwCvZw9T5t72Q9tXieuDmBAhd",
+      "timestamp": 1791816101,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "CGzAce3JG3TchTRQRv6dvbMCYxzCiRhRQ5vXA9otpChF",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "2457314",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "2454771",
+      "sourceTransfer": 9,
+      "principalTransfer": 10,
+      "eventProof": {
+        "logIndex": 28,
+        "dataHex": "9388d50b96178d98e27e250000000000f3742500000000000000000000000000a788e7e6b8d1396da00d95dd9e68c7e9be8a4302e712f651264b08903c911c7201001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "AuTKJH7agk3QBn9Nx5My1jzFVuJuuL15TzN7XsvWpwza",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "6513",
+          "closing": "6513",
+          "credit": "2457314",
+          "debit": "2457314",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7LX58iNSPjK42E24BEatrww6Pm1B1r6ZhV2otFXdeqUS",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "1585198",
+          "closing": "1585198",
+          "credit": "2454771",
+          "debit": "2454771",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "3897b2b461048e7ffbbeb45b1f3094f6c4549654eb1bdae3b53d71e2cdba8b81",
+      "rpcSha256": "30b0d39b20b4545d4fc2c13c662835a7a9d0509f86f420f61838635a9da667d7",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "29ZVL8DZnRTk3MZ2TBjz4nmTmaZtxhzGHXTWCV5xBn9KcCLgMDdSzVcPzBXeNMJFddajnPhgMqSGD8s9LyKYQGMR",
+      "instruction_index": 7,
+      "block_num": 456083428,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1307,
+      "block_hash": "3KCWXr6DqNm5NTJ5ETVwWBMssPrUYNaE6EdsAYK6q7qL",
+      "timestamp": 1791816103,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "3LoAYHuSd7Gh8d7RTFnhvYtiTiefdZ5ByamU42vkzd76",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "8502617",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "8492122",
+      "sourceTransfer": 8,
+      "principalTransfer": 9,
+      "eventProof": {
+        "logIndex": 23,
+        "dataHex": "9388d50b96178d9859bd8100000000005a94810000000000000000000000000022c99b8938fd670b721b2862b9eadda766551cdf6e28bbb3af046ca9b476d5e901021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "A5LZUZCbcsTxU2oszHASHpe4Cbo44TTHNy7aan9P7fyA",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "64390873",
+          "closing": "64390873",
+          "credit": "11146588",
+          "debit": "11146588",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "8TPHVGDXVSRaoKbdSfKfjtzdS7Ns1q2zHArVBi7QBVBZ",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "18086793",
+          "closing": "18086793",
+          "credit": "8492122",
+          "debit": "8492122",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "39a8f18cbd2f86eb87e9dba1d00033455936032d2529d1870f0d2bffb0faea70",
+      "rpcSha256": "c0c5e049d04b08118860e6936d6cce588e3a5cd60512a515bc2a5e5511ba4af3",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4ZpJfixSMRc3eCQpJj7s4i8JMKH1skGoBuHfcMLLQVP3NNDXToWvcB4JrtrnzVAo76CuMK43NaooWdfS8KKsqL7W",
+      "instruction_index": 19,
+      "block_num": 456083585,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 801,
+      "block_hash": "6SZG2QhsYGFvhK7TnDAnC19WGkHfiuXfx1rXSGgr2NsP",
+      "timestamp": 1791816138,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "936CKqBwq1mHAPqKDzyiH6BY6GcRDVqf5kktruEbWTZu",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "11965396",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "11953004",
+      "sourceTransfer": 20,
+      "principalTransfer": 21,
+      "eventProof": {
+        "logIndex": 69,
+        "dataHex": "9388d50b96178d98d493b600000000006c63b60000000000000000000000000077668804996876d6468789a49f4ec585ccd4993133fa33a89d48f326c559ed6401001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "4ysxRQaKHohV9aBvZBKmsj8zwp4WmsxCUdbHxcBDbqB9",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "11965396",
+          "debit": "11965396",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "FR4ufN5K7hdBZYjmZh3Pj36ziSKsKgfgSBFts5qoLy7j",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "55674464",
+          "closing": "195567540",
+          "credit": "140843076",
+          "debit": "950000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "ef4d2a9a29cc423a04fca74a57129bc5f55335df7886d6d2b83928e0ec5fa3dc",
+      "rpcSha256": "861f3a25113558c7d9bd23d26ce408524decbdd88b2f04d2fa4c52b2c29a90fc",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "5KsbBNNDKNHR9HxGMPjND8EWtpFFZtgybFmZ5EvsB8m3vQuQHuU4ivjH8ueb9mReaUQtyhnPHcakLkVCknPiWBmM",
+      "instruction_index": 15,
+      "block_num": 456083804,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 662,
+      "block_hash": "2SVq1NLbMCZknqiwPB8WsJNVgrKmhmp41YsWUE45hTDU",
+      "timestamp": 1791816185,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "2974033",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "2970357",
+      "sourceTransfer": 16,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 48,
+        "dataHex": "9388d50b96178d9851612d0000000000f5522d000000000000000000000000004f4b6c0e4108fd2a6a2478eae0acc59db21bb4edf511c162cf602d1e0c0901fb01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "52ASTPfF9PZ8sH4Vqd7k5Vug88RLByLnKEjWo5Xgtc5D",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "2974033",
+          "debit": "2974033",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "EH7fRKLe74pmZwREnZGubaaTJLPP3j5Gt8DTeBDqg1Uo",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "2970357",
+          "debit": "2970357",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "4427327e5a701be62df1c95af44427bced58eefbffc7cfacb30e4be39e8908bb",
+      "rpcSha256": "c0aeb8eef9da856746adc663985afe1c5f01673feb33329d814c34f6160a3f34",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "5p4eSiovxKeFhusbNKBtfGkNUc69SJKZatJQnG9gXZdr67JrmW8WA925pgPSSRKtzu44KW3E5K4g18PQ24GRhd3Z",
+      "instruction_index": 16,
+      "block_num": 456083901,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 800,
+      "block_hash": "E3AZJhh1hAdG75ZAb8iM8QEJQxbCYYL72ZExiUsg7vuR",
+      "timestamp": 1791816207,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "input": "14616263",
+      "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output": "14631437",
+      "sourceTransfer": 17,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 57,
+        "dataHex": "9388d50b96178d98c706df00000000000d42df00000000000000000000000000ac1ae3d087f29237062548f70c4c04aec2a995694986e7cbb467520621d3863002011cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "E9GoxmLvugjbjfFGnjPd76aAX6C4YFZt9FjvuDDd4ZjF",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "14616263",
+          "debit": "14616263",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GQuvMWcBF1M2wgh2sbxkonq7FtBc6UNurtHjREMRAL1x",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "946000",
+          "closing": "946000",
+          "credit": "14631437",
+          "debit": "14631437",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "e7a94152402721532e6e5183aa220a55c3c1fd4239ad4c4edfd9fe80637db537",
+      "rpcSha256": "950cf8bd7be380dfe636e1ca6d6930cbbae3c783569c6679e8dbc0eb6fb150c5",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "3Tq3SP3jXUWyx2Sx3PJ8QjfPM43YRJTEGteCV5PQdhTm7MeXoany5acSUCaNXy1thKhkE7Bu1L4AnLi2UnRmePWV",
+      "instruction_index": 15,
+      "block_num": 456084117,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 577,
+      "block_hash": "BVRGAPLukBSvL7tBkpkZ1ZkYzL4uHuZpMb9VKYV78ToB",
+      "timestamp": 1791816255,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "7244150",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "7235207",
+      "sourceTransfer": 16,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 48,
+        "dataHex": "9388d50b96178d9876896e000000000087666e000000000000000000000000008297e544ff44406a13b7fa64c2cffa3ec6e15df8935e00c74170deaef013f37d01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "HTm4PDMyKh6Wv7GQpvTpdWxYr2QT9Q8WYjnFewf4x8Ev",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "700000",
+          "closing": "700000",
+          "credit": "7244150",
+          "debit": "7244150",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "48XF4k6hk7p41XcKdXDxgEYYCvoDe5QrWAH9bdUfA6fQ",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "7235207",
+          "debit": "7235207",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "89ac7c3a50bee4ed8c1f14b1b33d709e194aec7973d4879caf9ae3e3e539914e",
+      "rpcSha256": "95089ee0a31c1ca3f242f8d5620a289c68f0c37fbc90db2ae2d97f21f84238c4",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "5kVsDQDH1jJMUFPNg3rLcYzRgrspoFgEytdVv49vppa7pz7wjGQAngPQV2kfgvQmJsyQ9d8m63Yu5YYwzz8ZCQJQ",
+      "instruction_index": 21,
+      "block_num": 456084135,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 558,
+      "block_hash": "HobrFee7QLX89QrfegKpMPFGoL9QeaPLy3dxZgeFb7WA",
+      "timestamp": 1791816259,
+      "sourceSelectionOnly": true,
+      "pool": "5M7McNWX7yBBGrZGB6XhmHYhFwWwwB2ckrA1HEpkf3SA",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+      "input": "1869",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1868",
+      "sourceTransfer": 22,
+      "principalTransfer": 22,
+      "eventProof": {
+        "logIndex": 73,
+        "dataHex": "9388d50b96178d984d070000000000004c0700000000000000000000000000009a800bff4c87368896c20fc14073ebf1cb5aa375fe81fe4dbdc82ba4dfb75e78010040958cc5ed8533df954029194e7530c9ee6cc6ec240348bf4ffbc67744a07b3b"
+      },
+      "ledger": [
+        {
+          "address": "AEPS8zgRQAggnnkL7LnpK8SdExSdzCwysz789vaoW12A",
+          "mint": "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1869",
+          "debit": "1869",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "368858",
+          "closing": "368858",
+          "credit": "1868",
+          "debit": "1868",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "5d2ab7672708d0294e58e2d99a195312a7b79e6dcf0d2f970ac2989ba418a966",
+      "rpcSha256": "9085b7b4d824252b2aadd2d9068a7222567a00d815d0b33d3b17107a6808364a",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "3ow6QHtKqqKKvWxCjmwqRRMwUX2DH4oey3uNbVArk2hWXHz9CPNJyB5oSpfza6q2PDXswXD1MSSt8DcN3KZm5szo",
+      "instruction_index": 16,
+      "block_num": 456084327,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1005,
+      "block_hash": "DxzsVvfKNRxfVgsKemn9qxquHNcHs7miZfKbGjd9yUx",
+      "timestamp": 1791816300,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "input": "19986000",
+      "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output": "20006721",
+      "sourceTransfer": 17,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 57,
+        "dataHex": "9388d50b96178d9850f6300100000000414731010000000000000000000000008297e544ff44406a13b7fa64c2cffa3ec6e15df8935e00c74170deaef013f37d02011cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "48XF4k6hk7p41XcKdXDxgEYYCvoDe5QrWAH9bdUfA6fQ",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "19986000",
+          "debit": "19986000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "HTm4PDMyKh6Wv7GQpvTpdWxYr2QT9Q8WYjnFewf4x8Ev",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "700000",
+          "closing": "700000",
+          "credit": "20006721",
+          "debit": "20006721",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "9a63d5a71163b3ef20ea3cf83c899fbfb42399e80e34762c37dc063bb57873bd",
+      "rpcSha256": "1290f0ec9e657a4f2c33bac269bb8493edd80b1f502267c68cabcceb5f56cd98",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "mzk29ZCBWv3hu94tm2465Kr6jw1Yv3AnWKftmESLxdyMg9GUQf8cDz1eRrw5BFq9Qvu6fzdg17JczkAYN9GiHS8",
+      "instruction_index": 14,
+      "block_num": 456084346,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 850,
+      "block_hash": "8mmkniBeLAMgWofQNXtW9pK1cZzbqieYeh3ina7t4BvR",
+      "timestamp": 1791816304,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "10965414",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "10954060",
+      "sourceTransfer": 15,
+      "principalTransfer": 16,
+      "eventProof": {
+        "logIndex": 46,
+        "dataHex": "9388d50b96178d98a651a700000000004c25a7000000000000000000000000003ab8903fb735cab1c67c59af4857edf61b0af832a50a7c59e321919e0ec8a9bc01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "2mnz3h22QcUCyvpyJP6nQU8RWo7yox7k4WQNa5JqHGeT",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "10965414",
+          "debit": "10965414",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "m3BrPbv2TFmZZTPpyB9NgsCXqGNujpXvzvGqj8ksars",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "978081",
+          "closing": "978081",
+          "credit": "10954060",
+          "debit": "10954060",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "cfe45215802408e1f489a3fe46022f95ad9b80c10585a95944ea48519383db79",
+      "rpcSha256": "e2b8e49bfed882da0d350c479eb5a90bbf23114e3114c8b1976ca00afc44c2fd",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "3AFNhAFrioq2tdfBPviiMQC8KGFct6UDUPbVVxpU495Jf4nceMg7VuFHckwdLiK9yBMsseAFdha3EfezvGkJRAm",
+      "instruction_index": 8,
+      "block_num": 456084348,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 915,
+      "block_hash": "B448NEfQkZv4R1WS7pawnjG1aLb2hmEDdws5ouE99XGo",
+      "timestamp": 1791816305,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "8madapb89YPpXMxwRvXnAsjZLk6gEQfYcwrYwpUjynra",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "3505397",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "3501074",
+      "sourceTransfer": 9,
+      "principalTransfer": 10,
+      "eventProof": {
+        "logIndex": 29,
+        "dataHex": "9388d50b96178d98f57c350000000000126c3500000000000000000000000000736d63f6eba2a27ea7a3bab4d6b336aea487b92245c5a2e51c2ae5d9180ef58f01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "8Q3cBYGukdBHsWuJGRbcuoU83vLMmSEKazeYWxDpp1xb",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "3539375",
+          "closing": "0",
+          "credit": "0",
+          "debit": "3539375",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "2WsGmp3Avm84CwPpnWL9ggULg3kNmz4vVKFzoyze5abW",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "3501074",
+          "debit": "3501074",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "45f78b571e7002bf43c54c46367a3a9fdec88efe8efa185616671c5cd809b801",
+      "rpcSha256": "c24fcc2257de498b080bc7218d4533ac4060054c329e398c89141d38b5f22ecc",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4b3f9mfMhov1MoRvCbpTiByNa9rrhaucqzSswqLrZhqUpgZMZCxRJx4BppJXGrUm9ZaoHAoU6jWY2LWHMXPbZXoA",
+      "instruction_index": 15,
+      "block_num": 456084457,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 126,
+      "block_hash": "GJQRyf48ikjEzQ2tGPYEgzWHWfRft1wrohFQF53CRSC6",
+      "timestamp": 1791816329,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "1361187",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1359776",
+      "sourceTransfer": 16,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 47,
+        "dataHex": "9388d50b96178d9823c5140000000000a0bf14000000000000000000000000003ab8903fb735cab1c67c59af4857edf61b0af832a50a7c59e321919e0ec8a9bc01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "2mnz3h22QcUCyvpyJP6nQU8RWo7yox7k4WQNa5JqHGeT",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1361187",
+          "debit": "1361187",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "m3BrPbv2TFmZZTPpyB9NgsCXqGNujpXvzvGqj8ksars",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "978081",
+          "closing": "978081",
+          "credit": "4286067",
+          "debit": "4286067",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "0a408dc70cc086bdedb91694b69694390cf4745b9e88c9bf22265e007d5ed738",
+      "rpcSha256": "e15b259df953a2ba09e4a09d7632e41e1bf709a762c338bce4fc86b832827776",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "fPhV5XPffab2pZWmF7zaMMWaPMCfF8NDmn1fHCqZHWyANXeerStjpSwNPdFxePvgNbcVUSSGV1ZmoDjgyUP5g6B",
+      "instruction_index": 23,
+      "block_num": 456084600,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 777,
+      "block_hash": "BdrbTPn1PCsPH66WN3JSKPwtwt3KJrHrAyHrpJPuFZKW",
+      "timestamp": 1791816361,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "C3ryhRgwjxDdgqgfYbKaGUzixqiYLpK48Wj1nm9HuNTc",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "997201",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "996167",
+      "sourceTransfer": 24,
+      "principalTransfer": 25,
+      "eventProof": {
+        "logIndex": 77,
+        "dataHex": "9388d50b96178d9851370f000000000047330f00000000000000000000000000a42c3a4318aec29bcd1ed5e6364b94df6a2f814141765c483f26d4fdd1ad539b01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "5m2LcU9LyPMJdbJMPew7E7x4qMXbvkftskkhBKiPMkSS",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "997201",
+          "debit": "997201",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        },
+        {
+          "address": "J6BWryu63gfSzD3WdxWPBqFs3JjhX9J7TfFR5cQNUgdu",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "8367365",
+          "closing": "8367365",
+          "credit": "1967782",
+          "debit": "1967782",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "da5124ea0674dead1214456c88f2d43b8f383aac787ca296254416ba3fa3c425",
+      "rpcSha256": "3403abd9680152afb80107329769905d6e1900c2728f79372a8395c86bc0047c",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": true,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4ubcbEVQjLZx6ofSLAZmLUHLgNmt2UcCUkrJg9U8rj9uanukPvnp6uASvJkzXVYmCgPFF2GZD6yiPM26jQQnSMiJ",
+      "instruction_index": 26,
+      "block_num": 456084799,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 940,
+      "block_hash": "371GuFqCfbT5PpxbTxfsLFkHy6TqrSZFQZftNXHvTFgd",
+      "timestamp": 1791816405,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "857242",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "856354",
+      "sourceTransfer": 27,
+      "principalTransfer": 28,
+      "eventProof": {
+        "logIndex": 94,
+        "dataHex": "9388d50b96178d989a140d000000000022110d000000000000000000000000003ab8903fb735cab1c67c59af4857edf61b0af832a50a7c59e321919e0ec8a9bc01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "2mnz3h22QcUCyvpyJP6nQU8RWo7yox7k4WQNa5JqHGeT",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "857242",
+          "debit": "857242",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "m3BrPbv2TFmZZTPpyB9NgsCXqGNujpXvzvGqj8ksars",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "1052400",
+          "closing": "1052400",
+          "credit": "856354",
+          "debit": "856354",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "4783ead4bc5009b6b1894216f60c5f505a8da6e2549576e3fd4d145a52d37799",
+      "rpcSha256": "ba1aa2cf346742950713968345f4405ac602a14eeb31c59451e8273244f6d94f",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": true,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4awawfRQ4u3MzsYwHgPeWRuwUcUQuTsp2GVYJKqvNTCnNSVtn6uq3boVUHnYqLHHcPgk6FWJYeKB3Bfs8ALU4cZE",
+      "instruction_index": 2,
+      "block_num": 456084805,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 757,
+      "block_hash": "FNhFafPjZmZKphqivKSH5La1B47ySLCBzDN8MvWW8xdr",
+      "timestamp": 1791816407,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "GGztQqQ6pCPaJQnNpXBgELr5cs3WwDakRbh1iEMzjgSJ",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "6934226",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "6925670",
+      "sourceTransfer": 3,
+      "principalTransfer": 4,
+      "eventProof": {
+        "logIndex": 7,
+        "dataHex": "9388d50b96178d98d2ce69000000000066ad6900000000000000000000000000e2f877e83daec6888f43abb5ae7b311bb78c34960897fce5a7b82c16e20ff19701021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "HkphEpUqnFBxBuCPEq5j1HA9L8EwmsmRT6UcFKziptM1",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "6934226",
+          "debit": "6934226",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "HKuXaSKudNhhXMuGJHyKJ35cLPKY7UgTKCKaxrz6NWVv",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "6925670",
+          "debit": "6925670",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "6d7e0d73326981860b6663d1be245e32de1e21c34c883329b152e8204d3517b3",
+      "rpcSha256": "bffd5a29de39a91a031bda3d5fb07e7cc767f9f035184625df1f288e8795e5c5",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "jJVdtrpfXDA1HFnHvHSjG7ReaMfbxHvuMriQVgNHnqFF28HuoYctn5h3sRQoW7xyrApPtRY8q89d9YrRmmUgbNq",
+      "instruction_index": 3,
+      "block_num": 456084861,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1122,
+      "block_hash": "3wiRjCkT6VK7Cf7bmPcEQYQ6HTw8cvbA1y8DfVH2U5WW",
+      "timestamp": 1791816419,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "CYmFiT1quvx3KiQ55rFCbJV3GgdvqA7HyuqV6KsrAiRU",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "8697727",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "8695140",
+      "sourceTransfer": 4,
+      "principalTransfer": 4,
+      "eventProof": {
+        "logIndex": 8,
+        "dataHex": "9388d50b96178d987fb784000000000064ad8400000000000000000000000000ab93995df496485e6c4d50b9c6e19c50ddaf56405460df90cb9d7d11776b160700021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "5AxAVNhnRVo23kMBQvjbVfDx6mLCBAMwstCf2QPfPwrY",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "9812094",
+          "closing": "1114367",
+          "credit": "0",
+          "debit": "8697727",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "G9G3aLSknfJTqvXMi2gjSrLcv9iPWgf8R1ZvuqPzKAQ6",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "51495279",
+          "closing": "60190419",
+          "credit": "8695140",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "ab0c4dc2f5cb7278d533303d5454fc988463defee86fe101fa84e536ba1253e1",
+      "rpcSha256": "2e6c9a6acb527c5aa903048dd835409fddcbbd4ca6c2363687ca2b832e09f821",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4Aro6QW9VCMtuZRP18pBYtm8nsKr8iU51iVkk86FbMTVXTWyJTN7ZieLpADsmTsmASsRtgLRxhriY2G86NxUHvw9",
+      "instruction_index": 11,
+      "block_num": 456084961,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 398,
+      "block_hash": "5AcAfEzSjuisjfezADjWUMHRCDVre6dUatGo3Wz3etNw",
+      "timestamp": 1791816441,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "input": "19986000",
+      "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output": "20006724",
+      "sourceTransfer": 12,
+      "principalTransfer": 12,
+      "eventProof": {
+        "logIndex": 40,
+        "dataHex": "9388d50b96178d9850f6300100000000444731010000000000000000000000004f4b6c0e4108fd2a6a2478eae0acc59db21bb4edf511c162cf602d1e0c0901fb02011cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "EH7fRKLe74pmZwREnZGubaaTJLPP3j5Gt8DTeBDqg1Uo",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "19986000",
+          "debit": "19986000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "52ASTPfF9PZ8sH4Vqd7k5Vug88RLByLnKEjWo5Xgtc5D",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "20006724",
+          "debit": "20006724",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "959f717e95faf10e32dc369d73ac742ebf2d1899b7979b4b50f4e037c48e1a67",
+      "rpcSha256": "84bae081e8edaea4217e793b3443218f4e99782f857050bf83380a14fecd8dd4",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "P3MxzQPNpzDPj4eXx4DZk23hE1EbrZfM5nSotQgGcw4tW8FV7CFSzKieXGrasP37KaYBJaSUgCgknWtynAeQeJk",
+      "instruction_index": 2,
+      "block_num": 456084977,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 207,
+      "block_hash": "934PHQ8FQoz5ZmDwtWa4y8W1j3pfh3wjk6jt4sc4zJ7o",
+      "timestamp": 1791816444,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "20853828",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "20828100",
+      "sourceTransfer": 3,
+      "principalTransfer": 4,
+      "eventProof": {
+        "logIndex": 7,
+        "dataHex": "9388d50b96178d9844343e0100000000c4cf3d010000000000000000000000009a800bff4c87368896c20fc14073ebf1cb5aa375fe81fe4dbdc82ba4dfb75e7801021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "6pXVFSACE5BND2C3ibGRWMG1fNtV7hfynWrfNKtCXhN3",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "20853828",
+          "debit": "20853828",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9XhdUGacSs3m4QUAmhp7ko5doSjFwVy1f9EzMygQxhCX",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "20828100",
+          "debit": "20828100",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "4b5ec9c4f8b62694b3ea40cd035d7ed9673b2b5cf524b6f670186ccbaa88111c",
+      "rpcSha256": "d1a5d66e66f8c4d9077b34734cdd395d81cc328a1f48f6408c35198a93807c83",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "5Gjs2qCFhwQXKS6kxnPkNmcjBPXP7dk6hAxicDaw6rhesR132A2cxPhjY4FDxGC2cqJ36j7XEF86YFTrqzZvjf7p",
+      "instruction_index": 16,
+      "block_num": 456085071,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1537,
+      "block_hash": "Enjwej6KyYRT1NGhr8T5zva7prTWQXYj9Br1recqDsov",
+      "timestamp": 1791816465,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "EgSptShwdAQVgNZ5v4fFaStUQnrig9wDtx9jfQBg7cTp",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "38116256",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "38076683",
+      "sourceTransfer": 17,
+      "principalTransfer": 18,
+      "eventProof": {
+        "logIndex": 58,
+        "dataHex": "9388d50b96178d98a09b4502000000000b014502000000000000000000000000cb42c8617ba1297488ce0daaf332fc552f69fd6d25cefbb8a6fa882e0c4f515f01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "3sKfxhyf21PcDmHeG29zuCiH82fZEDxewFDGmSMdeeBc",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "38116256",
+          "debit": "38116256",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3XpyvezExtezGV567QDNqsH26bA5v2kHrnbTfTnk41qy",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "3906230160",
+          "closing": "4084691639",
+          "credit": "179358270",
+          "debit": "896791",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "00c07465f502a4f7e592066974c82295c4c072e273bd90f7bba4e897676c3191",
+      "rpcSha256": "145fcc298ec6815ce0462c783c0dd0595a6ab53be659917039d2181b44478b93",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "2eXf53PY254xTV46sNTjNNPdp2PNEgWY3guxnzfh7bxdhUM3o76QCA1aQmrAK9hyqJudEckj7SpGCU8z6rs3kk1i",
+      "instruction_index": 15,
+      "block_num": 456085104,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1124,
+      "block_hash": "FADzd43ZAWxiyUF3bN61X8dt6WPbRs6juqwXsR5mnutK",
+      "timestamp": 1791816472,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "10782654",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "10771435",
+      "sourceTransfer": 16,
+      "principalTransfer": 17,
+      "eventProof": {
+        "logIndex": 48,
+        "dataHex": "9388d50b96178d98be87a40000000000eb5ba400000000000000000000000000513e2c5dba42c3bd8330dabd834ee997e5503589fa0055f5e090e4e72ecc031201001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "4mdQgodP1CZsx6fZEQWesU7BtPpGdYn69gCCGYAEYqUj",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "10782654",
+          "debit": "10782654",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "59v2cSbCsnyaWymLnsq6TWzE6cEN5KJYNTBNrcP4smRH",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "771931",
+          "closing": "771931",
+          "credit": "10771435",
+          "debit": "10771435",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "c3f8e7a4b8d1e74247101243270012f342e3bb855a7e54a18f2077a944179f06",
+      "rpcSha256": "2b795dc2a26d5dac04fb8aea9a5539314a250b6587eec17907342cac058bf603",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "Ah9M5CC6ZMns7MHD7mFwKnBEsjQbTCmuU1h7jBCTG5dkfCbCdnQ7bfKKiJF87EHT7r6xqBn3A7fFCXUR27UdRnk",
+      "instruction_index": 17,
+      "block_num": 456085192,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 217,
+      "block_hash": "HPF4bFqXf51sZiYAGw7XCDVQm6p4edi3fu5bWJ89fcMA",
+      "timestamp": 1791816493,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "86L8qu6wUSs4aKwqQui4AsPj11buseiBki8irTxKkR1s",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "17638481",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "17616626",
+      "sourceTransfer": 18,
+      "principalTransfer": 19,
+      "eventProof": {
+        "logIndex": 58,
+        "dataHex": "9388d50b96178d9851240d0100000000f2ce0c01000000000000000000000000695f594ad6cbda9508e2ecd4e6288fd0fc9eda7ec190e3b2ed1c6e1d928410ca01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "5DrRNWfZMqtFv9ba5SAxHKgoW8PsQo6okgiPFGpHMpj4",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "31193",
+          "closing": "31193",
+          "credit": "17638481",
+          "debit": "17638481",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9wMqfQ3nfSJU4hmTJpuYdFVjzifszmmfRuDUzUhRqqpc",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "10610",
+          "closing": "17627236",
+          "credit": "17616626",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "a2100f4ddc33516adb1dfcd80f200a8c42e82cd156c2129b443892c57bd7674b",
+      "rpcSha256": "8b8e3e414a9fd1b6a2efc8bae2bf0777036d3da4ee1106da3bf1950c038fd866",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4RQh2LUYq2LkmqeShrHBWP7pTsD4iR7zXt6ap9cWDpawrYSXA1hbng8QxMdVUwkYuLNW4rg6TEv8ScJHstg9Zddk",
+      "instruction_index": 11,
+      "block_num": 456085213,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 444,
+      "block_hash": "G2RJWpM6SeZBoAzkrrMU62NgRMkAqfFsEnx6tvPSER7H",
+      "timestamp": 1791816498,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "4xDsmeTWPNjgSVSS1VTfzFq3iHZhp77ffPkAmkZkdu71",
+      "inputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "input": "26537888",
+      "outputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output": "26565531",
+      "sourceTransfer": 12,
+      "principalTransfer": 12,
+      "eventProof": {
+        "logIndex": 40,
+        "dataHex": "9388d50b96178d98a0ef9401000000009b5b95010000000000000000000000003ab8903fb735cab1c67c59af4857edf61b0af832a50a7c59e321919e0ec8a9bc02011cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "u3nijny4MfU3zvRLjU6RDmCB2ZDwFLk4byzRorVFzEc",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "26537888",
+          "debit": "26537888",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "2mnz3h22QcUCyvpyJP6nQU8RWo7yox7k4WQNa5JqHGeT",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "26565531",
+          "debit": "26565531",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "b866fe781c7a40ba42e2763a9ccf6dc04692eb340913c6910a39195e6f6e67cc",
+      "rpcSha256": "1a8f9bb2be1fbf1d7aa7c989e899fa96ec344e4db034ca5c8a6df9276388bdfb",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "WZULnevV8ZBhQR7HrLFfrDzrP6fLE8SJBuadtKP2giREBxG4R3wmBkxpu27g6xd3AV4T8U9h9FbYyRRp9BveEBU",
+      "instruction_index": 20,
+      "block_num": 456085238,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 348,
+      "block_hash": "2ytrVoQxSisP2q37U2zr4DFF8Xb3UmkVRst6LxmoYma8",
+      "timestamp": 1791816504,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "234266",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "234021",
+      "sourceTransfer": 21,
+      "principalTransfer": 22,
+      "eventProof": {
+        "logIndex": 63,
+        "dataHex": "9388d50b96178d981a9303000000000025920300000000000000000000000000ac1ae3d087f29237062548f70c4c04aec2a995694986e7cbb467520621d3863001001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "GQuvMWcBF1M2wgh2sbxkonq7FtBc6UNurtHjREMRAL1x",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "946000",
+          "closing": "946000",
+          "credit": "234266",
+          "debit": "234266",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "Gjmjory7TWKJXD2Jc6hKzAG991wWutFhtbXudzJqgx3p",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "3947037",
+          "closing": "3947037",
+          "credit": "5984152",
+          "debit": "5984152",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "77afcbd8222f4b5c0a32417c05a467f100685c4e2397c602999888029e0976a3",
+      "rpcSha256": "f3125289ffc374c9040b559d22c619b519144b0237332656be19298ca3baa392",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4CMRmpUtUaUaJvFbqQ8mcsttaQzgE627KvYcEr2F5WCd6n7Xr5iEKkZnCwHEFuPLWXLtSArVuQCXzpqsmpncWURs",
+      "instruction_index": 4,
+      "block_num": 456085238,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1470,
+      "block_hash": "2ytrVoQxSisP2q37U2zr4DFF8Xb3UmkVRst6LxmoYma8",
+      "timestamp": 1791816504,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "6U91aKa8pmMxkJwBCfPTmUEfZi6dHe7DcFq2ALvB2tbB",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "9231486",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "9220065",
+      "sourceTransfer": 5,
+      "principalTransfer": 6,
+      "eventProof": {
+        "logIndex": 11,
+        "dataHex": "9388d50b96178d987edc8c0000000000e1af8c00000000000000000000000000513e2c5dba42c3bd8330dabd834ee997e5503589fa0055f5e090e4e72ecc031201021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "4mdQgodP1CZsx6fZEQWesU7BtPpGdYn69gCCGYAEYqUj",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "9231486",
+          "debit": "9231486",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "54gyJnf7GKika5J74EdBhqXw542L9potmZTBU19vEiH6",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "0",
+          "closing": "0",
+          "credit": "9220065",
+          "debit": "9220065",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "2c54fabbefb3c6247fff66aca5e80b99bf7952caf5486656f8a1ad06a38f12a1",
+      "rpcSha256": "d583fcf5f979b162aad5ce883a34ad9e8a9764afc9f2671fe9372c75cd392d39",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "4A8mfTtUyAvYMPaUynFZxDyAbPup9FV7kS2PiFfpZveJrWfFBdykPrmGUdzyVWNaAreKbavGWANbCqPPCLLXpcSZ",
+      "instruction_index": 14,
+      "block_num": 456085430,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 983,
+      "block_hash": "5hLdY2We63HPLdx4b9fX7CVnDZxekuyzQZ4YQkcsLfk4",
+      "timestamp": 1791816547,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "9Tkk7fihtBkHCb5qCyDpNW6azp9DXTjU7n6URmTBxLrU",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "1844321",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1842400",
+      "sourceTransfer": 15,
+      "principalTransfer": 16,
+      "eventProof": {
+        "logIndex": 53,
+        "dataHex": "9388d50b96178d9861241c0000000000e01c1c000000000000000000000000007db80ea62cc806415ff020856f644e356c35dc2342ddac1084051042975a185901001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "CPpRDdWcbP8rKgYhjFgrfQAu5JPSXBNXXzsd8xFME8wq",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1844321",
+          "debit": "1844321",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "6qKnhywZJXFkHhNDXbqWafp5LWS6AuY1rnwwjz1FgVGs",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "550698",
+          "closing": "4409777",
+          "credit": "3861441",
+          "debit": "2362",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "6d6829c19b0ae9ce424613994b30ea83617475bdb6bf55db8442e16319331c1c",
+      "rpcSha256": "f35a0674c6dc212af4d7809e9ab842eb1bb8486a93f0dbbc9be4b5edf925e9ce",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "2jMDQ4bMFraYe9ty7GbHV2hqS4FGf2TSEkuLGqeoz5jdpEp6xYpwdeyptPESDvTQdk4N95ouroE8iq9cy5af9Bnk",
+      "instruction_index": 12,
+      "block_num": 456085481,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 1275,
+      "block_hash": "14KMJnQ6zhJMhHAAY1BqB9G3m1sA5AJbHmN1L9siTLdp",
+      "timestamp": 1791816557,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "6LXutJvKUw8Q5ue2gCgKHQdAN4suWW8awzFVC6XCguFx",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "53527",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "53471",
+      "sourceTransfer": 13,
+      "principalTransfer": 14,
+      "eventProof": {
+        "logIndex": 39,
+        "dataHex": "9388d50b96178d9817d1000000000000dfd000000000000000000000000000004f4b6c0e4108fd2a6a2478eae0acc59db21bb4edf511c162cf602d1e0c0901fb01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "52ASTPfF9PZ8sH4Vqd7k5Vug88RLByLnKEjWo5Xgtc5D",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "53527",
+          "debit": "53527",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "G4CD7aqqZZ6QKCNHrc1MPdS9Aw8BWmQ5ZkDd54W6mAEG",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "3352916",
+          "closing": "3352916",
+          "credit": "210280",
+          "debit": "210280",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "5ec7e6f02aa2e4f554d24ea3a4bbd4db48f80f7447f6614a1aa4b5e272131c6b",
+      "rpcSha256": "66c96423f41b46ab05122ee2ea4875e89ec031d70545d39986d94d8fad800ca7",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "HGvKSzWRqbWxDLSJc4rL5CAdewxYkfCHzqgN8FPSzV6JXafTTXfqHbE2QEe1X1ayEwdpiV5eDmaoh1EdGVsJnHC",
+      "instruction_index": 13,
+      "block_num": 456085571,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 34,
+      "block_hash": "4V3BLBYYTbwa9k56q29o5UKr4YK9LVwm1GsHQSABLFgS",
+      "timestamp": 1791816578,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "F7p3dFrjRTbtRp8FRF6qHLomXbKRBzpvBLjtQcfcgmNe",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "758415",
+      "outputMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "output": "757476",
+      "sourceTransfer": 14,
+      "principalTransfer": 15,
+      "eventProof": {
+        "logIndex": 42,
+        "dataHex": "9388d50b96178d988f920b0000000000e48e0b00000000000000000000000000d1c24bcb2cf2f78791a8e63d2e528be4e923944900af6d8826f0063e91d1515f01021cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "A2sPEp16HY5pqxrSeyb78wevY1UQtuoBAGXmG3TNmaU9",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "308228754146",
+          "closing": "308227995731",
+          "credit": "0",
+          "debit": "758415",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7y6wgJmoj5jejaaR1iyY3wPtnqBAkW7SrCycNwTfVj74",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "opening": "141727019577",
+          "closing": "141727019577",
+          "credit": "757476",
+          "debit": "757476",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "0625290d6be9f08b8a3617833d64e329a09e81c7b9175ad584ec6f06571f6246",
+      "rpcSha256": "bd93eeaf02927735421fb6b1a20e7d3064fe54f3ddfe51b38d0d8698ef913bd3",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    },
+    {
+      "signature": "36eHfFe1fejFTDb8qvePBFeoDJW8KooSgGXB1eVozLub91TGmDXCEEAQagDVSXMMwpZPqkLPFcrtbtYv6KJC7qgx",
+      "instruction_index": 28,
+      "block_num": 456085596,
+      "program_id": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+      "protocol": "numeraire",
+      "transaction_index": 569,
+      "block_hash": "9yYLxKLgtTAnFkTuBqo539KQjvaJ1gbi5E2cSn4oC2T3",
+      "timestamp": 1791816584,
+      "sourceSelectionOnly": true,
+      "pool": "2w4A1eGyjRutakyFdmVyBiLPf98qKxNTC2LpuwhaCruZ",
+      "user": "5hCqJS29qoS4FpDVkAQcTUbSkgNBgkGZYUbw73die2wg",
+      "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input": "18776217",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "18756651",
+      "sourceTransfer": 29,
+      "principalTransfer": 30,
+      "eventProof": {
+        "logIndex": 91,
+        "dataHex": "9388d50b96178d9899801e01000000002b341e0100000000000000000000000045bb5c0310e7d533cc3c0c2dc4909a1a16ef8df2bd399825ce07caf9fbbcbcdf01001cb49e4f4820e6662c15f80d62f7b46fc373f37a08d1ad14afb9e61af1782c14"
+      },
+      "ledger": [
+        {
+          "address": "5eumZ5EwZSGVjiScz4BDWaBLwzK4tb4Zwh3BiaFTrQ5H",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "opening": "0",
+          "closing": "0",
+          "credit": "18776217",
+          "debit": "18776217",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": true
+        },
+        {
+          "address": "AK1w2tGGjoEBgtxSoJzNqZgTgYLidtCJQWp74NxLgJJd",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "opening": "0",
+          "closing": "0",
+          "credit": "63623830",
+          "debit": "63623830",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": true
+        }
+      ],
+      "pbSha256": "c752bb13624bb5b3e0c8be270600c75dde182dad27657918f5b38e3473644e91",
+      "rpcSha256": "2b66a6ba13cfa0864b8afb7b634ffb114dff1fa92188cd1d4c14a9eb6efb7101",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false,
+      "primaryExecutable": {
+        "program": "NUMERUNsFCP3kuNmWZuXtm1AaQCPj9uw6Guv2Ekoi5P",
+        "programData": "64h2hsxpnUprJu87bwH7HcYxoVtbidw95bZ7m5JTXGp",
+        "deployedSlot": "329553166",
+        "elfSha256": "f45357b0b8273edacf1ca3f497edf7c7a008fc3896de4f477d6a9bf9e31f5e04",
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      }
+    }
+  ],
+  "originalTransactions": 41,
+  "completeUserLedgers": 82,
+  "globalCoverageClaim": false,
+  "historicalReserveClaim": false
+}

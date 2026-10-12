@@ -1,5 +1,6 @@
 //! Program-owned AnchorSwap's canonical Swap handler. The third transfer is
-//! a separately declared output fee; price only the user's net receipt.
+//! a separately declared quote fee. Reverse swaps debit this fee directly
+//! from the user; their price includes the full input debit.
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
@@ -19,12 +20,13 @@ pub(crate) fn layout(ix:&InstructionView)->Option<Layout>{let a=ix.accounts();le
   if a[role].0.as_slice()!=ata.as_ref(){return None;}
  }
  let amount=u64::from_le_bytes(d[8..16].try_into().ok()?);if amount==0{return None;}
- Some(Layout{protocol:Protocol::AnchorSwap,pool:1,authority:10,users:[6,7],vaults:[4,5],amount,minimum_output:u64::from_le_bytes(d[16..24].try_into().ok()?),exact_input:true,input_limit:false,input_first:true,fixed_users:true})
+ Some(Layout{protocol:Protocol::AnchorSwap,pool:1,authority:10,users:[6,7],vaults:[4,5],amount,minimum_output:u64::from_le_bytes(d[16..24].try_into().ok()?),exact_input:true,input_limit:false,input_first:false,fixed_users:false})
 }
 pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView,calls:&[InstructionView],mints:&TokenMintLookup,successful:&HashSet<u32>)->Option<(u64,u64)>{
  let l=layout(ix)?;let a=ix.accounts();let depth=if ix.is_root(){1}else{ix.stack_height()};
  if calls.len()!=3||depth==0||!successful.contains(&source){return None;}let mut amounts=[0u64;3];
- for(n,c)in calls.iter().enumerate(){let ca=c.accounts();let d=c.data();let roles=match n{0=>[6,4,10],1=>[5,7,1],_=>[5,9,1]};let mint=if n==0{2}else{3};
+ let reverse=calls[0].accounts().first().is_some_and(|role|role.0==a[4].0);
+ for(n,c)in calls.iter().enumerate(){let ca=c.accounts();let d=c.data();let roles=if reverse{match n{0=>[4,6,1],1=>[7,5,10],_=>[7,9,10]}}else{match n{0=>[6,4,10],1=>[5,7,1],_=>[5,9,1]}};let mint=if n==0{2}else{3};
   if c.is_root()||c.stack_height()!=depth+1||!successful.contains(&(source+n as u32+1))||c.program_id().0.as_slice()!=substreams_solana_idls::spl::token::PROGRAM_ID
    ||d.len()!=9||d[0]!=3||ca.len()!=3||ca.iter().zip(roles).any(|(k,r)|k.0!=a[r].0)
    ||mints.mint_for(a[roles[0]].0).as_deref()!=Some(a[mint].0.as_slice())||mints.mint_for(a[roles[1]].0).as_deref()!=Some(a[mint].0.as_slice()){return None;}
@@ -58,7 +60,8 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
         let after=after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?;
         if i128::from(after)-i128::from(before)!=change { return None; }
     }
- if amounts[0]!=l.amount||amounts[1]==0||amounts[1]<l.minimum_output{return None;}Some((amounts[0],amounts[1]))
+ let (gross,net)=if reverse{(amounts[1].checked_add(amounts[2])?,amounts[0])}else{(amounts[0],amounts[1])};
+ if gross!=l.amount||net==0||net<l.minimum_output{return None;}Some((gross,net))
 }
 
 #[cfg(test)]
@@ -80,4 +83,36 @@ mod tests{
    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"AnchorSwap mode{mode}");
   }
  }
+ #[test]
+ fn archived_native_directions_preserve_exact_user_debits_and_physical_positions(){
+  let cases=include_str!("../fixtures/swap-coverage/wide-anchor-swap26/cases.tsv");let mut reverse=0;
+  for line in cases.lines(){let f:Vec<_>=line.split('\t').collect();let source=f[1].parse::<u32>().unwrap();
+   let bytes=std::fs::read(format!("{}/fixtures/swap-coverage/wide-anchor-swap26/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+   let decoded=crate::process_transaction(tx.clone()).unwrap();let matches:Vec<_>=decoded.swaps.iter().filter(|row|row.source_index==Some(source)).collect();assert_eq!(matches.len(),1,"{}:{}",f[0],source);let row=matches[0];
+   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::AnchorSwap as i32);assert_eq!(row.source_transfer_index,Some(f[8].parse().unwrap()));
+   assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
+   let walk:Vec<_>=tx.walk_instructions().collect();let native_accounts=walk[source as usize].accounts();let first=walk[source as usize+1].accounts();let output_first=first[0].0==native_accounts[4].0;
+   if !output_first{continue;}reverse+=1;
+   let mints=TokenMintLookup::new(&tx,tx.meta.as_ref().unwrap());
+   for mode in 0..9{let mut routed=(*row).clone();routed.protocol=Protocol::JupiterV6 as i32;routed.source_index=None;routed.source_transfer_index=None;
+    match mode{0=>{},1=>routed.amm_pool=vec![0;32],2=>routed.user=vec![0;32],3=>routed.input_mint=vec![0;32],4=>routed.output_mint=vec![0;32],5=>routed.input_amount+=1,6=>routed.output_amount+=1,7=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source);},_=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source+2);}}
+    let mut candidates=vec![routed];crate::quality::verify_with_fees(&tx,&mints,&mut candidates,false,|_,_|None);
+    if mode==0{assert_eq!(candidates.len(),1,"routed native positive {}:{}",f[0],source);assert_eq!(candidates[0].protocol,Protocol::AnchorSwap as i32);assert_eq!(candidates[0].source_transfer_index,row.source_transfer_index);}
+    else{assert!(candidates.is_empty(),"{}:{} invalid routed mode{}",f[0],source,mode);}
+   }
+
+   let mut positions=Vec::new();for (root,_)in tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().enumerate(){positions.push((root,None));if let Some((g,group))=tx.meta.as_ref().unwrap().inner_instructions.iter().enumerate().find(|(_,g)|g.index==root as u32){for (n,_)in group.instructions.iter().enumerate(){positions.push((root,Some((g,n))));}}}
+   for mode in 0..24 {let mut wrong=tx.clone();
+    if mode==22{wrong.meta.as_mut().unwrap().err=Some(Default::default());}
+    else if mode==23{wrong.meta.as_mut().unwrap().log_messages.clear();}
+    else{let target=source as usize+if mode<6{0}else{1+(mode-6)%3};let(root,inner)=positions[target];
+     if inner.is_none(){let call=&mut wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[root];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{8}else{1};call.data[n]^=1;},_=>call.accounts[2]=call.accounts[0]};}
+     else{let(g,n)=inner.unwrap();let call=&mut wrong.meta.as_mut().unwrap().inner_instructions[g].instructions[n];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{8}else{1};call.data[n]^=1;},_=>call.stack_height=Some(99)};}
+    }
+    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|row|row.source_index!=Some(source))),"{}:{} invalid mode{}",f[0],source,mode);
+   }
+  }
+  assert!(reverse>0,"retained real output-first originals required");
+ }
+
 }

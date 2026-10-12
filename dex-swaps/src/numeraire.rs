@@ -28,13 +28,14 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
  let Some(l)=layout(ix)else{return false;};let a=ix.accounts();let d=ix.data();let depth=if ix.is_root(){1}else{ix.stack_height()};
  if depth==0||calls.len()!=2||!successful.contains(&source)||net_output==0{return false;}
  let mut amounts=[0u64;2];
- for (n,c)in calls.iter().enumerate(){let ca=c.accounts();let cd=c.data();let roles=if n==0{[3,1,5,8]}else{[6,2,4,0]};
+ let output_first=calls[0].accounts().first().is_some_and(|role|role.0==a[6].0);
+ for (n,c)in calls.iter().enumerate(){let ca=c.accounts();let cd=c.data();let side=if output_first{1-n}else{n};let roles=if side==0{[3,1,5,8]}else{[6,2,4,0]};
   if c.is_root()||c.stack_height()!=depth+1||!successful.contains(&(source+1+n as u32))
    ||![token::PROGRAM_ID.as_slice(),token_2022::PROGRAM_ID.as_slice()].contains(&c.program_id().0.as_slice())
    ||ca.len()!=4||cd.len()!=10||cd[0]!=12||ca.iter().zip(roles).any(|(k,r)|k.0!=a[r].0)
    ||mints.mint_for(a[roles[0]].0).as_deref()!=Some(a[roles[1]].0.as_slice())
    ||mints.mint_for(a[roles[2]].0).as_deref()!=Some(a[roles[1]].0.as_slice()){return false;}
-  amounts[n]=u64::from_le_bytes(cd[1..9].try_into().unwrap());
+  amounts[side]=u64::from_le_bytes(cd[1..9].try_into().unwrap());
  }
  let requested=u64::from_le_bytes(d[10..18].try_into().unwrap());let limit=u64::from_le_bytes(d[18..26].try_into().unwrap());
  if amounts[0]==0||amounts[1]!=net_output||l.exact_input&&(amounts[0]!=requested||net_output<limit)
@@ -80,4 +81,36 @@ mod tests{
    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"invalid Numeraire mode{mode}");
   }
  }
+ #[test]
+ fn archived_native_directions_preserve_exact_user_debits_and_physical_positions(){
+  let cases=include_str!("../fixtures/swap-coverage/wide-numeraire26/cases.tsv");let mut reverse=0;
+  for line in cases.lines(){let f:Vec<_>=line.split('\t').collect();let source=f[1].parse::<u32>().unwrap();
+   let bytes=std::fs::read(format!("{}/fixtures/swap-coverage/wide-numeraire26/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
+   let decoded=crate::process_transaction(tx.clone()).unwrap();let matches:Vec<_>=decoded.swaps.iter().filter(|row|row.source_index==Some(source)).collect();assert_eq!(matches.len(),1,"{}:{}",f[0],source);let row=matches[0];
+   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::Numeraire as i32);assert_eq!(row.source_transfer_index,Some(f[8].parse().unwrap()));
+   assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
+   let walk:Vec<_>=tx.walk_instructions().collect();let native_accounts=walk[source as usize].accounts();let first=walk[source as usize+1].accounts();let output_first=first[0].0==native_accounts[6].0;
+   if !output_first{continue;}reverse+=1;
+   let mints=TokenMintLookup::new(&tx,tx.meta.as_ref().unwrap());
+   for mode in 0..9{let mut routed=(*row).clone();routed.protocol=Protocol::JupiterV6 as i32;routed.source_index=None;routed.source_transfer_index=None;
+    match mode{0=>{},1=>routed.amm_pool=vec![0;32],2=>routed.user=vec![0;32],3=>routed.input_mint=vec![0;32],4=>routed.output_mint=vec![0;32],5=>routed.input_amount+=1,6=>routed.output_amount+=1,7=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source);},_=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source+2);}}
+    let mut candidates=vec![routed];crate::quality::verify_with_fees(&tx,&mints,&mut candidates,false,|_,_|None);
+    if mode==0{assert_eq!(candidates.len(),1,"routed native positive {}:{}",f[0],source);assert_eq!(candidates[0].protocol,Protocol::Numeraire as i32);assert_eq!(candidates[0].source_transfer_index,row.source_transfer_index);}
+    else{assert!(candidates.is_empty(),"{}:{} invalid routed mode{}",f[0],source,mode);}
+   }
+
+   let mut positions=Vec::new();for (root,_)in tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().enumerate(){positions.push((root,None));if let Some((g,group))=tx.meta.as_ref().unwrap().inner_instructions.iter().enumerate().find(|(_,g)|g.index==root as u32){for (n,_)in group.instructions.iter().enumerate(){positions.push((root,Some((g,n))));}}}
+   for mode in 0..24 {let mut wrong=tx.clone();
+    if mode==22{wrong.meta.as_mut().unwrap().err=Some(Default::default());}
+    else if mode==23{wrong.meta.as_mut().unwrap().log_messages.clear();}
+    else{let target=source as usize+if mode<6{0}else{1+(mode-6)%2};let(root,inner)=positions[target];
+     if inner.is_none(){let call=&mut wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[root];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.accounts[2]=call.accounts[0]};}
+     else{let(g,n)=inner.unwrap();let call=&mut wrong.meta.as_mut().unwrap().inner_instructions[g].instructions[n];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.stack_height=Some(99)};}
+    }
+    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|row|row.source_index!=Some(source))),"{}:{} invalid mode{}",f[0],source,mode);
+   }
+  }
+  assert!(reverse>0,"retained real output-first originals required");
+ }
+
 }

@@ -90,6 +90,43 @@ pub(crate) fn unpack_trade_instruction(data: &[u8]) -> Result<pumpfun::instructi
     pumpfun::instructions::unpack(normalized)
 }
 
+// Exact quote input is a budget: fee and reserve rounding can leave atoms
+// unspent, and partial fills can spend less. Bind the declared bound to the
+// committed native event and physical whole-user quote debit, not equality.
+pub(crate) fn exact_quote_budget_satisfies(
+    instruction: &InstructionView, input: u64, output: u64, calls: &[InstructionView],
+) -> bool {
+    use pumpfun::instructions::PumpFunInstruction::*;
+    let (budget, minimum, user, authority) = match unpack_trade_instruction(instruction.data()) {
+        Ok(BuyExactQuoteInV2(a)) => (a.spendable_quote_in,a.min_tokens_out,13,25),
+        Ok(BuyExactQuoteInV3(a)) => (a.spendable_quote_in,a.min_tokens_out,8,15),
+        _ => return false,
+    };
+    let a=instruction.accounts();
+    if a.len() <= authority || input==0 || input>budget || output<minimum { return false; }
+    let depth=if instruction.is_root() {1} else {instruction.stack_height()};
+    let mut events=calls.iter().filter(|ix| ix.program_id().0 == &pumpfun::PROGRAM_ID
+        && ix.stack_height()==depth+1 && ix.data().starts_with(&[228,69,165,46,81,203,154,29,189,219,127,211,78,230,97,238]));
+    let Some(event)=events.next() else { return false; };
+    let e=event.accounts();let d=event.data();
+    if events.next().is_some() || e.len()!=1 || e[0].0!=a[authority].0 { return false; }
+    let Ok(Some(trade))=pumpfun::events::unpack_trade_event_minimal(d) else { return false; };
+    let Ok(quote)=pumpfun::events::unpack_quote_trade_amount(d) else { return false; };
+    if !trade.is_buy || trade.user.as_slice()!=a[user].0.as_slice() || trade.mint.as_slice()!=a[1].0.as_slice()
+        || quote.mint.as_slice()!=a[2].0.as_slice() || trade.token_amount!=output
+        || quote.amount.checked_add(quote.fee).and_then(|n|n.checked_add(quote.creator_fee))!=Some(input)
+    { return false; }
+    // Primary TradeEvent ABI: fee rates are fixed prefix fields; ix_name is
+    // the bounded string after the volume prefix. Both are native source data.
+    let Some(raw)=d.get(266..270) else { return false; };
+    let length=u32::from_le_bytes(raw.try_into().unwrap()) as usize;
+    if length!=18 || d.get(270..288)!=Some(b"buy_exact_quote_in".as_slice()) { return false; }
+    let rate=|offset|d.get(offset..offset+8).map(|b|u64::from_le_bytes(b.try_into().unwrap()));
+    let (Some(protocol),Some(creator))=(rate(169),rate(217)) else { return false; };
+    let ceil=|bps:u64|(u128::from(quote.amount)*u128::from(bps)+9999)/10000;
+    ceil(protocol)==u128::from(quote.fee) && ceil(creator)==u128::from(quote.creator_fee)
+}
+
 fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrade> {
     use pumpfun::instructions::PumpFunInstruction::*;
     let (pool, mint, quote, user, is_buy, event_authority) = match unpack_trade_instruction(instruction.data()).ok()? {
@@ -210,6 +247,47 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, InnerInstruction, InnerInstructions, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
+
+    #[test]
+    fn finalized_curve_quote_budgets_preserve_existing_financial_tuples() {
+        let fixtures: &[(&[u8],u32,u32,&str,&str,&str,u64,&str,u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-budget-rounding26/0.transaction.pb").as_slice(), 25, 26, "95EuA9NEHHb4c8jMQ7bYZYCQxH52JLy5kBRHQhBKcd2v", "4bPAd6teDaz5NJ3WiqxKTwWKPeSbUbgtSFKRrnJPnry5", "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ", 2732439825, "A51RN53Krd3Wpxhhb11GZ96TU5PbHwzq5vGcEfSqpump", 9250639363485),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-budget-rounding26/1.transaction.pb").as_slice(), 11, 12, "6ndKPXCsmdWaPQz4ngjdX58qHKxiJmCFwuarXeZza2qT", "7GRssGJHusWaYMAvoWGqjAL3RQ2S1knn1FMM6E6bUWN", "85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ", 2619025650, "8CgM1hC3LaVHaSoWDGaGdSTfsmK6hk51PM4NdaKgpump", 6485323286047),
+        ];
+        for &(bytes,source,first,pool,user,input_mint,input,output_mint,output) in fixtures {
+            let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let walk:Vec<_>=tx.walk_instructions().collect();let end=walk.iter().enumerate().skip(source as usize+1)
+                .find(|(_,i)|i.is_root() || i.stack_height()<=walk[source as usize].stack_height()).map(|(n,_)|n).unwrap_or(walk.len());
+            assert!(exact_quote_budget_satisfies(&walk[source as usize],input,output,&walk[source as usize+1..end]));
+            let native_data=walk[source as usize].data().clone();let event_data=walk[end-1].data().clone();
+            let decoded=crate::process_transaction(tx.clone()).unwrap();
+            let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();
+            assert_eq!(rows.len(),1,"source {source}");let row=rows[0];
+            let decode=|s:&str|substreams_solana::base58::decode(s).unwrap();
+            assert_eq!((row.source_transfer_index,row.amm_pool.clone(),row.user.clone(),row.input_mint.clone(),row.input_amount,row.output_mint.clone(),row.output_amount),
+                (Some(first),decode(pool),decode(user),decode(input_mint),input,decode(output_mint),output));
+            for mode in 0..12 {
+                let mut wrong=tx.clone();
+                let all=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions);
+                let call=all.into_iter().find(|i|i.data==if mode<4{native_data.clone()}else{event_data.clone()}).unwrap();
+                let a=call.accounts.clone();
+                match mode {
+                    0=>call.data[8..16].copy_from_slice(&(input-1).to_le_bytes()),
+                    1=>call.data[16..24].copy_from_slice(&(output+1).to_le_bytes()),
+                    2=>call.data.extend_from_slice(&[0,0]),3=>call.data[24]=2,
+                    4=>call.data[65]^=1,5=>call.data[16]^=1,6=>call.data[64]=0,
+                    7=>call.data[56]^=1,8=>call.data[177]^=1,9=>call.data[217]^=1,
+                    10=>call.data[270]^=1,_=>call.accounts[0]=a[0]^1,
+                }
+                assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"curve source{source} mutation{mode}");
+            }
+            // Budget increments that keep the same rounded net and physical
+            // cost are semantically valid; the event contains no budget field.
+            let mut bounded=tx.clone();let call=bounded.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|i|i.data==native_data).unwrap();
+            call.data[8..16].copy_from_slice(&(input+2).to_le_bytes());
+            assert!(crate::process_transaction(bounded).unwrap().swaps.iter().any(|s|s.source_index==Some(source)&&s.input_amount==input&&s.output_amount==output));
+        }
+    }
 
     #[test]
     fn titanium_native_sell_binds_atlas_sweep_and_exact_wsol_recreation() {

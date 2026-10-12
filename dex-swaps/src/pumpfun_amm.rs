@@ -103,11 +103,39 @@ pub(crate) fn unpack_trade_instruction(data: &[u8]) -> Result<pumpswap::instruct
     pumpswap::instructions::unpack(normalized)
 }
 
-pub(crate) fn amounts_satisfy(instruction: &InstructionView, input: u64, gross_output: u64) -> bool {
+pub(crate) fn amounts_satisfy(instruction: &InstructionView, input: u64, gross_output: u64, calls: &[InstructionView]) -> bool {
     use pumpswap::instructions::PumpSwapInstruction::*;
     match unpack_trade_instruction(instruction.data()) {
         Ok(Buy(a) | BuyV2(a)) => input <= a.max_quote_amount_in && gross_output >= a.base_amount_out,
-        Ok(BuyExactQuoteIn(a) | BuyExactQuoteInV2(a)) => input == a.spendable_quote_in && gross_output >= a.min_base_amount_out,
+        Ok(BuyExactQuoteIn(a) | BuyExactQuoteInV2(a)) => {
+            // The official SDK exactQuoteInFees floors the fee-adjusted budget;
+            // the committed user debit can therefore leave a rounding remainder.
+            // Bind the original budget and minimum to the canonical native event
+            // before accepting that debit, rather than demanding equality.
+            let accounts = instruction.accounts();
+            if accounts.len() <= 15 || input == 0 || input > a.spendable_quote_in
+                || gross_output < a.min_base_amount_out { return false; }
+            let depth = if instruction.is_root() { 1 } else { instruction.stack_height() };
+            let mut events = calls.iter().filter(|event| event.program_id().0 == &pumpswap::PROGRAM_ID
+                && event.stack_height() == depth + 1
+                && event.data().starts_with(&[0xe4,0x45,0xa5,0x2e,0x51,0xcb,0x9a,0x1d,0x67,0xf4,0x52,0x1f,0x2c,0xf5,0x77,0x77]));
+            let Some(event) = events.next() else { return false; };
+            if events.next().is_some() || event.accounts().len() != 1
+                || event.accounts()[0].0 != accounts[15].0 { return false; }
+            let data = event.data();
+            let u64_at = |offset: usize| data.get(offset..offset + 8)
+                .and_then(|b| b.try_into().ok()).map(u64::from_le_bytes);
+            let Some(name_len) = data.get(409..413).and_then(|b| b.try_into().ok()).map(u32::from_le_bytes) else { return false; };
+            let expected_name: &[u8] = if instruction.data().starts_with(&pumpswap::instructions::BUY_EXACT_QUOTE_IN_V2)
+                { b"buy_exact_quote_in_v2" } else { b"buy_exact_quote_in" };
+            name_len as usize == expected_name.len()
+                && data.get(413..413 + name_len as usize) == Some(expected_name)
+                && data.get(128..160) == Some(accounts[0].0.as_slice())
+                && data.get(160..192) == Some(accounts[1].0.as_slice())
+                && u64_at(32) == Some(a.spendable_quote_in)
+                && u64_at(401) == Some(a.min_base_amount_out)
+                && u64_at(24) == Some(gross_output)
+        },
         Ok(Sell(a) | SellV2(a)) => input == a.base_amount_in && gross_output >= a.min_quote_amount_out,
         _ => false,
     }
@@ -161,6 +189,114 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
+
+    #[test]
+    fn finalized_exact_quote_budgets_preserve_all_existing_financial_tuples() {
+        let fixtures: &[(&[u8], u32, u32, &str, &str, &str, u64, &str, u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/0.transaction.pb").as_slice(), 7, 9, "5K5jeFhcxcPR9SHtGMt98nFfBEUi4SKNhniN1tF3VXr8", "9br5NZy37b78G8b5kzKkpzKm756SN3ToQXjcnvKfLDjw", "B77LX3hJP3Fw12vCWLu5vKQduFgPtZSQnoouVa2bXPg5", 6039430102012, "So11111111111111111111111111111111111111112", 2112103275),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/1.transaction.pb").as_slice(), 12, 13, "2uF4Xh61rDwxnG9woyxsVQP7zuA6kLFpb3NvnRQeoiSd", "BF8DSXz4oqpmgQnkytebdvb42TrWMFfcxuUebAH3vv8m", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 175659402, "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn", 33789116588),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/2.transaction.pb").as_slice(), 16, 18, "7XP4BadsRvFCbd9T4zZkeya3ccnfoKimWEoBrrHW8arG", "2DQqmYc5NEQcLaX629Hfz3RXPmHJjnhS8iTYaPAotS16", "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN", 152456, "cnNgFYRS26pKHstKvfzQXEDQuvuMfUNzTB2AMZypump", 8855578842),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/3.transaction.pb").as_slice(), 3, 5, "E9odDMJHXYq9Cv2XoGQBvzZeWGzUjLzah3VbJPnWsitA", "GLiCiNEnku3pQsmkVkRvnDLbfUN9BWbsrPDWLdPaADng", "So11111111111111111111111111111111111111112", 64192, "H4KUxsEgCp2yDpFvyDuGM5k6XevSKKrrKUxZ3Zr6nyJc", 11366578),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/4.transaction.pb").as_slice(), 10, 12, "kGuUgQ43XTU11qVpqWA3EjQrW9wfu2BH99cYkJamprC", "FhFxFjgCGdQ9L8Z3bdX6dxSiHjPtnD3dRWuiZwFagfxP", "So11111111111111111111111111111111111111112", 22220, "E2owferYxitVgpur2cyPmdjkgvHUHVSajB7WinKbpump", 4859620),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/5.transaction.pb").as_slice(), 10, 12, "kGuUgQ43XTU11qVpqWA3EjQrW9wfu2BH99cYkJamprC", "4CU5CBA6r4gYJkSgmnnMrH2MhMYgeKoc7zaEdVe81F8B", "So11111111111111111111111111111111111111112", 18180, "E2owferYxitVgpur2cyPmdjkgvHUHVSajB7WinKbpump", 3904513),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/6.transaction.pb").as_slice(), 10, 12, "kGuUgQ43XTU11qVpqWA3EjQrW9wfu2BH99cYkJamprC", "HCoBzBwfH9TEL2PucGzWfB5P8cDkhAXLFMbSF2iSR7Fb", "So11111111111111111111111111111111111111112", 16160, "E2owferYxitVgpur2cyPmdjkgvHUHVSajB7WinKbpump", 3451444),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/7.transaction.pb").as_slice(), 7, 9, "2fjFL253ZhEtA2d4xC6mEKZA2VfpXyBArZmLVnAMKgvN", "DqRExYenXCLq7MD4Gn8VZ3Tfo74ySGFqReu9BPMmGV62", "So11111111111111111111111111111111111111112", 12120, "RpjBhw6BcnBMoUVfb76pciChV7ciFY8d8BDDvy8pump", 1848654),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/8.transaction.pb").as_slice(), 30, 31, "5LxBZE9LLdWcovqfvxupj1DE3N5MUnnLkEbiRShXcAiS", "HY6a9Zt92PiywT3VEsfkxXhngRApEkDnavcAxRA5tsfS", "XPLTrL1ZH3tZJBdFWbbtrNjK9qoqZWfuhQJnXibbdfT", 5833790100, "5gCBK3vT6ZjHbpT4GGfRGm3GhU6SViCheUeBVQ4gpump", 163794624165),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/9.transaction.pb").as_slice(), 7, 9, "J8k1KNT1WoTcAJ9uX4Cp1tHa4HGxpz3DBt7ZyjHPqcr2", "F8fDsrFNDUGPsxteDakr4gchZkv29tgoMWTTH15JgGxq", "So11111111111111111111111111111111111111112", 171700, "RWH4aZakcP5pBCsdj2sL3XQYqYTVMmC6jLSVgvrpump", 19167766),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/10.transaction.pb").as_slice(), 10, 11, "9TFZCemBhAet4Wt8buCPZ8GsmhAYc8u3uBpoJrREW6Vt", "AyNWXhor6D98TJhMaaJfzX8hV2f93hPSbnMww3UCCHPn", "XPLTrL1ZH3tZJBdFWbbtrNjK9qoqZWfuhQJnXibbdfT", 75633820794, "CcutWygeq1zNtiU1jhP94NMawxJEy6MvDM6QMkatpump", 2058200727946),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/11.transaction.pb").as_slice(), 18, 19, "8WbBaDHJmZeCe67vGmeCX4c4iHEuCeNJfUpWpFyt9js8", "8qQ37rpLnXVCH9LhJxGRSTzjCrKY3aEbHisL1e3WXSHJ", "Xs7ZdzSHLU9ftNJsii5fCeJhoRWSC32SQGzGQtePxNu", 337848, "5vc8sktTSVC2KNaVhc1Cj54hGLnXYGeYJobtWJNR6rzQ", 131802795682),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/12.transaction.pb").as_slice(), 7, 9, "2fjFL253ZhEtA2d4xC6mEKZA2VfpXyBArZmLVnAMKgvN", "2yNDsBmohCWCuDSBfMTGnznpL8KYQSo74jECXXp1svfP", "So11111111111111111111111111111111111111112", 20200, "RpjBhw6BcnBMoUVfb76pciChV7ciFY8d8BDDvy8pump", 3046634),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/13.transaction.pb").as_slice(), 6, 8, "D2zWyUkgy7jRZgpDjBzB1KM8WnwvTq6mfG2sZbKsg7rQ", "9ngxAKZCijZNceGeSRAhJhuo7Fqkz8AigsSga3NTWsMs", "88Cba2Nr3LjZruw2bpwtH26XcCLTqRfcH3vNibCSSxjk", 49930882614, "So11111111111111111111111111111111111111112", 1508331806),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/14.transaction.pb").as_slice(), 9, 11, "AMRso8TXLzoW13SqaJMF1xBGQ8R5DRgdWVHE9Z2Xjg4w", "8SP5SLUdAdtAypGFQ7Deu4zqCJPxrgBckCpiGqurf192", "So11111111111111111111111111111111111111112", 713060, "EWmP2iGQR5hsNLPVB5z7yMNwVcwX1WnfraRosQJwpump", 73926339),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/15.transaction.pb").as_slice(), 14, 16, "DYRpz8ULr6qNTnAhnLHzQwJUcVVCskrFshnzWPAE5tMV", "HoPnEUbaf7rpF7dxucBtcisieoL9KJSuziNARgN6SfNX", "So11111111111111111111111111111111111111112", 18498375, "Hu8T4yWycHsd54gin4PnXqsk8sY6T4KekwJBT57opump", 118108006540),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/16.transaction.pb").as_slice(), 10, 12, "AE7rqEKiuSLjwKYzcNM136tkWevypUfHsr1md2GWmX97", "Aet97eFLeRV7T9zisGUDQLC6We1oAE4XEqRLWwV6u91N", "So11111111111111111111111111111111111111112", 18498375, "H1hqLeM7YWs2JFHFJWkbQAcLyPh7DWfn7aUCwtGdpump", 53273717736),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/17.transaction.pb").as_slice(), 7, 9, "3sfSGmANQdJe6HVZjFtYLxL1gbem9fs47TabzEsqv5cs", "7WeQCxuuH1kDeam522pSnzhoM8kKmYngwhXeZVwGVuiX", "So11111111111111111111111111111111111111112", 246440, "7Y4uGVEvKDMkf9tBLcQLTfV7CxEhDCVSKN3M75fKwtLd", 33885005),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/18.transaction.pb").as_slice(), 7, 9, "J8k1KNT1WoTcAJ9uX4Cp1tHa4HGxpz3DBt7ZyjHPqcr2", "CWVZ3t5bUirGUpnT5d8YfnRxw37CVjB8UQLEBk3E8dWQ", "So11111111111111111111111111111111111111112", 282800, "RWH4aZakcP5pBCsdj2sL3XQYqYTVMmC6jLSVgvrpump", 30859209),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/19.transaction.pb").as_slice(), 7, 9, "2fjFL253ZhEtA2d4xC6mEKZA2VfpXyBArZmLVnAMKgvN", "E2d33b6XdtBvnnov1FP3cKPoGaCTznYT3ibq4zjkiik9", "So11111111111111111111111111111111111111112", 12120, "RpjBhw6BcnBMoUVfb76pciChV7ciFY8d8BDDvy8pump", 1791150),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/20.transaction.pb").as_slice(), 9, 11, "3T3HEUXincDxFHS42mdoXAnrrUy7PxtWxNafRsCtTmFR", "DrxsXdJBDsUjqQn1JdUXt2SqYWWgyZkJjwYpt4V6XBnt", "So11111111111111111111111111111111111111112", 173284298, "DZLM712LtQQmT9Cejm8rxWTiH3CSSQacKkzS9CFepump", 385352219),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/21.transaction.pb").as_slice(), 7, 9, "4GUovRiQx1P55HbCZnDabGHoiLcSmXSLtYaaEKU5rvNv", "EMqrEADnSbagTS5RQt7CxxHdQXUhr32YLffWGEyL5tYE", "So11111111111111111111111111111111111111112", 290880, "DU2pf91EAxrsuWaMXfYhNGUZbScTQGHPD6yiDU1QVv3k", 32037292),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/22.transaction.pb").as_slice(), 10, 12, "7nG2hjgpHoPrsDkC69a4pzLRFe5JRD8F1SZGMsYU5WV6", "5K2pNU3xJMxgjmP4xQ182MYkaioRuxBfQxPTVxjnEHsM", "So11111111111111111111111111111111111111112", 20200, "Ce7iHN73k2yHvbunNJVr5SdVisfUAZgT8yyzhYmgpump", 3954225),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/23.transaction.pb").as_slice(), 7, 9, "81KqwKbMWhqeCm6cNjzGhvMszG1wkLAf87ntnnz1hNJc", "DcQNaByvstRZCERvb9UJHgHiQe8YX2FMdPptM86psQyz", "5PiVKtJXU8NKNP4MeKpX7vSLq9ZxTSjNjPuvqTMCpLj8", 324051246, "So11111111111111111111111111111111111111112", 337164),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/24.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "AqqqxFzMcjtCJ15ZVc596bXny9je8ptmgb4d83mN6Pdz", "So11111111111111111111111111111111111111112", 24240, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 3766171),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/25.transaction.pb").as_slice(), 7, 9, "2wC9o3GaNxY959BcfCEPE8HKqpFVMPrJfH8Y7xewWsms", "4noZnjNm4toTigKuFkM54uJJEUaoVoTGqvDPSv5mJyWc", "So11111111111111111111111111111111111111112", 197960, "1337yLr5eHXLL3WfW4bdNcMMhif3PrAw2cn6JDiDpump", 34815965),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/26.transaction.pb").as_slice(), 7, 9, "4GUovRiQx1P55HbCZnDabGHoiLcSmXSLtYaaEKU5rvNv", "HBDG3jfPuZ4pym7BwonsBu97pk6MA2UHEjeaPax8PF7k", "So11111111111111111111111111111111111111112", 220180, "DU2pf91EAxrsuWaMXfYhNGUZbScTQGHPD6yiDU1QVv3k", 23733105),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/27.transaction.pb").as_slice(), 7, 9, "4GUovRiQx1P55HbCZnDabGHoiLcSmXSLtYaaEKU5rvNv", "GDZ4qMX7KphcfXgnbiwGmjs8GVyy7hgQrEdqQNzYtm3y", "So11111111111111111111111111111111111111112", 276740, "DU2pf91EAxrsuWaMXfYhNGUZbScTQGHPD6yiDU1QVv3k", 29863037),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/28.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "QKzmPw9NugkBjfrLVN31beucPmGPc9PjR4FbZDJaZSp", "So11111111111111111111111111111111111111112", 16160, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 2492798),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/29.transaction.pb").as_slice(), 12, 13, "DTDNWY5o7vwEoUSd2RJy6V8KvKwmp6X9KjJZDvC73EV8", "3cQEH4qra69qhzbQHZAmSgLL36qSQ4QniPWZF67YRHYr", "So11111111111111111111111111111111111111112", 467544, "ATHUikmKHwRbEKv7pgu3h3YGdcG9rignvuwkq37Gpump", 455629713),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/30.transaction.pb").as_slice(), 7, 9, "4GUovRiQx1P55HbCZnDabGHoiLcSmXSLtYaaEKU5rvNv", "9bpgxQeXzeceppuuqdPzLrH38PjZU19sDFcTpzATWJG8", "So11111111111111111111111111111111111111112", 224220, "DU2pf91EAxrsuWaMXfYhNGUZbScTQGHPD6yiDU1QVv3k", 24092601),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/31.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "8nh31vHckqYFtswYrwEySkCosQiuHwGiMnMrSSAducEa", "So11111111111111111111111111111111111111112", 26260, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 4013876),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/32.transaction.pb").as_slice(), 10, 12, "7nG2hjgpHoPrsDkC69a4pzLRFe5JRD8F1SZGMsYU5WV6", "31PuenjoExQEkFyoNBpEn5iCiksoP2Npwscum2AWBZEg", "So11111111111111111111111111111111111111112", 10100, "Ce7iHN73k2yHvbunNJVr5SdVisfUAZgT8yyzhYmgpump", 1812517),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/33.transaction.pb").as_slice(), 8, 9, "2pS7z7FrHSurdtSSvCzRMoyQRH4gUtKWKNUKs2jjY23W", "2Fg1akHpTyhoGvAUtiEsZ4enDpzjjPmd1ngapF9diPHc", "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn", 3730570236, "E7eCZS2cq655qJ7uVx3dSHR2zK31kwNQsWS6P6Hpump", 115833619451),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/34.transaction.pb").as_slice(), 7, 9, "AE255UKGwgskdM2oAbeD3F76zz2tSG8LQqdoRiwL4ieY", "Fk5GCPnu7r4PxvDVCDZBiA8WQJ3fmqpiA7q3Awv9p619", "So11111111111111111111111111111111111111112", 161600, "Ktik2gETjeg4UUgVTqxi6ZyGusTxxrKrtvHkbihpump", 32692934),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/35.transaction.pb").as_slice(), 10, 12, "7nG2hjgpHoPrsDkC69a4pzLRFe5JRD8F1SZGMsYU5WV6", "B2dcPgHigPq3U4Qe3wmAJ3qGE17MEUw9eUbsoP1GjMtr", "So11111111111111111111111111111111111111112", 28280, "Ce7iHN73k2yHvbunNJVr5SdVisfUAZgT8yyzhYmgpump", 4792475),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/36.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "GRvQ6w2qbFhcRPxHQvBDnJQfyix8RhvzBjZaxrW38Tew", "So11111111111111111111111111111111111111112", 26260, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 3874075),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/37.transaction.pb").as_slice(), 10, 12, "FbKKszgd9SdTCL97NPRvqNEW4AcZjtZ53XsB7tkS4miV", "5yFtr2muQxXpeDKWdwzWLE5BidYBtXwtsNVRyeaLcsjo", "So11111111111111111111111111111111111111112", 15028200, "FKvBk5kBa76ZEuwWoGaqcYEvRyxGTruN6NHzPrvHCqiv", 21601336516),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/38.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "9ZdWni11u7jtyaztEquhrFtBJcALtLEuzeVLQSFFFJt9", "So11111111111111111111111111111111111111112", 28280, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 4143505),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/39.transaction.pb").as_slice(), 7, 9, "Fjt4WVcMVnHS5V451Lq1ZHcbxwXwMxFd92SNdE2Wodwu", "4WTNDysM2zaFMyNuFvgeT2WYPL8ZK1YL3StydDNNCsCM", "uXVXakC7XeenWbEHJzfqhjwzS6xrjJwN5s3v71woQNM", 5129605740856, "So11111111111111111111111111111111111111112", 1220544311),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/40.transaction.pb").as_slice(), 9, 11, "9GC7uNo39kfEjCswhUTbshiKuLPEprzpVoCzoM9brLRs", "6vPuT8Vvw5VhAfmLGbYgczXASgdZBUM3yWTp8KULgDjY", "So11111111111111111111111111111111111111112", 351247700, "8hqvWebUmySdwyoT2p4NPjYfX1fjgxTHkg9ycm6ypump", 50160089931),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/41.transaction.pb").as_slice(), 9, 11, "9GC7uNo39kfEjCswhUTbshiKuLPEprzpVoCzoM9brLRs", "CN9AMG1pGzKQnLRZBCtvUwVexeNoWHuJyHjtnv57dgUs", "So11111111111111111111111111111111111111112", 420160, "8hqvWebUmySdwyoT2p4NPjYfX1fjgxTHkg9ycm6ypump", 59941384),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/42.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "4wrmrbNxTCLJC6ja9Vwbt7Z2HJUcZtucG81CbyEBwxV6", "So11111111111111111111111111111111111111112", 18180, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 2614118),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/43.transaction.pb").as_slice(), 9, 11, "H7SopFMt5nyi9g264QxJpQjGoSJGt13mpVDCKVoe4ShM", "9wsJEbqKxSJUmP52KykMYKjV6pqdBcm1gUJBYXKS2esB", "So11111111111111111111111111111111111111112", 286858, "5fePPYbUE2yQHD4AfKetsZzVLuz1Hu8K2mSuCBu5pump", 942578),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/44.transaction.pb").as_slice(), 14, 17, "5FdEzA3Q2o3fhfiJWYMMDsNqa2xAQBERRqgSCYH1DjzX", "8k21PguHvtyapXYBpBLWxnQ7pzKVt6CoJaZn1VsLv29z", "So11111111111111111111111111111111111111112", 1943190627, "7UBXrvqHwhnezKx7B2eG2tgTKiKy7Sf3xr4R9P72pump", 963621098595),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/45.transaction.pb").as_slice(), 9, 11, "9GC7uNo39kfEjCswhUTbshiKuLPEprzpVoCzoM9brLRs", "3SeofY6ReB2cJbfV8hfx8dsBSqFrTHkyMWGDtS1q4oP9", "So11111111111111111111111111111111111111112", 337340, "8hqvWebUmySdwyoT2p4NPjYfX1fjgxTHkg9ycm6ypump", 47157296),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/46.transaction.pb").as_slice(), 21, 23, "APNMac2fNY3X3FjbuMEBkGcxNJK9H3qmaukU4yiUvEYE", "FNpyU9nvLySGqq1tysxsvvLwbYebQWcR8yWhAZn52esw", "HLhwEfq8waa2ttszHEdNHxsxH8MQV6sqap1QN5LvWF2a", 31742761207262, "So11111111111111111111111111111111111111112", 5745036284),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/47.transaction.pb").as_slice(), 10, 12, "7nG2hjgpHoPrsDkC69a4pzLRFe5JRD8F1SZGMsYU5WV6", "FhFxFjgCGdQ9L8Z3bdX6dxSiHjPtnD3dRWuiZwFagfxP", "So11111111111111111111111111111111111111112", 26260, "Ce7iHN73k2yHvbunNJVr5SdVisfUAZgT8yyzhYmgpump", 4058257),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/48.transaction.pb").as_slice(), 10, 12, "qCm3yrYe4xSW3KHTFjdscBEAeawwgniijUrBwtc5Phu", "5eXr1aXiTMJR843Rd1Ymnwf59weFccY95xSdyUfmRaHB", "So11111111111111111111111111111111111111112", 176802472, "8CmzXiPx6hsidaGqr6jk8sE8bLYknuguRrBpeijBpump", 313275169449),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/49.transaction.pb").as_slice(), 9, 11, "Cr4f5486Vc5E6jGot8MSrWjwLrUUGg2fraXiFDzDdPXf", "7xsmD42nS8hBmbDF6GZMMFWFcspkigkqnWNPx3QwHVwM", "So11111111111111111111111111111111111111112", 110385, "FLYm6hwvTdHCeiAeHLLdmZKU6kjmDTrwRdTvRvKwpump", 1237281),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/50.transaction.pb").as_slice(), 6, 8, "8ibfGgWvURJ786haZfuaUT44MRnfXt1bWGrXKJUiNJPv", "7GbYP7VMxc4Jk3L6Ld7uirCYmEuS7LKw4jh3bhPRg7S9", "6GPV74iTCizLdRfwcp4tiPgX8uKcKSjcSqhAWfCbGyz", 2113768297880, "So11111111111111111111111111111111111111112", 1312893950),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/51.transaction.pb").as_slice(), 14, 16, "3XNhC29UssQh1Lk8XhkTApvu76zhQiMxfouJ8Royaw3r", "objU12a99hKf4hXkkG8PfNXoSVLrcVcFvtEFEtgYKUF", "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh", 4012, "A5WR25nLkB9PPLtQss9QwW6w92Q2s8quicwKZWyVfxJh", 542514946),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/52.transaction.pb").as_slice(), 6, 8, "D7CWBVDwkdjg5X8qUGzC7kw14WnZ1KDhjGc86H3ztsGe", "122KR2Zh8mVdmwQpAUtJKUhg2KByiMe8SHQMfiBaFpB", "DDub5dFXZ1i2MVuUfT9vy55nEk74ZN4w9WxxbA56LcG", 10268930648, "So11111111111111111111111111111111111111112", 1753005845),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/53.transaction.pb").as_slice(), 7, 9, "CdiWzUaiKqjYkeg5pdC8cp1gzXcysLpR5fo3GeRgLNMb", "ErvexocsLo8ofC2d4wW8AA4AV2Q6Th3gx3jxt9WTuufC", "EXs3rY8aSdX4TeLiMXk1JHEvJAiUiapuX9E9KmVeWmY4", 571222909098, "So11111111111111111111111111111111111111112", 1200226302),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/54.transaction.pb").as_slice(), 10, 12, "E94TX1RU5A3u6cVyujMEahD1tLjVCkXXywM8BoCRYMTK", "GT8iLXX5RQ2XNDVZ6oPMqe33u4kY2bcCh2doVWrqxnUb", "So11111111111111111111111111111111111111112", 24240, "EhSBeXrbWpRm2MSsgLw9ySCrD745nsrsTNS65zLpump", 3298001),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/55.transaction.pb").as_slice(), 10, 12, "7nG2hjgpHoPrsDkC69a4pzLRFe5JRD8F1SZGMsYU5WV6", "4e3c7ayMq1UQgrDu7yiRpr9nAM3BgfGNtsc7KeGniwzh", "So11111111111111111111111111111111111111112", 22220, "Ce7iHN73k2yHvbunNJVr5SdVisfUAZgT8yyzhYmgpump", 3117595),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/56.transaction.pb").as_slice(), 6, 7, "4sodzjFtwVMYVYEEURHrR4eYdj4fDvcbwWYRR7rJuCQA", "3JX2aEPNU4CMFkzwtKUKP2qb33yqWwzPcVFy7p9onXTN", "So11111111111111111111111111111111111111112", 226615136, "Ft87tocCrRNbeoWh9noaNJxXbjvN5K289kJJws8fpump", 480095983918),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/57.transaction.pb").as_slice(), 7, 9, "AE255UKGwgskdM2oAbeD3F76zz2tSG8LQqdoRiwL4ieY", "AUHtcVBE5dTtWNYAuECc3xMhshnrGTmheq2MQ7rebusF", "So11111111111111111111111111111111111111112", 163620, "Ktik2gETjeg4UUgVTqxi6ZyGusTxxrKrtvHkbihpump", 29204598),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-budget-rounding26/58.transaction.pb").as_slice(), 9, 11, "GXLKcTihFWVEU5EhzkJipBBpnKafeLVzLJzJFaWHxF5B", "5qeW7Dm8zhBDzaaepihtNxj4Su6MSFXfVid35gxNN6tK", "So11111111111111111111111111111111111111112", 661576, "3Ap7DQ1Js5PjEHFhY5Rr8Ng7nF5j9yKr5GUVn1cBpump", 31567384),
+        ];
+        for &(bytes, source, first, pool, user, input_mint, input, output_mint, output) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let native_data = tx.walk_instructions().nth(source as usize).unwrap().data().clone();
+            let event_data = tx.walk_instructions().skip(source as usize + 1)
+                .find(|ix| ix.program_id().0 == &pumpswap::PROGRAM_ID && ix.data().starts_with(&[0xe4,0x45,0xa5,0x2e,0x51,0xcb,0x9a,0x1d,0x67,0xf4,0x52,0x1f,0x2c,0xf5,0x77,0x77])).unwrap().data().clone();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source)).collect();
+            assert_eq!(swaps.len(), 1, "native source {source}");
+            let s = swaps[0];
+            assert_eq!((s.source_transfer_index, s.input_amount, s.output_amount), (Some(first), input, output));
+            for (actual, expected) in [(&s.amm_pool,pool),(&s.user,user),(&s.input_mint,input_mint),(&s.output_mint,output_mint)] {
+                assert_eq!(actual.as_slice(), substreams_solana::base58::decode(expected).unwrap().as_slice());
+            }
+            for mode in 0..9 {
+                let mut altered = tx.clone();
+                let meta = altered.meta.as_mut().unwrap();
+                let native_is_root = altered.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().any(|ix| ix.data == native_data);
+                if mode < 3 {
+                    let data = if native_is_root {
+                        &mut altered.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == native_data).unwrap().data
+                    } else { &mut meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|ix| ix.data == native_data).unwrap().data };
+                    match mode {
+                        0 => data[8] ^= 1,
+                        1 => data[8..16].copy_from_slice(&(input - 1).to_le_bytes()),
+                        2 => data[16..24].copy_from_slice(&u64::MAX.to_le_bytes()),
+                        _ => unreachable!(),
+                    }
+                } else {
+                    let ix = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|ix| ix.data == event_data).unwrap();
+                    match mode {
+                        3 => ix.data[32] ^= 1,
+                        4 => ix.data[401] ^= 1,
+                        5 => ix.data[413] ^= 1,
+                        6 => ix.data[128] ^= 1,
+                        7 => ix.data[160] ^= 1,
+                        8 => ix.data[24] ^= 1,
+                        _ => unreachable!(),
+                    }
+                }
+                assert!(crate::process_transaction(altered).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(source))),
+                    "exact quote budget/event mutation {mode}, source {source}");
+            }
+        }
+    }
 
     #[test]
     fn finalized_bounded_padding_and_v2_sell_keep_native_arguments() {

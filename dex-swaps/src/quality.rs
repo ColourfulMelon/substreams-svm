@@ -1136,7 +1136,7 @@ pub(crate) fn verify_with_fees(
                     pb::Protocol::SanctumInfinity=>Some(crate::sanctum_infinity::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
                     _=>None,
                 };
-                if receipt.is_some_and(|v|v!=Some((input.amounts[0],*output.amounts.iter().min().unwrap()))){continue;}
+                if receipt.is_some_and(|v|v!=Some((if layout.protocol==pb::Protocol::AnchorSwap{layout.amount}else{input.amounts[0]},*output.amounts.iter().min().unwrap()))){continue;}
                 if [pb::Protocol::Futarchy,pb::Protocol::Guacswap].contains(&layout.protocol) {
                     let receipt=if layout.protocol==pb::Protocol::Futarchy{crate::futarchy::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)}
                         else{crate::guacswap::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)};
@@ -1227,7 +1227,7 @@ pub(crate) fn verify_with_fees(
                         continue;
                     }
                 }
-                let input_amount = if layout.protocol == pb::Protocol::Hadron {
+                let input_amount = if [pb::Protocol::Hadron,pb::Protocol::AnchorSwap].contains(&layout.protocol) {
                     // Typed direct fee plus the pool principal equals the full
                     // user's requested debit; the helper excludes quote fields.
                     layout.amount
@@ -2645,20 +2645,20 @@ pub(crate) fn verify_with_fees(
                         _=>crate::sanctum_infinity::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
                     };
                     let Some((gross,net))=receipt else{continue;};
-                    let side=if layout.fixed_users{0}else{usize::from(mints.mint_for(accounts[4].0).as_deref()!=ix.data().get(8..40))};
+                    let side=if layout.protocol==pb::Protocol::AnchorSwap{usize::from(scoped.iter().any(|t|t.source==*accounts[7].0&&t.destination==*accounts[5].0&&t.authority==*accounts[10].0))}else if layout.fixed_users{0}else{usize::from(mints.mint_for(accounts[4].0).as_deref()!=ix.data().get(8..40))};
                     let users=if layout.fixed_users{[layout.users[0],layout.users[1]]}else{[layout.users[side],layout.users[1-side]]};
                     let vaults=[layout.vaults[side],layout.vaults[1-side]];
                     let Some(input)=scoped.iter().find(|t|t.source==*accounts[users[0]].0&&t.destination==*accounts[vaults[0]].0)else{continue;};
                     let Some(output)=scoped.iter().find(|t|t.source==*accounts[vaults[1]].0&&t.destination==*accounts[users[1]].0)else{continue;};
                     let identity=(index as u32,input.index,output.index);
                     if scoped.iter().filter(|t| ![pb::Protocol::Exponent,pb::Protocol::Janus].contains(&layout.protocol) || t.depth==depth+1).count()!=if [pb::Protocol::AnchorSwap,pb::Protocol::Exponent,pb::Protocol::Janus].contains(&layout.protocol){3}else{2} || !input.net_verified || !output.net_verified
-                        || (input.amounts[0],*output.amounts.iter().min().unwrap())!=(gross,net)
+                        || (if layout.protocol==pb::Protocol::AnchorSwap{layout.amount}else{input.amounts[0]},*output.amounts.iter().min().unwrap())!=(gross,net)
                         || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
                         || swap.input_mint!=input.mint || swap.output_mint!=output.mint
                         || [users[0],vaults[0]].iter().any(|r|mints.mint_for(accounts[*r].0).as_deref()!=Some(input.mint.as_slice()))
                         || [users[1],vaults[1]].iter().any(|r|mints.mint_for(accounts[*r].0).as_deref()!=Some(output.mint.as_slice()))
                         || (swap.input_amount,swap.output_amount)!=(gross,net)
-                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity){continue;}
+                        || expected_transfer.is_some_and(|position|position!=if layout.protocol==pb::Protocol::AnchorSwap{input.index.min(output.index)}else{input.index}) || native_evidence.contains(&identity){continue;}
                     swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
                 }
                 if [crate::anchor_markets::GHOSTY.as_slice(),crate::anchor_markets::MEMEFUN.as_slice(),crate::omnipair::PROGRAM_ID.as_slice(),crate::fraudsworth::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
@@ -2679,7 +2679,8 @@ pub(crate) fn verify_with_fees(
                 if [crate::jupiter_perps::PROGRAM_ID.as_slice(),crate::numeraire::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout)=crate::native_venues::layout(ix)else{continue;};
                     if scoped.len()!=2 {continue;}
-                    let (input,output)=(scoped[0],scoped[1]);let net=*output.amounts.iter().min().unwrap();
+                    let Some(input)=scoped.iter().find(|t|t.source==*accounts[layout.users[0]].0&&t.destination==*accounts[layout.vaults[0]].0&&t.authority==*accounts[layout.authority].0)else{continue;};
+                    let Some(output)=scoped.iter().find(|t|t.source==*accounts[layout.vaults[1]].0&&t.destination==*accounts[layout.users[1]].0)else{continue;};let net=*output.amounts.iter().min().unwrap();
                     let valid=if layout.protocol==pb::Protocol::JupiterPerps {
                         crate::jupiter_perps::settlement(index as u32,ix,&instructions[index+1..end as usize],&successful_invocations)==Some((input.amounts[0],net))
                     }else{crate::numeraire::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations,net)};
@@ -2690,7 +2691,7 @@ pub(crate) fn verify_with_fees(
                         || [layout.users[0],layout.vaults[0]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(input.mint.as_slice()))
                         || [layout.users[1],layout.vaults[1]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(output.mint.as_slice()))
                         || (swap.input_amount,swap.output_amount)!=(input.amounts[0],net)
-                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
+                        || expected_transfer.is_some_and(|position|position!=input.index.min(output.index)) || native_evidence.contains(&identity)
                     {continue;}
                     swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
                 }
@@ -3371,7 +3372,7 @@ pub(crate) fn verify_with_fees(
                     let total = inputs.iter().try_fold(0u64, |n, t| n.checked_add(t.amounts[0]));
                     if swap.user != a.user.to_bytes() || swap.amm_pool != a.pool.to_bytes()
                         || inputs.is_empty() || outputs.len() != 1
-                        || !total.is_some_and(|input| crate::pumpfun_amm::amounts_satisfy(ix, input, outputs[0].amounts[0]))
+                        || !total.is_some_and(|input| crate::pumpfun_amm::amounts_satisfy(ix, input, outputs[0].amounts[0], &instructions[index + 1..end as usize]))
                     { continue; }
                 }
                 // Explicit quote-token curve settlement must satisfy the same
@@ -3397,7 +3398,8 @@ pub(crate) fn verify_with_fees(
                     let outputs: Vec<_> = scoped.iter().filter(|t| t.destination == *accounts[destination].0 && t.mint == swap.output_mint).collect();
                     let Some(input) = inputs.iter().try_fold(0u64, |n,t| n.checked_add(t.amounts[0])) else { continue };
                     if inputs.is_empty() || outputs.len() != 1
-                        || if exact { input != amount || outputs[0].amounts[0] < limit }
+                        || if exact && buy { !crate::pumpfun::exact_quote_budget_satisfies(ix, input, outputs[0].amounts[0], &instructions[index + 1..end as usize]) }
+                            else if exact { input != amount || outputs[0].amounts[0] < limit }
                             else { input > limit || outputs[0].amounts[0] < amount }
                     { continue; }
                 }
