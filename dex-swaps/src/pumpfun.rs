@@ -123,8 +123,19 @@ pub(crate) fn exact_quote_budget_satisfies(
     if length!=18 || d.get(270..288)!=Some(b"buy_exact_quote_in".as_slice()) { return false; }
     let rate=|offset|d.get(offset..offset+8).map(|b|u64::from_le_bytes(b.try_into().unwrap()));
     let (Some(protocol),Some(creator))=(rate(169),rate(217)) else { return false; };
-    let ceil=|bps:u64|(u128::from(quote.amount)*u128::from(bps)+9999)/10000;
-    ceil(protocol)==u128::from(quote.fee) && ceil(creator)==u128::from(quote.creator_fee)
+    let ceil=|net:u128,bps:u64|(net*u128::from(bps)+9999)/10000;
+    let amount=u128::from(quote.amount);
+    // The primary SDK retains fees computed on the initial budget-derived
+    // net when a ceiling-fee deficit then reduces the curve quote by atoms.
+    // Do not recompute those retained fees on the smaller adjusted quote.
+    let initial=u128::from(budget)*10000/(10000+u128::from(protocol)+u128::from(creator));
+    let initial_protocol=ceil(initial,protocol);let initial_creator=ceil(initial,creator);
+    let deficit=(initial+initial_protocol+initial_creator).saturating_sub(u128::from(budget));
+    let budget_profile=initial.checked_sub(deficit)==Some(amount)
+        && initial_protocol==u128::from(quote.fee) && initial_creator==u128::from(quote.creator_fee);
+    let actual_net_profile=ceil(amount,protocol)==u128::from(quote.fee)
+        && ceil(amount,creator)==u128::from(quote.creator_fee);
+    budget_profile || actual_net_profile
 }
 
 fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrade> {
@@ -247,6 +258,39 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, InnerInstruction, InnerInstructions, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
+
+    #[test]
+    fn finalized_curve_exact_spend_keeps_previous_financial_tuples() {
+        let fixtures:&[(&[u8],u32,u32,&str,&str,&str,u64,&str,u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/0.transaction.pb").as_slice(), 19, 20, "J5SkNaYmJCdF9vJCBcVyujqixiaEAPXyFBZbg4LwuDbH", "CN3FYKeQik2wQwY8goDw6oHfagHkqY8MK9ZBjkk9ZABv", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 2009760, "DJyHbwX5u6gHUQLf1fqyjr8reVSwfmgXVbMrE9wwpump", 195742223978),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/1.transaction.pb").as_slice(), 17, 18, "J5SkNaYmJCdF9vJCBcVyujqixiaEAPXyFBZbg4LwuDbH", "2KQKDA9RtgB8wfGMcnGsKMfFY2BkktG2ETMtRPSAzB8C", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 10822028, "DJyHbwX5u6gHUQLf1fqyjr8reVSwfmgXVbMrE9wwpump", 522367153655),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/2.transaction.pb").as_slice(), 21, 22, "CTgr9yQNKuwasAy1WMzYzeCrEzr4ZBt1oZA9yewygVpk", "6KobcKGGX1aTvZyaXvTNcMv9GYt5oLhZnmcBboNwec37", "XPLTrL1ZH3tZJBdFWbbtrNjK9qoqZWfuhQJnXibbdfT", 116251108877, "BBSU4XLUq48jFr2rVV9vLcxfXYoG92oM37qTcuhFpump", 23826345255281),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/3.transaction.pb").as_slice(), 17, 19, "7BMih8fnu4AvAftqeheSnNMDTDmGHvqzyyqpVfJpYtBT", "ANhNhjH47k49GfVsRXWAB7ke9heNwyUNqNjJVo2fNL3g", "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX", 3572776, "6xQARVkkByCExiZmqSK6ritMA9o1E5sG12uca4JLpump", 4495045496687),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/4.transaction.pb").as_slice(), 14, 15, "7BMih8fnu4AvAftqeheSnNMDTDmGHvqzyyqpVfJpYtBT", "4kF9wfK4a4vXjvf5qXNkyiaa5QAS1BcHPNcSmGYwvQRT", "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX", 7826288, "6xQARVkkByCExiZmqSK6ritMA9o1E5sG12uca4JLpump", 8306694919241),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/5.transaction.pb").as_slice(), 20, 21, "CjJYeZZGLpwjpkhSb4yJtGetivAXdidUfV3LvmzrUhiL", "4k1U14CSSLyACLoTRGFRq8NffY6LrnFP5kDTLreKPMzL", "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS", 7764514, "6TGiuQdBEemiDEJ8WoGuXKECmpLh8gvnGQ2qD9kJpump", 12420170604595),
+            (include_bytes!("../fixtures/swap-coverage/pump-curve-exact-spend26/6.transaction.pb").as_slice(), 24, 25, "BeUTqz3gYcVvX45Y4LvQd8qyE1LQBUY7SQUSwLLuNVSZ", "9Wj67iqcSPCuiZqAUsMCeYnYn2XwQa5uzSAQZ8nTqbh", "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX", 8125308, "5BYrGVrzt1o3FVnsSRJoS3KT8TSfzASRFBkjw7qGpump", 4623456534383),
+        ];
+        for &(bytes,source,first,pool,user,input_mint,input,output_mint,output)in fixtures {
+            let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();
+            assert_eq!(rows.len(),1,"source {source}");let row=rows[0];let decode=|s:&str|substreams_solana::base58::decode(s).unwrap();
+            assert_eq!((row.source_transfer_index,row.amm_pool.clone(),row.user.clone(),row.input_mint.clone(),row.input_amount,row.output_mint.clone(),row.output_amount),
+                (Some(first),decode(pool),decode(user),decode(input_mint),input,decode(output_mint),output));
+            let walk:Vec<_>=tx.walk_instructions().collect();let end=walk.iter().enumerate().skip(source as usize+1)
+                .find(|(_,i)|i.is_root() || i.stack_height()<=walk[source as usize].stack_height()).map(|(n,_)|n).unwrap_or(walk.len());
+            assert!(exact_quote_budget_satisfies(&walk[source as usize],input,output,&walk[source as usize+1..end]),"primary retained pre-deficit fee basis source{source}");
+            let native_data=walk[source as usize].data().clone();let event_data=walk[end-1].data().clone();
+            for mode in 0..3 {
+                let mut wrong=tx.clone();let call=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|i|i.data==native_data).unwrap();
+                match mode{0=>call.data[8..16].copy_from_slice(&(input-1).to_le_bytes()),1=>call.data[16..24].copy_from_slice(&(output+1).to_le_bytes()),_=>call.data.extend_from_slice(&[2,2,2])}
+                assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"existing curve source{source} malformed{mode}");
+            }
+            for offset in [177,225] {
+                let mut wrong=tx.clone();let call=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|i|i.data==event_data).unwrap();call.data[offset]^=1;
+                let walk:Vec<_>=wrong.walk_instructions().collect();assert!(!exact_quote_budget_satisfies(&walk[source as usize],input,output,&walk[source as usize+1..end]),"incorrect retained source fee{offset}");
+            }
+        }
+    }
 
     #[test]
     fn finalized_curve_quote_budgets_preserve_existing_financial_tuples() {

@@ -3398,7 +3398,7 @@ pub(crate) fn verify_with_fees(
                     let outputs: Vec<_> = scoped.iter().filter(|t| t.destination == *accounts[destination].0 && t.mint == swap.output_mint).collect();
                     let Some(input) = inputs.iter().try_fold(0u64, |n,t| n.checked_add(t.amounts[0])) else { continue };
                     if inputs.is_empty() || outputs.len() != 1
-                        || if exact && buy { !crate::pumpfun::exact_quote_budget_satisfies(ix, input, outputs[0].amounts[0], &instructions[index + 1..end as usize]) }
+                        || if exact && buy { outputs[0].amounts[0] < limit || input != amount && !crate::pumpfun::exact_quote_budget_satisfies(ix, input, outputs[0].amounts[0], &instructions[index + 1..end as usize]) }
                             else if exact { input != amount || outputs[0].amounts[0] < limit }
                             else { input > limit || outputs[0].amounts[0] < amount }
                     { continue; }
