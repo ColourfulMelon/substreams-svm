@@ -1,0 +1,435 @@
+{
+  "release": "v0.5.2-pluto.25",
+  "deploymentUuid": "0pxsxcbf1djoabao3iwmrbeg",
+  "deploymentCommit": "b42f0cfe6ca5f42e596d895206a975b3e8b4ce5c",
+  "sourceCommit": "04017309809946011813fe5e0f025fd2c67bb038",
+  "packageSha256": "f70f2191af1f5f1cdb02cb7c69dd63d2d7586007004d12f6106b9369093e3431",
+  "oldModuleHash": "1503b8dc02f0a0cfc700718d6ec62f6358322f08",
+  "newModuleHash": "ab73d62ccb7a7451fcfd8cebf618b2b8df561206",
+  "savedOldBlock": 456163418,
+  "savedOldBlockId": "4cKsUcaYNk4b4H3HBw7q6wr6Z5thAEmAvxvVdfhpEPZY",
+  "oldWriterConfirmedStopped": true,
+  "twoStableOldCursorChecks": true,
+  "noOldVersionTailRowsInFourTables": true,
+  "exactOpaqueCursorAndBlockCopied": true,
+  "oldCursorPreserved": true,
+  "historicalFinancialReplay": false,
+  "warmProof": {
+    "label": "warm25",
+    "release": "v0.5.2-pluto.25",
+    "firstSlot": 456166700,
+    "lastSlot": 456166704,
+    "startedAt": "2026-10-12T19:47:04.907062+00:00",
+    "finishedAt": "2026-10-12T20:01:19.748271+00:00",
+    "exitCode": 0,
+    "packageSha256AtLaunch": "f70f2191af1f5f1cdb02cb7c69dd63d2d7586007004d12f6106b9369093e3431",
+    "packageSha256AfterReplay": "f70f2191af1f5f1cdb02cb7c69dd63d2d7586007004d12f6106b9369093e3431",
+    "databaseWrites": false,
+    "finalizedOnly": true,
+    "productionMode": false,
+    "outputBytes": 2002733,
+    "actualBlocks": 5,
+    "tableRows": {
+      "swaps": 666,
+      "swap_coverage_transactions": 17,
+      "swap_coverage": 21,
+      "blocks": 5
+    },
+    "outputSha256": "44f2da537d034bb4ca6c7e1c5f131428e0126ff5c75edd6065bd85c61873e7e0",
+    "parentChainsAndSealedCountersValid": true,
+    "uniqueKeysAndOrdinals": true,
+    "allFinancialRowsVerified": true,
+    "allFourTableVersionsValidated": true
+  },
+  "independentReleaseProof": "https://github.com/ColourfulMelon/substreams-svm/blob/04017309809946011813fe5e0f025fd2c67bb038/dex-swaps/fixtures/swap-coverage/combined25/packaged-release-proof.json",
+  "liveValidation": {
+    "release": "v0.5.2-pluto.25",
+    "checkedAt": "2026-10-12T20:20:55.416Z",
+    "oldModuleHash": "1503b8dc02f0a0cfc700718d6ec62f6358322f08",
+    "newModuleHash": "ab73d62ccb7a7451fcfd8cebf618b2b8df561206",
+    "savedOldBlock": 456163418,
+    "savedOldBlockId": "4cKsUcaYNk4b4H3HBw7q6wr6Z5thAEmAvxvVdfhpEPZY",
+    "newCursor": {
+      "id": "ab73d62ccb7a7451fcfd8cebf618b2b8df561206",
+      "block_num": 456164044,
+      "block_id": "AbAG63LaPVy8KCBAhtA1nFBkTzATRneVo3JKkSVv6q9C"
+    },
+    "firstNewBlock": {
+      "block_num": 456163419,
+      "block_hash": "DtbjoPoD28G8wapQmhsK1g6DJB2fRZMVRUe5fHtwv79T",
+      "parent_slot": 456163418,
+      "parent_hash": "4cKsUcaYNk4b4H3HBw7q6wr6Z5thAEmAvxvVdfhpEPZY",
+      "decoder_version": "v0.5.2-pluto.25",
+      "verified_swaps": 168,
+      "coverage_candidates": 4,
+      "coverage_transactions": 4
+    },
+    "lastNewBlock": {
+      "block_num": 456164044,
+      "block_hash": "AbAG63LaPVy8KCBAhtA1nFBkTzATRneVo3JKkSVv6q9C",
+      "parent_slot": 456164043,
+      "parent_hash": "5tcR2TXcaVzKCqe7GVamX1g1CdBprtcqKuXWxRFV3VNu",
+      "decoder_version": "v0.5.2-pluto.25",
+      "verified_swaps": 129,
+      "coverage_candidates": 9,
+      "coverage_transactions": 7
+    },
+    "verifiedBlocks": 626,
+    "tableRows": {
+      "swaps": 75623,
+      "swap_coverage": 2605,
+      "swap_coverage_transactions": 2103
+    },
+    "protocolCounts": [
+      {
+        "protocol": "alphaq",
+        "n": 409
+      },
+      {
+        "protocol": "aquifer",
+        "n": 203
+      },
+      {
+        "protocol": "archer",
+        "n": 15
+      },
+      {
+        "protocol": "binaryfi",
+        "n": 2
+      },
+      {
+        "protocol": "bisonfi",
+        "n": 2390
+      },
+      {
+        "protocol": "bisonfi_predict",
+        "n": 16
+      },
+      {
+        "protocol": "bonkswap",
+        "n": 4
+      },
+      {
+        "protocol": "byreal",
+        "n": 355
+      },
+      {
+        "protocol": "defituna",
+        "n": 3
+      },
+      {
+        "protocol": "denali",
+        "n": 22
+      },
+      {
+        "protocol": "deriverse",
+        "n": 449
+      },
+      {
+        "protocol": "flux",
+        "n": 66
+      },
+      {
+        "protocol": "fluxbeam",
+        "n": 45
+      },
+      {
+        "protocol": "goonfi_v2",
+        "n": 384
+      },
+      {
+        "protocol": "hadron",
+        "n": 33
+      },
+      {
+        "protocol": "humidifi",
+        "n": 376
+      },
+      {
+        "protocol": "invariant",
+        "n": 3
+      },
+      {
+        "protocol": "jupiter_lend",
+        "n": 115
+      },
+      {
+        "protocol": "jupiter_rfq",
+        "n": 108
+      },
+      {
+        "protocol": "jupiter_v6",
+        "n": 5
+      },
+      {
+        "protocol": "kipseli",
+        "n": 280
+      },
+      {
+        "protocol": "manifest",
+        "n": 371
+      },
+      {
+        "protocol": "mercurial",
+        "n": 1
+      },
+      {
+        "protocol": "meteora_daam",
+        "n": 5157
+      },
+      {
+        "protocol": "meteora_dbc",
+        "n": 590
+      },
+      {
+        "protocol": "meteora_dlmm",
+        "n": 2661
+      },
+      {
+        "protocol": "obsidian",
+        "n": 112
+      },
+      {
+        "protocol": "onedex",
+        "n": 8
+      },
+      {
+        "protocol": "orca_v2",
+        "n": 15
+      },
+      {
+        "protocol": "orca_whirlpool",
+        "n": 1510
+      },
+      {
+        "protocol": "pancakeswap",
+        "n": 382
+      },
+      {
+        "protocol": "poseidon_v2",
+        "n": 363
+      },
+      {
+        "protocol": "pumpfun",
+        "n": 6989
+      },
+      {
+        "protocol": "pumpfun_amm",
+        "n": 45705
+      },
+      {
+        "protocol": "quantum",
+        "n": 69
+      },
+      {
+        "protocol": "quay",
+        "n": 6
+      },
+      {
+        "protocol": "raydium_amm_v4",
+        "n": 720
+      },
+      {
+        "protocol": "raydium_clmm",
+        "n": 3335
+      },
+      {
+        "protocol": "raydium_cpmm",
+        "n": 646
+      },
+      {
+        "protocol": "raydium_launchpad",
+        "n": 213
+      },
+      {
+        "protocol": "riptide",
+        "n": 8
+      },
+      {
+        "protocol": "saber",
+        "n": 1
+      },
+      {
+        "protocol": "saros",
+        "n": 3
+      },
+      {
+        "protocol": "scorch",
+        "n": 182
+      },
+      {
+        "protocol": "solfi_v2",
+        "n": 65
+      },
+      {
+        "protocol": "spl_token_swap",
+        "n": 8
+      },
+      {
+        "protocol": "tesserav",
+        "n": 1099
+      },
+      {
+        "protocol": "triangle",
+        "n": 14
+      },
+      {
+        "protocol": "zerofi",
+        "n": 107
+      }
+    ],
+    "allEightEnumColumnsReady": true,
+    "allFinancialRowsVerified": true,
+    "allTableVersionsValidated": true,
+    "allTableKeysUnique": true,
+    "parentChainsAndSealedCountersValid": true,
+    "oldCursorPreserved": true,
+    "oldVersionTailRows": [
+      {
+        "t": "blocks",
+        "n": 0
+      },
+      {
+        "t": "swap_coverage",
+        "n": 0
+      },
+      {
+        "t": "swap_coverage_transactions",
+        "n": 0
+      },
+      {
+        "t": "swaps",
+        "n": 0
+      }
+    ],
+    "databaseFinancialWrites": false
+  },
+  "firstBlockFinalizedRpc": {
+    "checkedAt": "2026-10-12T20:20:10.559510+00:00",
+    "commitment": "finalized",
+    "slot": 456163419,
+    "blockHash": "DtbjoPoD28G8wapQmhsK1g6DJB2fRZMVRUe5fHtwv79T",
+    "parentSlot": 456163418,
+    "parentHash": "4cKsUcaYNk4b4H3HBw7q6wr6Z5thAEmAvxvVdfhpEPZY",
+    "blockTime": 1791833677,
+    "finalizedRpcResponseSha256": "d6371048f4da1a5bbd2835dc5b584a98cccdd2f66e79990e2711b0bb6d2912dd",
+    "firstBlockMatchesSavedParentAndId": true
+  },
+  "deployment": {
+    "deployment_uuid": "0pxsxcbf1djoabao3iwmrbeg",
+    "status": "finished",
+    "commit": "b42f0cfe6ca5f42e596d895206a975b3e8b4ce5c",
+    "is_currently_deployed": null,
+    "created_at": "2026-10-12T20:14:19.000000Z",
+    "updated_at": "2026-10-12T20:16:26.000000Z",
+    "latestDockerStage": [
+      "stage-2",
+      "14",
+      "14"
+    ],
+    "upstreamDatabaseTestsPassed": true,
+    "upstreamSinkTestsPassed": true,
+    "schemaHelperTestsPassed": true
+  },
+  "production": {
+    "productionStatus": "running:healthy",
+    "flags": {
+      "LIMIT_ORDERS_ENABLED": "true",
+      "CUSTOM_SELL_ORDERS_ENABLED": "false",
+      "CUSTOM_SELL_EXECUTION_ENABLED": "false"
+    }
+  },
+  "finalAppStatuses": [
+    {
+      "uuid": "n9ghhxvpche6ci33oq0xzp9e",
+      "status": "running:healthy",
+      "git_branch": "main",
+      "git_commit_sha": "HEAD",
+      "build_pack": "dockerfile",
+      "dockerfile_location": "/apps/pluto-pricing-orchestrator/Dockerfile",
+      "base_directory": "/",
+      "autoDeploy": true,
+      "serverUuid": "wz5nl9wjjqgbs1d0g97ymvxo"
+    },
+    {
+      "uuid": "i90ejj1hzcern4et3hh9yssj",
+      "status": "running:healthy",
+      "git_branch": "main",
+      "git_commit_sha": "HEAD",
+      "build_pack": "dockercompose",
+      "dockerfile_location": "/Dockerfile",
+      "base_directory": "/apps/pluto-backend",
+      "autoDeploy": true,
+      "serverUuid": "wz5nl9wjjqgbs1d0g97ymvxo"
+    }
+  ],
+  "automaticDeploymentSettingsRestored": true,
+  "allEightNewProtocolsObservedLive": {
+    "saber": 1,
+    "quantum": 69,
+    "binaryfi": 2,
+    "triangle": 14,
+    "archer": 15,
+    "riptide": 8,
+    "hadron": 33,
+    "quay": 6
+  },
+  "streamStatus": [
+    {
+      "timestamp": "2026-10-12T20:16:58.140555622Z",
+      "message": "session initialized with remote endpoint",
+      "max_parallel_workers": 15,
+      "linear_handoff_block": 456163000,
+      "resolved_start_block": 456163419
+    },
+    {
+      "timestamp": "2026-10-12T20:20:50.010547025Z",
+      "message": "postgres sink stats",
+      "last_block": "#456164019 (GFD2EozkteMFExas45M6dE71MFnrtFdjfG8Wk8XoDyg2)",
+      "drift": 2646.010542086,
+      "buffered_rows": 3118,
+      "flushed_rows": 77717,
+      "time_since_last_flush": 4.817606791
+    },
+    {
+      "timestamp": "2026-10-12T20:20:50.010543366Z",
+      "message": "substreams stream stats",
+      "last_block": "#456164043 (5tcR2TXcaVzKCqe7GVamX1g1CdBprtcqKuXWxRFV3VNu)",
+      "drift": 2641.010539926,
+      "data_msg_rate": "4.700 msg/s (625 total)"
+    },
+    {
+      "startupSettings": [
+        "WATCHDOG_STALL_SECONDS=600",
+        "LIVE_DRIFT_RECONNECT=0s",
+        "BATCH_BLOCK_FLUSH_INTERVAL=25"
+      ],
+      "errorCount": 0,
+      "statsKeys": [
+        "data_msg_rate",
+        "drift",
+        "last_block",
+        "live",
+        "logger",
+        "logging.googleapis.com/labels",
+        "message",
+        "progress_block_rate",
+        "progress_last_block",
+        "progress_last_contiguous_block",
+        "progress_running_jobs",
+        "progress_total_processed_blocks",
+        "severity",
+        "timestamp",
+        "undo_msg_rate"
+      ]
+    },
+    {
+      "checkedAt": "2026-10-12T20:20:55.304096+00:00",
+      "chainFinalizedSlot": 456176124,
+      "savedPricingSlot": 456164019,
+      "slotsBehind": 12105
+    }
+  ],
+  "freshnessNote": "Cursor advancing; the pre-existing chain lag remains. Moving output is not a freshness guarantee.",
+  "liveFinancialRewrites": false
+}
