@@ -912,3 +912,29 @@ on every row and preserves all 4298 prior swaps while adding the same fourteen
 original-verified legs. All parent links, sealed counters and operation ordering
 agree. A coordinated rollout remains pending, and complete coverage of all swap
 types is still unproven.
+
+
+## Independently retained next native gaps
+
+Two unmatched DFlow receipts now have original finalized RPC instruction,
+token-balance and exact log-prefix parity plus current program-owned market
+corroboration. Retained originals are under
+`dex-swaps/fixtures/swap-coverage/dflow-native-gaps/`. Current owned market reads
+corroborate identity; they are not historical reserve evidence.
+
+At slot 456009465 HumidiFi executes an eighteen-account call with the existing
+25-byte XOR layout and decoded opcode 48. Its scoped direct SPL transfers
+prove 8974777 wrapped SOL in and 1000030 USDC out. Opcode 48 is not included in
+.19's known 4/15/20 branch; the independent native settlement remains missing.
+
+At slot 456009179 Jupiter Lend AMM executes a 24-account swap_in call, with
+2017780 USDT input and 2015842 USDC output. The input transfer is immediate;
+the output transfer is one level deeper inside liquidity operate. The retained
+program-owned AMM IDL and official Jupiter liquidity IDL at commit
+7960a14a5a760abc41db3ed1395dc5cb56a1f8db pin these roles. Liquidity operate
+has 105 bytes and thirteen accounts, not an inferred 89-byte layout. The
+observed AMM call omits the current IDL's final associated-token-program account;
+compatibility needs bounded shape validation before adding it. This protocol
+is not yet decoded. Prediction-market receipts still need primary layout and
+settlement evidence. None of these newly retained cases is a coverage claim or
+an authorization to price router totals.

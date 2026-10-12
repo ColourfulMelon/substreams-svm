@@ -1,0 +1,56 @@
+{
+  "sourceRepository": "jup-ag/jupiter-lend",
+  "sourceCommit": "7960a14a5a760abc41db3ed1395dc5cb56a1f8db",
+  "liquidityIdl": "target/idl/liquidity.json",
+  "liquidityAddress": "jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC",
+  "operateShape": {
+    "payloadBytes": 105,
+    "accounts": 13,
+    "scopedOutputTransferDepth": 4
+  },
+  "jupiterLendObservedSwap": {
+    "slot": 456009179,
+    "sourceInstruction": 3,
+    "nativeAccounts": 24,
+    "payloadBytes": 25,
+    "inputTransfer": 5,
+    "inputAmount": "2017780",
+    "outputOperate": 7,
+    "outputTransfer": 8,
+    "outputAmount": "2015842",
+    "inputMint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  },
+  "humidiObservedSwap": {
+    "slot": 456009465,
+    "sourceInstruction": 16,
+    "nativeAccounts": 18,
+    "decodedPayloadBytes": 25,
+    "decodedOpcode": 48,
+    "inputTransfer": 18,
+    "inputAmount": "8974777",
+    "outputTransfer": 17,
+    "outputAmount": "1000030",
+    "inputMint": "So11111111111111111111111111111111111111112",
+    "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  },
+  "originalInstructionTokenBalanceAndLogPrefixParity": true,
+  "currentMarketsProgramOwnershipVerified": true,
+  "implementationPending": true,
+  "independentlyVerifiedGlobalCoverage": false,
+  "notEvidenceOfHistoricalReserveState": true,
+  "retainedOriginals": [
+    {
+      "name": "humidi",
+      "signature": "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW",
+      "protobufSha256": "caf4314e17db314f46044f16fe9ccbd0110b7dd2c3861cdab593c41125b0fbff",
+      "originalRpcSha256": "ab7a75fcbbebb1338794e13ec982875bce00e3fc36f47908dc65d3df5640a2a3"
+    },
+    {
+      "name": "jupz",
+      "signature": "3dhNbvRGTyUmJdbZbxhgUs37CWkA5exGg3Ha3GqspD9zNaUstpddYtnMHqx3DcpM1tvQzeWLVsaGGFDym791Ji1T",
+      "protobufSha256": "af5a9c6e2cbc4746c59b01f80eacab07752195e09eeaf44ebfee0dbe5c2f89d9",
+      "originalRpcSha256": "819b78fbbb4359eea8b3b98623bf7020dc8356f23455adaa51b53fd12e86ec7f"
+    }
+  ]
+}
