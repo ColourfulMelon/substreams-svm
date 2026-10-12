@@ -1114,3 +1114,15 @@ quarantined parsed gross event into a verified net receipt: `quarantined_swaps`
 decreases and `corrected_events` increases by one; no other counters change.
 All original RPC financial identities and exact input/net-output tuples agree.
 This replay is read-only; the `.22` live rollout remains pending.
+
+The `.21` Orca padding package was deployed from monorepo commit
+`b0baa99bfe559da9f2121aca4e3173f1e10e1643` on 2026-10-12 at 14:23 UTC.
+The stopped `.20` writer ended at durable slot 456076732 with no rows beyond
+its cursor in any of the four tables. The unchanged cursor was backed up and
+adopted under the new module hash with strict checking. Actual `.21` block
+456076733 points to that exact previous block/hash. Original automatic deployment
+settings were restored; production API and disabled custom orders were preserved.
+A provider shutdown at 14:37 UTC caused an automatic reconnect. The persisted
+post-reconnect proof has 1,522 linked blocks and 207,081 unique valid swaps with
+matching sealed counts and no duplicate rows or broken parent links. Pricing
+freshness remains pending; this is not a claim that catch-up is complete.

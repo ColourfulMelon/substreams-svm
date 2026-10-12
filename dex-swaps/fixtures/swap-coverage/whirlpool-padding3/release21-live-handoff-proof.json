@@ -1,0 +1,107 @@
+{
+  "release": "v0.5.2-pluto.21",
+  "sourceCommit": "e95414dce2dcfdc3be115b945b07b952a4dac6e5",
+  "packageSha256": "fe50efbaff05f09e8868cb30251eab5faed81179658f33ba5dd92bb592b8083b",
+  "oldOutputHash": "9be0cadf1f790f814ff9bbde0ee673ab07cffd32",
+  "newOutputHash": "b39c3e9016678ba7dbec4b4a71d54ba039ea025b",
+  "monorepoMergeCommit": "b0baa99bfe559da9f2121aca4e3173f1e10e1643",
+  "moduleHashMismatchMode": "error",
+  "oldWriterStoppedWithNoRowsBeyondDurableCursor": true,
+  "opaqueCursorBackedUpAndAdoptedUnchanged": true,
+  "originalAutomaticDeploymentSettingsRestored": true,
+  "productionApiRunning": true,
+  "productionCustomOrdersDisabled": true,
+  "firstActualBoundaryAndParentVerified": true,
+  "liveProof": {
+    "oldDurableBlock": 456076732,
+    "cursors": [
+      {
+        "id": "b39c3e9016678ba7dbec4b4a71d54ba039ea025b",
+        "block_num": 456078258
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 456076733,
+        "parent_slot": 456076732,
+        "parent_hash": "DEftjzLsejWNK2PCZg7ybdFoYFiF1997m6sV8i6nZLqW",
+        "block_hash": "46a2CytoS6zucgfNeFBFQBg1cZSW6tGdUdSZ2stmqRRu",
+        "timestamp": "2026-10-12 14:17:18"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 1522,
+        "unique_blocks": 1522,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 456078258,
+        "lag_seconds": 1011
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 207081,
+        "unique_events": 207081,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "humidifi",
+        "rows": 372,
+        "unique_events": 372
+      },
+      {
+        "protocol": "tesserav",
+        "rows": 3809,
+        "unique_events": 3809
+      },
+      {
+        "protocol": "jupiter_lend",
+        "rows": 128,
+        "unique_events": 128
+      }
+    ],
+    "cut": 456078158,
+    "coverage": [
+      {
+        "swaps": 195063,
+        "expected_swaps": 195063,
+        "candidates": 9854,
+        "raw": 7674,
+        "expected_candidates": 9854,
+        "expected_raw": 7674
+      }
+    ]
+  },
+  "readOnlyPreparation": {
+    "status": "completed",
+    "firstRequestedBlock": 456071500,
+    "packageSha256": "fe50efbaff05f09e8868cb30251eab5faed81179658f33ba5dd92bb592b8083b",
+    "receivedBlocks": 2484,
+    "financialRows": 273660,
+    "liveDatabaseWrites": false,
+    "lastBlock": 456073999,
+    "lastBlockHash": "2YYEJWFLPGTghcsuCBFKjBPZSA5wimJyxeMU7x7vUefD",
+    "lastBlockTimestamp": 1791814041,
+    "checkedAt": "2026-10-12T14:20:12.965308+00:00",
+    "lagSeconds": 771.9653151035309,
+    "exitCode": 0
+  },
+  "providerRetry": {
+    "timestamp": "2026-10-12T14:37:21.962366079Z",
+    "code": "Unavailable",
+    "reason": "endpoint is shutting down, please reconnect",
+    "automaticReconnect": true,
+    "persistedContinuityAfterReconnectVerified": true
+  },
+  "liveFreshnessPending": true,
+  "historicalRecoveryPerformed": false,
+  "globalCoverageProven": false,
+  "checkedAt": "2026-10-12T14:43:28.599866+00:00"
+}
