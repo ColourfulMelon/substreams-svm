@@ -229,6 +229,29 @@ payloads and recovers these two legs for 149 across the 65-transaction sample.
 The separate DLMM sample preserves all 140 full payloads. This is bounded replay
 evidence; the global fee registry must be complete and warmed before live use.
 
+## DefiTuna two-hop swaps
+
+The existing FusionAMM 1.1.4 on-chain IDL also defines `two_hop_swap`
+(`c360ed6c44a2dbe6`). Its two pools, three directed mints, explicit vaults and
+three token programs differ from the single-hop layout. The decoder consumes
+its exact Borsh flags and optional transfer-hook/supplemental-tick slices and
+binds exactly three immediate, committed transfers to the declared roles.
+Both output receipts require proven net amounts. Request limits bound the
+actual first debit and last receipt; neither limits nor whole-wallet deltas
+create prices. The intermediate vault transfer supplies the first pool's output
+and the second pool's input, with distinct physical leg identities.
+
+The retained finalized transaction at slot 455838453 independently verifies both
+program-owned pool states and all six affected account balance changes. It
+restores WSOL 13,448,909 → USDC 1,495,460 and USDC 1,495,460 → TUNA 671,227,733.
+These are two pool trades, not one aggregate WSOL/TUNA pool. Core tests reject
+incomplete, duplicated or unauthorized intermediate transfers, invalid layouts,
+failed limits and missing, truncated or rolled-back invocation evidence.
+A diagnostic remains if either declared pool leg is unverified. Exact-output
+bounds additionally use altered fixture arguments; this audit's observed route
+is exact-input, with first direction A→B and second B→A. This staged source has
+not yet been included in the live release.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains

@@ -50,10 +50,11 @@ pub(crate) fn verify_with_fees(
         })
     });
     let successful_invocations = if caught_failure
-        || instructions
-            .iter()
-            .any(|ix| ix.program_id().0 == &token_2022::PROGRAM_ID || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID)
-    {
+        || instructions.iter().any(|ix| {
+            ix.program_id().0 == &token_2022::PROGRAM_ID
+                || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
+                || crate::native_venues::defituna_two_hop(ix).is_some()
+        }) {
         crate::logs::successful_invocations(tx)
     } else {
         HashSet::new()
@@ -450,8 +451,97 @@ pub(crate) fn verify_with_fees(
         damm_receipts.insert(index as u32, (input_position, output_position));
     }
 
+    let mut two_hop_receipts = HashMap::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some((amount, threshold, exact_input)) = crate::native_venues::defituna_two_hop(ix) else {
+            continue;
+        };
+        if !successful_invocations.contains(&(index as u32)) {
+            continue;
+        }
+        let accounts = ix.accounts();
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        let end = instructions
+            .iter()
+            .enumerate()
+            .skip(index + 1)
+            .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
+            .map_or(instructions.len() as u32, |(end, _)| end as u32);
+        let mut legs = Vec::new();
+        for (source, destination, authority, mint, program) in [(8, 9, 14, 2, 5), (10, 11, 0, 3, 6), (12, 13, 1, 4, 7)] {
+            let matched: Vec<_> = transfers
+                .iter()
+                .enumerate()
+                .filter(|(_, t)| {
+                    t.index > index as u32
+                        && t.index < end
+                        && t.depth == depth + 1
+                        && t.source == *accounts[source].0
+                        && t.destination == *accounts[destination].0
+                        && t.authority == *accounts[authority].0
+                        && t.mint == *accounts[mint].0
+                        && instructions[t.index as usize].program_id().0 == accounts[program].0
+                        && successful_invocations.contains(&t.index)
+                })
+                .collect();
+            if matched.len() != 1
+                || mints.mint_for(accounts[source].0).as_ref() != Some(accounts[mint].0)
+                || mints.mint_for(accounts[destination].0).as_ref() != Some(accounts[mint].0)
+                || !legs.is_empty() && matched[0].1.fee_token && !matched[0].1.net_verified
+            {
+                break;
+            }
+            legs.push(matched[0].0);
+        }
+        if legs.len() != 3
+            || transfers[legs[0]].index >= transfers[legs[1]].index
+            || transfers[legs[1]].index >= transfers[legs[2]].index
+            || transfers
+                .iter()
+                .filter(|t| t.index > index as u32 && t.index < end && t.depth == depth + 1)
+                .count()
+                != 3
+        {
+            continue;
+        }
+        let input = &transfers[legs[0]];
+        let output = &transfers[legs[2]];
+        let net = *output.amounts.iter().min().unwrap();
+        if net == 0
+            || input.amounts[0] > if exact_input { amount } else { threshold }
+            || net < if exact_input { threshold } else { amount }
+            || !exact_input && net != amount
+            || transfers[legs[1]].amounts.iter().min() == Some(&0)
+        {
+            continue;
+        }
+        two_hop_receipts.insert(index as u32, legs);
+    }
+
     let mut rejected = Vec::new();
     if expand_native {
+        for (&index, legs) in &two_hop_receipts {
+            let ix = &instructions[index as usize];
+            let accounts = ix.accounts();
+            for hop in 0..2 {
+                let (input, output) = (&transfers[legs[hop]], &transfers[legs[hop + 1]]);
+                swaps.push(pb::Swap {
+                    protocol: pb::Protocol::Defituna as i32,
+                    program_id: ix.program_id().0.clone(),
+                    amm: ix.program_id().0.clone(),
+                    amm_pool: accounts[hop].0.clone(),
+                    user: accounts[14].0.clone(),
+                    stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+                    input_mint: input.mint.clone(),
+                    input_amount: input.amounts[0],
+                    output_mint: output.mint.clone(),
+                    output_amount: *output.amounts.iter().min().unwrap(),
+                    source_index: Some(index),
+                    source_transfer_index: Some(input.index.min(output.index)),
+                    ..Default::default()
+                });
+            }
+        }
         for (index, ix) in instructions.iter().enumerate() {
             let Some(&(input_position, output_position)) = damm_receipts.get(&(index as u32)) else {
                 continue;
@@ -1145,6 +1235,25 @@ pub(crate) fn verify_with_fees(
                             && accounts.iter().any(|account| account.0 == &transfer.destination)
                     })
                     .collect();
+                if let Some(legs) = two_hop_receipts.get(&(index as u32)) {
+                    for hop in 0..2 {
+                        let (input, output) = (&transfers[legs[hop]], &transfers[legs[hop + 1]]);
+                        let identity = (index as u32, input.index, output.index);
+                        if swap.amm_pool == *accounts[hop].0
+                            && swap.user == *accounts[14].0
+                            && swap.input_mint == input.mint
+                            && swap.output_mint == output.mint
+                            && swap.input_amount == input.amounts[0]
+                            && swap.output_amount == *output.amounts.iter().min().unwrap()
+                            && !expected_transfer.is_some_and(|transfer| transfer != input.index.min(output.index))
+                            && !native_evidence.contains(&identity)
+                        {
+                            evidence = Some(identity);
+                            break 'candidate;
+                        }
+                    }
+                    continue;
+                }
                 // Pump's sell instruction debits program-owned lamports
                 // directly, without a System CPI. Only accept its exact pool
                 // balance delta when this is the sole pool-bearing invocation

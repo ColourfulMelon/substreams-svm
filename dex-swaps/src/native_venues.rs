@@ -683,6 +683,54 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     })
 }
 
+// FusionAMM 1.1.4 owner-verified IDL: two pools and three directed
+// mints, with fully consumed optional transfer-hook/tick-array slices.
+pub(crate) fn defituna_two_hop(ix: &InstructionView) -> Option<(u64, u64, bool)> {
+    let data = ix.data();
+    let accounts = ix.accounts();
+    if ix.program_id().0.as_slice() != b58!("fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9")
+        || accounts.len() < 22
+        || data.len() < 60
+        || data[..8] != [195, 96, 237, 108, 68, 162, 219, 230]
+        || data[24..27].iter().any(|flag| *flag > 1)
+        || accounts[0].0 == accounts[1].0
+        || accounts[2].0 == accounts[3].0
+        || accounts[3].0 == accounts[4].0
+        || accounts[5..8]
+            .iter()
+            .any(|program| program.0 != &substreams_solana_idls::spl::token::PROGRAM_ID && program.0 != &substreams_solana_idls::spl::token_2022::PROGRAM_ID)
+        || accounts[21].0.as_slice() != b58!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr")
+    {
+        return None;
+    }
+    let mut remaining = 0;
+    match data[59] {
+        0 if data.len() == 60 => {}
+        1 if data.len() >= 64 => {
+            let count = u32::from_le_bytes(data[60..64].try_into().ok()?) as usize;
+            if count > 5 || data.len() != 64 + 2 * count {
+                return None;
+            }
+            let mut used = [false; 8];
+            for slice in data[64..].chunks_exact(2) {
+                let kind = slice[0] as usize;
+                if !matches!(kind, 2 | 3 | 4 | 6 | 7) || used[kind] {
+                    return None;
+                }
+                used[kind] = true;
+                remaining += slice[1] as usize;
+            }
+        }
+        _ => return None,
+    }
+    if accounts.len() < 22 + remaining {
+        return None;
+    }
+    let amount = u64::from_le_bytes(data[8..16].try_into().ok()?);
+    let threshold = u64::from_le_bytes(data[16..24].try_into().ok()?);
+    (amount > 0).then_some((amount, threshold, data[24] == 1))
+}
+
 pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
     let layout = layout(ix)?;
     Some(ix.accounts().get(layout.pool)?.0.clone())

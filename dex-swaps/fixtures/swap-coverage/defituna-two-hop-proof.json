@@ -1,0 +1,95 @@
+{
+  "signature": "u9EtGB3i7fCZjojUgacquayCBFqqxQ8mgYJEhPKW4prgVs9i661Yg4hEH3RAgWUbZPP1VbYWdBSqjkkjTM5zxzx",
+  "slot": 455838453,
+  "finalized": true,
+  "nativeIndex": 3,
+  "nativeData": "c360ed6c44a2dbe6cd36cd000000000000000000000000000101000000000000000000000000000000000000000000000000000000000000000000010200000006020702",
+  "nativeAccounts": [
+    "7VuKeevbvbQQcxz6N4SNLmuq6PYy4AcGQRDssoqo4t65",
+    "AXB9KoFBT4ZxJgc4bHMYDgSkxjox6JuL3bbLBeL8LdSJ",
+    "So11111111111111111111111111111111111111112",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "TUNAfXDZEdQizTMTh3uEvNvYqJmqFHZbEJt8joP4cyx",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "Eaf6WZmeAovypEDL62v9rtoTgc2LzhmYEpMBZnmMEaxt",
+    "CYuiCBEhHLAYcDbFVtJ1KfgeQaQuN2sV18pNmzcDsbM7",
+    "CjQWTPK84zwBq1PjVXmhmtKqhD9BfnMP7dcUFuN8Ljyd",
+    "24vnFPee7GUQJmEQ4CTQ28hWubGGAZiEoSnGjV9kKEcj",
+    "8zaYHLeHtDJR6K5sY6We1aVJZH2mNYuBRmWdwng5vJct",
+    "7xufffPyiVE6aCR7EXdLKMJ31ADusE1Y8nGEZsLgeZhF",
+    "G9XfJoY81n8A9bZKaJFhJYomRrcvFkuJ22em2g8rZuCh",
+    "9ZDLGfFRzRCmrSLPHcgXicVrbzytDsns1BJehAnVbmyf",
+    "GpxDi99yNJaPSNFnADfDpbcT4xYpDoK2D9cBoFX5AvkX",
+    "BvGq78MYvQPM23YYWkJgijoeJET4WzPpjtdtqZJEY8p3",
+    "AnpPsLMqiXqhhtukmZ2LzrQmgGxGNaEGV7TJzWBy7j61",
+    "DRLot38MytgGiDPftgcJnxgL51E4aRvcWLReHFewp6wL",
+    "A5aXh9sreVBZNdbCi1mACEvGPZLBjomEj2DweWVErtKV",
+    "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    "4AyU4fjeHuxwN7j2QDF6HuGRBGYjnr3zuMvWHcjvfze5",
+    "BSathQ1iMicgEYUUT7zaTmHfnG16LwBNifdXEaxg5mLh",
+    "CqhFdNT62pk42kqBGqdZpXhhZBt8kcnptHA2QJvJgk2B",
+    "BriDR88uJzaQa34PTEs2AzGXu99f1jRaUZAkY7GMA2yu"
+  ],
+  "pools": [
+    {
+      "pool": "7VuKeevbvbQQcxz6N4SNLmuq6PYy4AcGQRDssoqo4t65",
+      "owner": "fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9",
+      "contextSlot": 455852048,
+      "sha256": "d0672275dad4a649e736dbdbc5b21027d80aef1cce759100dc2bcde1c66508f5",
+      "mintA": "So11111111111111111111111111111111111111112",
+      "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "vaultA": "CYuiCBEhHLAYcDbFVtJ1KfgeQaQuN2sV18pNmzcDsbM7",
+      "vaultB": "CjQWTPK84zwBq1PjVXmhmtKqhD9BfnMP7dcUFuN8Ljyd",
+      "fixture": "defituna-two-hop-pool-1.bin"
+    },
+    {
+      "pool": "AXB9KoFBT4ZxJgc4bHMYDgSkxjox6JuL3bbLBeL8LdSJ",
+      "owner": "fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9",
+      "contextSlot": 455852048,
+      "sha256": "6272df584fb24f0ec3ec3b8828688cbc91c5e34764256d22f481b7fac54b99a1",
+      "mintA": "TUNAfXDZEdQizTMTh3uEvNvYqJmqFHZbEJt8joP4cyx",
+      "mintB": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "vaultA": "8zaYHLeHtDJR6K5sY6We1aVJZH2mNYuBRmWdwng5vJct",
+      "vaultB": "24vnFPee7GUQJmEQ4CTQ28hWubGGAZiEoSnGjV9kKEcj",
+      "fixture": "defituna-two-hop-pool-2.bin"
+    }
+  ],
+  "transfers": [
+    {
+      "index": 4,
+      "source": "Eaf6WZmeAovypEDL62v9rtoTgc2LzhmYEpMBZnmMEaxt",
+      "destination": "CYuiCBEhHLAYcDbFVtJ1KfgeQaQuN2sV18pNmzcDsbM7",
+      "authority": "G9XfJoY81n8A9bZKaJFhJYomRrcvFkuJ22em2g8rZuCh",
+      "mint": "So11111111111111111111111111111111111111112",
+      "grossAmount": "13448909",
+      "netAmount": "13448909"
+    },
+    {
+      "index": 5,
+      "source": "CjQWTPK84zwBq1PjVXmhmtKqhD9BfnMP7dcUFuN8Ljyd",
+      "destination": "24vnFPee7GUQJmEQ4CTQ28hWubGGAZiEoSnGjV9kKEcj",
+      "authority": "7VuKeevbvbQQcxz6N4SNLmuq6PYy4AcGQRDssoqo4t65",
+      "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "grossAmount": "1495460",
+      "netAmount": "1495460"
+    },
+    {
+      "index": 6,
+      "source": "8zaYHLeHtDJR6K5sY6We1aVJZH2mNYuBRmWdwng5vJct",
+      "destination": "7xufffPyiVE6aCR7EXdLKMJ31ADusE1Y8nGEZsLgeZhF",
+      "authority": "AXB9KoFBT4ZxJgc4bHMYDgSkxjox6JuL3bbLBeL8LdSJ",
+      "mint": "TUNAfXDZEdQizTMTh3uEvNvYqJmqFHZbEJt8joP4cyx",
+      "grossAmount": "671227733",
+      "netAmount": "671227733"
+    }
+  ],
+  "transactionSha256": "45f8f4d81758c2b71cb02a706bce200db2c85941f58ca67bb4c3a16c9067565c",
+  "idl": {
+    "owner": "fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9",
+    "version": "1.1.4",
+    "sha256": "284fc8b2b6b2b2d2352934366239d79c8df7569c9f75fec2850da51f0ce490a8",
+    "source": "https://github.com/DefiTuna/fusionamm-sdk/tree/683c52d6e9f29b7a696877f798c8bb2bfb439893"
+  }
+}

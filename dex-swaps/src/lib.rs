@@ -483,6 +483,113 @@ mod tests {
     }
 
     #[test]
+    fn defituna_two_hop_preserves_both_pool_legs_and_requires_complete_flows() {
+        let tx =
+            substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/swap-coverage/defituna-two-hop.transaction.pb").to_vec()).unwrap();
+        let decoded = process_transaction(tx.clone()).unwrap();
+        assert_eq!(decoded.swaps.len(), 2);
+        assert!(decoded.rejected_swaps.is_empty());
+        for (hop, (input, output, transfer)) in [(13_448_909, 1_495_460, 4), (1_495_460, 671_227_733, 5)].into_iter().enumerate() {
+            let swap = &decoded.swaps[hop];
+            let accounts = tx.walk_instructions().nth(3).unwrap().accounts();
+            assert_eq!(swap.amm_pool, *accounts[hop].0);
+            assert_eq!(swap.user, *accounts[14].0);
+            assert_eq!((swap.input_amount, swap.output_amount), (input, output));
+            assert_eq!(swap.source_index, Some(3));
+            assert_eq!(swap.source_transfer_index, Some(transfer));
+            assert!(swap.transfer_verified);
+        }
+        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        for hop in 0..2 {
+            assert!(coverage::candidates(&tx, &mints, &decoded.swaps[hop..hop + 1])
+                .iter()
+                .any(|candidate| candidate.source_index == 3 && candidate.reason == "multihop_without_all_verified_pools"));
+        }
+        for mode in 0..15 {
+            let mut altered = tx.clone();
+            let native_data = tx.walk_instructions().nth(3).unwrap().data().to_vec();
+            for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                for ix in &mut group.instructions {
+                    if ix.data == native_data {
+                        match mode {
+                            0 => {
+                                ix.data.pop();
+                            }
+                            1 => ix.data[25] = 2,
+                            2 => ix.data[24] = 2,
+                            3 => ix.data[8..16].copy_from_slice(&13_448_908u64.to_le_bytes()),
+                            4 => ix.data[16..24].copy_from_slice(&671_227_734u64.to_le_bytes()),
+                            5 => ix.accounts[1] = ix.accounts[0],
+                            6 => ix.accounts[11] = ix.accounts[10],
+                            7 => ix.accounts[6] = ix.accounts[21],
+                            8 => ix.data[64] = 0,
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            if mode == 9 {
+                altered.meta.as_mut().unwrap().log_messages.clear();
+            }
+            if mode == 10 {
+                let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                let end = logs
+                    .iter()
+                    .rposition(|log| log == "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 success")
+                    .unwrap();
+                logs.truncate(end);
+            }
+            if mode == 11 {
+                for log in &mut altered.meta.as_mut().unwrap().log_messages {
+                    if log == "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 success" {
+                        *log = "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 failed: custom program error: 1".into();
+                    }
+                }
+            }
+            if mode >= 12 {
+                let keys: Vec<_> = altered.resolved_accounts().iter().map(|key| (*key).clone()).collect();
+                let token_program = substreams_solana_idls::spl::token::PROGRAM_ID;
+                let group = altered
+                    .meta
+                    .as_mut()
+                    .unwrap()
+                    .inner_instructions
+                    .iter_mut()
+                    .find(|group| group.instructions.iter().any(|ix| ix.data == native_data))
+                    .unwrap();
+                let position = group
+                    .instructions
+                    .iter()
+                    .position(|ix| keys[ix.program_id_index as usize].as_slice() == token_program && ix.data.as_slice() == [12, 164, 209, 22, 0, 0, 0, 0, 0, 6])
+                    .unwrap();
+                match mode {
+                    12 => {
+                        group.instructions.remove(position);
+                    }
+                    13 => {
+                        let duplicate = group.instructions[position].clone();
+                        group.instructions.insert(position, duplicate);
+                    }
+                    _ => group.instructions[position].accounts[3] = group.instructions[position].accounts[2],
+                }
+            }
+            assert!(process_transaction(altered).map_or(true, |decoded| decoded.swaps.is_empty()), "mode {mode}");
+        }
+        let mut exact_out = tx;
+        let native_data = exact_out.walk_instructions().nth(3).unwrap().data().to_vec();
+        for group in &mut exact_out.meta.as_mut().unwrap().inner_instructions {
+            for ix in &mut group.instructions {
+                if ix.data == native_data {
+                    ix.data[24] = 0;
+                    ix.data[8..16].copy_from_slice(&671_227_733u64.to_le_bytes());
+                    ix.data[16..24].copy_from_slice(&13_448_909u64.to_le_bytes());
+                }
+            }
+        }
+        assert_eq!(process_transaction(exact_out).unwrap().swaps, decoded.swaps);
+    }
+
+    #[test]
     fn stabble_nested_and_dlmm_receipts_use_each_transfers_owned_fee() {
         let tx =
             substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/token-fees/stabble-dlmm-shared-output.transaction.pb").to_vec())

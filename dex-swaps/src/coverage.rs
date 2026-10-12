@@ -65,6 +65,29 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             None
         };
         let accounts = ix.accounts();
+        let missing_two_hop = crate::native_venues::defituna_two_hop(ix).map(|_| {
+            let mut used = BTreeSet::new();
+            (0..2).any(|hop| {
+                let matched = swaps.iter().find_map(|swap| {
+                    let transfer = swap.source_transfer_index?;
+                    (swap.source_index == Some(index as u32)
+                        && swap.transfer_verified
+                        && swap.input_amount > 0
+                        && swap.output_amount > 0
+                        && &swap.amm_pool == accounts[hop].0
+                        && &swap.input_mint == accounts[2 + hop].0
+                        && &swap.output_mint == accounts[3 + hop].0
+                        && !used.contains(&transfer))
+                    .then_some(transfer)
+                });
+                if let Some(transfer) = matched {
+                    used.insert(transfer);
+                    false
+                } else {
+                    true
+                }
+            })
+        });
         let missing_hop = fixed.map(|fixed| {
             if accounts.len() <= fixed || (accounts.len() - fixed) % 5 != 0 {
                 return true;
@@ -121,7 +144,10 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             }
             mints.mint_for(accounts[destination].0).as_ref() != Some(&current_mint)
         });
-        if missing_hop == Some(false) || missing_hop.is_none() && swaps.iter().any(|swap| swap.source_index == Some(index as u32)) {
+        if missing_hop == Some(false)
+            || missing_two_hop == Some(false)
+            || missing_hop.is_none() && missing_two_hop.is_none() && swaps.iter().any(|swap| swap.source_index == Some(index as u32))
+        {
             continue;
         }
         // Phoenix can fill from already deposited balances without a Token
@@ -131,7 +157,11 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
         let orderbook_swap = crate::openbook::market_index(ix).is_some()
             || program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
                 && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
-        let known_swap = crate::native_venues::layout(ix).is_some() || crate::rfq::layout(ix).is_some() || fixed.is_some() || orderbook_swap;
+        let known_swap = crate::native_venues::defituna_two_hop(ix).is_some()
+            || crate::native_venues::layout(ix).is_some()
+            || crate::rfq::layout(ix).is_some()
+            || fixed.is_some()
+            || orderbook_swap;
         if exchange_mints.len() < 2 && !known_swap {
             continue;
         }
@@ -142,7 +172,7 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
             instruction_tag: ix.data().iter().take(8).copied().collect(),
             mints: exchange_mints.into_iter().collect(),
             transfer_count,
-            reason: if missing_hop == Some(true) {
+            reason: if missing_hop == Some(true) || missing_two_hop == Some(true) {
                 "multihop_without_all_verified_pools"
             } else if orderbook_swap {
                 "orderbook_swap_requires_fill_accounting"
