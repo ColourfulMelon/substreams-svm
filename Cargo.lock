@@ -3118,6 +3118,7 @@ name = "svm-dex"
 version = "0.0.0"
 dependencies = [
  "common",
+ "dex-swaps",
  "num_enum",
  "prost",
  "proto",

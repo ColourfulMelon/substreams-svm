@@ -16,3 +16,6 @@ prost = { workspace = true }
 
 proto = { path = "../proto" }
 common = { path = "../common" }
+
+[dev-dependencies]
+dex-swaps = { path = "../dex-swaps" }

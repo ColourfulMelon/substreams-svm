@@ -206,4 +206,60 @@ mod tests {
         }
         assert_eq!(shapes.len(),4);
     }
+    #[test]
+    fn finalized_damm_and_whirlpool_zero_outputs_never_create_prices() {
+        use base64::Engine;
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage/live-meteora-whirlpool26");
+        let cases = include_str!("../fixtures/swap-coverage/live-meteora-whirlpool26/cases.tsv");
+        let mut counts = [0usize; 2];
+        for line in cases.lines() {
+            let f: Vec<_> = line.split('\t').collect();
+            let source = f[1].parse::<u32>().unwrap();
+            let damm = f[2] == "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG";
+            let event = f[3].parse::<usize>().unwrap();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(dir.join(format!("{}.pb", f[0]))).unwrap()).unwrap();
+            counts[if damm { 0 } else { 1 }] += 1;
+            for fabricated_event in [false, true] {
+                let mut changed = tx.clone();
+                if fabricated_event {
+                    let meta = changed.meta.as_mut().unwrap();
+                    if damm {
+                        let roots = changed.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.len();
+                        let mut position = 0usize;
+                        for root in 0..roots {
+                            position += 1;
+                            if let Some(group) = meta.inner_instructions.iter_mut().find(|g| g.index == root as u32) {
+                                for ix in &mut group.instructions {
+                                    if position == event {
+                                        // Gross output, pool output and recipient net are all
+                                        // fabricated consistently; zero principal CPI still wins.
+                                        for offset in [16 + 76, 16 + 140, 16 + 148] {
+                                            ix.data[offset..offset + 8].copy_from_slice(&1u64.to_le_bytes());
+                                        }
+                                    }
+                                    position += 1;
+                                }
+                            }
+                        }
+                    } else {
+                        let line = &mut meta.log_messages[event];
+                        let mut bytes = base64::engine::general_purpose::STANDARD.decode(line.strip_prefix("Program data: ").unwrap()).unwrap();
+                        for offset in [73, 81] {
+                            bytes[offset..offset + 8].copy_from_slice(&1u64.to_le_bytes());
+                        }
+                        *line = format!("Program data: {}", base64::engine::general_purpose::STANDARD.encode(bytes));
+                    }
+                }
+                let swaps = crate::process_transaction_with_metadata(changed, None, |_, _| None, |_, _| None, |mint, _| {
+                    let raw = std::fs::read(dir.join("fee-mints").join(format!("{}.bin", base58::encode(mint)))).ok()?;
+                    let (schedule, initialized) = crate::token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, &raw)?;
+                    initialized.then(|| schedule.at(1055)).flatten()
+                });
+                assert!(swaps.map_or(true, |tx| tx.swaps.iter().all(|s| s.source_index != Some(source))),
+                    "{} source{source}: zero proceeds must not create a price, fabricated_event={fabricated_event}", f[0]);
+            }
+        }
+        assert_eq!(counts, [19, 10]);
+    }
+
 }

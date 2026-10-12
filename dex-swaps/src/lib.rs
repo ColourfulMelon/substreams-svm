@@ -1,3 +1,10 @@
+mod futarchy;
+mod guacswap;
+mod omnipair;
+mod fraudsworth;
+mod jupiter_perps;
+mod numeraire;
+mod anchor_markets;
 mod quay;
 mod hadron;
 mod riptide;
@@ -280,10 +287,10 @@ pub fn process_transaction_with_metadata(
     for (index, instruction) in instructions.iter().enumerate() {
         swaps.extend(jupiter_v6::decode_instruction(&tx, index, &instructions));
         byreal_state.handle_instruction(&instruction, &token_mints);
-        if let Some(swap) = pumpfun::handle_instruction(&mut pumpfun_pending, &instruction) {
+        if let Some(swap) = pumpfun::handle_instruction(&mut pumpfun_pending, &instruction, index as u32) {
             swaps.push(swap);
         }
-        if let Some(swap) = pumpfun_amm::handle_instruction(&mut pumpfun_amm_pending, &instruction) {
+        if let Some(swap) = pumpfun_amm::handle_instruction(&mut pumpfun_amm_pending, &instruction, index as u32) {
             swaps.push(swap);
         }
         meteora_amm_state.handle_instruction(&instruction, &token_mints);
@@ -353,6 +360,7 @@ pub fn process_transaction_with_metadata(
 
     let rejected_swaps = quality::verify_with_fees(&tx, &token_mints, &mut swaps, true, fee_lookup);
     swaps.extend(manifest::decode_fills(&tx));
+    swaps.extend(cryptoquest::decode_fills(&tx));
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0.as_slice() != phoenix::PROGRAM_ID || !matches!(ix.data().first(), Some(0 | 1 | 2 | 3)) {
             continue;
@@ -949,3 +957,19 @@ mod tests {
         }
     }
 }
+
+mod current_proprietary;
+
+mod gator;
+
+mod peg;
+mod sanctum_infinity;
+
+mod anchor_swap;
+
+mod suffixed_anchor_swaps;
+
+mod raydium_cpmm_fork;
+mod exponent;
+mod janus;
+mod cryptoquest;

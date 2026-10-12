@@ -8,15 +8,26 @@ pub(crate) struct PendingTrade {
     pool: Vec<u8>,
     base_mint: Vec<u8>,
     quote_mint: Vec<u8>,
+    user: Vec<u8>,
+    is_buy: bool,
+    source_index: u32,
+    depth: u32,
+    event_authority: Vec<u8>,
 }
 
-pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instruction: &InstructionView) -> Option<pb::Swap> {
+pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instruction: &InstructionView, source_index: u32) -> Option<pb::Swap> {
+    // Expire the pending event at the end of its native invocation subtree.
+    if pending_trade.as_ref().map_or(false, |trade| instruction.stack_height() <= trade.depth) {
+        *pending_trade = None;
+    }
     let program_id = instruction.program_id().0;
     if program_id != &pumpswap::PROGRAM_ID {
         return None;
     }
 
-    if let Some(trade) = decode_trade_instruction(instruction) {
+    if let Some(mut trade) = decode_trade_instruction(instruction) {
+        trade.source_index = source_index;
+        trade.depth = if instruction.is_root() { 1 } else { instruction.stack_height() };
         *pending_trade = Some(trade);
         return None;
     }
@@ -29,6 +40,15 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
     let trade = pending_trade.take()?;
 
     let is_buy = matches!(event.direction, TradeDirection::Buy);
+    // The stable event prefix contains pool at payload offset 112 and user
+    // at offset 144. Bind both identities and direction to this exact self-CPI.
+    if instruction.stack_height() != trade.depth + 1
+        || instruction.accounts().len() != 1
+        || instruction.accounts()[0].0.as_slice() != trade.event_authority.as_slice()
+        || event.user.as_slice() != trade.user
+        || is_buy != trade.is_buy
+        || instruction.data().get(128..160)? != trade.pool
+    { return None; }
     let (input_amount, output_amount) = if is_buy {
         (event.quote_amount, event.base_amount)
     } else {
@@ -39,6 +59,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
         protocol: pb::Protocol::PumpfunAmm as i32,
         program_id: pumpswap::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
+        source_index: Some(trade.source_index),
         amm: pumpswap::PROGRAM_ID.to_vec(),
         amm_pool: trade.pool,
         user: event.user.to_vec(),
@@ -65,16 +86,36 @@ pub(crate) fn extract_pool(instruction: &InstructionView) -> Option<Vec<u8>> {
     instruction.accounts().get(0).map(|a| a.0.to_vec())
 }
 
-fn is_trade_instruction(instruction: &InstructionView) -> bool {
-    let data = instruction.data();
-    // Finalized legacy sells also carry the same one/two boolean suffixes
-    // already accepted for buys. Only normalize this exact discriminator,
-    // bounded length and valid booleans; accounts and receipts stay typed.
-    let data = if data.starts_with(&pumpswap::instructions::SELL)
+// These bounded suffix profiles are retained in finalized native originals.
+// The primary Anchor ABI consumes the two-u64 trade prefix and, for legacy
+// buys, one OptionBool. It does not consume the remaining caller padding.
+// Keep this parser shared with the final receipt gate so routed candidates
+// cannot bypass rejected lengths or boolean encodings.
+pub(crate) fn unpack_trade_instruction(data: &[u8]) -> Result<pumpswap::instructions::PumpSwapInstruction, substreams_solana_idls::common::ParseError> {
+    let normalized = if data.starts_with(&pumpswap::instructions::SELL)
         && matches!(data.len(), 25 | 26) && data[24..].iter().all(|flag| *flag <= 1)
-    { &data[..24] } else { data.as_slice() };
+        || data.starts_with(&pumpswap::instructions::SELL_V2) && data.len() == 25 && data[24] <= 1
+    { &data[..24] }
+    else if data.starts_with(&pumpswap::instructions::BUY_EXACT_QUOTE_IN)
+        && data.len() == 32 && data[24..] == [0, 0, 0, 0, 0, 0, 0, 1]
+    { &data[..25] }
+    else { data };
+    pumpswap::instructions::unpack(normalized)
+}
+
+pub(crate) fn amounts_satisfy(instruction: &InstructionView, input: u64, gross_output: u64) -> bool {
+    use pumpswap::instructions::PumpSwapInstruction::*;
+    match unpack_trade_instruction(instruction.data()) {
+        Ok(Buy(a) | BuyV2(a)) => input <= a.max_quote_amount_in && gross_output >= a.base_amount_out,
+        Ok(BuyExactQuoteIn(a) | BuyExactQuoteInV2(a)) => input == a.spendable_quote_in && gross_output >= a.min_base_amount_out,
+        Ok(Sell(a) | SellV2(a)) => input == a.base_amount_in && gross_output >= a.min_quote_amount_out,
+        _ => false,
+    }
+}
+
+fn is_trade_instruction(instruction: &InstructionView) -> bool {
     matches!(
-        pumpswap::instructions::unpack(data),
+        unpack_trade_instruction(instruction.data()),
         Ok(pumpswap::instructions::PumpSwapInstruction::Buy(_))
             | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteIn(_))
             | Ok(pumpswap::instructions::PumpSwapInstruction::Sell(_))
@@ -85,14 +126,7 @@ fn is_trade_instruction(instruction: &InstructionView) -> bool {
 }
 
 fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrade> {
-    let data = instruction.data();
-    // Finalized legacy sells also carry the same one/two boolean suffixes
-    // already accepted for buys. Only normalize this exact discriminator,
-    // bounded length and valid booleans; accounts and receipts stay typed.
-    let data = if data.starts_with(&pumpswap::instructions::SELL)
-        && matches!(data.len(), 25 | 26) && data[24..].iter().all(|flag| *flag <= 1)
-    { &data[..24] } else { data.as_slice() };
-    match pumpswap::instructions::unpack(data) {
+    match unpack_trade_instruction(instruction.data()) {
         Ok(pumpswap::instructions::PumpSwapInstruction::Buy(_))
         | Ok(pumpswap::instructions::PumpSwapInstruction::BuyExactQuoteIn(_))
         | Ok(pumpswap::instructions::PumpSwapInstruction::Sell(_))
@@ -110,6 +144,11 @@ fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrad
                 pool: accounts.pool.to_bytes().to_vec(),
                 base_mint: accounts.base_mint.to_bytes().to_vec(),
                 quote_mint: accounts.quote_mint.to_bytes().to_vec(),
+                user: accounts.user.to_bytes().to_vec(),
+                is_buy: !instruction.data().starts_with(&pumpswap::instructions::SELL) && !instruction.data().starts_with(&pumpswap::instructions::SELL_V2),
+                source_index: 0,
+                depth: 0,
+                event_authority: instruction.accounts().get(15).map(|a| a.0.clone()).unwrap_or_default(),
             })
         }
         _ => None,
@@ -122,6 +161,105 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
+
+    #[test]
+    fn finalized_bounded_padding_and_v2_sell_keep_native_arguments() {
+        let fixtures: &[(&[u8], u32, u32, u64, u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pump-live-bounded/0.transaction.pb"), 6, 8, 266439947, 1104296149),
+            (include_bytes!("../fixtures/swap-coverage/pump-live-bounded/1.transaction.pb"), 18, 19, 178497715, 748153),
+        ];
+        for &(bytes, source, first, input, output) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let native_data = tx.walk_instructions().nth(source as usize).unwrap().data().clone();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source)).collect();
+            assert_eq!(swaps.len(), 1);
+            assert_eq!((swaps[0].source_transfer_index, swaps[0].input_amount, swaps[0].output_amount), (Some(first), input, output));
+            for mode in 0..6 {
+                let mut altered = tx.clone();
+                let data = &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                    .flat_map(|g| &mut g.instructions).find(|ix| ix.data == native_data).unwrap().data;
+                match mode {
+                    0 => data[24] = 2,
+                    1 => data.push(0),
+                    2 => data.truncate(23),
+                    3 => data[8] ^= 1,
+                    4 => data[16..24].copy_from_slice(&u64::MAX.to_le_bytes()),
+                    5 => { data[0] ^= 1; },
+                    _ => unreachable!(),
+                }
+                assert!(crate::process_transaction(altered).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(source))),
+                    "bounded native profile mutation {mode}");
+            }
+        }
+    }
+
+    #[test]
+    fn repeated_native_buys_keep_distinct_committed_sources() {
+        let fixtures: &[(&[u8], u32, u32, u64, u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/0.transaction.pb").as_slice(), 13, 15, 100000, 1695196),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/1.transaction.pb").as_slice(), 13, 15, 100000, 1695196),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/2.transaction.pb").as_slice(), 13, 15, 100000, 1695196),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/3.transaction.pb").as_slice(), 13, 15, 100000, 1695196),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/4.transaction.pb").as_slice(), 13, 15, 100000, 1695196),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/5.transaction.pb").as_slice(), 13, 15, 100000, 1695368),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/6.transaction.pb").as_slice(), 13, 15, 100000, 1695368),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/7.transaction.pb").as_slice(), 13, 15, 100000, 1695197),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/8.transaction.pb").as_slice(), 13, 15, 100000, 1695197),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/9.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/10.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/11.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/12.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/13.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/14.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/15.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/16.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/17.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/18.transaction.pb").as_slice(), 13, 15, 100000, 1695066),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/19.transaction.pb").as_slice(), 13, 15, 100000, 1696485),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/20.transaction.pb").as_slice(), 13, 15, 100000, 1696485),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/21.transaction.pb").as_slice(), 13, 15, 100000, 1699510),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/22.transaction.pb").as_slice(), 13, 15, 100000, 1699510),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/23.transaction.pb").as_slice(), 13, 15, 100000, 1701164),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/24.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/25.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/26.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/27.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/28.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+            (include_bytes!("../fixtures/swap-coverage/pumpswap-repeated-live/29.transaction.pb").as_slice(), 13, 15, 100000, 1701140),
+        ];
+        for &(bytes, source, first, input, output) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let buys: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == pb::Protocol::PumpfunAmm as i32).collect();
+            assert_eq!(buys.len(), 2);
+            let restored: Vec<_> = buys.iter().filter(|s| s.source_index == Some(source)).collect();
+            assert_eq!(restored.len(), 1);
+            assert_eq!((restored[0].source_transfer_index, restored[0].input_amount, restored[0].output_amount), (Some(first), input, output));
+            assert!(restored[0].transfer_verified);
+        }
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixtures[0].0.to_vec()).unwrap();
+        // Alter only the second event; it must never be attached to the first
+        // otherwise-identical native buy or accepted with another event's user.
+        for mode in 0..5 {
+            let mut altered = tx.clone();
+            let event = &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                .flat_map(|g| &mut g.instructions).filter(|ix| ix.data.starts_with(&[0xe4,0x45,0xa5,0x2e,0x51,0xcb,0x9a,0x1d])).nth(1).unwrap();
+            match mode {
+                0 => event.stack_height = Some(1),
+                1 => event.accounts[0] ^= 1,
+                2 => event.data[128] ^= 1, // pool
+                3 => event.data[160] ^= 1, // user
+                4 => event.data[8..16].copy_from_slice(&pumpswap::events::SELL_EVENT),
+                _ => unreachable!(),
+            }
+            let mut pending = None;
+            let candidates: Vec<_> = altered.walk_instructions().enumerate()
+                .filter_map(|(index, ix)| handle_instruction(&mut pending, &ix, index as u32)).collect();
+            assert_eq!(candidates.len(), 1, "event source mutation {mode}");
+            assert_eq!(candidates[0].source_index, Some(2));
+        }
+    }
 
     #[test]
     fn finalized_sell_boolean_suffixes_preserve_exact_principal_receipts() {

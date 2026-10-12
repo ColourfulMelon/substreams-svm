@@ -60,6 +60,21 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Riptide, crate::riptide::PROGRAM_ID),
     (Protocol::Hadron, crate::hadron::PROGRAM_ID),
     (Protocol::Quay, crate::quay::PROGRAM_ID),
+    (Protocol::AnchorSwap, crate::anchor_swap::PROGRAM_ID),
+    (Protocol::RaydiumCpmmFork, crate::raydium_cpmm_fork::PROGRAM_ID),
+    (Protocol::Exponent, crate::exponent::PROGRAM_ID),
+    (Protocol::Janus, crate::janus::PROGRAM_ID),
+    (Protocol::Peg, crate::peg::PROGRAM_ID),
+    (Protocol::SanctumInfinity, crate::sanctum_infinity::PROGRAM_ID),
+    (Protocol::Gator, crate::gator::PROGRAM_ID),
+    (Protocol::Ghosty, crate::anchor_markets::GHOSTY),
+    (Protocol::Memefun, crate::anchor_markets::MEMEFUN),
+    (Protocol::JupiterPerps, crate::jupiter_perps::PROGRAM_ID),
+    (Protocol::Numeraire, crate::numeraire::PROGRAM_ID),
+    (Protocol::Futarchy, crate::futarchy::PROGRAM_ID),
+    (Protocol::Guacswap, crate::guacswap::PROGRAM_ID),
+    (Protocol::Omnipair, crate::omnipair::PROGRAM_ID),
+    (Protocol::DrFraudsworth, crate::fraudsworth::PROGRAM_ID),
 ];
 
 pub(crate) struct Layout {
@@ -78,6 +93,15 @@ pub(crate) struct Layout {
 }
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
+    if ix.program_id().0.as_slice()==crate::raydium_cpmm_fork::PROGRAM_ID { return crate::raydium_cpmm_fork::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::janus::PROGRAM_ID { return crate::janus::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::exponent::PROGRAM_ID { return crate::exponent::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::anchor_swap::PROGRAM_ID { return crate::anchor_swap::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::peg::PROGRAM_ID { return crate::peg::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::sanctum_infinity::PROGRAM_ID { return crate::sanctum_infinity::layout(ix); }
+    if ix.program_id().0.as_slice()==crate::gator::PROGRAM_ID { return crate::gator::layout(ix); }
+    if crate::suffixed_anchor_swaps::applies(ix) { return crate::suffixed_anchor_swaps::layout(ix); }
+    if crate::current_proprietary::applies(ix) { return crate::current_proprietary::layout(ix); }
     let program = ix.program_id();
     if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice()].contains(&program.0.as_slice()) {
         return crate::spl_swap_forks::layout(ix);
@@ -90,6 +114,13 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     if protocol == Protocol::Riptide { return crate::riptide::layout(ix); }
     if protocol == Protocol::Hadron { return crate::hadron::layout(ix); }
     if protocol == Protocol::Quay { return crate::quay::layout(ix); }
+    if protocol == Protocol::JupiterPerps { return crate::jupiter_perps::layout(ix); }
+    if protocol == Protocol::Numeraire { return crate::numeraire::layout(ix); }
+    if protocol == Protocol::Futarchy { return crate::futarchy::layout(ix); }
+    if protocol == Protocol::Guacswap { return crate::guacswap::layout(ix); }
+    if protocol == Protocol::Omnipair { return crate::omnipair::layout(ix); }
+    if protocol == Protocol::DrFraudsworth { return crate::fraudsworth::layout(ix); }
+    if [Protocol::Ghosty,Protocol::Memefun].contains(&protocol) { return crate::anchor_markets::layout(ix); }
     let raw = ix.data();
     let mut data = raw.clone();
     // These extended calls preserve the canonical market account prefix.
@@ -1391,7 +1422,16 @@ mod tests {
         assert_eq!(leg.input_mint, b58!("So11111111111111111111111111111111111111112"));
         assert_eq!(leg.output_mint, b58!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"));
         assert!(leg.transfer_verified);
-        assert_eq!(decoded.swaps.len(), 4);
+        // Independent finalized original proof restores the formerly missing
+        // Omnipair fill; all four prior route legs remain intact.
+        let recovered = decoded.swaps.iter().find(|s| s.protocol == Protocol::Omnipair as i32).unwrap();
+        assert_eq!((recovered.source_index, recovered.source_transfer_index), (Some(8), Some(10)));
+        assert_eq!((recovered.input_amount, recovered.output_amount), (10_120_621, 1_753_261_255));
+        assert_eq!(recovered.amm_pool, b58!("FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu"));
+        assert_eq!(recovered.input_mint, b58!("omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta"));
+        assert_eq!(recovered.output_mint, b58!("storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR"));
+        assert!(recovered.transfer_verified);
+        assert_eq!(decoded.swaps.len(), 5);
         assert!(!decoded.coverage_candidates.iter().any(|c| c.source_index == 23));
     }
 

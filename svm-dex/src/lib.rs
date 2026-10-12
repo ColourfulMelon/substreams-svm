@@ -5,7 +5,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.25";
+const DECODER_VERSION: &str = "v0.5.2-pluto.26";
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
@@ -58,6 +58,22 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Riptide => "riptide",
         pb::Protocol::Hadron => "hadron",
         pb::Protocol::Quay => "quay",
+        pb::Protocol::Ghosty => "ghosty",
+        pb::Protocol::Memefun => "memefun",
+        pb::Protocol::Gator => "gator",
+        pb::Protocol::JupiterPerps => "jupiter_perps",
+        pb::Protocol::Numeraire => "numeraire",
+        pb::Protocol::Futarchy => "futarchy",
+        pb::Protocol::Guacswap => "guacswap",
+        pb::Protocol::Omnipair => "omnipair",
+        pb::Protocol::DrFraudsworth => "dr_fraudsworth",
+        pb::Protocol::SanctumInfinity => "sanctum_infinity",
+        pb::Protocol::Peg => "peg",
+        pb::Protocol::AnchorSwap => "anchor_swap",
+        pb::Protocol::RaydiumCpmmFork => "raydium_cpmm_fork",
+        pb::Protocol::Janus => "janus",
+        pb::Protocol::Exponent => "exponent",
+        pb::Protocol::Cryptoquest => "cryptoquest",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",
@@ -514,5 +530,38 @@ mod tests {
             }
         )
         .is_err());
+    }
+
+    #[test]
+    fn finalized_cryptoquest_fills_preserve_runtime_log_database_identity() {
+        use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
+        let originals: &[(&[u8], u64, usize)] = &[
+            (include_bytes!("../../dex-swaps/fixtures/swap-coverage/cryptoquest-live26/5q78v5Ri7c63U9dGgLnH7WEVTZVRinYGPPvtRteQaEekPQefdpNzVzZpEmxCkWPsfPGQMZ8ig5AiJ8Y4m8F9eYpz.pb"), 456163753, 2),
+            (include_bytes!("../../dex-swaps/fixtures/swap-coverage/cryptoquest-live26/nWY5ryPesc9dY7jQn3ZvnpMN1zb4PipXteY6vuCojP3B8Mvck1n65TPRtbjZX9WtGjnt7erdQNxGQBYpwA9iv1H.pb"), 456164118, 1),
+        ];
+        for (wire, slot, count) in originals {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&wire.to_vec()).unwrap();
+            let mut transaction = dex_swaps::process_transaction(tx).unwrap();
+            transaction.source_index = Some(17);
+            let fills: Vec<_> = transaction.swaps.iter().filter(|s| s.protocol == pb::Protocol::Cryptoquest as i32).cloned().collect();
+            assert_eq!(fills.len(), *count);
+            let signature = base58::encode(&transaction.signature);
+            let changes = write_swaps(Clock { number: *slot, id: "retained-finalized-block".into(), timestamp: Some(Default::default()) },
+                pb::Events { transactions: vec![transaction], ..Default::default() }).unwrap();
+            let financial: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swaps").collect();
+            assert_eq!(financial.len(), *count);
+            for fill in fills {
+                assert!(fill.orderbook_fill_verified && fill.source_transfer_index.is_none() && fill.source_event_index.is_none());
+                let log = fill.source_log_index.unwrap();
+                let id = format!("{}:{}:log:{}", signature, fill.source_index.unwrap(), log);
+                let rows: Vec<_> = financial.iter().filter(|row| row.fields.iter().any(|f| f.name == "event_id" && f.value == id)).collect();
+                assert_eq!(rows.len(), 1);
+                let Some(PrimaryKey::CompositePk(key)) = &rows[0].primary_key else { panic!("missing runtime fill key") };
+                assert_eq!(key.keys["instruction_index"], (32768 + log).to_string());
+                assert!(rows[0].fields.iter().any(|f| f.name == "protocol" && f.value == "cryptoquest"));
+                assert!(rows[0].fields.iter().any(|f| f.name == "input_amount" && f.value == fill.input_amount.to_string()));
+                assert!(rows[0].fields.iter().any(|f| f.name == "output_amount" && f.value == fill.output_amount.to_string()));
+            }
+        }
     }
 }

@@ -118,18 +118,35 @@ pub(crate) fn verify_with_fees(
                 || ix.program_id().0 == &crate::saber::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::solfi::v2::PROGRAM_ID && matches!(ix.data().len(), 25 | 153)
                 || crate::jupiter_lend::layout(ix).is_some()
+                || crate::rfq::layout(ix).is_some()
                 || crate::spl_swap_forks::layout(ix).is_some()
                 || crate::proprietary_swaps::layout(ix).is_some()
                 || crate::riptide::layout(ix).is_some()
                 || crate::archer::layout(ix).is_some()
                 || crate::triangle::layout(ix).is_some()
                 || crate::quay::layout(ix).is_some()
+                || crate::anchor_markets::layout(ix).is_some()
+                || crate::omnipair::layout(ix).is_some()
+                || crate::fraudsworth::layout(ix).is_some()
+                || crate::jupiter_perps::layout(ix).is_some()
+                || crate::numeraire::layout(ix).is_some()
+                || crate::futarchy::layout(ix).is_some()
+                || crate::guacswap::layout(ix).is_some()
+                || crate::anchor_swap::layout(ix).is_some()
+                || crate::raydium_cpmm_fork::layout(ix).is_some()
+                || crate::exponent::layout(ix).is_some()
+                || crate::janus::layout(ix).is_some()
+                || crate::peg::layout(ix).is_some()
+                || crate::sanctum_infinity::layout(ix).is_some()
+                || crate::gator::layout(ix).is_some()
+                || crate::suffixed_anchor_swaps::applies(ix)
+                || crate::current_proprietary::applies(ix)
                 || crate::hadron::layout(ix).is_some()
                 || ix.program_id().0 == &substreams_solana_idls::meteora::daam::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || ix.program_id().0 == &pumpfun::PROGRAM_ID && (ix.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
                     || ix.data().starts_with(&pumpfun::instructions::SELL_V3)
-                    || matches!(pumpfun::instructions::unpack(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
+                    || matches!(crate::pumpfun::unpack_trade_instruction(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
                         | pumpfun::instructions::PumpFunInstruction::SellV2(_))))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
                 || ix.program_id().0.as_slice() == substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") && ix.data().first() == Some(&17)
@@ -450,6 +467,84 @@ pub(crate) fn verify_with_fees(
     // A referral may alias either user account. Bind the first two actual
     // transfer instructions, including zero-amount calls, so a referral can
     // never stand in for a zero output or become a second financial swap.
+    // These Anchor venues require exact whole-account conservation in
+    // addition to their two native principal CPIs. A missing balance cannot
+    // turn a transfer label into a verified price.
+    let mut anchor_receipts = HashSet::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some(layout)=crate::native_venues::layout(ix).filter(|l|[pb::Protocol::Ghosty,pb::Protocol::Memefun,pb::Protocol::Omnipair,pb::Protocol::DrFraudsworth].contains(&l.protocol))else{continue;};
+        let depth=if ix.is_root(){1}else{ix.stack_height()};
+        let end=instructions.iter().enumerate().skip(index+1)
+            .find(|(_,child)|child.is_root() || child.stack_height()>0&&child.stack_height()<=depth)
+            .map_or(instructions.len(),|(position,_)|position);
+        let settled=match layout.protocol {
+            pb::Protocol::Omnipair=>crate::omnipair::settlement(tx,index as u32,ix,&instructions[index+1..end],mints,&successful_invocations),
+            pb::Protocol::DrFraudsworth=>crate::fraudsworth::settlement(tx,index as u32,ix,&instructions[index+1..end],mints,&successful_invocations),
+            _=>crate::anchor_markets::settlement(tx,index as u32,ix,&instructions[index+1..end],mints,&successful_invocations),
+        };
+        if !settled{continue;}
+        let accounts=ix.accounts();
+        if layout.users.iter().chain(&layout.vaults).any(|position|{
+            let address=accounts[*position].0;
+            let Some(mint)=mints.mint_for(address)else{return true;};
+                let synchronized = mint.as_slice() == crate::SOL_MINT
+                    && instructions.iter().enumerate().any(|(position, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID && child.data().as_slice() == [17]
+                            && child.accounts().len() == 1 && child.accounts()[0].0 == address
+                            && successful_invocations.contains(&(position as u32))
+                    })
+                    && instructions.iter().enumerate().filter(|(_, child)| {
+                        (child.program_id().0 == &token::PROGRAM_ID || child.program_id().0 == &token_2022::PROGRAM_ID)
+                            && child.accounts().iter().any(|a| a.0 == address)
+                    }).all(|(position, child)| {
+                        if !successful_invocations.contains(&(position as u32)) { return false; }
+                        let data = child.data();
+                        let a = child.accounts();
+                        transfers.iter().any(|t| t.index == position as u32)
+                            || child.program_id().0 == &token::PROGRAM_ID && data.as_slice() == [17] && a.len() == 1
+                            || data.as_slice() == [9] && a.len() >= 3 && a[0].0 == address
+                            || (data.as_slice() == [1] || matches!(data.first(), Some(16 | 18)) && data.len() == 33)
+                                && a.len() >= 2 && a[0].0 == address && a[1].0.as_slice() == crate::SOL_MINT
+                    });
+            if other_token_operations.contains(address)&&!synchronized
+                || !observed_start.contains(address)&&initializations.get(address)!=Some(&1)
+                || !observed_end.contains(address)&&!proven_closed.contains(address){return true;}
+            let incoming:Vec<_>=transfers.iter().filter(|t|t.destination==*address&&t.mint==mint).collect();
+            if incoming.iter().any(|t|!t.net_verified
+                || instructions[t.index as usize].program_id().0.iter().all(|byte|*byte==0)
+                    && !instructions.iter().enumerate().any(|(position,child)|position>t.index as usize
+                        && child.program_id().0==&token::PROGRAM_ID && child.data().as_slice()==[17]
+                        && child.accounts().len()==1 && child.accounts()[0].0==address
+                        && successful_invocations.contains(&(position as u32)))){return true;}
+            let received:i128=incoming.iter().map(|t|i128::from(*t.amounts.iter().min().unwrap())).sum();
+            let spent=debits.get(&(address.clone(),mint.clone())).copied().unwrap_or(0);
+            if deltas.get(address).copied()==Some(received-spent){return false;}
+            // Classic CloseAccount unwraps remaining WSOL, including a positive
+            // pre-existing token balance. It is a lifecycle debit, never swap
+            // proceeds. Bind its owner and prohibit later account accesses.
+            if mint.as_slice()!=crate::SOL_MINT || !proven_closed.contains(address){return true;}
+            let Some(meta)=tx.meta.as_ref()else{return true;};
+            let resolved=tx.resolved_accounts();
+            let Some(position)=resolved.iter().position(|key|*key==address)else{return true;};
+            let Some(before)=meta.pre_token_balances.iter().find(|v|v.account_index as usize==position)else{return true;};
+            let Some(start)=before.ui_token_amount.as_ref().and_then(|v|v.amount.parse::<i128>().ok())else{return true;};
+            let Some((closed,close))=instructions.iter().enumerate().find(|(n,c)|c.program_id().0==&token::PROGRAM_ID
+                && c.data().as_slice()==[9] && c.accounts().len()==3 && c.accounts()[0].0==address
+                && successful_invocations.contains(&(*n as u32)))else{return true;};
+            start+received-spent<0 || before.program_id!=base58::encode(token::PROGRAM_ID)
+                || before.owner!=base58::encode(close.accounts()[2].0)
+                    && !instructions.iter().enumerate().any(|(n,c)|n<closed && c.program_id().0==&token::PROGRAM_ID
+                        && c.data().len()==35 && c.data()[..3]==[6,2,1] && c.data()[3..]==*close.accounts()[2].0
+                        && c.accounts().len()==2 && c.accounts()[0].0==address
+                        && base58::encode(c.accounts()[1].0)==before.owner
+                        && successful_invocations.contains(&(n as u32)))
+                || meta.post_balances.get(position)!=Some(&0)
+                || meta.pre_balances.get(position).is_none_or(|lamports|i128::from(*lamports)<start)
+                || transfers.iter().any(|t|t.index as usize>closed&&(t.source==*address||t.destination==*address))
+                || instructions.iter().enumerate().any(|(n,c)|n>closed&&c.accounts().iter().any(|a|a.0==address))
+        }){continue;}
+        anchor_receipts.insert(index as u32);
+    }
     let mut damm_receipts = HashMap::new();
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0 != &substreams_solana_idls::meteora::daam::PROGRAM_ID || (caught_failure && !successful_invocations.contains(&(index as u32))) {
@@ -803,6 +898,7 @@ pub(crate) fn verify_with_fees(
 
     let mut rejected = Vec::new();
     let mut native_sol_multihop_receipts = HashMap::new();
+    let mut native_pump_multihop_receipts = HashSet::new();
     if expand_native {
         for (&index, &(input_position, output_position)) in &jupiter_lend_receipts {
             let ix = &instructions[index as usize];
@@ -968,6 +1064,9 @@ pub(crate) fn verify_with_fees(
                 && matches!(ix.data().len(), 32 | 34 | 56)
                 && !crate::meteora_dlmm::padded_swap2_settlement(index as u32, ix, &instructions[index + 1..end as usize], &successful_invocations)
             { continue; }
+            if [pb::Protocol::Ghosty,pb::Protocol::Memefun,pb::Protocol::Omnipair,pb::Protocol::DrFraudsworth].contains(&layout.protocol)
+                && !anchor_receipts.contains(&(index as u32))
+            {continue;}
             if ix.program_id().0.as_slice() == crate::quay::PROGRAM_ID
                 && !crate::quay::settlement(tx, index as u32, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
             { continue; }
@@ -1027,33 +1126,34 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
-                // Opcode 48's XOR-encoded tail is 48 ^ 58 ^ 3. The layout
-                // above already pins its observed direction and shape.
-                if layout.protocol == pb::Protocol::Humidifi && ix.data().len() == 25 && ix.data()[24] == (48 ^ 58 ^ 3) {
-                    let calls = &instructions[index + 1..end as usize];
-                    if scoped.len() != 2 || calls.len() != 2
-                        || calls.iter().any(|child| child.data().len() != 9 || child.data()[0] != 3 || child.accounts().len() != 3)
-                        || output.authority != *accounts[1].0
-                        || [0, 2, 3, 4, 5, 10, 11].iter().any(|role| accounts[1].0 == accounts[*role].0)
-                        || input.mint != *accounts[10].0 || output.mint != *accounts[11].0
-                        || instructions[input.index as usize].program_id().0 != accounts[7].0
-                        || instructions[output.index as usize].program_id().0 != accounts[8].0
-                        || !successful_invocations.contains(&(index as u32))
-                        || !successful_invocations.contains(&input.index) || !successful_invocations.contains(&output.index)
-                    { continue; }
+                let receipt=match layout.protocol {
+                    pb::Protocol::Gator=>Some(crate::gator::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::AnchorSwap=>Some(crate::anchor_swap::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::RaydiumCpmmFork=>Some(crate::raydium_cpmm_fork::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::Exponent=>Some(crate::exponent::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::Janus=>Some(crate::janus::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::Peg=>Some(crate::peg::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    pb::Protocol::SanctumInfinity=>Some(crate::sanctum_infinity::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
+                    _=>None,
+                };
+                if receipt.is_some_and(|v|v!=Some((input.amounts[0],*output.amounts.iter().min().unwrap()))){continue;}
+                if [pb::Protocol::Futarchy,pb::Protocol::Guacswap].contains(&layout.protocol) {
+                    let receipt=if layout.protocol==pb::Protocol::Futarchy{crate::futarchy::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)}
+                        else{crate::guacswap::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)};
+                    if receipt!=Some((input.amounts[0],*output.amounts.iter().min().unwrap())){continue;}
                 }
-                if layout.protocol == pb::Protocol::Tesserav && ix.data().first() == Some(&17) {
-                    let a = usize::from(ix.data()[1] == 0);
-                    let b = 1 - a;
-                    if scoped.len() != 2 || output.authority != *accounts[0].0
-                        || [0, 2, 3, 4, 5, 6, 7, 8].iter().any(|role| accounts[1].0 == accounts[*role].0)
-                        || input.mint != *accounts[7 + a].0 || output.mint != *accounts[7 + b].0
-                        || instructions[input.index as usize].program_id().0 != accounts[9 + a].0
-                        || instructions[output.index as usize].program_id().0 != accounts[9 + b].0
-                        || !successful_invocations.contains(&(index as u32))
-                        || !successful_invocations.contains(&input.index) || !successful_invocations.contains(&output.index)
-                    { continue; }
-                }
+                if layout.protocol==pb::Protocol::JupiterPerps
+                    && crate::jupiter_perps::settlement(index as u32,ix,&instructions[index+1..end as usize],&successful_invocations)
+                        !=Some((input.amounts[0],*output.amounts.iter().min().unwrap())) {continue;}
+                if layout.protocol==pb::Protocol::Numeraire
+                    && !crate::numeraire::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations,*output.amounts.iter().min().unwrap()) {continue;}
+
+                if crate::suffixed_anchor_swaps::applies(ix)
+                    && crate::suffixed_anchor_swaps::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
+                        != Some((input.amounts[0], output.amounts[0])) { continue; }
+                if crate::current_proprietary::applies(ix)
+                    && crate::current_proprietary::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
+                        != Some((input.amounts[0], output.amounts[0])) { continue; }
                 if layout.protocol == pb::Protocol::Saber
                     || layout.protocol == pb::Protocol::SolfiV2 && matches!(ix.data().len(), 25 | 153)
                 {
@@ -1335,158 +1435,6 @@ pub(crate) fn verify_with_fees(
             }
         }
 
-        // RFQ fills identify a taker and maker, not reserve-vault liquidity.
-        // Verify their exact user debit/receipt, including native SOL paths.
-        for (index, ix) in instructions.iter().enumerate() {
-            if caught_failure && !successful_invocations.contains(&(index as u32)) {
-                continue;
-            }
-            let Some(fill) = crate::rfq::layout(ix) else { continue };
-            let accounts = ix.accounts();
-            let depth = if ix.is_root() { 1 } else { ix.stack_height() };
-            if depth == 0 {
-                continue;
-            }
-            let end = instructions
-                .iter()
-                .enumerate()
-                .skip(index + 1)
-                .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
-                .map_or(instructions.len(), |(end, _)| end);
-            let scoped: Vec<_> = transfers
-                .iter()
-                .filter(|t| t.index > index as u32 && (t.index as usize) < end && t.depth == depth + 1)
-                .collect();
-            let input_mint = accounts[6].0;
-            let output_mint = accounts[8].0;
-            let source = accounts[fill.input_source].0;
-            let destination = accounts[fill.output_destination].0;
-            let inputs: Vec<_> = scoped.iter().filter(|t| &t.source == source && &t.mint == input_mint).collect();
-            let outputs: Vec<_> = scoped.iter().filter(|t| &t.destination == destination && &t.mint == output_mint).collect();
-            if input_mint == output_mint || inputs.len() != 1 || outputs.len() != 1 {
-                continue;
-            }
-            let (input, output) = (inputs[0], outputs[0]);
-            if input.amounts[0] != fill.input_amount
-                || output.amounts[0] != fill.output_amount
-                || instructions[input.index as usize].program_id().0 != accounts[if fill.input_source == 0 { 10 } else { 7 }].0
-                || instructions[output.index as usize].program_id().0 != accounts[if fill.output_source == 1 { 10 } else { 9 }].0
-                || input.destination.as_slice() != accounts[fill.input_destination].0.as_slice()
-                || output.source.as_slice() != accounts[fill.output_source].0.as_slice()
-                || (!instructions[input.index as usize].program_id().0.iter().all(|byte| *byte == 0) && input.authority.as_slice() != accounts[0].0.as_slice())
-                || (!instructions[output.index as usize].program_id().0.iter().all(|byte| *byte == 0)
-                    && output.authority.as_slice() != accounts[1].0.as_slice())
-                || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified)
-                || [2, 3].iter().any(|position| {
-                    accounts[*position].0.as_slice() != crate::rfq::PROGRAM_ID && mints.mint_for(accounts[*position].0).as_ref() != Some(input_mint)
-                })
-                || [4, 5].iter().any(|position| {
-                    accounts[*position].0.as_slice() != crate::rfq::PROGRAM_ID && mints.mint_for(accounts[*position].0).as_ref() != Some(output_mint)
-                })
-            {
-                continue;
-            }
-            let child_instructions: Vec<_> = instructions[index + 1..end]
-                .iter()
-                .enumerate()
-                .filter(|(offset, child)| {
-                    child.stack_height() == depth + 1 && (!caught_failure || successful_invocations.contains(&((index + 1 + offset) as u32)))
-                })
-                .map(|(offset, child)| (index + 1 + offset, child))
-                .collect();
-            let mut native_proven = true;
-            for transfer in [input, output] {
-                // Native SOL credited to a WSOL account must be synced by the
-                // declared contract, rather than reporting an unsynced balance.
-                let token_destination = if transfer.index == input.index {
-                    fill.input_destination
-                } else {
-                    fill.output_destination
-                };
-                if instructions[transfer.index as usize].program_id().0.iter().all(|byte| *byte == 0)
-                    && !matches!(token_destination, 0 | 1)
-                    && child_instructions
-                        .iter()
-                        .filter(|(position, child)| {
-                            *position > transfer.index as usize
-                                && child.program_id().0 == &token::PROGRAM_ID
-                                && child.data().as_slice() == [17]
-                                && child.accounts().first().is_some_and(|a| a.0 == accounts[token_destination].0)
-                        })
-                        .count()
-                        != 1
-                {
-                    native_proven = false;
-                }
-            }
-            if fill.unwrap_input || fill.unwrap_output {
-                let temporary = accounts[11].0;
-                let initializes: Vec<_> = child_instructions
-                    .iter()
-                    .filter(|(_, child)| {
-                        child.program_id().0 == &token::PROGRAM_ID
-                            && child.data().len() == 33
-                            && child.data()[0] == 18
-                            && child.data()[1..] == accounts[1].0[..]
-                            && child.accounts().len() >= 2
-                            && child.accounts()[0].0 == temporary
-                            && child.accounts()[1].0.as_slice() == crate::SOL_MINT
-                    })
-                    .collect();
-                let closes: Vec<_> = child_instructions
-                    .iter()
-                    .filter(|(_, child)| {
-                        child.program_id().0 == &token::PROGRAM_ID
-                            && child.data().as_slice() == [9]
-                            && child.accounts().len() >= 3
-                            && child.accounts()[0].0 == temporary
-                            && child.accounts()[1].0 == accounts[1].0
-                            && child.accounts()[2].0 == accounts[1].0
-                    })
-                    .collect();
-                let unwraps: Vec<_> = scoped
-                    .iter()
-                    .filter(|t| {
-                        t.destination.as_slice() == temporary.as_slice()
-                            && instructions[t.index as usize].program_id().0 == &token::PROGRAM_ID
-                            && t.mint == crate::SOL_MINT
-                            && t.source.as_slice() == accounts[if fill.unwrap_input { 2 } else { 5 }].0.as_slice()
-                            && t.authority.as_slice() == accounts[if fill.unwrap_input { 0 } else { 1 }].0.as_slice()
-                            && t.amounts[0] == if fill.unwrap_input { fill.input_amount } else { fill.output_amount }
-                    })
-                    .collect();
-                if initializes.len() != 1
-                    || closes.len() != 1
-                    || unwraps.len() != 1
-                    || initializes[0].0 >= unwraps[0].index as usize
-                    || closes[0].0 <= unwraps[0].index as usize
-                    || (fill.unwrap_output && closes[0].0 >= output.index as usize)
-                {
-                    native_proven = false;
-                }
-            }
-            if !native_proven {
-                continue;
-            }
-            swaps.push(pb::Swap {
-                protocol: pb::Protocol::JupiterRfq as i32,
-                program_id: crate::rfq::PROGRAM_ID.to_vec(),
-                amm: crate::rfq::PROGRAM_ID.to_vec(),
-                // Real maker identity; protocol explicitly marks an RFQ source.
-                // Pair columns keep its different asset markets separate.
-                amm_pool: accounts[1].0.clone(),
-                user: accounts[0].0.clone(),
-                input_mint: input_mint.clone(),
-                input_amount: input.amounts[0],
-                output_mint: output_mint.clone(),
-                output_amount: *output.amounts.iter().min().unwrap(),
-                stack_height: depth,
-                source_index: Some(index as u32),
-                source_transfer_index: Some(input.index.min(output.index)),
-                ..Default::default()
-            });
-        }
-
         // Pump's multi-hop instructions expose five accounts per real venue.
         // Intermediate coins travel vault-to-vault, bypassing user ATAs. Preserve
         // every pool leg, including transfers executed by the next curve's CPI.
@@ -1732,6 +1680,9 @@ pub(crate) fn verify_with_fees(
                 {
                     continue;
                 }
+                native_pump_multihop_receipts.insert((index as u32, input.index.min(output.index),
+                    group[2].0.clone(), accounts[user].0.clone(), input_mint.clone(), input.amounts[0],
+                    output_mint.clone(), *output.amounts.iter().min().unwrap()));
                 swaps.push(pb::Swap {
                     protocol: if is_curve { pb::Protocol::Pumpfun } else { pb::Protocol::PumpfunAmm } as i32,
                     program_id: ix.program_id().0.clone(),
@@ -1750,6 +1701,234 @@ pub(crate) fn verify_with_fees(
             }
         }
     }
+    let mut rfq_receipts = HashMap::new();
+        // RFQ fills identify a taker and maker, not reserve-vault liquidity.
+        // Verify their exact user debit/receipt, including native SOL paths.
+        for (index, ix) in instructions.iter().enumerate() {
+            if caught_failure && !successful_invocations.contains(&(index as u32)) {
+                continue;
+            }
+            let Some(fill) = crate::rfq::layout(ix) else { continue };
+            let strict_rfq = ix.program_id().0.as_slice() != crate::rfq::PROGRAM_ID;
+            if strict_rfq && !successful_invocations.contains(&(index as u32)) { continue; }
+            let accounts = ix.accounts();
+            let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+            if depth == 0 {
+                continue;
+            }
+            let end = instructions
+                .iter()
+                .enumerate()
+                .skip(index + 1)
+                .find(|(_, child)| child.is_root() || (child.stack_height() > 0 && child.stack_height() <= depth))
+                .map_or(instructions.len(), |(end, _)| end);
+            let scoped: Vec<_> = transfers
+                .iter()
+                .filter(|t| t.index > index as u32 && (t.index as usize) < end && t.depth == depth + 1)
+                .collect();
+            let input_mint = accounts[fill.input_mint].0;
+            let output_mint = accounts[fill.output_mint].0;
+            let source = accounts[fill.input_source].0;
+            let destination = accounts[fill.output_destination].0;
+            let inputs: Vec<_> = scoped.iter().filter(|t| &t.source == source && &t.mint == input_mint).collect();
+            let outputs: Vec<_> = scoped.iter().filter(|t| &t.destination == destination && &t.mint == output_mint).collect();
+            if input_mint == output_mint || inputs.len() != 1 || outputs.len() != 1 {
+                continue;
+            }
+            let (input, output) = (inputs[0], outputs[0]);
+            if strict_rfq && (!successful_invocations.contains(&input.index) || !successful_invocations.contains(&output.index)
+                || !input.net_verified || !output.net_verified)
+                || input.amounts[0] != fill.input_amount
+                || output.amounts[0] != fill.output_amount
+                || instructions[input.index as usize].program_id().0 != accounts[if fill.input_source == 0 { 10 } else { fill.input_token_program }].0
+                || instructions[output.index as usize].program_id().0 != accounts[if fill.output_source == 1 { 10 } else { fill.output_token_program }].0
+                || input.destination.as_slice() != accounts[fill.input_destination].0.as_slice()
+                || output.source.as_slice() != accounts[fill.output_source].0.as_slice()
+                || (!instructions[input.index as usize].program_id().0.iter().all(|byte| *byte == 0) && input.authority.as_slice() != accounts[0].0.as_slice())
+                || (!instructions[output.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                    && output.authority.as_slice() != accounts[1].0.as_slice())
+                || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified)
+                || fill.input_accounts.iter().any(|position| {
+                    accounts[*position].0 != ix.program_id().0 && mints.mint_for(accounts[*position].0).as_ref() != Some(input_mint)
+                })
+                || fill.output_accounts.iter().any(|position| {
+                    accounts[*position].0 != ix.program_id().0 && mints.mint_for(accounts[*position].0).as_ref() != Some(output_mint)
+                })
+            {
+                continue;
+            }
+            let child_instructions: Vec<_> = instructions[index + 1..end]
+                .iter()
+                .enumerate()
+                .filter(|(offset, child)| {
+                    child.stack_height() == depth + 1 && (!caught_failure || successful_invocations.contains(&((index + 1 + offset) as u32)))
+                })
+                .map(|(offset, child)| (index + 1 + offset, child))
+                .collect();
+            if strict_rfq && fill.input_accounts.iter().chain(&fill.output_accounts).any(|position| {
+                let address = accounts[*position].0;
+                if address == ix.program_id().0 { return false; }
+                let Some(mint) = mints.mint_for(address) else { return true };
+                // A committed classic SyncNative changes WSOL's spendable
+                // balance by explicit System credits already in the ledger.
+                // Admit it only when every token access has a typed, committed
+                // transfer/lifecycle receipt; unknown mint/extension operations
+                // remain blocked, and the complete balance equation still holds.
+                let synchronized = mint.as_slice() == crate::SOL_MINT
+                    && instructions.iter().enumerate().any(|(position, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID && child.data().as_slice() == [17]
+                            && child.accounts().len() == 1 && child.accounts()[0].0 == address
+                            && successful_invocations.contains(&(position as u32))
+                    })
+                    && instructions.iter().enumerate().filter(|(_, child)| {
+                        (child.program_id().0 == &token::PROGRAM_ID || child.program_id().0 == &token_2022::PROGRAM_ID)
+                            && child.accounts().iter().any(|a| a.0 == address)
+                    }).all(|(position, child)| {
+                        if !successful_invocations.contains(&(position as u32)) { return false; }
+                        let data = child.data();
+                        let a = child.accounts();
+                        transfers.iter().any(|t| t.index == position as u32)
+                            || child.program_id().0 == &token::PROGRAM_ID && data.as_slice() == [17] && a.len() == 1
+                            || data.as_slice() == [9] && a.len() >= 3 && a[0].0 == address
+                            || (data.as_slice() == [1] || matches!(data.first(), Some(16 | 18)) && data.len() == 33)
+                                && a.len() >= 2 && a[0].0 == address && a[1].0.as_slice() == crate::SOL_MINT
+                    });
+                if other_token_operations.contains(address) && !synchronized
+                    || !observed_start.contains(address) && initializations.get(address) != Some(&1)
+                    || !observed_end.contains(address) && !proven_closed.contains(address) { return true; }
+                let incoming: Vec<_> = transfers.iter().filter(|t| t.destination == *address && t.mint == mint).collect();
+                if incoming.iter().any(|t| !t.net_verified
+                    || instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                        && !instructions.iter().enumerate().any(|(position, child)| {
+                            position > t.index as usize && child.program_id().0 == &token::PROGRAM_ID
+                                && child.data().as_slice() == [17] && child.accounts().len() == 1
+                                && child.accounts()[0].0 == address && successful_invocations.contains(&(position as u32))
+                        })) { return true; }
+                let received: i128 = incoming.iter().map(|t| i128::from(*t.amounts.iter().min().unwrap())).sum();
+                deltas.get(address).copied() != Some(received - debits.get(&(address.clone(), mint)).copied().unwrap_or(0))
+            }) { continue; }
+            let mut native_proven = true;
+            for transfer in [input, output] {
+                // Native SOL credited to a WSOL account must be synced by the
+                // declared contract, rather than reporting an unsynced balance.
+                let token_destination = if transfer.index == input.index {
+                    fill.input_destination
+                } else {
+                    fill.output_destination
+                };
+                if instructions[transfer.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+                    && !matches!(token_destination, 0 | 1)
+                    && child_instructions
+                        .iter()
+                        .filter(|(position, child)| {
+                            *position > transfer.index as usize
+                                && child.program_id().0 == &token::PROGRAM_ID
+                                && child.data().as_slice() == [17]
+                                && child.accounts().first().is_some_and(|a| a.0 == accounts[token_destination].0)
+                        })
+                        .count()
+                        != 1
+                {
+                    native_proven = false;
+                }
+            }
+            if fill.unwrap_input || fill.unwrap_output {
+                let temporary = accounts[11].0;
+                let initializes: Vec<_> = child_instructions
+                    .iter()
+                    .filter(|(_, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID
+                            && child.data().len() == 33
+                            && child.data()[0] == 18
+                            && child.data()[1..] == accounts[1].0[..]
+                            && child.accounts().len() >= 2
+                            && child.accounts()[0].0 == temporary
+                            && child.accounts()[1].0.as_slice() == crate::SOL_MINT
+                    })
+                    .collect();
+                let closes: Vec<_> = child_instructions
+                    .iter()
+                    .filter(|(_, child)| {
+                        child.program_id().0 == &token::PROGRAM_ID
+                            && child.data().as_slice() == [9]
+                            && child.accounts().len() >= 3
+                            && child.accounts()[0].0 == temporary
+                            && child.accounts()[1].0 == accounts[1].0
+                            && child.accounts()[2].0 == accounts[1].0
+                    })
+                    .collect();
+                let unwraps: Vec<_> = scoped
+                    .iter()
+                    .filter(|t| {
+                        t.destination.as_slice() == temporary.as_slice()
+                            && instructions[t.index as usize].program_id().0 == &token::PROGRAM_ID
+                            && t.mint == crate::SOL_MINT
+                            && t.source.as_slice() == accounts[if fill.unwrap_input { 2 } else { 5 }].0.as_slice()
+                            && t.authority.as_slice() == accounts[if fill.unwrap_input { 0 } else { 1 }].0.as_slice()
+                            && t.amounts[0] == if fill.unwrap_input { fill.input_amount } else { fill.output_amount }
+                    })
+                    .collect();
+                if initializes.len() != 1
+                    || closes.len() != 1
+                    || unwraps.len() != 1
+                    || initializes[0].0 >= unwraps[0].index as usize
+                    || closes[0].0 <= unwraps[0].index as usize
+                    || (fill.unwrap_output && closes[0].0 >= output.index as usize)
+                {
+                    native_proven = false;
+                }
+            }
+            if !native_proven {
+                continue;
+            }
+            let native = pb::Swap {
+                protocol: pb::Protocol::JupiterRfq as i32,
+                program_id: ix.program_id().0.clone(),
+                amm: ix.program_id().0.clone(),
+                // Real maker identity; protocol explicitly marks an RFQ source.
+                // Pair columns keep its different asset markets separate.
+                amm_pool: accounts[1].0.clone(),
+                user: accounts[0].0.clone(),
+                input_mint: input_mint.clone(),
+                input_amount: input.amounts[0],
+                output_mint: output_mint.clone(),
+                output_amount: *output.amounts.iter().min().unwrap(),
+                stack_height: depth,
+                source_index: Some(index as u32),
+                source_transfer_index: Some(input.index.min(output.index)),
+                ..Default::default()
+            };
+            rfq_receipts.insert(index as u32, (native.clone(), input.index, output.index));
+            if expand_native { swaps.push(native); }
+        }
+
+    // An older native curve can be extended in its own committed invocation
+    // immediately before a V3 sell. Bind the rent funding to the full exact
+    // ExtendAccount account/event ABI; an arbitrary earlier transfer is not
+    // an independently proven extension.
+    let mut proven_pump_extensions = HashMap::<usize, (u32, Vec<u8>, Vec<u8>)>::new();
+    for (position, call) in instructions.iter().enumerate() {
+        let a = call.accounts();
+        if call.program_id().0 != &pumpfun::PROGRAM_ID || call.data().as_slice() != [234,102,194,203,150,72,62,229]
+            || a.len() != 5 || a[2].0.iter().any(|n| *n != 0) || a[4].0.as_slice() != pumpfun::PROGRAM_ID
+            || !successful_invocations.contains(&(position as u32)) { continue; }
+        let depth = if call.is_root() { 1 } else { call.stack_height() };
+        let children: Vec<_> = instructions.iter().enumerate().skip(position + 1).take_while(|(_, c)| !c.is_root()
+            && (c.stack_height() == 0 || c.stack_height() > depth)).collect();
+        if children.len() != 2 || children.iter().any(|(i,c)| c.stack_height() != depth + 1
+            || !successful_invocations.contains(&(*i as u32))) { continue; }
+        let (funding_index, funding) = children[0]; let event = children[1].1;
+        let f = funding.accounts(); let e = event.accounts();
+        if funding.program_id().0.iter().any(|n| *n != 0) || funding.data().len() != 12
+            || funding.data()[..4] != [2,0,0,0] || f.len() != 2 || f[0].0 != a[1].0 || f[1].0 != a[0].0
+            || event.program_id().0 != &pumpfun::PROGRAM_ID || e.len() != 1 || e[0].0 != a[3].0
+            || event.data().len() != 104 || event.data()[..16] != [228,69,165,46,81,203,154,29,97,97,215,144,93,146,22,124]
+            || event.data()[16..48] != a[0].0[..] || event.data()[48..80] != a[1].0[..]
+            || u64::from_le_bytes(event.data()[80..88].try_into().unwrap()) >= u64::from_le_bytes(event.data()[88..96].try_into().unwrap())
+        { continue; }
+        proven_pump_extensions.insert(position, (funding_index as u32, a[0].0.clone(), a[1].0.clone()));
+    }
+
     // Legacy/V2 native sells pay the user and all fees directly from owned
     // curve lamports. Build every independently token-proven contribution
     // before checking shared curve/fee credits and each isolated user's net.
@@ -1758,7 +1937,7 @@ pub(crate) fn verify_with_fees(
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0 != &pumpfun::PROGRAM_ID || !successful_invocations.contains(&(index as u32)) { continue; }
         let a = ix.accounts();
-        let (roles, amount, minimum) = match pumpfun::instructions::unpack(ix.data()) {
+        let (roles, amount, minimum) = match crate::pumpfun::unpack_trade_instruction(ix.data()) {
             Ok(pumpfun::instructions::PumpFunInstruction::Sell(args)) if a.len() == 16 && a[7].0.iter().all(|b| *b == 0)
                 && a[11].0.as_slice() == pumpfun::PROGRAM_ID => ([3, 2, 6, 5, 4, 9, 10, 1, 15, 8], args.amount, args.min_sol_output),
             Ok(pumpfun::instructions::PumpFunInstruction::SellV2(args)) if matches!(a.len(), 26 | 27) && a[2].0.as_slice() == crate::SOL_MINT
@@ -1916,6 +2095,19 @@ pub(crate) fn verify_with_fees(
         }
         if let Some(meta) = tx.meta.as_ref() {
             if let Some(payer) = resolved.first() { *native_changes.entry((*payer).clone()).or_default() -= i128::from(meta.fee); }
+            // Source-bound Titanium Pump settlement: exact Atlas gain is swept
+            // to its funding account and wrapped, with an early WSOL close and
+            // exact paired re-creation/restore. Require independent CP proceeds.
+            let titan_settlements: HashMap<_, _> = legacy_native_sells.iter().filter(|sell| sell.independent_proceeds)
+                .filter_map(|sell| crate::pumpfun::titan_native_settlement(tx, &instructions, sell.instruction, sell.net, &successful_invocations)
+                    .map(|settlement| (sell.instruction, settlement))).collect();
+            for (source, settlement) in &titan_settlements {
+                let net = legacy_native_sells.iter().find(|sell| sell.instruction == *source).unwrap().net;
+                *native_changes.entry(settlement.atlas.clone()).or_default() -= i128::from(net);
+                *native_changes.entry(settlement.funder.clone()).or_default() += i128::from(net);
+                *native_changes.entry(settlement.quote.clone()).or_default() -= i128::from(settlement.refund);
+                *native_changes.entry(settlement.funder.clone()).or_default() += i128::from(settlement.refund);
+            }
             let mut proven_volume_refunds = HashSet::new();
             let protected: HashSet<_> = legacy_native_sells.iter().flat_map(|sell| {
                 let a = instructions[sell.instruction].accounts();
@@ -1954,6 +2146,7 @@ pub(crate) fn verify_with_fees(
                 let a = ix.accounts();
                 if (ix.program_id().0 != &token::PROGRAM_ID && ix.program_id().0 != &token_2022::PROGRAM_ID)
                     || ix.data().as_slice() != [9] || a.len() < 3 || !successful_invocations.contains(&(position as u32))
+                    || titan_settlements.values().any(|settlement| settlement.close == position)
                     || closes.get(a[0].0) != Some(&1) || protected.contains(a[0].0)
                     || instructions.iter().enumerate().skip(position + 1).any(|(p, later)| later.accounts().iter().any(|key| key.0 == a[0].0)
                         && !(later.is_root() && later.program_id().0.as_slice() == substreams_solana::b58!("D3og1Asnw7dPBcToJ3gQ2mRup728xsEn6Sg62mTm1enm")
@@ -2076,6 +2269,13 @@ pub(crate) fn verify_with_fees(
                 let user_sells: Vec<_> = legacy_native_sells.iter().filter(|other|
                     instructions[other.instruction].accounts()[other.roles[2]].0 == a[sell.roles[2]].0).collect();
                 if user_sells.len() != 1 && user_sells.iter().any(|other| !other.independent_proceeds) { continue; }
+                if let Some(settlement) = titan_settlements.get(&sell.instruction) {
+                    if !successful_invocations.contains(&(settlement.parent as u32)) || [&settlement.funder, &settlement.quote].iter().any(|address| {
+                        let exact = resolved.iter().position(|key| *key == *address).and_then(|p|
+                            meta.post_balances.get(p).zip(meta.pre_balances.get(p)).map(|(after, before)| i128::from(*after) - i128::from(*before)));
+                        exact != native_changes.get(*address).copied()
+                    }) { continue; }
+                }
                 let verified = [sell.roles[0], sell.roles[2], sell.roles[7], sell.roles[8], sell.roles[9]].into_iter()
                     .chain(sell.cashback.map(|(role, _)| role)).all(|role| {
                     let address = a[role].0;
@@ -2086,10 +2286,51 @@ pub(crate) fn verify_with_fees(
                         && call.accounts().iter().any(|key| key.0 == address)).all(|(position, call)| {
                         if legacy_native_sells.iter().any(|s| s.instruction == position) { return true; }
                         if proven_volume_refunds.contains(&position) { return true; }
+                        if let Ok(pumpfun::instructions::PumpFunInstruction::BuyExactQuoteInV2(args)) = crate::pumpfun::unpack_trade_instruction(call.data()) {
+                            let b = call.accounts();
+                            if b.len() != 27 || b[2].0.iter().all(|n| *n == 0) || b[2].0.as_slice() == crate::SOL_MINT
+                                || b[3].0.as_slice() != token_2022::PROGRAM_ID || b[4].0.as_slice() != token::PROGRAM_ID
+                                || b[24].0.iter().any(|n| *n != 0) || b[26].0.as_slice() != pumpfun::PROGRAM_ID
+                                || !successful_invocations.contains(&(position as u32)) { return false; }
+                            let depth = if call.is_root() { 1 } else { call.stack_height() };
+                            let children: Vec<_> = instructions.iter().enumerate().skip(position + 1).take_while(|(_, c)| !c.is_root()
+                                && (c.stack_height() == 0 || c.stack_height() > depth)).collect();
+                            if children.len() != 7 || children.iter().any(|(i,c)| c.stack_height() != depth + 1
+                                || !successful_invocations.contains(&(*i as u32))) { return false; }
+                            let fee = children[0].1; let fa = fee.accounts();
+                            if fee.program_id().0.as_slice() != crate::pump_curve::FEE_PROGRAM || fa.len() != 2
+                                || fa[0].0 != b[22].0 || fa[1].0.as_slice() != pumpfun::PROGRAM_ID
+                                || fee.data().len() != 57 || fee.data()[..9] != [154,237,138,92,162,2,162,187,1]
+                                || fee.data()[25..57] != b[2].0[..] { return false; }
+                            let event = children[6].1; let ea = event.accounts();
+                            let Ok(Some(trade)) = pumpfun::events::unpack_trade_event_minimal(event.data()) else { return false; };
+                            let Ok(quote) = pumpfun::events::unpack_quote_trade_amount(event.data()) else { return false; };
+                            if event.program_id().0 != &pumpfun::PROGRAM_ID || ea.len() != 1 || ea[0].0 != b[25].0
+                                || !trade.is_buy || trade.user.as_slice() != b[13].0.as_slice() || trade.mint.as_slice() != b[1].0.as_slice()
+                                || quote.mint.as_slice() != b[2].0.as_slice() { return false; }
+                            let receipts: Vec<_> = transfers.iter().filter(|t| t.index > position as u32
+                                && t.index < children[6].0 as u32).collect();
+                            if receipts.len() != 5 || receipts.iter().any(|t| !t.net_verified || t.depth != depth + 1) { return false; }
+                            let base = receipts[0];
+                            if base.index != children[1].0 as u32 || base.source != *b[11].0 || base.destination != *b[14].0
+                                || base.authority != *b[10].0 || base.mint != *b[1].0 || base.amounts[0] != trade.token_amount
+                                || *base.amounts.iter().min().unwrap() < args.min_tokens_out
+                                || instructions[base.index as usize].program_id().0 != b[3].0 { return false; }
+                            let mut total = 0u64;
+                            for (offset, destination) in [17,12,7,9].iter().enumerate() {
+                                let t = receipts[offset + 1];
+                                if t.index != children[offset + 2].0 as u32 || t.source != *b[15].0 || t.destination != *b[*destination].0
+                                    || t.authority != *b[13].0 || t.mint != *b[2].0 || instructions[t.index as usize].program_id().0 != b[4].0
+                                { return false; }
+                                let Some(next) = total.checked_add(t.amounts[0]) else { return false; }; total = next;
+                            }
+                            return total == args.spendable_quote_in;
+                        }
+
                         // Native buys settle through explicit System transfers.
                         // Bind every contribution before permitting a shared
                         // seller's wallet/fee accounts to occur in this call.
-                        if matches!(pumpfun::instructions::unpack(call.data()), Ok(pumpfun::instructions::PumpFunInstruction::BuyExactSolIn(_))) {
+                        if matches!(crate::pumpfun::unpack_trade_instruction(call.data()), Ok(pumpfun::instructions::PumpFunInstruction::BuyExactSolIn(_))) {
                             let b = call.accounts();
                             if b.len() != 18 || b[7].0.iter().any(|n| *n != 0) || b[11].0.as_slice() != pumpfun::PROGRAM_ID
                                 || !successful_invocations.contains(&(position as u32)) { return false; }
@@ -2177,7 +2418,7 @@ pub(crate) fn verify_with_fees(
     let mut v3_buyback_contributions = HashMap::<Vec<u8>, (usize, u64)>::new();
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0 != &pumpfun::PROGRAM_ID || !successful_invocations.contains(&(index as u32)) { continue; }
-        let (buy, amount, limit) = match pumpfun::instructions::unpack(ix.data()) {
+        let (buy, amount, limit) = match crate::pumpfun::unpack_trade_instruction(ix.data()) {
             Ok(pumpfun::instructions::PumpFunInstruction::BuyV3(args)) => (true, args.amount, args.max_sol_cost),
             Ok(pumpfun::instructions::PumpFunInstruction::SellV3(args)) => (false, args.amount, args.min_sol_output),
             _ => continue,
@@ -2189,8 +2430,8 @@ pub(crate) fn verify_with_fees(
             || a[4].0.as_slice() != token::PROGRAM_ID || a[14].0.iter().any(|byte| *byte != 0)
             || a[16].0.as_slice() != pumpfun::PROGRAM_ID || a[5].0 == a[13].0 || a[5].0 == a[8].0 || a[13].0 == a[8].0
             || mints.mint_for(a[6].0).as_ref() != Some(a[1].0) || mints.mint_for(a[9].0).as_ref() != Some(a[1].0)
-            || instructions.iter().filter(|call| call.program_id().0 == &pumpfun::PROGRAM_ID
-                && call.accounts().iter().any(|account| account.0 == a[5].0)).count() != 1
+            || instructions.iter().enumerate().filter(|(position, call)| call.program_id().0 == &pumpfun::PROGRAM_ID
+                && call.accounts().iter().any(|account| account.0 == a[5].0) && !proven_pump_extensions.contains_key(position)).count() != 1
         { continue; }
         let end = instructions.iter().enumerate().skip(index + 1)
             .find(|(_, child)| child.is_root() || child.stack_height() > 0 && child.stack_height() <= depth)
@@ -2240,8 +2481,11 @@ pub(crate) fn verify_with_fees(
         // earlier curve-growth payment; it is funding, never sale proceeds.
         if touches.len() > 1 || buy && touches.len() != 1 { continue; }
         let funding = if let Some(t) = touches.first() {
-            if t.source != *a[8].0 || t.destination != *a[5].0 || t.index <= index as u32 || t.index as usize >= end
-                || t.depth != depth + 1 || !instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
+            let earlier_extension = !buy && proven_pump_extensions.values().any(|(funding, pool, user)|
+                *funding == t.index && t.index < index as u32 && pool == a[5].0 && user == a[8].0);
+            if t.source != *a[8].0 || t.destination != *a[5].0
+                || !earlier_extension && (t.index <= index as u32 || t.index as usize >= end || t.depth != depth + 1)
+                || !instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
                 || !successful_invocations.contains(&t.index) || if buy { t.amounts[0] != user_lamports } else { t.index >= base.index }
             { continue; }
             t.amounts[0]
@@ -2312,6 +2556,19 @@ pub(crate) fn verify_with_fees(
                             && accounts.iter().any(|account| account.0 == &transfer.destination)
                     })
                     .collect();
+                if [crate::rfq::UPDATED_PROGRAM_ID.as_slice(), crate::rfq::V2_PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some((native, input, output)) = rfq_receipts.get(&(index as u32)) else { continue };
+                    let identity = (index as u32, *input, *output);
+                    if swap.amm_pool != native.amm_pool || swap.user != native.user
+                        || swap.input_mint != native.input_mint || swap.output_mint != native.output_mint
+                        || (swap.input_amount, swap.output_amount) != (native.input_amount, native.output_amount)
+                        || expected_transfer.is_some_and(|position| position != input.min(output).to_owned())
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = pb::Protocol::JupiterRfq as i32;
+                    swap.program_id = ix.program_id().0.clone();
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
                 if ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                     && ix.data().starts_with(&substreams_solana_idls::meteora::dlmm::instructions::SWAP2)
                     && ix.data().get(24..28).is_some_and(|count| count == [0, 0, 0, 0])
@@ -2375,6 +2632,84 @@ pub(crate) fn verify_with_fees(
                     { continue; }
                     evidence = Some(identity);
                     break 'candidate;
+                }
+                if [crate::gator::PROGRAM_ID.as_slice(),crate::peg::PROGRAM_ID.as_slice(),crate::sanctum_infinity::PROGRAM_ID.as_slice(),crate::anchor_swap::PROGRAM_ID.as_slice(),crate::raydium_cpmm_fork::PROGRAM_ID.as_slice(),crate::exponent::PROGRAM_ID.as_slice(),crate::janus::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout)=crate::native_venues::layout(ix)else{continue;};
+                    let receipt=match layout.protocol {
+                        pb::Protocol::Gator=>crate::gator::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        pb::Protocol::AnchorSwap=>crate::anchor_swap::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        pb::Protocol::RaydiumCpmmFork=>crate::raydium_cpmm_fork::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        pb::Protocol::Exponent=>crate::exponent::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        pb::Protocol::Janus=>crate::janus::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        pb::Protocol::Peg=>crate::peg::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                        _=>crate::sanctum_infinity::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations),
+                    };
+                    let Some((gross,net))=receipt else{continue;};
+                    let side=if layout.fixed_users{0}else{usize::from(mints.mint_for(accounts[4].0).as_deref()!=ix.data().get(8..40))};
+                    let users=if layout.fixed_users{[layout.users[0],layout.users[1]]}else{[layout.users[side],layout.users[1-side]]};
+                    let vaults=[layout.vaults[side],layout.vaults[1-side]];
+                    let Some(input)=scoped.iter().find(|t|t.source==*accounts[users[0]].0&&t.destination==*accounts[vaults[0]].0)else{continue;};
+                    let Some(output)=scoped.iter().find(|t|t.source==*accounts[vaults[1]].0&&t.destination==*accounts[users[1]].0)else{continue;};
+                    let identity=(index as u32,input.index,output.index);
+                    if scoped.iter().filter(|t| ![pb::Protocol::Exponent,pb::Protocol::Janus].contains(&layout.protocol) || t.depth==depth+1).count()!=if [pb::Protocol::AnchorSwap,pb::Protocol::Exponent,pb::Protocol::Janus].contains(&layout.protocol){3}else{2} || !input.net_verified || !output.net_verified
+                        || (input.amounts[0],*output.amounts.iter().min().unwrap())!=(gross,net)
+                        || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
+                        || swap.input_mint!=input.mint || swap.output_mint!=output.mint
+                        || [users[0],vaults[0]].iter().any(|r|mints.mint_for(accounts[*r].0).as_deref()!=Some(input.mint.as_slice()))
+                        || [users[1],vaults[1]].iter().any(|r|mints.mint_for(accounts[*r].0).as_deref()!=Some(output.mint.as_slice()))
+                        || (swap.input_amount,swap.output_amount)!=(gross,net)
+                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity){continue;}
+                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                }
+                if [crate::anchor_markets::GHOSTY.as_slice(),crate::anchor_markets::MEMEFUN.as_slice(),crate::omnipair::PROGRAM_ID.as_slice(),crate::fraudsworth::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout)=crate::native_venues::layout(ix)else{continue;};
+                    if !anchor_receipts.contains(&(index as u32))
+                        || scoped.len()!=2 {continue;}
+                    let (input,output)=(scoped[0],scoped[1]);let net=*output.amounts.iter().min().unwrap();
+                    let identity=(index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || net==0 || net<layout.minimum_output
+                        || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
+                        || swap.input_mint!=input.mint || swap.output_mint!=output.mint
+                        || (swap.input_amount,swap.output_amount)!=(layout.amount,net)
+                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
+                    {continue;}
+                    swap.protocol=layout.protocol as i32;
+                    evidence=Some(identity);break 'candidate;
+                }
+                if [crate::jupiter_perps::PROGRAM_ID.as_slice(),crate::numeraire::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout)=crate::native_venues::layout(ix)else{continue;};
+                    if scoped.len()!=2 {continue;}
+                    let (input,output)=(scoped[0],scoped[1]);let net=*output.amounts.iter().min().unwrap();
+                    let valid=if layout.protocol==pb::Protocol::JupiterPerps {
+                        crate::jupiter_perps::settlement(index as u32,ix,&instructions[index+1..end as usize],&successful_invocations)==Some((input.amounts[0],net))
+                    }else{crate::numeraire::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations,net)};
+                    let identity=(index as u32,input.index,output.index);
+                    if !valid || !input.net_verified || !output.net_verified || net==0
+                        || input.mint==output.mint || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
+                        || swap.input_mint!=input.mint || swap.output_mint!=output.mint
+                        || [layout.users[0],layout.vaults[0]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(input.mint.as_slice()))
+                        || [layout.users[1],layout.vaults[1]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(output.mint.as_slice()))
+                        || (swap.input_amount,swap.output_amount)!=(input.amounts[0],net)
+                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
+                    {continue;}
+                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                }
+                if [crate::futarchy::PROGRAM_ID.as_slice(),crate::guacswap::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout)=crate::native_venues::layout(ix)else{continue;};
+                    if scoped.len()!=if layout.protocol==pb::Protocol::Guacswap{3}else{2}{continue;}
+                    let (input,output)=(scoped[0],scoped[1]);let net=*output.amounts.iter().min().unwrap();
+                    let receipt=if layout.protocol==pb::Protocol::Futarchy{crate::futarchy::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)}
+                        else{crate::guacswap::settlement(index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)};
+                    let identity=(index as u32,input.index,output.index);
+                    if receipt!=Some((input.amounts[0],net)) || !input.net_verified || !output.net_verified || net==0
+                        || input.mint==output.mint || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
+                        || swap.input_mint!=input.mint || swap.output_mint!=output.mint
+                        || [layout.users[0],layout.vaults[0]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(input.mint.as_slice()))
+                        || [layout.users[1],layout.vaults[1]].iter().any(|role|mints.mint_for(accounts[*role].0).as_deref()!=Some(output.mint.as_slice()))
+                        || (swap.input_amount,swap.output_amount)!=(input.amounts[0],net)
+                        || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
+                    {continue;}
+                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
                 }
                 if ix.program_id().0.as_slice() == crate::quay::PROGRAM_ID {
                     let Some(layout) = crate::quay::layout(ix) else { continue };
@@ -2604,15 +2939,15 @@ pub(crate) fn verify_with_fees(
                 if swap.protocol == pb::Protocol::Pumpfun as i32
                     && swap.output_mint == crate::SOL_MINT
                     && matches!(
-                        pumpfun::instructions::unpack(ix.data()),
+                        crate::pumpfun::unpack_trade_instruction(ix.data()),
                         Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
                             | pumpfun::instructions::PumpFunInstruction::SellV2(_)
                             | pumpfun::instructions::PumpFunInstruction::SellV3(_))
                     )
                 {
-                    if matches!(pumpfun::instructions::unpack(ix.data()),
+                    if matches!(crate::pumpfun::unpack_trade_instruction(ix.data()),
                         Ok(pumpfun::instructions::PumpFunInstruction::Sell(_))) && accounts.len() == 16
-                        || matches!(pumpfun::instructions::unpack(ix.data()),
+                        || matches!(crate::pumpfun::unpack_trade_instruction(ix.data()),
                             Ok(pumpfun::instructions::PumpFunInstruction::SellV2(_))) && matches!(accounts.len(), 26 | 27)
                     {
                         if let Some((input_index, net, pool, user)) = legacy_native_receipts.get(&(index as u32)) {
@@ -2637,7 +2972,9 @@ pub(crate) fn verify_with_fees(
                     }
                     let calls = instructions
                         .iter()
-                        .filter(|call| call.program_id().0 == &swap.amm && call.accounts().iter().any(|a| a.0 == &swap.amm_pool))
+                        .enumerate()
+                        .filter(|(position, call)| call.program_id().0 == &swap.amm && call.accounts().iter().any(|a| a.0 == &swap.amm_pool)
+                            && !proven_pump_extensions.contains_key(position))
                         .count();
                     let explicit_sol = transfers
                         .iter()
@@ -2653,7 +2990,7 @@ pub(crate) fn verify_with_fees(
                     // event's gross quote alone cannot verify this variant.
                     if calls == 1
                         && matches!(
-                            pumpfun::instructions::unpack(ix.data()),
+                            crate::pumpfun::unpack_trade_instruction(ix.data()),
                             Ok(pumpfun::instructions::PumpFunInstruction::SellV3(_))
                         )
                     {
@@ -2683,7 +3020,9 @@ pub(crate) fn verify_with_fees(
                                 if touches.len() != 1 { return None; }
                                 let t = touches[0];
                                 if accounts.len() != 17 || t.source != swap.user || t.destination != swap.amm_pool
-                                    || t.index <= index as u32 || t.index >= end || t.depth != depth + 1
+                                    || !(t.index > index as u32 && t.index < end && t.depth == depth + 1
+                                        || proven_pump_extensions.values().any(|(funding, pool, user)| *funding == t.index && t.index < index as u32
+                                            && pool == &swap.amm_pool && user == &swap.user))
                                     || !instructions[t.index as usize].program_id().0.iter().all(|byte| *byte == 0)
                                     || !successful_invocations.contains(&(index as u32)) || !successful_invocations.contains(&t.index)
                                 { return None; }
@@ -2870,6 +3209,55 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
+                if [substreams_solana::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp").as_slice(),
+                    substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH").as_slice(),
+                    substreams_solana::b58!("goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE").as_slice(),
+                    substreams_solana::b58!("DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD").as_slice()].contains(&ix.program_id().0.as_slice())
+                    && crate::native_venues::layout(ix).is_none(){continue;}
+                if [substreams_solana::b58!("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C").as_slice(),
+                    substreams_solana::b58!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN").as_slice()].contains(&ix.program_id().0.as_slice())
+                    && crate::native_venues::layout(ix).is_none()
+                { continue; }
+                if crate::suffixed_anchor_swaps::applies(ix) {
+                    let Some(layout) = crate::suffixed_anchor_swaps::layout(ix) else { continue };
+                    let Some((input_amount, gross_output)) = crate::suffixed_anchor_swaps::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations) else { continue };
+                    let Some(input) = scoped.iter().find(|t| t.source == *accounts[layout.users[0]].0 && layout.vaults.iter().any(|v| t.destination == *accounts[*v].0)) else { continue };
+                    let Some(output) = scoped.iter().find(|t| layout.vaults.iter().any(|v| t.source == *accounts[*v].0) && t.destination == *accounts[layout.users[1]].0) else { continue };
+                    let net = *output.amounts.iter().min().unwrap();
+                    let identity = (index as u32, input.index, output.index);
+                    if scoped.len() != 2 || !input.net_verified || !output.net_verified || net == 0 || net < layout.minimum_output
+                        || input.amounts[0] != input_amount || output.amounts[0] != gross_output
+                        || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || (swap.input_amount, swap.output_amount) != (input_amount, net)
+                        || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32;
+                    swap.program_id = ix.program_id().0.clone();
+                    swap.amm = ix.program_id().0.clone();
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
+                if crate::current_proprietary::applies(ix) {
+                    let Some(layout) = crate::current_proprietary::layout(ix) else { continue };
+                    let Some((input_amount, gross_output)) = crate::current_proprietary::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations) else { continue };
+                    let Some(input) = scoped.iter().find(|t| t.source == *accounts[layout.users[0]].0 && t.destination == *accounts[layout.vaults[0]].0) else { continue };
+                    let Some(output) = scoped.iter().find(|t| t.source == *accounts[layout.vaults[1]].0 && t.destination == *accounts[layout.users[1]].0) else { continue };
+                    let net = *output.amounts.iter().min().unwrap();
+                    let identity = (index as u32, input.index, output.index);
+                    if scoped.len() != 2 || !input.net_verified || !output.net_verified || net == 0 || net < layout.minimum_output
+                        || input.amounts[0] != input_amount || output.amounts[0] != gross_output
+                        || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || (swap.input_amount, swap.output_amount) != (input_amount, net)
+                        || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32;
+                    swap.program_id = ix.program_id().0.clone();
+                    swap.amm = ix.program_id().0.clone();
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
                 // A routed candidate cannot turn an unsupported SolFi call
                 // into a trade through generic amount matching below.
                 if ix.program_id().0.as_slice() == substreams_solana_idls::solfi::v2::PROGRAM_ID
@@ -2958,6 +3346,61 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
+                // Use the same bounded native argument parser as PumpSwap
+                // event decoding. This also guards Jupiter-derived candidates;
+                // an event or exact amount coincidence cannot bypass a malformed
+                // native payload or the caller's exact input/minimum constraint.
+                // The existing bounded multi-hop builder independently proves
+                // each physical intermediate leg. Single-trade account/argument
+                // layouts cannot describe those declared five-account groups.
+                let proven_pump_multihop = expected_transfer.is_some_and(|position|
+                    native_pump_multihop_receipts.contains(&(index as u32, position,
+                        swap.amm_pool.clone(), swap.user.clone(), swap.input_mint.clone(), swap.input_amount,
+                        swap.output_mint.clone(), swap.output_amount)));
+                if ix.program_id().0 == &pumpswap::PROGRAM_ID && !proven_pump_multihop {
+                    let Ok(a) = pumpswap::accounts::TradeTokenAccounts::try_from(ix) else { continue };
+                    let (source, destination) = if swap.input_mint == a.quote_mint.to_bytes()
+                        && swap.output_mint == a.base_mint.to_bytes() {
+                        (a.user_quote_token_account.to_bytes().to_vec(), a.user_base_token_account.to_bytes().to_vec())
+                    } else if swap.input_mint == a.base_mint.to_bytes()
+                        && swap.output_mint == a.quote_mint.to_bytes() {
+                        (a.user_base_token_account.to_bytes().to_vec(), a.user_quote_token_account.to_bytes().to_vec())
+                    } else { continue };
+                    let inputs: Vec<_> = scoped.iter().filter(|t| t.source == source && t.mint == swap.input_mint).collect();
+                    let outputs: Vec<_> = scoped.iter().filter(|t| t.destination == destination && t.mint == swap.output_mint).collect();
+                    let total = inputs.iter().try_fold(0u64, |n, t| n.checked_add(t.amounts[0]));
+                    if swap.user != a.user.to_bytes() || swap.amm_pool != a.pool.to_bytes()
+                        || inputs.is_empty() || outputs.len() != 1
+                        || !total.is_some_and(|input| crate::pumpfun_amm::amounts_satisfy(ix, input, outputs[0].amounts[0]))
+                    { continue; }
+                }
+                // Explicit quote-token curve settlement must satisfy the same
+                // native argument and typed role contract, including candidates
+                // originating from a Jupiter route rather than the native event.
+                if ix.program_id().0 == &pumpfun::PROGRAM_ID && !proven_pump_multihop
+                    && swap.input_mint != crate::SOL_MINT && swap.output_mint != crate::SOL_MINT {
+                    use pumpfun::instructions::PumpFunInstruction::*;
+                    let (base, quote, pool, user, source, destination, buy, exact, amount, limit) = match crate::pumpfun::unpack_trade_instruction(ix.data()) {
+                        Ok(BuyV2(a)) => (1,2,10,13,15,14,true,false,a.amount,a.max_sol_cost),
+                        Ok(BuyExactQuoteInV2(a)) => (1,2,10,13,15,14,true,true,a.spendable_quote_in,a.min_tokens_out),
+                        Ok(SellV2(a)) => (1,2,10,13,14,15,false,true,a.amount,a.min_sol_output),
+                        Ok(BuyV3(a)) => (1,2,5,8,10,9,true,false,a.amount,a.max_sol_cost),
+                        Ok(BuyExactQuoteInV3(a)) => (1,2,5,8,10,9,true,true,a.spendable_quote_in,a.min_tokens_out),
+                        Ok(SellV3(a)) => (1,2,5,8,9,10,false,true,a.amount,a.min_sol_output),
+                        _ => continue,
+                    };
+                    if accounts.len() <= destination.max(source).max(user).max(pool)
+                        || swap.user != *accounts[user].0 || swap.amm_pool != *accounts[pool].0
+                        || swap.input_mint != *accounts[if buy { quote } else { base }].0
+                        || swap.output_mint != *accounts[if buy { base } else { quote }].0 { continue; }
+                    let inputs: Vec<_> = scoped.iter().filter(|t| t.source == *accounts[source].0 && t.mint == swap.input_mint).collect();
+                    let outputs: Vec<_> = scoped.iter().filter(|t| t.destination == *accounts[destination].0 && t.mint == swap.output_mint).collect();
+                    let Some(input) = inputs.iter().try_fold(0u64, |n,t| n.checked_add(t.amounts[0])) else { continue };
+                    if inputs.is_empty() || outputs.len() != 1
+                        || if exact { input != amount || outputs[0].amounts[0] < limit }
+                            else { input > limit || outputs[0].amounts[0] < amount }
+                    { continue; }
+                }
                 // Dynamic AMM v1 logs report vault-share conversions, which can
                 // differ from the transferred atoms. Its explicit user accounts
                 // let us use exact CPI flows instead of rounding the event.
@@ -2977,7 +3420,7 @@ pub(crate) fn verify_with_fees(
                     })
                 } else if swap.protocol == pb::Protocol::Pumpfun as i32 {
                     use pumpfun::instructions::PumpFunInstruction::*;
-                    let (base, quote) = match pumpfun::instructions::unpack(ix.data()) {
+                    let (base, quote) = match crate::pumpfun::unpack_trade_instruction(ix.data()) {
                         Ok(Buy(_) | BuyExactSolIn(_) | Sell(_)) => (5, 6),
                         Ok(BuyV2(_) | BuyExactQuoteInV2(_) | SellV2(_)) => (14, 15),
                         Ok(BuyV3(_) | BuyExactQuoteInV3(_) | SellV3(_)) => (9, 10),
@@ -3188,7 +3631,7 @@ mod tests {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
             let call = tx.walk_instructions().nth(source as usize).unwrap();
             let a = call.accounts();
-            let legacy = matches!(pumpfun::instructions::unpack(call.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)));
+            let legacy = matches!(crate::pumpfun::unpack_trade_instruction(call.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)));
             let pool = tx.resolved_accounts().iter().position(|key| *key == a[if legacy { 3 } else { 10 }].0).unwrap();
             let call_data = call.data().clone();
             for mode in 0..6 {
@@ -3214,7 +3657,7 @@ mod tests {
                     }
                 }
                 let mut pending = None;
-                let mut swaps: Vec<_> = altered.walk_instructions().filter_map(|ix| crate::pumpfun::handle_instruction(&mut pending, &ix)).collect();
+                let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
                 let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true, |_, _| None);
                 let actual: Vec<_> = swaps.iter().filter(|s| s.source_index == Some(source)).collect();
@@ -3272,7 +3715,7 @@ mod tests {
                     }
                 }
                 let mut pending = None;
-                let mut swaps: Vec<_> = altered.walk_instructions().filter_map(|ix| crate::pumpfun::handle_instruction(&mut pending, &ix)).collect();
+                let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
                 let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true, |_, _| None);
                 let pump: Vec<_> = swaps.iter().filter(|s| s.protocol == pb::Protocol::Pumpfun as i32).collect();
@@ -3302,7 +3745,7 @@ mod tests {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
             assert_eq!(crate::pump_curve::fee_returns(&tx).len(), expected.len(), "fee return runtime binding");
             let calls: Vec<_> = tx.walk_instructions().enumerate().filter(|(_, ix)| ix.program_id().0 == &pumpfun::PROGRAM_ID
-                && matches!(pumpfun::instructions::unpack(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)))).map(|(i, _)| i as u32).collect();
+                && matches!(crate::pumpfun::unpack_trade_instruction(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)))).map(|(i, _)| i as u32).collect();
             assert_eq!(calls.len(), expected.len());
             for mode in 0..12 {
                 let mut altered = tx.clone();
@@ -3370,7 +3813,7 @@ mod tests {
                     logs[i] = "Log truncated".into();
                 }
                 let mut pending = None;
-                let mut swaps: Vec<_> = altered.walk_instructions().filter_map(|ix| crate::pumpfun::handle_instruction(&mut pending, &ix)).collect();
+                let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
                 let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true,
                     |_, _| (mode != 11).then_some(crate::token_fees::TransferFee { basis_points: 0, maximum_fee: 0 }));
@@ -4122,7 +4565,7 @@ mod tests {
             .walk_instructions()
             .find(|ix| {
                 matches!(
-                    pumpfun::instructions::unpack(ix.data()),
+                    crate::pumpfun::unpack_trade_instruction(ix.data()),
                     Ok(pumpfun::instructions::PumpFunInstruction::SellV3(_))
                 )
             })
