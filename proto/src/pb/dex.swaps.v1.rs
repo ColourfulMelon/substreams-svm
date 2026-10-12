@@ -175,6 +175,7 @@ pub enum Protocol {
     OpenbookV2 = 51,
     Mercurial = 52,
     Oasis = 53,
+    JupiterLend = 54,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -237,6 +238,7 @@ impl Protocol {
             Protocol::OpenbookV2 => "PROTOCOL_OPENBOOK_V2",
             Protocol::Mercurial => "PROTOCOL_MERCURIAL",
             Protocol::Oasis => "PROTOCOL_OASIS",
+            Protocol::JupiterLend => "PROTOCOL_JUPITER_LEND",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -296,6 +298,7 @@ impl Protocol {
             "PROTOCOL_OPENBOOK_V2" => Some(Self::OpenbookV2),
             "PROTOCOL_MERCURIAL" => Some(Self::Mercurial),
             "PROTOCOL_OASIS" => Some(Self::Oasis),
+            "PROTOCOL_JUPITER_LEND" => Some(Self::JupiterLend),
             _ => None,
         }
     }

@@ -984,3 +984,41 @@ gate and passes with it. All 163 core tests pass. Across 18 overlapping finalize
 corpora, all 2,803 prior financial occurrences remain unchanged with no added
 rows. This source correction is not yet a packaged or deployed release. See
 `dex-swaps/fixtures/swap-coverage/dflow-native-gaps/humidi48-standalone-parity-proof.json`.
+
+### Jupiter Lend AMM normalized settlement (tested source, not deployed)
+
+The new protocol ID 54 (`jupiter_lend`) preserves all existing protocol IDs.
+Its program and liquidity identities are corroborated by Jupiter's official
+program-address documentation and the retained owned Anchor/official liquidity
+IDLs. The observed 24-account `swap_in` has one direct checked user debit and
+an output checked transfer nested inside the outgoing liquidity `operate`.
+Both directions bind the signer, DEX, reserve, rate model, vaults, positions,
+mints, token programs and optional recipient roles. All contributing invocations
+and ancestors must commit. Only zero-supply direct borrow settlement is emitted;
+claim, supply-changing, ATA-creation and additional nested shapes remain pending.
+
+The incoming internal borrow repayment is below the user's physical token debit
+in every recent original (difference 1–430 atoms). The price uses the full actual
+user debit and verified recipient receipt, rather than the internal book amount
+or the router receipt. Token-2022 requires the existing independent net-receipt
+proof; no new finalized Token-2022 Jupiter Lend positive is claimed.
+
+All 164 core tests pass. Three original cases cover both directions, with 46
+invalid settlement mutations per case, standalone classic-only invocations and
+synthetic exact-output, current-25-account and optional-account shapes. Those
+synthetic cases do not establish finalized coverage of those instruction types.
+Across 19 overlapping corpora all 2,908 prior full financial occurrences remain
+unchanged. There are 65 added occurrences of 64 distinct Jupiter Lend legs;
+each added financial tuple matches independently fetched finalized RPC native
+instructions, balances and log prefixes. Their current DEX account ownership is
+verified separately; this is not evidence of historical reserves.
+
+The recent retained sample contains 60 originals (33/27 in the two directions),
+plus four originals recovered from older corpora. A separate recent program RPC
+sample found 59 successful `swap_in` calls with 24 accounts (43/16 directions),
+without an exact-output or 25-account positive. Supported swap discriminators
+with unsupported shapes now retain original transaction bytes even with only
+one immediate mint. See `dex-swaps/fixtures/swap-coverage/jupiter-lend/` for the
+64 original pairs, owner reads and full financial parity proof. Package replay,
+all-seven frozen metadata hash checks, protocol-54 readiness/migration and a
+coordinated cursor transition are still required before deployment.

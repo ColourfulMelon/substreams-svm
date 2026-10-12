@@ -3,6 +3,7 @@ mod byreal;
 mod coverage;
 mod darklake;
 mod dumpfun;
+mod jupiter_lend;
 mod jupiter_v4;
 mod jupiter_v6;
 mod logs;

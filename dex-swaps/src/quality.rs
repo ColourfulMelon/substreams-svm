@@ -67,6 +67,7 @@ pub(crate) fn verify_with_fees(
                 || ix.program_id().0 == &substreams_solana_idls::spl::token_swap::PROGRAM_ID
                 || ix.program_id().0 == &crate::mercurial::PROGRAM_ID
                 || ix.program_id().0 == &crate::oasis::PROGRAM_ID
+                || crate::jupiter_lend::layout(ix).is_some()
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || ix.program_id().0 == &pumpfun::PROGRAM_ID && (ix.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
                     || ix.data().starts_with(&pumpfun::instructions::SELL_V3)
@@ -514,6 +515,88 @@ pub(crate) fn verify_with_fees(
         mercurial_receipts.insert(index as u32, (input_position, output_position));
     }
 
+    let mut jupiter_lend_receipts = HashMap::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        let Some(swap) = crate::jupiter_lend::layout(ix) else { continue };
+        if !successful_invocations.contains(&(index as u32)) { continue; }
+        let a = ix.accounts();
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        let end = instructions.iter().enumerate().skip(index + 1)
+            .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
+            .map_or(instructions.len(), |(end, _)| end);
+        let calls = &instructions[index + 1..end];
+        // Proven direct settlement: pre-operate, user debit, incoming operate,
+        // outgoing operate, and its one nested vault debit. Supply-changing,
+        // claim, ATA-creation and additional nested variants stay diagnostic.
+        if calls.len() != 5 || calls.iter().enumerate().any(|(offset, child)| {
+            child.stack_height() != depth + if offset == 4 { 2 } else { 1 }
+                || !successful_invocations.contains(&((index + 1 + offset) as u32))
+        }) { continue; }
+        let scoped: Vec<_> = transfers.iter().enumerate().filter(|(_, t)| t.index > index as u32 && t.index < end as u32).collect();
+        if scoped.len() != 2 { continue; }
+        let (input_position, input) = scoped[0];
+        let (output_position, output) = scoped[1];
+        let (incoming, outgoing) = (swap.input_token, swap.output_token);
+        let net_input = *input.amounts.iter().min().unwrap();
+        let net_output = *output.amounts.iter().min().unwrap();
+        if input.index != index as u32 + 2 || output.index != index as u32 + 5
+            || input.source != *a[2 + incoming].0 || input.destination != *a[13 + incoming].0 || input.authority != *a[0].0
+            || output.source != *a[13 + outgoing].0 || output.destination != *a[swap.destination].0 || output.authority != *a[19].0
+            || input.mint != *a[7 + incoming].0 || output.mint != *a[7 + outgoing].0
+            || !input.net_verified || !output.net_verified || net_input == 0 || net_output == 0
+            || [(input.source.as_slice(), input.mint.as_slice()), (input.destination.as_slice(), input.mint.as_slice()),
+                (output.source.as_slice(), output.mint.as_slice()), (output.destination.as_slice(), output.mint.as_slice())]
+                .iter().any(|(account, mint)| mints.mint_for(account).as_deref() != Some(*mint))
+            || calls[1].program_id().0 != a[21 + incoming].0 || calls[4].program_id().0 != a[21 + outgoing].0
+            || [1, 4].iter().any(|offset| calls[*offset].data().len() != 10 || calls[*offset].data()[0] != 12 || calls[*offset].accounts().len() != 4)
+            || swap.exact_input && (input.amounts[0] != swap.amount || net_output < swap.threshold)
+            || !swap.exact_input && (net_output != swap.amount || input.amounts[0] > swap.threshold)
+        { continue; }
+        let pre = &calls[0];
+        let p = pre.accounts();
+        if pre.program_id().0.as_slice() != crate::jupiter_lend::LIQUIDITY_PROGRAM
+            || pre.data().len() != 40 || !pre.data().starts_with(&crate::jupiter_lend::PRE_OPERATE)
+            || pre.data()[8..40] != *a[7 + incoming].0 || p.len() != 7
+        { continue; }
+        let mut valid = true;
+        for (slot, role) in [1, 19, 15 + incoming, 17 + incoming, 13 + incoming, 9 + incoming, 21 + incoming].iter().enumerate() {
+            let expected = if [2, 3].contains(&slot) && a[*role].0.as_slice() == crate::jupiter_lend::PROGRAM_ID {
+                crate::jupiter_lend::LIQUIDITY_PROGRAM.as_slice()
+            } else { a[*role].0.as_slice() };
+            if p[slot].0.as_slice() != expected { valid = false; }
+        }
+        for (offset, side) in [(2, incoming), (3, outgoing)] {
+            let operate = &calls[offset];
+            let o = operate.accounts();
+            let data = operate.data();
+            if operate.program_id().0.as_slice() != crate::jupiter_lend::LIQUIDITY_PROGRAM
+                || data.len() != 105 || !data.starts_with(&crate::jupiter_lend::OPERATE) || o.len() != 13
+                || data[8..24] != [0; 16]
+                || data[40..72] != *a[swap.recipient].0 || data[72..104] != *a[swap.recipient].0
+                || data[104] != 1
+            { valid = false; break; }
+            // Observed incoming repayments are slightly below the vault's
+            // receipt. Price the full physical user debit, including that
+            // difference; never substitute the internal borrow amount.
+            let borrow = i128::from_le_bytes(data[24..40].try_into().unwrap());
+            if offset == 2 && !(borrow < 0 && borrow >= -i128::from(net_input))
+                || offset == 3 && borrow != i128::from(output.amounts[0])
+            { valid = false; break; }
+            for (slot, role) in [1, 19, 9 + side, 7 + side, 13 + side, 15 + side, 17 + side, 11 + side].iter().enumerate() {
+                let expected = if [5, 6].contains(&slot) && a[*role].0.as_slice() == crate::jupiter_lend::PROGRAM_ID {
+                    crate::jupiter_lend::LIQUIDITY_PROGRAM.as_slice()
+                } else { a[*role].0.as_slice() };
+                if o[slot].0.as_slice() != expected { valid = false; }
+            }
+            let destination = if offset == 2 { crate::jupiter_lend::LIQUIDITY_PROGRAM.as_slice() } else { a[swap.destination].0.as_slice() };
+            if o[8].0.as_slice() != destination || o[9].0.as_slice() != destination
+                || o[10].0.as_slice() != crate::jupiter_lend::LIQUIDITY_PROGRAM || o[11].0.as_slice() != crate::jupiter_lend::LIQUIDITY_PROGRAM
+                || o[12].0 != a[21 + side].0
+            { valid = false; }
+        }
+        if valid { jupiter_lend_receipts.insert(index as u32, (input_position, output_position)); }
+    }
+
     let mut oasis_receipts = HashMap::new();
     for (index, ix) in instructions.iter().enumerate() {
         let Some((limit, x_to_y)) = crate::oasis::layout(ix) else { continue };
@@ -624,6 +707,21 @@ pub(crate) fn verify_with_fees(
     let mut rejected = Vec::new();
     let mut native_sol_multihop_receipts = HashMap::new();
     if expand_native {
+        for (&index, &(input_position, output_position)) in &jupiter_lend_receipts {
+            let ix = &instructions[index as usize];
+            let a = ix.accounts();
+            let (input, output) = (&transfers[input_position], &transfers[output_position]);
+            swaps.push(pb::Swap {
+                protocol: pb::Protocol::JupiterLend as i32,
+                program_id: crate::jupiter_lend::PROGRAM_ID.to_vec(), amm: crate::jupiter_lend::PROGRAM_ID.to_vec(),
+                amm_pool: a[1].0.clone(), user: a[0].0.clone(),
+                stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
+                input_mint: input.mint.clone(), input_amount: input.amounts[0],
+                output_mint: output.mint.clone(), output_amount: *output.amounts.iter().min().unwrap(),
+                source_index: Some(index), source_transfer_index: Some(input.index),
+                ..Default::default()
+            });
+        }
         for (&index, &(input_position, output_position)) in &oasis_receipts {
             let ix = &instructions[index as usize];
             let a = ix.accounts();
@@ -1912,6 +2010,21 @@ pub(crate) fn verify_with_fees(
                         && swap.input_mint == input.mint && swap.output_mint == crate::SOL_MINT
                         && (swap.input_amount, swap.output_amount) == (input.amounts[0], net)
                         && !expected_transfer.is_some_and(|position| position != input_index)
+                        && !native_evidence.contains(&identity)
+                    {
+                        evidence = Some(identity);
+                        break 'candidate;
+                    }
+                    continue;
+                }
+                if ix.program_id().0 == &crate::jupiter_lend::PROGRAM_ID {
+                    let Some(&(input_position, output_position)) = jupiter_lend_receipts.get(&(index as u32)) else { continue };
+                    let (input, output) = (&transfers[input_position], &transfers[output_position]);
+                    let identity = (index as u32, input.index, output.index);
+                    if swap.protocol == pb::Protocol::JupiterLend as i32 && swap.amm_pool == *accounts[1].0 && swap.user == *accounts[0].0
+                        && swap.input_mint == input.mint && swap.output_mint == output.mint
+                        && (swap.input_amount, swap.output_amount) == (input.amounts[0], *output.amounts.iter().min().unwrap())
+                        && !expected_transfer.is_some_and(|transfer| transfer != input.index)
                         && !native_evidence.contains(&identity)
                     {
                         evidence = Some(identity);

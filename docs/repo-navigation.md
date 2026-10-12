@@ -27,7 +27,9 @@ This guide is a quick map for contributors and coding agents working in this mon
 ### Add or edit a DEX protocol decoder
 
 For the Pluto normalized pricing stream, start in `dex-swaps/src/lib.rs`,
-`native_venues.rs`, `quality.rs`, and `routed_pool.rs`. Additional native
+`native_venues.rs`, `quality.rs`, and `routed_pool.rs`. Jupiter Lend AMM
+IDL layouts are in `jupiter_lend.rs`; its nested liquidity settlement is verified
+in `quality.rs`. Additional native
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
