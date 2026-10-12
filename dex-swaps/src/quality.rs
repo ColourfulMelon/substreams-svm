@@ -1110,15 +1110,36 @@ pub(crate) fn verify_with_fees(
                         && t.net_verified
                 })
                 .collect();
-            if outputs.len() != 1 || input.mint.as_slice() == mint.as_slice() {
+            if input.mint.as_slice() == mint.as_slice() {
                 continue;
             }
-            let output = outputs[0];
+            // A declared classic-token host payout may alias user_token_out.
+            // Require the complete committed current event to distinguish it
+            // from the primary receipt; never sum fees or pick by amount size.
+            let (output, host_fee_index) = if outputs.len() == 1 {
+                (outputs[0], None)
+            } else if outputs.len() == 2
+                && layout.host_fee_account.as_deref() == Some(layout.user_token_out.as_slice())
+                && outputs.iter().all(|t| !t.fee_token)
+            {
+                let events: Vec<_> = instructions.iter().enumerate()
+                    .filter(|(position, child)| *position > outputs[1].index as usize && *position < end as usize
+                        && child.stack_height() == depth + 1 && successful_invocations.contains(&(*position as u32)))
+                    .filter_map(|(_, child)| crate::meteora_dlmm::output_host_fee_event(child, &layout, input.amounts[0], mint))
+                    .collect();
+                if events.len() != 1 || (outputs[1].amounts[0], outputs[0].amounts[0]) != events[0] {
+                    continue;
+                }
+                (outputs[1], Some(outputs[0].index))
+            } else {
+                continue;
+            };
             // Additional user flows (including refunds) need their own complete
             // net-debit proof; do not silently ignore them when normalizing.
             if scoped.iter().any(|t| {
                 t.index != input.index
                     && t.index != output.index
+                    && Some(t.index) != host_fee_index
                     && [t.source.as_slice(), t.destination.as_slice()]
                         .iter()
                         .any(|account| *account == layout.user_token_in.as_slice() || *account == layout.user_token_out.as_slice())
@@ -2283,15 +2304,36 @@ pub(crate) fn verify_with_fees(
                                 && instructions[t.index as usize].program_id().0 == output_program
                         })
                         .collect();
-                    if inputs.len() != 1
-                        || outputs.len() != 1
-                        || !outputs[0].net_verified
-                        || inputs[0].amounts[0] != swap.input_amount
-                        || !outputs[0].amounts.contains(&swap.output_amount)
+                    if inputs.len() != 1 || inputs[0].amounts[0] != swap.input_amount {
+                        continue;
+                    }
+                    let input = inputs[0];
+                    let (output, host_fee_index) = if outputs.len() == 1 {
+                        (outputs[0], None)
+                    } else if outputs.len() == 2
+                        && layout.host_fee_account.as_deref() == Some(layout.user_token_out.as_slice())
+                        && outputs.iter().all(|t| !t.fee_token && t.net_verified)
+                    {
+                        let events: Vec<_> = instructions.iter().enumerate()
+                            .filter(|(position, child)| *position > outputs[1].index as usize && *position < end as usize
+                                && child.stack_height() == depth + 1 && successful_invocations.contains(&(*position as u32)))
+                            .filter_map(|(_, child)| crate::meteora_dlmm::output_host_fee_event(child, &layout, input.amounts[0], &swap.output_mint))
+                            .collect();
+                        if events.len() != 1 || (outputs[1].amounts[0], outputs[0].amounts[0]) != events[0] {
+                            continue;
+                        }
+                        (outputs[1], Some(outputs[0].index))
+                    } else {
+                        continue;
+                    };
+                    if !output.net_verified || !output.amounts.contains(&swap.output_amount)
+                        || host_fee_index.is_some() && scoped.iter().any(|t|
+                            t.index != input.index && t.index != output.index && Some(t.index) != host_fee_index
+                                && [t.source.as_slice(), t.destination.as_slice()].iter().any(|account|
+                                    *account == layout.user_token_in.as_slice() || *account == layout.user_token_out.as_slice()))
                     {
                         continue;
                     }
-                    let (input, output) = (inputs[0], outputs[0]);
                     let identity = (index as u32, input.index, output.index);
                     if expected_transfer.is_some_and(|transfer| transfer != input.index.min(output.index)) || native_evidence.contains(&identity) {
                         continue;

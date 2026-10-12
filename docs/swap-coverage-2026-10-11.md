@@ -1181,3 +1181,32 @@ financial/candidate/raw counts agreeing. Production API and disabled custom
 orders are preserved. Pricing remains about 35 minutes behind; catch-up is
 not complete. The release tag remains pinned to its immutable tested source
 and replay evidence.
+
+## DLMM output host-fee aliases (next candidate)
+
+Declared host fees can be paid to the same token account as the user's swap
+output. The existing exact-receipt check rejected two matching output CPIs,
+therefore omitted genuine swaps. The candidate preserves typed native account
+roles and uses the complete current canonical Swap2Evt to bind the separately
+declared host payout and primary receipt. Only classic-token output aliases,
+zero refunds, an exact host payout followed by the exact primary receipt, and
+one committed event matching pool, user, direction, input and fee side qualify.
+Token-2022 output aliases and other fee/refund cases remain diagnostic.
+
+The event contract is pinned to MeteoraAg/dlmm-sdk
+`576919e3e4368e542c402f000b4264724f7f23ec/idls/dlmm.json`. Thirty-two current
+original finalized transactions across 13 program-owned pools independently
+match RPC/PB/runtime instructions, both canonical event versions, principal
+CPIs, separate host fees and 64 complete user ledgers. Owned initialized
+Token-2022 fee mints, raw/parsed TLV parity and historically applicable epoch
+schedules account for incoming transfer fees in those ledgers. An additional
+13 older originals across seven pools independently pass the same proofs and
+25 available ledger checks. Their exact decoded financial tuples agree.
+
+All 168 core tests pass, including 384 invalid host-witness mutations and caught
+failures in the 32 originals. Twenty-six overlapping host corpora preserve
+all 3,187 previous full financial occurrences with no changes or losses and
+add 77 occurrences representing the 45 independently verified originals.
+Evidence is in `dex-swaps/fixtures/swap-coverage/dlmm-host-fee-alias/`. The
+packaged replay and rollout of this candidate remain pending. The live writer
+is .23; no universal swap coverage claim is made.
