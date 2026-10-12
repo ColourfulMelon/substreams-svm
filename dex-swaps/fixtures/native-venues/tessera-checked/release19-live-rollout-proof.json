@@ -31,7 +31,7 @@
     "cursors": [
       {
         "id": "81f7904aa2d2486b648e16e8789db5daac8e2ceb",
-        "block_num": 456027060
+        "block_num": 456034936
       }
     ],
     "firstActualBlock": [
@@ -46,55 +46,65 @@
     "boundaryMatches": true,
     "continuity": [
       {
-        "blocks": 451,
-        "unique_blocks": 451,
+        "blocks": 8306,
+        "unique_blocks": 8306,
         "broken_parents": 0
       }
     ],
     "health": [
       {
-        "saved_block": 456027085,
-        "lag_seconds": 394
+        "saved_block": 456034941,
+        "lag_seconds": 4
       }
     ],
     "swaps": [
       {
-        "rows": 39473,
-        "unique_events": 39473,
+        "rows": 725846,
+        "unique_events": 725846,
         "invalid": 0
       }
     ],
     "venues": [
       {
         "protocol": "raydium_cpmm",
-        "rows": 334,
-        "unique_events": 334
+        "rows": 6116,
+        "unique_events": 6116
       },
       {
         "protocol": "manifest",
-        "rows": 258,
-        "unique_events": 258
+        "rows": 5353,
+        "unique_events": 5353
       },
       {
         "protocol": "tesserav",
-        "rows": 475,
-        "unique_events": 475
+        "rows": 10060,
+        "unique_events": 10060
+      },
+      {
+        "protocol": "openbook_v2",
+        "rows": 2,
+        "unique_events": 2
       },
       {
         "protocol": "mercurial",
-        "rows": 1,
-        "unique_events": 1
+        "rows": 75,
+        "unique_events": 75
+      },
+      {
+        "protocol": "oasis",
+        "rows": 3,
+        "unique_events": 3
       }
     ],
-    "cut": 456026960,
+    "cut": 456034836,
     "coverage": [
       {
-        "swaps": 28893,
-        "expected_swaps": 28893,
-        "candidates": 1757,
-        "raw": 1418,
-        "expected_candidates": 1757,
-        "expected_raw": 1418
+        "swaps": 717022,
+        "expected_swaps": 717022,
+        "candidates": 41607,
+        "raw": 32349,
+        "expected_candidates": 41607,
+        "expected_raw": 32349
       }
     ]
   },
@@ -107,8 +117,19 @@
     "termination": "Owned read-only primer stopped after actual live writes and exact restart boundary verification. Child exit 1 is expected SIGTERM; parent reaped 0. The separate finite 50-block package replay exits cleanly."
   },
   "freshness": {
-    "complete": false,
-    "status": "Actual live output validated; advancing catch-up still monitored."
+    "sinkTimestamp": "2026-10-12T11:44:07.176297802Z",
+    "sinkLagSeconds": 4.176290352,
+    "streamTimestamp": "2026-10-12T11:44:07.176287522Z",
+    "streamLagSeconds": 3.176284043,
+    "streamBlockRate": "5.467 msg/s (7969 total)",
+    "reportedErrors": 0,
+    "complete": true,
+    "checkedAt": "2026-10-12T11:44:11.579992+00:00",
+    "savedSlot": 456034606,
+    "laterFinalizedChainSlot": 456034611,
+    "slotsBehind": 5,
+    "status": "Actual wall-clock freshness recovered without restarting the advancing writer; financial uniqueness, parent chain and sealed counters verified."
   },
-  "universalSwapCoverageEstablished": false
+  "universalSwapCoverageEstablished": false,
+  "releaseTagSourceVerified": true
 }

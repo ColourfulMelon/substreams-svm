@@ -919,7 +919,10 @@ exact saved parent hash. Live unique nonzero financial rows, linked blocks and
 sealed financial/diagnostic counters pass. Both original automatic deployment
 settings are restored, and production custom creation/execution remain disabled.
 The owned read-only primer verified 5700 blocks and 553794 swaps before deliberate
-termination/reaping. Wall-clock catch-up remains monitored. Complete coverage
+termination/reaping. Wall-clock freshness recovered without restarting the
+advancing writer; the retained proof includes exact sink/stream drift and a later
+finalized RPC check. Financial uniqueness and parent/sealed-counter checks pass.
+Complete coverage
 of all swap types is still unproven.
 
 
