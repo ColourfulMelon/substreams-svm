@@ -1169,3 +1169,15 @@ counts pass. Three existing Manifest fills remain independently marked
 Twelve pricing integration tests pass with the exact tested package. The frozen
 metadata binary and seven module hashes are unchanged. The live rollout remains
 pending; universal swap coverage has not been demonstrated.
+
+The .23 release was deployed from monorepo commit
+`b718e46cda9b9f9637d4bbffd4e5c69faed2e1bc` on 2026-10-12 at 15:56 UTC.
+The stopped .22 writer ended at durable slot 456095859 with zero rows beyond
+its cursor in all four tables. Its unchanged opaque cursor was backed up and
+adopted under the new module hash with strict checking. Actual .23 block
+456095860 points to that exact previous block/hash. The first persisted live
+proof contains 376 linked blocks and 44,474 unique valid swaps, with sealed
+financial/candidate/raw counts agreeing. Production API and disabled custom
+orders are preserved. Pricing remains about 35 minutes behind; catch-up is
+not complete. The release tag remains pinned to its immutable tested source
+and replay evidence.
