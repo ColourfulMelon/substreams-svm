@@ -1,0 +1,3026 @@
+{
+  "scope": "19 finalized legacy/V2 native sell originals in 456081601..456086300 diagnostic corpus. Exact original RPC/PB/runtime parity, unique native reserve inverses when available, independently bound native fee-return schedules, physical curve/user/fee/cashback/native lifecycle ledgers and all physical principal source/vault token ledgers. Exactly one ambiguous inverse remains; its single sell is allocated by exact whole-user/curve ledgers with all other contributions independently proven. No repeated inverse is widened.",
+  "primaryAbi": "https://github.com/pump-fun/pump-public-docs/blob/2293f9a66c654e9fe82dc5e8f4618538f24bb35f/idl/pump.json",
+  "primaryOwnerRule": "https://solana.com/docs/core/accounts",
+  "transactions": [
+    {
+      "signature": "4hRJgY8iKrzE3uQa5aefv7RytSBCC9rDgLUeDCViKHckUy4y3a5SkiQSawUPxtgX6erBbutD6sDWkFmkfcnXMZxm",
+      "slot": 456081617,
+      "rpcSha256": "817b109e3fc96dddfbc166d401512a37c9cf6b33c432747eb7944100664e07e6",
+      "pbSha256": "58473d0d487077fc03b5c7bc75b076adc0bccd7e18f7aef43ebdaf6d5e99f3c1",
+      "legs": [
+        {
+          "source": 6,
+          "event": 10,
+          "transfer": 9,
+          "fee": 8,
+          "roles": [
+            "4mgvphrHqy3FGG5oTU53n99eunGxhwayp59aM4AQV8U7",
+            "GTt9syUkRDzZ3VsQXP8hbrFtfd1JhY6ke525BsnmvE28",
+            "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "E2SCH9E5qbb8EhdGqskBmGJahB7pT1TdcCpkDRoSjC3",
+            "hrbDiNowZRt5a3vn7wqWm44yuhEbzPjdhdP2p5ire7e",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+            "4Agz2gxzUp5dEteRQUzo7b8uaHhxudcLcwZgqqzn6bef"
+          ],
+          "input": "167809550852",
+          "inverseLow": "30069747313",
+          "inverseHigh": "30069747313",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30069747313",
+              "gross": "4712888",
+              "net": "4653976",
+              "protocol": "44773",
+              "creator": "14139"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "4712888",
+            "net": "4653976",
+            "protocol": "44773",
+            "creator": "14139",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "4hRJgY8iKrzE3uQa5aefv7RytSBCC9rDgLUeDCViKHckUy4y3a5SkiQSawUPxtgX6erBbutD6sDWkFmkfcnXMZxm",
+            "protocol": 9,
+            "source_index": 6,
+            "first_transfer_index": 9,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "4mgvphrHqy3FGG5oTU53n99eunGxhwayp59aM4AQV8U7",
+            "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "input_mint": "GTt9syUkRDzZ3VsQXP8hbrFtfd1JhY6ke525BsnmvE28",
+            "input_amount": "167809550852",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "4653976"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+          "expected": "4416237",
+          "actual": "4416237",
+          "matches": true
+        },
+        {
+          "account": "45WGs2cGTzDCa8PspQLfzUujsqen8X62YgnMStu39uS4",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "4mgvphrHqy3FGG5oTU53n99eunGxhwayp59aM4AQV8U7",
+          "expected": "-4636688",
+          "actual": "-4636688",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "22387",
+          "actual": "22387",
+          "matches": true
+        },
+        {
+          "account": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+          "expected": "22386",
+          "actual": "22386",
+          "matches": true
+        },
+        {
+          "account": "4Agz2gxzUp5dEteRQUzo7b8uaHhxudcLcwZgqqzn6bef",
+          "expected": "14139",
+          "actual": "14139",
+          "matches": true
+        },
+        {
+          "account": "J5XGHmzrRmnYWbmw45DbYkdZAU2bwERFZ11qCDXPvFB5",
+          "expected": "46539",
+          "actual": "46539",
+          "matches": true
+        },
+        {
+          "account": "4TQLFNWK8AovT1gFvda5jfw2oJeRMKEmw7aH6MGBJ3or",
+          "expected": "100000",
+          "actual": "100000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 0,
+      "principalTokenLedgers": [
+        {
+          "account": "E2SCH9E5qbb8EhdGqskBmGJahB7pT1TdcCpkDRoSjC3",
+          "expected": "-167809550852",
+          "actual": "-167809550852",
+          "matches": true
+        },
+        {
+          "account": "hrbDiNowZRt5a3vn7wqWm44yuhEbzPjdhdP2p5ire7e",
+          "expected": "167809550852",
+          "actual": "167809550852",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3bKTa7mX6qumsmrpq9cYe62YYQNjxhoZWcwQzPxuTZXc3A6L58rudRcu14eHj55tumZacUkaWdcb6Gt7VZqGjXFV",
+      "slot": 456081754,
+      "rpcSha256": "3e26fd4f6f2de119a50b940c0a6fc3cd77a6059f7363e24f7b25162538f76322",
+      "pbSha256": "03854f3b332ac2eae9811295368c27da0211602f9c400ac3f291fb4b0ab482f6",
+      "legs": [
+        {
+          "source": 6,
+          "event": 10,
+          "transfer": 9,
+          "fee": 8,
+          "roles": [
+            "5E28DFMxFoMYSdxbesHMYoQgEWWHzR6sAPEYpiK58Dts",
+            "8MVcb3kV8cCbyBR8TFEuQr9oijmPo4kjYbNiKoXpPm1M",
+            "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "GHSYaynDA8gCvywpzLPF2yRzAAS2WBQyrs6YGfoBvuY7",
+            "34gXiD66yS2ou5TTgakNdn2SmR2nc6MGXdk85HABkQ5k",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+            "GNFhMJ99LytbuUzUsfxDVLe4QXn6H2VppeBzcLbx1RNG"
+          ],
+          "input": "41882444153",
+          "inverseLow": "30010221290",
+          "inverseHigh": "30010221290",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30010221290",
+              "gross": "1171743",
+              "net": "1157095",
+              "protocol": "11132",
+              "creator": "3516"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "1171743",
+            "net": "1157095",
+            "protocol": "11132",
+            "creator": "3516",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "3bKTa7mX6qumsmrpq9cYe62YYQNjxhoZWcwQzPxuTZXc3A6L58rudRcu14eHj55tumZacUkaWdcb6Gt7VZqGjXFV",
+            "protocol": 9,
+            "source_index": 6,
+            "first_transfer_index": 9,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "5E28DFMxFoMYSdxbesHMYoQgEWWHzR6sAPEYpiK58Dts",
+            "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "input_mint": "8MVcb3kV8cCbyBR8TFEuQr9oijmPo4kjYbNiKoXpPm1M",
+            "input_amount": "41882444153",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "1157095"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+          "expected": "954325",
+          "actual": "954325",
+          "matches": true
+        },
+        {
+          "account": "45WGs2cGTzDCa8PspQLfzUujsqen8X62YgnMStu39uS4",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "5E28DFMxFoMYSdxbesHMYoQgEWWHzR6sAPEYpiK58Dts",
+          "expected": "-1095543",
+          "actual": "-1095543",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "5566",
+          "actual": "5566",
+          "matches": true
+        },
+        {
+          "account": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+          "expected": "5566",
+          "actual": "5566",
+          "matches": true
+        },
+        {
+          "account": "GNFhMJ99LytbuUzUsfxDVLe4QXn6H2VppeBzcLbx1RNG",
+          "expected": "3516",
+          "actual": "3516",
+          "matches": true
+        },
+        {
+          "account": "J5XGHmzrRmnYWbmw45DbYkdZAU2bwERFZ11qCDXPvFB5",
+          "expected": "11570",
+          "actual": "11570",
+          "matches": true
+        },
+        {
+          "account": "4TQLFNWK8AovT1gFvda5jfw2oJeRMKEmw7aH6MGBJ3or",
+          "expected": "100000",
+          "actual": "100000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 1,
+      "principalTokenLedgers": [
+        {
+          "account": "GHSYaynDA8gCvywpzLPF2yRzAAS2WBQyrs6YGfoBvuY7",
+          "expected": "-41882444153",
+          "actual": "-41882444153",
+          "matches": true
+        },
+        {
+          "account": "34gXiD66yS2ou5TTgakNdn2SmR2nc6MGXdk85HABkQ5k",
+          "expected": "41882444153",
+          "actual": "41882444153",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3sg26MgeZuRMbteXPNZXDa6KpaJ18orcuSqFMWn9k8LB6VpkQnbkn5KjNgAVmPgsGAqwTifLp3HuSGRNDqFzZSdA",
+      "slot": 456081805,
+      "rpcSha256": "acecb99903b86b4ac7c9c6f26c99db5349ac68fa6e22c87e010c18708dade474",
+      "pbSha256": "ea8fec176096864f9a2c191f33f16d8afcb6284bf28407f9f8eada3edbc809d3",
+      "legs": [
+        {
+          "source": 6,
+          "event": 10,
+          "transfer": 9,
+          "fee": 8,
+          "roles": [
+            "CgLzrUusxRPQFDuZ6fwU9uVh5ztdMbN7pF3HmZkFh6CB",
+            "9QpvgN2LviuC7Ff2fdahCLj5Hz1eMErNPmXxJ683j7kJ",
+            "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "7cGNyAjNsPuXeNQzAYp6HPLLRGX2HGAbGgQLZmP9Bqua",
+            "5ybHDNZnavpphzW1pQuqFQLyCHG4pa4MZtjPyKfJgJuc",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+            "7JJ3F5Drf4w9mAmiNZA7oxGbHvJrnXSqo79uRX8URvvd"
+          ],
+          "input": "76186604730",
+          "inverseLow": "30156785817",
+          "inverseHigh": "30156785817",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30156785817",
+              "gross": "2152269",
+              "net": "2125365",
+              "protocol": "20447",
+              "creator": "6457"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "2152269",
+            "net": "2125365",
+            "protocol": "20447",
+            "creator": "6457",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "3sg26MgeZuRMbteXPNZXDa6KpaJ18orcuSqFMWn9k8LB6VpkQnbkn5KjNgAVmPgsGAqwTifLp3HuSGRNDqFzZSdA",
+            "protocol": 9,
+            "source_index": 6,
+            "first_transfer_index": 9,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "CgLzrUusxRPQFDuZ6fwU9uVh5ztdMbN7pF3HmZkFh6CB",
+            "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+            "input_mint": "9QpvgN2LviuC7Ff2fdahCLj5Hz1eMErNPmXxJ683j7kJ",
+            "input_amount": "76186604730",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "2125365"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+          "expected": "1912912",
+          "actual": "1912912",
+          "matches": true
+        },
+        {
+          "account": "45WGs2cGTzDCa8PspQLfzUujsqen8X62YgnMStu39uS4",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "CgLzrUusxRPQFDuZ6fwU9uVh5ztdMbN7pF3HmZkFh6CB",
+          "expected": "-2076069",
+          "actual": "-2076069",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "10224",
+          "actual": "10224",
+          "matches": true
+        },
+        {
+          "account": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+          "expected": "10223",
+          "actual": "10223",
+          "matches": true
+        },
+        {
+          "account": "7JJ3F5Drf4w9mAmiNZA7oxGbHvJrnXSqo79uRX8URvvd",
+          "expected": "6457",
+          "actual": "6457",
+          "matches": true
+        },
+        {
+          "account": "J5XGHmzrRmnYWbmw45DbYkdZAU2bwERFZ11qCDXPvFB5",
+          "expected": "21253",
+          "actual": "21253",
+          "matches": true
+        },
+        {
+          "account": "ste11TMV68LMi1BguM4RQujtbNCZvf1sjsASpqgAvSX",
+          "expected": "100000",
+          "actual": "100000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 2,
+      "principalTokenLedgers": [
+        {
+          "account": "7cGNyAjNsPuXeNQzAYp6HPLLRGX2HGAbGgQLZmP9Bqua",
+          "expected": "-76186604730",
+          "actual": "-76186604730",
+          "matches": true
+        },
+        {
+          "account": "5ybHDNZnavpphzW1pQuqFQLyCHG4pa4MZtjPyKfJgJuc",
+          "expected": "76186604730",
+          "actual": "76186604730",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3Rs7YMTSuJgRpFa8Nh4p2YckwKRMZE3uiXASpTomH81WiJXNb76h4YfTU3b8XS19XJn1fZo9isBXtxmoHbxwPWnP",
+      "slot": 456081836,
+      "rpcSha256": "df497435de6f007c2f582e325a027b80d914db4eae97bb93a8c95afb1c40a24c",
+      "pbSha256": "d5ccc8cddca9cfd1c9a5f251745fd8a714adbc02e13a0f198e38b893516b060f",
+      "legs": [
+        {
+          "source": 13,
+          "event": 16,
+          "transfer": 15,
+          "fee": 14,
+          "roles": [
+            "K4qaVJS4CS714v1igAoamRWCTK2aFPmtRt7q1Sxfyzq",
+            "HArUcNYTd3YxTF1c7CBM2bRtNG18rrYPKubRF8mepump",
+            "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "99Z6bRe2YXZ2GHUdYcZpgme2qafeFeDzHKhkDBNAQXQU",
+            "GE7Zw6jHBR7LvXC1kxvTJPBkUva65gKvESgZdqg32MU9",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "DZ5VWewBzob11FHR7BpCx68AM69CYmUVmXSe6noRypqY"
+          ],
+          "input": "8968180991927",
+          "inverseLow": "52419564152",
+          "inverseHigh": "52419564152",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "52419564152",
+              "gross": "754524853",
+              "net": "745093291",
+              "protocol": "7167987",
+              "creator": "2263575"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "754524853",
+            "net": "745093291",
+            "protocol": "7167987",
+            "creator": "2263575",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "3Rs7YMTSuJgRpFa8Nh4p2YckwKRMZE3uiXASpTomH81WiJXNb76h4YfTU3b8XS19XJn1fZo9isBXtxmoHbxwPWnP",
+            "protocol": 9,
+            "source_index": 13,
+            "first_transfer_index": 15,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "K4qaVJS4CS714v1igAoamRWCTK2aFPmtRt7q1Sxfyzq",
+            "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "input_mint": "HArUcNYTd3YxTF1c7CBM2bRtNG18rrYPKubRF8mepump",
+            "input_amount": "8968180991927",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "745093291"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "753dMLvTjrKYiaRaCP5i27JH2wPCbNYSxCAKANwxvmPx",
+          "expected": "-86001",
+          "actual": "-86001",
+          "matches": true
+        },
+        {
+          "account": "AaVkWvcZ8ENa9jC4NXKEEU4nYFKMyoQJ6WUkHdEB8zGR",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "K4qaVJS4CS714v1igAoamRWCTK2aFPmtRt7q1Sxfyzq",
+          "expected": "-754524853",
+          "actual": "-754524853",
+          "matches": true
+        },
+        {
+          "account": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "7079494",
+          "actual": "7079494",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "7079492",
+          "actual": "7079492",
+          "matches": true
+        },
+        {
+          "account": "DZ5VWewBzob11FHR7BpCx68AM69CYmUVmXSe6noRypqY",
+          "expected": "2263575",
+          "actual": "2263575",
+          "matches": true
+        },
+        {
+          "account": "3d7Kzwhtvu21JNcx21YeFiXCYWXsZxySWMHjJQp6YPyu",
+          "expected": "2207684",
+          "actual": "2207684",
+          "matches": true
+        },
+        {
+          "account": "3xs6qzj5QFMoc7pqth42KdsmQWEgiu4hMvuFWjPmoZ5a",
+          "expected": "735894608",
+          "actual": "735894608",
+          "matches": true
+        },
+        {
+          "account": "CcTNKBhQKYu7nB4eRrRFQoXEvpd6H5QnGKh93pwniBtp",
+          "expected": "6000",
+          "actual": "6000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 3,
+      "principalTokenLedgers": [
+        {
+          "account": "99Z6bRe2YXZ2GHUdYcZpgme2qafeFeDzHKhkDBNAQXQU",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "GE7Zw6jHBR7LvXC1kxvTJPBkUva65gKvESgZdqg32MU9",
+          "expected": "8968180991927",
+          "actual": "8968180991927",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "JwB5A6wuDFiLePEdeN9VrL7XBxRjthZdr2SoZ2KR6LKoK7aUX1VyEUHaEYod21y2EahTWgen6cLywQGB3dBQwvw",
+      "slot": 456082420,
+      "rpcSha256": "ffbea68cdbbc3e6bb3edf73b885a2bf6bd3d451e44ea9f68bbafb367dc7acd46",
+      "pbSha256": "47ac3fce1b2a69e0558116720bdca15c1afd9b1fd2662a2180b41d7bac532477",
+      "legs": [
+        {
+          "source": 11,
+          "event": 14,
+          "transfer": 13,
+          "fee": 12,
+          "roles": [
+            "4a5FTB2vjty4aFdztghvCHjorE4JEuWZx2WRNnMZafJQ",
+            "77TXFjsYxi1MyFRsRHQUteUF7N4cixcMFLzCL2PLpump",
+            "D18noz8Uff6B6rddvHHt3MHvSgpsZ4otBVUprx7XLtn7",
+            "4JrYcqgpupEFA2Waybapfm9ZkiNv7dPvD8dXJn6iW6EP",
+            "35XZkJAHLBGwcABnTG6hQpT3GfuF2qHtR8Q2pQ18fn3d",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "AVmoTthdrX6tKt4nDjco2D775W2YK3sDhxPcMmzUAmTY",
+            "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+            "D9Cweg81TbyJpDW1KHaWNisCzpZhKt9fRbtsJq9WrDZs"
+          ],
+          "input": "8767655536282",
+          "inverseLow": "56859885460",
+          "inverseHigh": "56859885460",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "56859885460",
+              "gross": "867161654",
+              "net": "856322133",
+              "protocol": "8238036",
+              "creator": "2601485"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "867161654",
+            "net": "856322133",
+            "protocol": "8238036",
+            "creator": "2601485",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "JwB5A6wuDFiLePEdeN9VrL7XBxRjthZdr2SoZ2KR6LKoK7aUX1VyEUHaEYod21y2EahTWgen6cLywQGB3dBQwvw",
+            "protocol": 9,
+            "source_index": 11,
+            "first_transfer_index": 13,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "4a5FTB2vjty4aFdztghvCHjorE4JEuWZx2WRNnMZafJQ",
+            "user": "D18noz8Uff6B6rddvHHt3MHvSgpsZ4otBVUprx7XLtn7",
+            "input_mint": "77TXFjsYxi1MyFRsRHQUteUF7N4cixcMFLzCL2PLpump",
+            "input_amount": "8767655536282",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "856322133"
+          }
+        }
+      ],
+      "refunds": [
+        {
+          "kind": "SystemAllocateAssign-owned",
+          "source": 10,
+          "close": 15,
+          "state": "9A6fBeeQh5m9EAMkEizNPyDozpjtrmV5mqTnwbpzv1uB",
+          "user": "D18noz8Uff6B6rddvHHt3MHvSgpsZ4otBVUprx7XLtn7",
+          "lamports": "1097280"
+        }
+      ],
+      "nativeLedgers": [
+        {
+          "account": "HXk447f9G41nqfneZmiXGmcr1HLffLQJ1AoVdEEuBQG9",
+          "expected": "-736160",
+          "actual": "-736160",
+          "matches": true
+        },
+        {
+          "account": "9unQDKXP6oruTXsPF3rdS4durxQzaA4NMRgSNgGFNxWw",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "D18noz8Uff6B6rddvHHt3MHvSgpsZ4otBVUprx7XLtn7",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "9A6fBeeQh5m9EAMkEizNPyDozpjtrmV5mqTnwbpzv1uB",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "4a5FTB2vjty4aFdztghvCHjorE4JEuWZx2WRNnMZafJQ",
+          "expected": "-867161654",
+          "actual": "-867161654",
+          "matches": true
+        },
+        {
+          "account": "AVmoTthdrX6tKt4nDjco2D775W2YK3sDhxPcMmzUAmTY",
+          "expected": "4119018",
+          "actual": "4119018",
+          "matches": true
+        },
+        {
+          "account": "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+          "expected": "4119018",
+          "actual": "4119018",
+          "matches": true
+        },
+        {
+          "account": "D9Cweg81TbyJpDW1KHaWNisCzpZhKt9fRbtsJq9WrDZs",
+          "expected": "2601485",
+          "actual": "2601485",
+          "matches": true
+        },
+        {
+          "account": "DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz",
+          "expected": "856322133",
+          "actual": "856322133",
+          "matches": true
+        },
+        {
+          "account": "4JrYcqgpupEFA2Waybapfm9ZkiNv7dPvD8dXJn6iW6EP",
+          "expected": "-1513840",
+          "actual": "-1513840",
+          "matches": true
+        },
+        {
+          "account": "3KCKozbAaF75qEU33jtzozcJ29yJuaLJTy2jFdzUY8bT",
+          "expected": "2000000",
+          "actual": "2000000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 4,
+      "principalTokenLedgers": [
+        {
+          "account": "4JrYcqgpupEFA2Waybapfm9ZkiNv7dPvD8dXJn6iW6EP",
+          "expected": "-8767655536282",
+          "actual": "-8767655536282",
+          "matches": true
+        },
+        {
+          "account": "35XZkJAHLBGwcABnTG6hQpT3GfuF2qHtR8Q2pQ18fn3d",
+          "expected": "8767655536282",
+          "actual": "8767655536282",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "2KM3QC5hymubtES3FMuJCeWizzuSKgnDJeeQHhYHRKjT7vQY2VgtXsUY3uH6JWszMLkrrU6zfSEe7pwzzrRnKeVT",
+      "slot": 456082640,
+      "rpcSha256": "7fb908b5ea4d14b79bb22dc1df6bd4811bd68dbdf303fd653a8658a598152a27",
+      "pbSha256": "8e2ca17cb6ca581f305b419d4d0dfbe4ebd5b357c912884bb1b5814a7affd916",
+      "legs": [
+        {
+          "source": 3,
+          "event": 6,
+          "transfer": 5,
+          "fee": 4,
+          "roles": [
+            "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+            "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+            "8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi",
+            "iTjLUthKoXBHy7BTPmnTzsBuxEH3z3J1S7KQN4Gk2mi",
+            "D7ehBXt5tNx8X5joHsVCw9grTb41xa115idZu2YNy9h5",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+            "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+            "32em5KiJZeeME6ZtF93ydyUY7txA6wSChhSn6ixzoph3"
+          ],
+          "input": "1834134292638",
+          "inverseLow": "38348766510",
+          "inverseHigh": "38348766510",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "38348766510",
+              "gross": "83611310",
+              "net": "82566168",
+              "protocol": "794308",
+              "creator": "250834"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "83611310",
+            "net": "82566168",
+            "protocol": "794308",
+            "creator": "0",
+            "cashback": "250834"
+          },
+          "financial": {
+            "signature": "2KM3QC5hymubtES3FMuJCeWizzuSKgnDJeeQHhYHRKjT7vQY2VgtXsUY3uH6JWszMLkrrU6zfSEe7pwzzrRnKeVT",
+            "protocol": 9,
+            "source_index": 3,
+            "first_transfer_index": 5,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+            "user": "8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi",
+            "input_mint": "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+            "input_amount": "1834134292638",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "82566168"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi",
+          "expected": "84040008",
+          "actual": "84040008",
+          "matches": true
+        },
+        {
+          "account": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+          "expected": "-83611310",
+          "actual": "-83611310",
+          "matches": true
+        },
+        {
+          "account": "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+          "expected": "397154",
+          "actual": "397154",
+          "matches": true
+        },
+        {
+          "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "397154",
+          "actual": "397154",
+          "matches": true
+        },
+        {
+          "account": "32em5KiJZeeME6ZtF93ydyUY7txA6wSChhSn6ixzoph3",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "BFuRnKDz7qAMBi867bSMuMvoSkEtFY6bqni3q1FUZfvT",
+          "expected": "250834",
+          "actual": "250834",
+          "matches": true
+        },
+        {
+          "account": "iTjLUthKoXBHy7BTPmnTzsBuxEH3z3J1S7KQN4Gk2mi",
+          "expected": "-1513840",
+          "actual": "-1513840",
+          "matches": true
+        },
+        {
+          "account": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 5,
+      "principalTokenLedgers": [
+        {
+          "account": "iTjLUthKoXBHy7BTPmnTzsBuxEH3z3J1S7KQN4Gk2mi",
+          "expected": "-1834134292638",
+          "actual": "-1834134292638",
+          "matches": true
+        },
+        {
+          "account": "D7ehBXt5tNx8X5joHsVCw9grTb41xa115idZu2YNy9h5",
+          "expected": "1834134292638",
+          "actual": "1834134292638",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3rUfRQ2qPBpC1oeNkJmsavMVwu2u5v5WuDK4nXqs6HzkyRVzRpRvBmcDhmMxFRh9UE9ZxnEopkXyx8pvpSeGpdu7",
+      "slot": 456082649,
+      "rpcSha256": "4eec88d509a363fc16ba37af3c74fca5ab552a315adb3756ee27b3b6d750cc4a",
+      "pbSha256": "155a42eeaf5197d2853cc1c5d49c96924c3eaee452030f6fc96f32014df1e049",
+      "legs": [
+        {
+          "source": 2,
+          "event": 5,
+          "transfer": 4,
+          "fee": 3,
+          "roles": [
+            "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+            "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+            "4s4vL1TLZSNMxhG6FZgc2GevwLSLP5XyHEhPdAaKqNLR",
+            "Dx6Tyqo5j6Lo9T1kXnztFGpvF9QZMp67hrzrFuvYx21W",
+            "D7ehBXt5tNx8X5joHsVCw9grTb41xa115idZu2YNy9h5",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+            "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+            "32em5KiJZeeME6ZtF93ydyUY7txA6wSChhSn6ixzoph3"
+          ],
+          "input": "21618907912",
+          "inverseLow": "38117643535",
+          "inverseHigh": "38117643535",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "38117643535",
+              "gross": "975784",
+              "net": "963586",
+              "protocol": "9270",
+              "creator": "2928"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "975784",
+            "net": "963586",
+            "protocol": "9270",
+            "creator": "0",
+            "cashback": "2928"
+          },
+          "financial": {
+            "signature": "3rUfRQ2qPBpC1oeNkJmsavMVwu2u5v5WuDK4nXqs6HzkyRVzRpRvBmcDhmMxFRh9UE9ZxnEopkXyx8pvpSeGpdu7",
+            "protocol": 9,
+            "source_index": 2,
+            "first_transfer_index": 4,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+            "user": "4s4vL1TLZSNMxhG6FZgc2GevwLSLP5XyHEhPdAaKqNLR",
+            "input_mint": "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+            "input_amount": "21618907912",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "963586"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "4s4vL1TLZSNMxhG6FZgc2GevwLSLP5XyHEhPdAaKqNLR",
+          "expected": "948586",
+          "actual": "948586",
+          "matches": true
+        },
+        {
+          "account": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+          "expected": "-975784",
+          "actual": "-975784",
+          "matches": true
+        },
+        {
+          "account": "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+          "expected": "4635",
+          "actual": "4635",
+          "matches": true
+        },
+        {
+          "account": "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+          "expected": "4635",
+          "actual": "4635",
+          "matches": true
+        },
+        {
+          "account": "32em5KiJZeeME6ZtF93ydyUY7txA6wSChhSn6ixzoph3",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "GXvmNGZXLvk1rgR7r928EZHRhqwcpJxsRziPuuB8bpre",
+          "expected": "2928",
+          "actual": "2928",
+          "matches": true
+        },
+        {
+          "account": "3KCKozbAaF75qEU33jtzozcJ29yJuaLJTy2jFdzUY8bT",
+          "expected": "5000",
+          "actual": "5000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 6,
+      "principalTokenLedgers": [
+        {
+          "account": "Dx6Tyqo5j6Lo9T1kXnztFGpvF9QZMp67hrzrFuvYx21W",
+          "expected": "-21618907912",
+          "actual": "-21618907912",
+          "matches": true
+        },
+        {
+          "account": "D7ehBXt5tNx8X5joHsVCw9grTb41xa115idZu2YNy9h5",
+          "expected": "21618907912",
+          "actual": "21618907912",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3BL46WWueDmNeyinusbdXuqbehLbgEaiosHRBsCiymZEfqVu3mbECj4jwmkuGKLkb8iVYbbWqAKfr4D218SrY2Gr",
+      "slot": 456082666,
+      "rpcSha256": "603831d17a620137781cabcc70059304998fee86f3f7d622dc4712ac18b43fd9",
+      "pbSha256": "eac43199d45cf3438d46c736ba3bbb8c6c3a4c981e0ee24333f66aef54af8ff0",
+      "legs": [
+        {
+          "source": 3,
+          "event": 6,
+          "transfer": 5,
+          "fee": 4,
+          "roles": [
+            "2duBnPF1zQF3N3BhB8uGrHgcgVkswZnLmSEZXRzQUcfZ",
+            "CtEd76hrxP8vXUntDMqGNDi11x3Hbm59DSwQRghtpump",
+            "FvFbRnmBPPwsoPF4c73dWRkA9JLESPjo2cNwQFJdtvPL",
+            "AvTAeTUGDh75zzz7gpdMaEGkUdXzaa1GbJp9dFq5fJc5",
+            "4c8dg1UbXK7wwqTaV7DibYy9fnn7Y3r1RKGiHmLG6spV",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "AVmoTthdrX6tKt4nDjco2D775W2YK3sDhxPcMmzUAmTY",
+            "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+            "8MtWns3dttMJ4MNzCwV7g17Q4AAYZxr1koje1yj4fzNg"
+          ],
+          "input": "788088731336",
+          "inverseLow": "30135590940",
+          "inverseHigh": "30135590940",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30135590940",
+              "gross": "22217400",
+              "net": "21939681",
+              "protocol": "211066",
+              "creator": "66653"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "22217400",
+            "net": "21939681",
+            "protocol": "211066",
+            "creator": "0",
+            "cashback": "66653"
+          },
+          "financial": {
+            "signature": "3BL46WWueDmNeyinusbdXuqbehLbgEaiosHRBsCiymZEfqVu3mbECj4jwmkuGKLkb8iVYbbWqAKfr4D218SrY2Gr",
+            "protocol": 9,
+            "source_index": 3,
+            "first_transfer_index": 5,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "2duBnPF1zQF3N3BhB8uGrHgcgVkswZnLmSEZXRzQUcfZ",
+            "user": "FvFbRnmBPPwsoPF4c73dWRkA9JLESPjo2cNwQFJdtvPL",
+            "input_mint": "CtEd76hrxP8vXUntDMqGNDi11x3Hbm59DSwQRghtpump",
+            "input_amount": "788088731336",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "21939681"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "FvFbRnmBPPwsoPF4c73dWRkA9JLESPjo2cNwQFJdtvPL",
+          "expected": "21930681",
+          "actual": "21930681",
+          "matches": true
+        },
+        {
+          "account": "2duBnPF1zQF3N3BhB8uGrHgcgVkswZnLmSEZXRzQUcfZ",
+          "expected": "-22217400",
+          "actual": "-22217400",
+          "matches": true
+        },
+        {
+          "account": "AVmoTthdrX6tKt4nDjco2D775W2YK3sDhxPcMmzUAmTY",
+          "expected": "105533",
+          "actual": "105533",
+          "matches": true
+        },
+        {
+          "account": "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+          "expected": "105533",
+          "actual": "105533",
+          "matches": true
+        },
+        {
+          "account": "8MtWns3dttMJ4MNzCwV7g17Q4AAYZxr1koje1yj4fzNg",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "7M5ocAJYFL6NU4RL5yiu83PErQMvuCB15RE7heWNLtMK",
+          "expected": "66653",
+          "actual": "66653",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 7,
+      "principalTokenLedgers": [
+        {
+          "account": "AvTAeTUGDh75zzz7gpdMaEGkUdXzaa1GbJp9dFq5fJc5",
+          "expected": "-788088731336",
+          "actual": "-788088731336",
+          "matches": true
+        },
+        {
+          "account": "4c8dg1UbXK7wwqTaV7DibYy9fnn7Y3r1RKGiHmLG6spV",
+          "expected": "788088731336",
+          "actual": "788088731336",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "5A3NMoSG3JQcwab9nrou9MaDyGHJHJXCYWGYjAEjAHcEN7ovxQYhv9mWQobjCrY3wZeRz3Mxac472s3pj8mysfvU",
+      "slot": 456082859,
+      "rpcSha256": "48e0b738387aa80ee0d9c277055f08826bd09f4dcf7cca7d19aec1fbf9c7fd59",
+      "pbSha256": "db95902b3197e9176fe16b05fd260d4e286f44cdfd3bedb322b4315757ebf6f4",
+      "legs": [
+        {
+          "source": 13,
+          "event": 16,
+          "transfer": 15,
+          "fee": 14,
+          "roles": [
+            "AmaK5efPX6nXAtrd5BBXsE5kVHKXX9sh7QgEUwsffobL",
+            "2DmudAPQ9tMavs9qsTTmkGcr6GbTF1nWRmTJktURpump",
+            "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "G8hbNtDjSkiorFhi6wjYbmys1JB4XDSJoQoKME4WWLQo",
+            "7rYWMhGwLasdx663KAZMkcEYciBnBzQg7ToRYYczknxU",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "37pqoyWB1SqZdoYAzTeW1gs6jMTH3bLmnR4PNQkNkmDX"
+          ],
+          "input": "161432235633",
+          "inverseLow": "30416462830",
+          "inverseHigh": "30416462830",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30416462830",
+              "gross": "4638958",
+              "net": "4580970",
+              "protocol": "44071",
+              "creator": "13917"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "4638958",
+            "net": "4580970",
+            "protocol": "44071",
+            "creator": "13917",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "5A3NMoSG3JQcwab9nrou9MaDyGHJHJXCYWGYjAEjAHcEN7ovxQYhv9mWQobjCrY3wZeRz3Mxac472s3pj8mysfvU",
+            "protocol": 9,
+            "source_index": 13,
+            "first_transfer_index": 15,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "AmaK5efPX6nXAtrd5BBXsE5kVHKXX9sh7QgEUwsffobL",
+            "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "input_mint": "2DmudAPQ9tMavs9qsTTmkGcr6GbTF1nWRmTJktURpump",
+            "input_amount": "161432235633",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "4580970"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "Exr3GkHm3VgZaazXsTFqtqBiPkXonPYXcwCTwJqVXYQJ",
+          "expected": "-86001",
+          "actual": "-86001",
+          "matches": true
+        },
+        {
+          "account": "AaVkWvcZ8ENa9jC4NXKEEU4nYFKMyoQJ6WUkHdEB8zGR",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "AmaK5efPX6nXAtrd5BBXsE5kVHKXX9sh7QgEUwsffobL",
+          "expected": "-4638958",
+          "actual": "-4638958",
+          "matches": true
+        },
+        {
+          "account": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "43527",
+          "actual": "43527",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "43526",
+          "actual": "43526",
+          "matches": true
+        },
+        {
+          "account": "37pqoyWB1SqZdoYAzTeW1gs6jMTH3bLmnR4PNQkNkmDX",
+          "expected": "13917",
+          "actual": "13917",
+          "matches": true
+        },
+        {
+          "account": "6mFXAz9PxNwx8e26MpJjDTGxPwTvU7fLNxjMW32Hnxgu",
+          "expected": "13574",
+          "actual": "13574",
+          "matches": true
+        },
+        {
+          "account": "Acgmqe8fPEkrGvMqELFEDmqHds2S8kSUAnzcFz1sbHKU",
+          "expected": "4524414",
+          "actual": "4524414",
+          "matches": true
+        },
+        {
+          "account": "CcTNKBhQKYu7nB4eRrRFQoXEvpd6H5QnGKh93pwniBtp",
+          "expected": "6000",
+          "actual": "6000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 8,
+      "principalTokenLedgers": [
+        {
+          "account": "G8hbNtDjSkiorFhi6wjYbmys1JB4XDSJoQoKME4WWLQo",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "7rYWMhGwLasdx663KAZMkcEYciBnBzQg7ToRYYczknxU",
+          "expected": "161432235633",
+          "actual": "161432235633",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "2iByqpArrXvDqkPMNxioDA2qNxQUim7S5aCgQ2jfnx5M9MewGDFSYnLphSom5rgsdUkucDvGGYbQaRG2wKnNmF2C",
+      "slot": 456082881,
+      "rpcSha256": "dcb2b3bcb6584655406a9534504bdbf52c4b4413c28d117bb5a9cb51172f4a62",
+      "pbSha256": "dfadb67ec7466c1e7214c15c78604b7de220519b057644919f394d802ed0c794",
+      "legs": [
+        {
+          "source": 3,
+          "event": 6,
+          "transfer": 5,
+          "fee": 4,
+          "roles": [
+            "95dZfbsPPimDFSw81PAqCAhbtxaf3CdRuna44oCvjbaV",
+            "8h1oyjtdxAk8M5ceNdQCQAfhtDCidvuM6bSWJbeZHCZt",
+            "GfkunjBphJ5FPPhzN9LALpn4FyMxDwM3eUuTv4xCQcAF",
+            "FjzJcRsqMBrg1SzeHhq8UWovApkqBDSgn2P7MqPivKFy",
+            "ETSwMtae3rThRmtNVoEeELZwm9XnzJKZd7cRKWpE8s32",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+            "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+            "HHRQPRhN5DHgZGec4zQZWoMJD54PWtXkqTevNPRfiLBe"
+          ],
+          "input": "4752633409272",
+          "inverseLow": "46389523272",
+          "inverseHigh": "46389523272",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "46389523272",
+              "gross": "315564960",
+              "net": "311620397",
+              "protocol": "2997868",
+              "creator": "946695"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "315564960",
+            "net": "311620397",
+            "protocol": "2997868",
+            "creator": "946695",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "2iByqpArrXvDqkPMNxioDA2qNxQUim7S5aCgQ2jfnx5M9MewGDFSYnLphSom5rgsdUkucDvGGYbQaRG2wKnNmF2C",
+            "protocol": 9,
+            "source_index": 3,
+            "first_transfer_index": 5,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "95dZfbsPPimDFSw81PAqCAhbtxaf3CdRuna44oCvjbaV",
+            "user": "GfkunjBphJ5FPPhzN9LALpn4FyMxDwM3eUuTv4xCQcAF",
+            "input_mint": "8h1oyjtdxAk8M5ceNdQCQAfhtDCidvuM6bSWJbeZHCZt",
+            "input_amount": "4752633409272",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "311620397"
+          }
+        }
+      ],
+      "refunds": [
+        {
+          "kind": "committed-owner-leaf",
+          "source": 8,
+          "state": "B7BF3SQZRo8wbKC38yUqGpzZ4xgwn9cvueYyhngFZNG1",
+          "user": "GfkunjBphJ5FPPhzN9LALpn4FyMxDwM3eUuTv4xCQcAF",
+          "lamports": "1016000"
+        }
+      ],
+      "nativeLedgers": [
+        {
+          "account": "GfkunjBphJ5FPPhzN9LALpn4FyMxDwM3eUuTv4xCQcAF",
+          "expected": "314199096",
+          "actual": "314199096",
+          "matches": true
+        },
+        {
+          "account": "95dZfbsPPimDFSw81PAqCAhbtxaf3CdRuna44oCvjbaV",
+          "expected": "-315564960",
+          "actual": "-315564960",
+          "matches": true
+        },
+        {
+          "account": "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+          "expected": "1498934",
+          "actual": "1498934",
+          "matches": true
+        },
+        {
+          "account": "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+          "expected": "1498934",
+          "actual": "1498934",
+          "matches": true
+        },
+        {
+          "account": "HHRQPRhN5DHgZGec4zQZWoMJD54PWtXkqTevNPRfiLBe",
+          "expected": "946695",
+          "actual": "946695",
+          "matches": true
+        },
+        {
+          "account": "FjzJcRsqMBrg1SzeHhq8UWovApkqBDSgn2P7MqPivKFy",
+          "expected": "-1574800",
+          "actual": "-1574800",
+          "matches": true
+        },
+        {
+          "account": "B7BF3SQZRo8wbKC38yUqGpzZ4xgwn9cvueYyhngFZNG1",
+          "expected": "-1016000",
+          "actual": "-1016000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 9,
+      "principalTokenLedgers": [
+        {
+          "account": "FjzJcRsqMBrg1SzeHhq8UWovApkqBDSgn2P7MqPivKFy",
+          "expected": "-4752633409272",
+          "actual": "-4752633409272",
+          "matches": true
+        },
+        {
+          "account": "ETSwMtae3rThRmtNVoEeELZwm9XnzJKZd7cRKWpE8s32",
+          "expected": "4752633409272",
+          "actual": "4752633409272",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3FSsHNhr7DbB6JMBHqJwJmHrDdfbQbAqjwWP95aJAgLtZAmsR5smHXXfnr4qFKZdqzbzuLSKDrGFSrLht3izv6g6",
+      "slot": 456083044,
+      "rpcSha256": "aa9b2103ce409c751da24526960b9b5bf772594e5fce552a064e17091a911a78",
+      "pbSha256": "3b6e342e3e22078bb914dff03134104f4cbe4039878ec6d96746160533bd5773",
+      "legs": [
+        {
+          "source": 3,
+          "event": 6,
+          "transfer": 5,
+          "fee": 4,
+          "roles": [
+            "7NALM8q13NsNEaQv9vaGqmW2iintExVWSi7oc4fQdXk6",
+            "J3p1fN3gEXLcCh3wh2vC3ZVtazo6NugrZnDN9pSqw5yN",
+            "4ceNqujf4DEZy9jkPW9JzdYq4petdFd9njBvcFaDH47k",
+            "59drZKz9AK1a69qpGFgiTAG14QnBRiuJtvSSzBxFAZeW",
+            "CNwippUfVW4oKG2TUkYiAeNtUJuCtT3GsJd1TS6qfK4K",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+            "EHAAiTxcdDwQ3U4bU6YcMsQGaekdzLS3B5SmYo46kJtL",
+            "Gg2Erp3h9UYLSA9rT4DWGSqjAteqrMpTgzMUPEdSDy4o"
+          ],
+          "input": "842877483533",
+          "inverseLow": "30067193234",
+          "inverseHigh": "30067193234",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30067193234",
+              "gross": "23653067",
+              "net": "23357402",
+              "protocol": "224705",
+              "creator": "70960"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "23653067",
+            "net": "23357402",
+            "protocol": "224705",
+            "creator": "0",
+            "cashback": "70960"
+          },
+          "financial": {
+            "signature": "3FSsHNhr7DbB6JMBHqJwJmHrDdfbQbAqjwWP95aJAgLtZAmsR5smHXXfnr4qFKZdqzbzuLSKDrGFSrLht3izv6g6",
+            "protocol": 9,
+            "source_index": 3,
+            "first_transfer_index": 5,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "7NALM8q13NsNEaQv9vaGqmW2iintExVWSi7oc4fQdXk6",
+            "user": "4ceNqujf4DEZy9jkPW9JzdYq4petdFd9njBvcFaDH47k",
+            "input_mint": "J3p1fN3gEXLcCh3wh2vC3ZVtazo6NugrZnDN9pSqw5yN",
+            "input_amount": "842877483533",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "23357402"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "4ceNqujf4DEZy9jkPW9JzdYq4petdFd9njBvcFaDH47k",
+          "expected": "23275735",
+          "actual": "23275735",
+          "matches": true
+        },
+        {
+          "account": "7NALM8q13NsNEaQv9vaGqmW2iintExVWSi7oc4fQdXk6",
+          "expected": "-23653067",
+          "actual": "-23653067",
+          "matches": true
+        },
+        {
+          "account": "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+          "expected": "112353",
+          "actual": "112353",
+          "matches": true
+        },
+        {
+          "account": "EHAAiTxcdDwQ3U4bU6YcMsQGaekdzLS3B5SmYo46kJtL",
+          "expected": "112352",
+          "actual": "112352",
+          "matches": true
+        },
+        {
+          "account": "Gg2Erp3h9UYLSA9rT4DWGSqjAteqrMpTgzMUPEdSDy4o",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "8vGMbokLkvJeJxbXQQ3TZBE32J6z9VcGeJv2QASbsQib",
+          "expected": "70960",
+          "actual": "70960",
+          "matches": true
+        },
+        {
+          "account": "pfnSbziLrSSVNqPBD9tpx3Ud4VtbxwsXjdfYv9SmBDx",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 10,
+      "principalTokenLedgers": [
+        {
+          "account": "59drZKz9AK1a69qpGFgiTAG14QnBRiuJtvSSzBxFAZeW",
+          "expected": "-842877483533",
+          "actual": "-842877483533",
+          "matches": true
+        },
+        {
+          "account": "CNwippUfVW4oKG2TUkYiAeNtUJuCtT3GsJd1TS6qfK4K",
+          "expected": "842877483533",
+          "actual": "842877483533",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3ffxUHgQrVYUAJ65WoWXt9apM2WesXLbuSWabXo6RVeDZog44CJvemVaR5movNRo1NVxNb6jXUY2b36Y3ngnPH53",
+      "slot": 456083209,
+      "rpcSha256": "d027786218c3f8c8ca2d04f8b9a5086dd916d578cb29a84c338d881d8513258f",
+      "pbSha256": "3f11b223c93737bb3b233863ee48e1580f4d5b3c313da0edc8d5fe3b4cab4825",
+      "legs": [
+        {
+          "source": 9,
+          "event": 12,
+          "transfer": 11,
+          "fee": 10,
+          "roles": [
+            "2BpktmHsbpMShuecMaFAtBte3VeTQKYdcrqTVY4SuXhh",
+            "A4eFiUuqYGWQS5KumQx6gwdtZ4LnigRipKZ8tX3jpump",
+            "4z8P79vfvxceqEVeSb9GYJmhkKdGxo6qS3uy1TP53QjS",
+            "57kU532u8zRcUMomgRWbrue74AG4bE5EhR7QUmcoX4qs",
+            "GfVCGfqg46MwkwTu3EzDyE6Euw7CKMZyDdxdyk64veYH",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "J748dBHGUCnp8Y6Prt17MgjSrytZEZNGiRiEzkwwozFq"
+          ],
+          "input": "570158702478",
+          "inverseLow": "30204520097",
+          "inverseHigh": "30204520097",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30204520097",
+              "gross": "16150515",
+              "net": "15948633",
+              "protocol": "153430",
+              "creator": "48452"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "16150515",
+            "net": "15948633",
+            "protocol": "153430",
+            "creator": "0",
+            "cashback": "48452"
+          },
+          "financial": {
+            "signature": "3ffxUHgQrVYUAJ65WoWXt9apM2WesXLbuSWabXo6RVeDZog44CJvemVaR5movNRo1NVxNb6jXUY2b36Y3ngnPH53",
+            "protocol": 9,
+            "source_index": 9,
+            "first_transfer_index": 11,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "2BpktmHsbpMShuecMaFAtBte3VeTQKYdcrqTVY4SuXhh",
+            "user": "4z8P79vfvxceqEVeSb9GYJmhkKdGxo6qS3uy1TP53QjS",
+            "input_mint": "A4eFiUuqYGWQS5KumQx6gwdtZ4LnigRipKZ8tX3jpump",
+            "input_amount": "570158702478",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "15948633"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "4z8P79vfvxceqEVeSb9GYJmhkKdGxo6qS3uy1TP53QjS",
+          "expected": "15890124",
+          "actual": "15890124",
+          "matches": true
+        },
+        {
+          "account": "4UneUF9E7YrLbCjV98srw979WDaggUffPZsM3BBdpFbG",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "2BpktmHsbpMShuecMaFAtBte3VeTQKYdcrqTVY4SuXhh",
+          "expected": "-16150515",
+          "actual": "-16150515",
+          "matches": true
+        },
+        {
+          "account": "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+          "expected": "76715",
+          "actual": "76715",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "76715",
+          "actual": "76715",
+          "matches": true
+        },
+        {
+          "account": "J748dBHGUCnp8Y6Prt17MgjSrytZEZNGiRiEzkwwozFq",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "3BZBq8F8LyatKUa7PHweD6KxRDRFPoZCW29YPYFww4vp",
+          "expected": "48452",
+          "actual": "48452",
+          "matches": true
+        },
+        {
+          "account": "5fEmSsnU8rKRTKdEPpqdsNUsdafTipUivJLcL1VU1oWU",
+          "expected": "127589",
+          "actual": "127589",
+          "matches": true
+        },
+        {
+          "account": "57kU532u8zRcUMomgRWbrue74AG4bE5EhR7QUmcoX4qs",
+          "expected": "-2074080",
+          "actual": "-2074080",
+          "matches": true
+        },
+        {
+          "account": "FLASHRzANfcAKDuQ3RXv9hbkBy4WVEKDzoAgxJ56DiE4",
+          "expected": "1600000",
+          "actual": "1600000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 11,
+      "principalTokenLedgers": [
+        {
+          "account": "57kU532u8zRcUMomgRWbrue74AG4bE5EhR7QUmcoX4qs",
+          "expected": "-570158702478",
+          "actual": "-570158702478",
+          "matches": true
+        },
+        {
+          "account": "GfVCGfqg46MwkwTu3EzDyE6Euw7CKMZyDdxdyk64veYH",
+          "expected": "570158702478",
+          "actual": "570158702478",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "7p5FU9Bw8q6wcdKofkKAUdsJvLq5tPMvKAGyZ6Hf28454WPGvi79YAhDapYvM39QpYqZkJCc4a9FDtkVzRYNT53",
+      "slot": 456083261,
+      "rpcSha256": "54c0974e8e244248eba54a5cdf5a64a0e9d8120a1315351d5c471e1f24fd5790",
+      "pbSha256": "cecc3c0cca97e02ec137397ec15ce39b0cd3e58de95247256a8a08ef0db34b5b",
+      "legs": [
+        {
+          "source": 17,
+          "event": 20,
+          "transfer": 19,
+          "fee": 18,
+          "roles": [
+            "Acgmqe8fPEkrGvMqELFEDmqHds2S8kSUAnzcFz1sbHKU",
+            "DH4Hw4SDEXGTTsggAgn9pBMidoJnwwGG1vgu77eVpump",
+            "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "FRD9ED9WQkBuaahSRznCTM91tFPFYGK5V8jqu8mMCtTp",
+            "AEmrVWJhXXz7tvgaf2gxbN5TEeYVrjaNBova1KVwGZ3J",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "6mFXAz9PxNwx8e26MpJjDTGxPwTvU7fLNxjMW32Hnxgu"
+          ],
+          "input": "38311815794",
+          "inverseLow": "68280306610",
+          "inverseHigh": "68280306610",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "68280306610",
+              "gross": "5548395",
+              "net": "5479039",
+              "protocol": "52710",
+              "creator": "16646"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "5548395",
+            "net": "5479039",
+            "protocol": "52710",
+            "creator": "16646",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "7p5FU9Bw8q6wcdKofkKAUdsJvLq5tPMvKAGyZ6Hf28454WPGvi79YAhDapYvM39QpYqZkJCc4a9FDtkVzRYNT53",
+            "protocol": 9,
+            "source_index": 17,
+            "first_transfer_index": 19,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "Acgmqe8fPEkrGvMqELFEDmqHds2S8kSUAnzcFz1sbHKU",
+            "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "input_mint": "DH4Hw4SDEXGTTsggAgn9pBMidoJnwwGG1vgu77eVpump",
+            "input_amount": "38311815794",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "5479039"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "D1bDby4oMbYZ83Tuwa9PpKtqNydSEhXKamzvMb8RhNMi",
+          "expected": "-1599841",
+          "actual": "-1599841",
+          "matches": true
+        },
+        {
+          "account": "2JjLXiFRbx4ZBs61P41tzhPnwH81gzbYUKbHHedByCbw",
+          "expected": "1513840",
+          "actual": "1513840",
+          "matches": true
+        },
+        {
+          "account": "AaVkWvcZ8ENa9jC4NXKEEU4nYFKMyoQJ6WUkHdEB8zGR",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "Acgmqe8fPEkrGvMqELFEDmqHds2S8kSUAnzcFz1sbHKU",
+          "expected": "-5548395",
+          "actual": "-5548395",
+          "matches": true
+        },
+        {
+          "account": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "52060",
+          "actual": "52060",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "52059",
+          "actual": "52059",
+          "matches": true
+        },
+        {
+          "account": "6mFXAz9PxNwx8e26MpJjDTGxPwTvU7fLNxjMW32Hnxgu",
+          "expected": "16646",
+          "actual": "16646",
+          "matches": true
+        },
+        {
+          "account": "J96biDkbsTC53rxBdTmv2mbZT7vknrCHAvXRjCjo3WqX",
+          "expected": "16235",
+          "actual": "16235",
+          "matches": true
+        },
+        {
+          "account": "GrC7DNcVjaAqC4s5N3RXRR7TZyrR6LrusrhGwBbCW9Ei",
+          "expected": "5411395",
+          "actual": "5411395",
+          "matches": true
+        },
+        {
+          "account": "6HRgJMRmjaj2svP9GpRbUU5TPzLAHnBW3sHgYVbirWYE",
+          "expected": "6000",
+          "actual": "6000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 12,
+      "principalTokenLedgers": [
+        {
+          "account": "FRD9ED9WQkBuaahSRznCTM91tFPFYGK5V8jqu8mMCtTp",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "AEmrVWJhXXz7tvgaf2gxbN5TEeYVrjaNBova1KVwGZ3J",
+          "expected": "38311815794",
+          "actual": "38311815794",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "7R6ckeSVu8rw1aAHr28NaC6Xs5TfJZbG9hfVC9xjDaZrtSn3bYrUJSV9R16AMzoxMxACAvtbMRrAGfhABN98wb5",
+      "slot": 456083429,
+      "rpcSha256": "0f51f70148068637549e8c8f12747e9962f77fdb12587da7b7e359f70f7c67d3",
+      "pbSha256": "4201ad3fb2bcf79c62063da77a7766359da9904ae8976b4faef760debb7764da",
+      "legs": [
+        {
+          "source": 6,
+          "event": 9,
+          "transfer": 8,
+          "fee": 7,
+          "roles": [
+            "EaSnmhAseAaDAKezQEoY9BKHEmLDghkCwXVvsEKAUzef",
+            "D2k1yUvsfgNM5yyApZnyGNQ72jcMSXz1E4Arvfxupump",
+            "6BShonZRyF2CWNcnQ7fQBMEFTR1KjBPKn5rDQxm32qPU",
+            "HN6wkZUnHfomXkFYFtwPXrQidXiCZ3fvLFu5EC3RYxCf",
+            "D61LkUoZ3Cr2HVLbqwoH82KRFFb5PxV67ZWQNYx6kMzz",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "GesfTA3X2arioaHp8bbKdjG9vJtskViWACZoYvxp4twS",
+            "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+            "FjchZEWaFUjGaxnLa5jqg6oAECF5BZsDqsKhgypNoRwy"
+          ],
+          "input": "395356257363",
+          "inverseLow": "162700675829",
+          "inverseHigh": "162700675829",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "162700675829",
+              "gross": "80917149",
+              "net": "79905684",
+              "protocol": "768713",
+              "creator": "242752"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "80917149",
+            "net": "79905684",
+            "protocol": "768713",
+            "creator": "242752",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "7R6ckeSVu8rw1aAHr28NaC6Xs5TfJZbG9hfVC9xjDaZrtSn3bYrUJSV9R16AMzoxMxACAvtbMRrAGfhABN98wb5",
+            "protocol": 9,
+            "source_index": 6,
+            "first_transfer_index": 8,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "EaSnmhAseAaDAKezQEoY9BKHEmLDghkCwXVvsEKAUzef",
+            "user": "6BShonZRyF2CWNcnQ7fQBMEFTR1KjBPKn5rDQxm32qPU",
+            "input_mint": "D2k1yUvsfgNM5yyApZnyGNQ72jcMSXz1E4Arvfxupump",
+            "input_amount": "395356257363",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "79905684"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "7JCe3GHwkEr3feHgtLXnmuJ1yB3A7coSeyynxTBgdG8k",
+          "expected": "-1047150",
+          "actual": "-1047150",
+          "matches": true
+        },
+        {
+          "account": "EaSnmhAseAaDAKezQEoY9BKHEmLDghkCwXVvsEKAUzef",
+          "expected": "-80917149",
+          "actual": "-80917149",
+          "matches": true
+        },
+        {
+          "account": "6BShonZRyF2CWNcnQ7fQBMEFTR1KjBPKn5rDQxm32qPU",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "GesfTA3X2arioaHp8bbKdjG9vJtskViWACZoYvxp4twS",
+          "expected": "768713",
+          "actual": "768713",
+          "matches": true
+        },
+        {
+          "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "FjchZEWaFUjGaxnLa5jqg6oAECF5BZsDqsKhgypNoRwy",
+          "expected": "242752",
+          "actual": "242752",
+          "matches": true
+        },
+        {
+          "account": "HAZ63t55mnXEZoHMVyWaMtT4HTwgKfMCEWJ2GmTVYsqD",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "4ct7br2vTPzfdmY3S5HLtTxcGSBfn6pnw98hsS6v359A",
+          "expected": "79905684",
+          "actual": "79905684",
+          "matches": true
+        },
+        {
+          "account": "GaRXSetYz7MMnFitHA3D1HGEMih6dnyXhtd3q4jWX6oS",
+          "expected": "1000000",
+          "actual": "1000000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 13,
+      "principalTokenLedgers": [
+        {
+          "account": "HN6wkZUnHfomXkFYFtwPXrQidXiCZ3fvLFu5EC3RYxCf",
+          "expected": "-395356257363",
+          "actual": "-395356257363",
+          "matches": true
+        },
+        {
+          "account": "D61LkUoZ3Cr2HVLbqwoH82KRFFb5PxV67ZWQNYx6kMzz",
+          "expected": "395356257363",
+          "actual": "395356257363",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "4rwdxcEJ9mBjj3JNPvhERTMmLhrENk29rk1xvmrUqHkKpz4GDs56psmEHFxcAwohnfb4ySnkeAEHtzFqWYc4n5Ya",
+      "slot": 456083837,
+      "rpcSha256": "8799d9adfa278f1a2b9ed06c307fa2900232076b53e536cb1050d1f3a797c490",
+      "pbSha256": "4e7b3b28cce6ad068fcb4c6f2d365e3d985cb6cb6da01d2e91f8665cf1d8821a",
+      "legs": [
+        {
+          "source": 16,
+          "event": 19,
+          "transfer": 18,
+          "fee": 17,
+          "roles": [
+            "32XgU2iigbLdXR25tmVdod1AhQCpincM3dAp8jmCFowG",
+            "4zHK4xnkURQhXKCFPZvG2H53JtYQpRMEiQFVom7gpump",
+            "owAMurkzZnskDhGzLp6Qvu2UDHoJEdy7gAKYGsVzTQC",
+            "BC3WbkumDwnYBhHHaju7gNc4vStpdhNnJtXXsDYGkyHK",
+            "5CrkBkXzcFm86WrdD2cPWH4wa73B24FA4jYqaCzQNLeU",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+            "2kp7Y6RPat17fbgXANju4ump8RrmKTjdfj59TAUyG7KU"
+          ],
+          "input": "1161096288224",
+          "inverseLow": "30032498255",
+          "inverseHigh": "30032498256",
+          "unique": false,
+          "uniqueAmountMatch": false,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30032498255",
+              "gross": "32498249",
+              "net": "32092020",
+              "protocol": "308734",
+              "creator": "97495"
+            },
+            {
+              "preS": "30032498256",
+              "gross": "32498250",
+              "net": "32092021",
+              "protocol": "308734",
+              "creator": "97495"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "32498250",
+            "net": "32092021",
+            "protocol": "308734",
+            "creator": "0",
+            "cashback": "97495"
+          },
+          "financial": {
+            "signature": "4rwdxcEJ9mBjj3JNPvhERTMmLhrENk29rk1xvmrUqHkKpz4GDs56psmEHFxcAwohnfb4ySnkeAEHtzFqWYc4n5Ya",
+            "protocol": 9,
+            "source_index": 16,
+            "first_transfer_index": 18,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "32XgU2iigbLdXR25tmVdod1AhQCpincM3dAp8jmCFowG",
+            "user": "owAMurkzZnskDhGzLp6Qvu2UDHoJEdy7gAKYGsVzTQC",
+            "input_mint": "4zHK4xnkURQhXKCFPZvG2H53JtYQpRMEiQFVom7gpump",
+            "input_amount": "1161096288224",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "32092021"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "7JCe3GHwkEr3feHgtLXnmuJ1yB3A7coSeyynxTBgdG8k",
+          "expected": "-3881790",
+          "actual": "-3881790",
+          "matches": true
+        },
+        {
+          "account": "EBZAT87GTmfP9FZnqHYfiTan6wkptoaTK5pzginha7W9",
+          "expected": "1443695",
+          "actual": "1443695",
+          "matches": true
+        },
+        {
+          "account": "HZqMx6ihusSuJHCd9c2nkQ1HwwtrxX7WjpQ3ELwHhJdR",
+          "expected": "1488440",
+          "actual": "1488440",
+          "matches": true
+        },
+        {
+          "account": "FWA3JQH1DC1fhS9dycvoMeVHDxDRiZSPMVFjbZswwkMg",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "32XgU2iigbLdXR25tmVdod1AhQCpincM3dAp8jmCFowG",
+          "expected": "-32498250",
+          "actual": "-32498250",
+          "matches": true
+        },
+        {
+          "account": "owAMurkzZnskDhGzLp6Qvu2UDHoJEdy7gAKYGsVzTQC",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "154367",
+          "actual": "154367",
+          "matches": true
+        },
+        {
+          "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "154367",
+          "actual": "154367",
+          "matches": true
+        },
+        {
+          "account": "2kp7Y6RPat17fbgXANju4ump8RrmKTjdfj59TAUyG7KU",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "4ct7br2vTPzfdmY3S5HLtTxcGSBfn6pnw98hsS6v359A",
+          "expected": "32092021",
+          "actual": "32092021",
+          "matches": true
+        },
+        {
+          "account": "GaRXSetYz7MMnFitHA3D1HGEMih6dnyXhtd3q4jWX6oS",
+          "expected": "1000000",
+          "actual": "1000000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 14,
+      "principalTokenLedgers": [
+        {
+          "account": "BC3WbkumDwnYBhHHaju7gNc4vStpdhNnJtXXsDYGkyHK",
+          "expected": "-1161096288224",
+          "actual": "-1161096288224",
+          "matches": true
+        },
+        {
+          "account": "5CrkBkXzcFm86WrdD2cPWH4wa73B24FA4jYqaCzQNLeU",
+          "expected": "1161096288224",
+          "actual": "1161096288224",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "2vKpDMKTQ4yhhLWBfv1DwBe99UCXQHMxyNg8ozrBWpGoFNdS4ziYae18whVRbXsAP8QnEzJeBDu17RYTo3VmRHhz",
+      "slot": 456084345,
+      "rpcSha256": "d4a4a127d12f9d393dab4ceb838eba6cbc0d69d560a5030d58ca7e52e268012b",
+      "pbSha256": "c1a9b1de3a26f7936a49982a1f276b9052763ac951a4bc2b03f79438c64cfb26",
+      "legs": [
+        {
+          "source": 6,
+          "event": 9,
+          "transfer": 8,
+          "fee": 7,
+          "roles": [
+            "EewyvQwcSfqMdv7Md1rkvLYQHgadGmX9WrexGM3yGD76",
+            "8fRhgKcTCNeXt5AVUdZ7BkGJ74y9vbUbGJaKt5Kpump",
+            "6wiZqdvSAVqpGSdP72tHQ27XWoty2eTcRLKUEYAE3FGR",
+            "A5w4BnkMxP8oeZcBC3TxLMD1xbeT6b2nALdrYaVRvW1o",
+            "CzBntm7a3nov7K5UwXGk6yHauo2i7RTtjSJNCh3ajWNE",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+            "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+            "48SUwTctkVm7AmstS7E9qAk2vH4Xx4sch5AVFMuQJSnT"
+          ],
+          "input": "832030768516",
+          "inverseLow": "30355047845",
+          "inverseHigh": "30355047845",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30355047845",
+              "gross": "23797954",
+              "net": "23500479",
+              "protocol": "226081",
+              "creator": "71394"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "23797954",
+            "net": "23500479",
+            "protocol": "226081",
+            "creator": "0",
+            "cashback": "71394"
+          },
+          "financial": {
+            "signature": "2vKpDMKTQ4yhhLWBfv1DwBe99UCXQHMxyNg8ozrBWpGoFNdS4ziYae18whVRbXsAP8QnEzJeBDu17RYTo3VmRHhz",
+            "protocol": 9,
+            "source_index": 6,
+            "first_transfer_index": 8,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "EewyvQwcSfqMdv7Md1rkvLYQHgadGmX9WrexGM3yGD76",
+            "user": "6wiZqdvSAVqpGSdP72tHQ27XWoty2eTcRLKUEYAE3FGR",
+            "input_mint": "8fRhgKcTCNeXt5AVUdZ7BkGJ74y9vbUbGJaKt5Kpump",
+            "input_amount": "832030768516",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "23500479"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "FHpcNSe6tb2n15bAdq4BkeYWGyZKFD7yLYrH92ng7wCT",
+          "expected": "-1556560",
+          "actual": "-1556560",
+          "matches": true
+        },
+        {
+          "account": "97W2Mzu8cZD8u7iwmWEWq1n2RWqrYx7i7QCbKuw8sKf1",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "EewyvQwcSfqMdv7Md1rkvLYQHgadGmX9WrexGM3yGD76",
+          "expected": "-23797954",
+          "actual": "-23797954",
+          "matches": true
+        },
+        {
+          "account": "6wiZqdvSAVqpGSdP72tHQ27XWoty2eTcRLKUEYAE3FGR",
+          "expected": "1488440",
+          "actual": "1488440",
+          "matches": true
+        },
+        {
+          "account": "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+          "expected": "113041",
+          "actual": "113041",
+          "matches": true
+        },
+        {
+          "account": "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+          "expected": "113040",
+          "actual": "113040",
+          "matches": true
+        },
+        {
+          "account": "48SUwTctkVm7AmstS7E9qAk2vH4Xx4sch5AVFMuQJSnT",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "8r3Hc9L7GRHU3YtWuUR5NF3FUDQnrZd9g8QwQMPY7aUa",
+          "expected": "71394",
+          "actual": "71394",
+          "matches": true
+        },
+        {
+          "account": "DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz",
+          "expected": "23500479",
+          "actual": "23500479",
+          "matches": true
+        },
+        {
+          "account": "pfnUxCuZcfP6yidkG3EsqyR5DTbyie3R74fGoA5oB3J",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 15,
+      "principalTokenLedgers": [
+        {
+          "account": "A5w4BnkMxP8oeZcBC3TxLMD1xbeT6b2nALdrYaVRvW1o",
+          "expected": "-832030768516",
+          "actual": "-832030768516",
+          "matches": true
+        },
+        {
+          "account": "CzBntm7a3nov7K5UwXGk6yHauo2i7RTtjSJNCh3ajWNE",
+          "expected": "832030768516",
+          "actual": "832030768516",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "BEtpzDTRW69J17wHNxfQsnYjohDeyAuAVTMteGruesMehCniZPJfaAgqRddAxY4W5qUEEeNT7DyoxpjHSxfaKs3",
+      "slot": 456084372,
+      "rpcSha256": "df070a2ba2670022ad3bd3202bdabfcdb67d34e872d7a5bb45b063e30f5ef4a9",
+      "pbSha256": "29249aaf4ed526f72f00697bcd95a6f04556132f618b91e110b79f3dee3e47c1",
+      "legs": [
+        {
+          "source": 12,
+          "event": 15,
+          "transfer": 14,
+          "fee": 13,
+          "roles": [
+            "F8VwYGVrm3b12McMVun1Xc1vgEbZmyY6ce9XuVaGBY8",
+            "BCe4s3co3hMPPwvFkRm5mbwwdYDBTtoxs9wFsBrKpump",
+            "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "6tyM1jT761JtS2fnDGqKT72VJk8snR4JAVQZqkWXq6X",
+            "E3tKFMfnzPdt4grLEhuqq3BCsnprG1Sc89XJvVwdBCsR",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "6bdk1UrKG93Q6ABjE5kTGf8iBBxQsP9bssAJVwEWb4Dp"
+          ],
+          "input": "29227163107",
+          "inverseLow": "53875203312",
+          "inverseHigh": "53875203312",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "53875203312",
+              "gross": "2635252",
+              "net": "2602311",
+              "protocol": "25035",
+              "creator": "7906"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "2635252",
+            "net": "2602311",
+            "protocol": "25035",
+            "creator": "7906",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "BEtpzDTRW69J17wHNxfQsnYjohDeyAuAVTMteGruesMehCniZPJfaAgqRddAxY4W5qUEEeNT7DyoxpjHSxfaKs3",
+            "protocol": 9,
+            "source_index": 12,
+            "first_transfer_index": 14,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "F8VwYGVrm3b12McMVun1Xc1vgEbZmyY6ce9XuVaGBY8",
+            "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "input_mint": "BCe4s3co3hMPPwvFkRm5mbwwdYDBTtoxs9wFsBrKpump",
+            "input_amount": "29227163107",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "2602311"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "JA17sEumpRt8URf6ULuy9f5AEwGcQmF8tCiRRNKPz6cX",
+          "expected": "-18362",
+          "actual": "-18362",
+          "matches": true
+        },
+        {
+          "account": "AaVkWvcZ8ENa9jC4NXKEEU4nYFKMyoQJ6WUkHdEB8zGR",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "F8VwYGVrm3b12McMVun1Xc1vgEbZmyY6ce9XuVaGBY8",
+          "expected": "-2635252",
+          "actual": "-2635252",
+          "matches": true
+        },
+        {
+          "account": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "24727",
+          "actual": "24727",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "24725",
+          "actual": "24725",
+          "matches": true
+        },
+        {
+          "account": "6bdk1UrKG93Q6ABjE5kTGf8iBBxQsP9bssAJVwEWb4Dp",
+          "expected": "7906",
+          "actual": "7906",
+          "matches": true
+        },
+        {
+          "account": "84B63P4L5jgXubdCqarJuq1e6Q6PLKB36YjHVqr4k6Wt",
+          "expected": "7711",
+          "actual": "7711",
+          "matches": true
+        },
+        {
+          "account": "Ea75CjdH5pMQn6h17mbRNSJ3F97vTrzLT1bjQbAz8nj",
+          "expected": "2570183",
+          "actual": "2570183",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 16,
+      "principalTokenLedgers": [
+        {
+          "account": "6tyM1jT761JtS2fnDGqKT72VJk8snR4JAVQZqkWXq6X",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "E3tKFMfnzPdt4grLEhuqq3BCsnprG1Sc89XJvVwdBCsR",
+          "expected": "29227163107",
+          "actual": "29227163107",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "4CFr7AZFMxw8N4VQ4fLGzq4PiLhv4JkSVf5vXsvLk88pYbx9wQuR7zrxe6j2DfpMyZYX7TGiHLiDDNt3dBgYtkPw",
+      "slot": 456085394,
+      "rpcSha256": "cd6af75292169e5c4b7db5457d90b25d1e3cace61ce10939e0e409aa283c9062",
+      "pbSha256": "15168061dbc68053e0c7f4beadcc54abd2ca94cfbc76d812c6a0040a2af7656f",
+      "legs": [
+        {
+          "source": 11,
+          "event": 14,
+          "transfer": 13,
+          "fee": 12,
+          "roles": [
+            "3yBZ9keCiKggpC3XtBqAQHwH34mmbHEzVxS1KKdeSyKf",
+            "2XFGaryhk6LouBgMW22jRQP9NxMoLTK3JErBQZsBGQhs",
+            "2rxAETaX1rsJY2gvqQvoowozQuvx3hJA7VaYyMuYdv6a",
+            "EJns8iraewHR8FizPNgQAKtdBWdPjxiXNfesyKwHrf35",
+            "B1PMa5nhGuYENH6XNtZWPF3TEkWFkXv3o1kag1aDo9Xu",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "FWsW1xNtWscwNmKv6wVsU1iTzRN6wmmk3MjxRP5tT7hz",
+            "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+            "HMVkSGM597RhC4LbpGb3bNGuwwesKFqT7LQkxwCYkLp7"
+          ],
+          "input": "5561737250",
+          "inverseLow": "72237643938",
+          "inverseHigh": "72237643938",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "72237643938",
+              "gross": "901594",
+              "net": "890323",
+              "protocol": "8566",
+              "creator": "2705"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "901594",
+            "net": "890323",
+            "protocol": "8566",
+            "creator": "2705",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "4CFr7AZFMxw8N4VQ4fLGzq4PiLhv4JkSVf5vXsvLk88pYbx9wQuR7zrxe6j2DfpMyZYX7TGiHLiDDNt3dBgYtkPw",
+            "protocol": 9,
+            "source_index": 11,
+            "first_transfer_index": 13,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "3yBZ9keCiKggpC3XtBqAQHwH34mmbHEzVxS1KKdeSyKf",
+            "user": "2rxAETaX1rsJY2gvqQvoowozQuvx3hJA7VaYyMuYdv6a",
+            "input_mint": "2XFGaryhk6LouBgMW22jRQP9NxMoLTK3JErBQZsBGQhs",
+            "input_amount": "5561737250",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "890323"
+          }
+        }
+      ],
+      "refunds": [
+        {
+          "kind": "SystemCreate-owned",
+          "source": 9,
+          "close": 20,
+          "state": "AxdNPvY8jRck7rUY2uN3cagpNioqSaRjtxf5jsW4a9SA",
+          "user": "2rxAETaX1rsJY2gvqQvoowozQuvx3hJA7VaYyMuYdv6a",
+          "lamports": "772160"
+        }
+      ],
+      "nativeLedgers": [
+        {
+          "account": "2rxAETaX1rsJY2gvqQvoowozQuvx3hJA7VaYyMuYdv6a",
+          "expected": "-4493440",
+          "actual": "-4493440",
+          "matches": true
+        },
+        {
+          "account": "4rPy1PLb4g54w6DSbQ91v2veVVSir3piSwx6UXdPnEy1",
+          "expected": "1488440",
+          "actual": "1488440",
+          "matches": true
+        },
+        {
+          "account": "AxdNPvY8jRck7rUY2uN3cagpNioqSaRjtxf5jsW4a9SA",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "3yBZ9keCiKggpC3XtBqAQHwH34mmbHEzVxS1KKdeSyKf",
+          "expected": "-901594",
+          "actual": "-901594",
+          "matches": true
+        },
+        {
+          "account": "FWsW1xNtWscwNmKv6wVsU1iTzRN6wmmk3MjxRP5tT7hz",
+          "expected": "4283",
+          "actual": "4283",
+          "matches": true
+        },
+        {
+          "account": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+          "expected": "4283",
+          "actual": "4283",
+          "matches": true
+        },
+        {
+          "account": "HMVkSGM597RhC4LbpGb3bNGuwwesKFqT7LQkxwCYkLp7",
+          "expected": "2705",
+          "actual": "2705",
+          "matches": true
+        },
+        {
+          "account": "DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz",
+          "expected": "890323",
+          "actual": "890323",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 17,
+      "principalTokenLedgers": [
+        {
+          "account": "EJns8iraewHR8FizPNgQAKtdBWdPjxiXNfesyKwHrf35",
+          "expected": "-5561737250",
+          "actual": "-5561737250",
+          "matches": true
+        },
+        {
+          "account": "B1PMa5nhGuYENH6XNtZWPF3TEkWFkXv3o1kag1aDo9Xu",
+          "expected": "5561737250",
+          "actual": "5561737250",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "signature": "3qJoP9banskuMhBdRgUfNuLhfSRHBUDyMy5HQzJfBvK6zG7iFiHQveC5HEVb7GinVbAeJqeTwD1EvdvfXufWKFjk",
+      "slot": 456085595,
+      "rpcSha256": "ec8cfbcbf598e582b7b6f9d957045a3e3d6d1e32dceafdff2569ff54e7550d77",
+      "pbSha256": "583415bdb0977896a975fdea3c7d526a39228be18c212b814ad5239ecc04dea9",
+      "legs": [
+        {
+          "source": 13,
+          "event": 16,
+          "transfer": 15,
+          "fee": 14,
+          "roles": [
+            "2fn463ZVtPdjZAsGCqg41AX42Xgb8pCE7EjBnbA8Cw1g",
+            "Gz8PvqPZodhP49C7HqCauw1s3CnfY9y7aPk7XM3rpump",
+            "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "6pxKPjwXWPNwUZo3eHPuyD3Et62BrZvyRfmmnf5uCeJV",
+            "2jLBhNt3T4p3s24GnJqK9Ptg4KjKYJYT5ShhQeaKa29n",
+            "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+            "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+            "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+            "DqnBVRmGC3UmKmY1K1uHbcUKxrGUFX5fE8TmMGbhvPUj"
+          ],
+          "input": "471577705952",
+          "inverseLow": "30453709186",
+          "inverseHigh": "30453709186",
+          "unique": true,
+          "uniqueAmountMatch": true,
+          "feeBps": [
+            "0",
+            "95",
+            "30"
+          ],
+          "possible": [
+            {
+              "preS": "30453709186",
+              "gross": "13580600",
+              "net": "13410842",
+              "protocol": "129016",
+              "creator": "40742"
+            }
+          ],
+          "eventAmounts": {
+            "gross": "13580600",
+            "net": "13410842",
+            "protocol": "129016",
+            "creator": "40742",
+            "cashback": "0"
+          },
+          "financial": {
+            "signature": "3qJoP9banskuMhBdRgUfNuLhfSRHBUDyMy5HQzJfBvK6zG7iFiHQveC5HEVb7GinVbAeJqeTwD1EvdvfXufWKFjk",
+            "protocol": 9,
+            "source_index": 13,
+            "first_transfer_index": 15,
+            "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+            "pool": "2fn463ZVtPdjZAsGCqg41AX42Xgb8pCE7EjBnbA8Cw1g",
+            "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+            "input_mint": "Gz8PvqPZodhP49C7HqCauw1s3CnfY9y7aPk7XM3rpump",
+            "input_amount": "471577705952",
+            "output_mint": "So11111111111111111111111111111111111111112",
+            "output_amount": "13410842"
+          }
+        }
+      ],
+      "refunds": [],
+      "nativeLedgers": [
+        {
+          "account": "2A8MdR4qoo8rdpLt9BXFMpWPzkgzx57Vz9VNjV3d57yi",
+          "expected": "-86001",
+          "actual": "-86001",
+          "matches": true
+        },
+        {
+          "account": "AaVkWvcZ8ENa9jC4NXKEEU4nYFKMyoQJ6WUkHdEB8zGR",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "2fn463ZVtPdjZAsGCqg41AX42Xgb8pCE7EjBnbA8Cw1g",
+          "expected": "-13580600",
+          "actual": "-13580600",
+          "matches": true
+        },
+        {
+          "account": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "127424",
+          "actual": "127424",
+          "matches": true
+        },
+        {
+          "account": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "127423",
+          "actual": "127423",
+          "matches": true
+        },
+        {
+          "account": "DqnBVRmGC3UmKmY1K1uHbcUKxrGUFX5fE8TmMGbhvPUj",
+          "expected": "40742",
+          "actual": "40742",
+          "matches": true
+        },
+        {
+          "account": "DNPL9KP2PcNj2Fsnf9T4PLS6R6G2WHQxYxYuXRBXN4av",
+          "expected": "39736",
+          "actual": "39736",
+          "matches": true
+        },
+        {
+          "account": "FcvTPEhCH5pJvnpXdKBtxSwDAZAHdhQHqZMEjGxrUkBK",
+          "expected": "13245275",
+          "actual": "13245275",
+          "matches": true
+        },
+        {
+          "account": "CcTNKBhQKYu7nB4eRrRFQoXEvpd6H5QnGKh93pwniBtp",
+          "expected": "6000",
+          "actual": "6000",
+          "matches": true
+        }
+      ],
+      "fixtureIndex": 18,
+      "principalTokenLedgers": [
+        {
+          "account": "6pxKPjwXWPNwUZo3eHPuyD3Et62BrZvyRfmmnf5uCeJV",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "account": "2jLBhNt3T4p3s24GnJqK9Ptg4KjKYJYT5ShhQeaKa29n",
+          "expected": "471577705952",
+          "actual": "471577705952",
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "financialRows": [
+    {
+      "signature": "4hRJgY8iKrzE3uQa5aefv7RytSBCC9rDgLUeDCViKHckUy4y3a5SkiQSawUPxtgX6erBbutD6sDWkFmkfcnXMZxm",
+      "protocol": 9,
+      "source_index": 6,
+      "first_transfer_index": 9,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "4mgvphrHqy3FGG5oTU53n99eunGxhwayp59aM4AQV8U7",
+      "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+      "input_mint": "GTt9syUkRDzZ3VsQXP8hbrFtfd1JhY6ke525BsnmvE28",
+      "input_amount": "167809550852",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "4653976"
+    },
+    {
+      "signature": "3bKTa7mX6qumsmrpq9cYe62YYQNjxhoZWcwQzPxuTZXc3A6L58rudRcu14eHj55tumZacUkaWdcb6Gt7VZqGjXFV",
+      "protocol": 9,
+      "source_index": 6,
+      "first_transfer_index": 9,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "5E28DFMxFoMYSdxbesHMYoQgEWWHzR6sAPEYpiK58Dts",
+      "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+      "input_mint": "8MVcb3kV8cCbyBR8TFEuQr9oijmPo4kjYbNiKoXpPm1M",
+      "input_amount": "41882444153",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "1157095"
+    },
+    {
+      "signature": "3sg26MgeZuRMbteXPNZXDa6KpaJ18orcuSqFMWn9k8LB6VpkQnbkn5KjNgAVmPgsGAqwTifLp3HuSGRNDqFzZSdA",
+      "protocol": 9,
+      "source_index": 6,
+      "first_transfer_index": 9,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "CgLzrUusxRPQFDuZ6fwU9uVh5ztdMbN7pF3HmZkFh6CB",
+      "user": "F8eCiF15wWEhwf2Hjfa3PRgYkF63RrRrWSo3tYqsgLcg",
+      "input_mint": "9QpvgN2LviuC7Ff2fdahCLj5Hz1eMErNPmXxJ683j7kJ",
+      "input_amount": "76186604730",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "2125365"
+    },
+    {
+      "signature": "3Rs7YMTSuJgRpFa8Nh4p2YckwKRMZE3uiXASpTomH81WiJXNb76h4YfTU3b8XS19XJn1fZo9isBXtxmoHbxwPWnP",
+      "protocol": 9,
+      "source_index": 13,
+      "first_transfer_index": 15,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "K4qaVJS4CS714v1igAoamRWCTK2aFPmtRt7q1Sxfyzq",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_mint": "HArUcNYTd3YxTF1c7CBM2bRtNG18rrYPKubRF8mepump",
+      "input_amount": "8968180991927",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "745093291"
+    },
+    {
+      "signature": "JwB5A6wuDFiLePEdeN9VrL7XBxRjthZdr2SoZ2KR6LKoK7aUX1VyEUHaEYod21y2EahTWgen6cLywQGB3dBQwvw",
+      "protocol": 9,
+      "source_index": 11,
+      "first_transfer_index": 13,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "4a5FTB2vjty4aFdztghvCHjorE4JEuWZx2WRNnMZafJQ",
+      "user": "D18noz8Uff6B6rddvHHt3MHvSgpsZ4otBVUprx7XLtn7",
+      "input_mint": "77TXFjsYxi1MyFRsRHQUteUF7N4cixcMFLzCL2PLpump",
+      "input_amount": "8767655536282",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "856322133"
+    },
+    {
+      "signature": "2KM3QC5hymubtES3FMuJCeWizzuSKgnDJeeQHhYHRKjT7vQY2VgtXsUY3uH6JWszMLkrrU6zfSEe7pwzzrRnKeVT",
+      "protocol": 9,
+      "source_index": 3,
+      "first_transfer_index": 5,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+      "user": "8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi",
+      "input_mint": "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+      "input_amount": "1834134292638",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "82566168"
+    },
+    {
+      "signature": "3rUfRQ2qPBpC1oeNkJmsavMVwu2u5v5WuDK4nXqs6HzkyRVzRpRvBmcDhmMxFRh9UE9ZxnEopkXyx8pvpSeGpdu7",
+      "protocol": 9,
+      "source_index": 2,
+      "first_transfer_index": 4,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "9R5JgEtQejAWPwx65cR2mTrN47yQj1N9zfQKogTG9FyU",
+      "user": "4s4vL1TLZSNMxhG6FZgc2GevwLSLP5XyHEhPdAaKqNLR",
+      "input_mint": "8hngwyfFyyU4JbKz91UQfRBybvXfemx2Dv3K3Vvtpump",
+      "input_amount": "21618907912",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "963586"
+    },
+    {
+      "signature": "3BL46WWueDmNeyinusbdXuqbehLbgEaiosHRBsCiymZEfqVu3mbECj4jwmkuGKLkb8iVYbbWqAKfr4D218SrY2Gr",
+      "protocol": 9,
+      "source_index": 3,
+      "first_transfer_index": 5,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "2duBnPF1zQF3N3BhB8uGrHgcgVkswZnLmSEZXRzQUcfZ",
+      "user": "FvFbRnmBPPwsoPF4c73dWRkA9JLESPjo2cNwQFJdtvPL",
+      "input_mint": "CtEd76hrxP8vXUntDMqGNDi11x3Hbm59DSwQRghtpump",
+      "input_amount": "788088731336",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "21939681"
+    },
+    {
+      "signature": "5A3NMoSG3JQcwab9nrou9MaDyGHJHJXCYWGYjAEjAHcEN7ovxQYhv9mWQobjCrY3wZeRz3Mxac472s3pj8mysfvU",
+      "protocol": 9,
+      "source_index": 13,
+      "first_transfer_index": 15,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "AmaK5efPX6nXAtrd5BBXsE5kVHKXX9sh7QgEUwsffobL",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_mint": "2DmudAPQ9tMavs9qsTTmkGcr6GbTF1nWRmTJktURpump",
+      "input_amount": "161432235633",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "4580970"
+    },
+    {
+      "signature": "2iByqpArrXvDqkPMNxioDA2qNxQUim7S5aCgQ2jfnx5M9MewGDFSYnLphSom5rgsdUkucDvGGYbQaRG2wKnNmF2C",
+      "protocol": 9,
+      "source_index": 3,
+      "first_transfer_index": 5,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "95dZfbsPPimDFSw81PAqCAhbtxaf3CdRuna44oCvjbaV",
+      "user": "GfkunjBphJ5FPPhzN9LALpn4FyMxDwM3eUuTv4xCQcAF",
+      "input_mint": "8h1oyjtdxAk8M5ceNdQCQAfhtDCidvuM6bSWJbeZHCZt",
+      "input_amount": "4752633409272",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "311620397"
+    },
+    {
+      "signature": "3FSsHNhr7DbB6JMBHqJwJmHrDdfbQbAqjwWP95aJAgLtZAmsR5smHXXfnr4qFKZdqzbzuLSKDrGFSrLht3izv6g6",
+      "protocol": 9,
+      "source_index": 3,
+      "first_transfer_index": 5,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "7NALM8q13NsNEaQv9vaGqmW2iintExVWSi7oc4fQdXk6",
+      "user": "4ceNqujf4DEZy9jkPW9JzdYq4petdFd9njBvcFaDH47k",
+      "input_mint": "J3p1fN3gEXLcCh3wh2vC3ZVtazo6NugrZnDN9pSqw5yN",
+      "input_amount": "842877483533",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "23357402"
+    },
+    {
+      "signature": "3ffxUHgQrVYUAJ65WoWXt9apM2WesXLbuSWabXo6RVeDZog44CJvemVaR5movNRo1NVxNb6jXUY2b36Y3ngnPH53",
+      "protocol": 9,
+      "source_index": 9,
+      "first_transfer_index": 11,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "2BpktmHsbpMShuecMaFAtBte3VeTQKYdcrqTVY4SuXhh",
+      "user": "4z8P79vfvxceqEVeSb9GYJmhkKdGxo6qS3uy1TP53QjS",
+      "input_mint": "A4eFiUuqYGWQS5KumQx6gwdtZ4LnigRipKZ8tX3jpump",
+      "input_amount": "570158702478",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "15948633"
+    },
+    {
+      "signature": "7p5FU9Bw8q6wcdKofkKAUdsJvLq5tPMvKAGyZ6Hf28454WPGvi79YAhDapYvM39QpYqZkJCc4a9FDtkVzRYNT53",
+      "protocol": 9,
+      "source_index": 17,
+      "first_transfer_index": 19,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "Acgmqe8fPEkrGvMqELFEDmqHds2S8kSUAnzcFz1sbHKU",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_mint": "DH4Hw4SDEXGTTsggAgn9pBMidoJnwwGG1vgu77eVpump",
+      "input_amount": "38311815794",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "5479039"
+    },
+    {
+      "signature": "7R6ckeSVu8rw1aAHr28NaC6Xs5TfJZbG9hfVC9xjDaZrtSn3bYrUJSV9R16AMzoxMxACAvtbMRrAGfhABN98wb5",
+      "protocol": 9,
+      "source_index": 6,
+      "first_transfer_index": 8,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "EaSnmhAseAaDAKezQEoY9BKHEmLDghkCwXVvsEKAUzef",
+      "user": "6BShonZRyF2CWNcnQ7fQBMEFTR1KjBPKn5rDQxm32qPU",
+      "input_mint": "D2k1yUvsfgNM5yyApZnyGNQ72jcMSXz1E4Arvfxupump",
+      "input_amount": "395356257363",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "79905684"
+    },
+    {
+      "signature": "4rwdxcEJ9mBjj3JNPvhERTMmLhrENk29rk1xvmrUqHkKpz4GDs56psmEHFxcAwohnfb4ySnkeAEHtzFqWYc4n5Ya",
+      "protocol": 9,
+      "source_index": 16,
+      "first_transfer_index": 18,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "32XgU2iigbLdXR25tmVdod1AhQCpincM3dAp8jmCFowG",
+      "user": "owAMurkzZnskDhGzLp6Qvu2UDHoJEdy7gAKYGsVzTQC",
+      "input_mint": "4zHK4xnkURQhXKCFPZvG2H53JtYQpRMEiQFVom7gpump",
+      "input_amount": "1161096288224",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "32092021"
+    },
+    {
+      "signature": "2vKpDMKTQ4yhhLWBfv1DwBe99UCXQHMxyNg8ozrBWpGoFNdS4ziYae18whVRbXsAP8QnEzJeBDu17RYTo3VmRHhz",
+      "protocol": 9,
+      "source_index": 6,
+      "first_transfer_index": 8,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "EewyvQwcSfqMdv7Md1rkvLYQHgadGmX9WrexGM3yGD76",
+      "user": "6wiZqdvSAVqpGSdP72tHQ27XWoty2eTcRLKUEYAE3FGR",
+      "input_mint": "8fRhgKcTCNeXt5AVUdZ7BkGJ74y9vbUbGJaKt5Kpump",
+      "input_amount": "832030768516",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "23500479"
+    },
+    {
+      "signature": "BEtpzDTRW69J17wHNxfQsnYjohDeyAuAVTMteGruesMehCniZPJfaAgqRddAxY4W5qUEEeNT7DyoxpjHSxfaKs3",
+      "protocol": 9,
+      "source_index": 12,
+      "first_transfer_index": 14,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "F8VwYGVrm3b12McMVun1Xc1vgEbZmyY6ce9XuVaGBY8",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_mint": "BCe4s3co3hMPPwvFkRm5mbwwdYDBTtoxs9wFsBrKpump",
+      "input_amount": "29227163107",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "2602311"
+    },
+    {
+      "signature": "4CFr7AZFMxw8N4VQ4fLGzq4PiLhv4JkSVf5vXsvLk88pYbx9wQuR7zrxe6j2DfpMyZYX7TGiHLiDDNt3dBgYtkPw",
+      "protocol": 9,
+      "source_index": 11,
+      "first_transfer_index": 13,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "3yBZ9keCiKggpC3XtBqAQHwH34mmbHEzVxS1KKdeSyKf",
+      "user": "2rxAETaX1rsJY2gvqQvoowozQuvx3hJA7VaYyMuYdv6a",
+      "input_mint": "2XFGaryhk6LouBgMW22jRQP9NxMoLTK3JErBQZsBGQhs",
+      "input_amount": "5561737250",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "890323"
+    },
+    {
+      "signature": "3qJoP9banskuMhBdRgUfNuLhfSRHBUDyMy5HQzJfBvK6zG7iFiHQveC5HEVb7GinVbAeJqeTwD1EvdvfXufWKFjk",
+      "protocol": 9,
+      "source_index": 13,
+      "first_transfer_index": 15,
+      "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "pool": "2fn463ZVtPdjZAsGCqg41AX42Xgb8pCE7EjBnbA8Cw1g",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_mint": "Gz8PvqPZodhP49C7HqCauw1s3CnfY9y7aPk7XM3rpump",
+      "input_amount": "471577705952",
+      "output_mint": "So11111111111111111111111111111111111111112",
+      "output_amount": "13410842"
+    }
+  ],
+  "counts": {
+    "transactions": 19,
+    "nativeSellRows": 19,
+    "uniqueInverses": 18,
+    "ambiguousSingleWithPhysicalProof": 1,
+    "physicalNativeLedgers": 168,
+    "physicalPrincipalTokenLedgers": 38,
+    "ownedCashbackAccumulators": 7,
+    "inertV2Suffixes": 3,
+    "ownerRefunds": 3
+  },
+  "ownedCashback": {
+    "cases": [
+      {
+        "signature": "2KM3QC5hymubtES3FMuJCeWizzuSKgnDJeeQHhYHRKjT7vQY2VgtXsUY3uH6JWszMLkrrU6zfSEe7pwzzrRnKeVT",
+        "user": "8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi",
+        "account": "BFuRnKDz7qAMBi867bSMuMvoSkEtFY6bqni3q1FUZfvT"
+      },
+      {
+        "signature": "3rUfRQ2qPBpC1oeNkJmsavMVwu2u5v5WuDK4nXqs6HzkyRVzRpRvBmcDhmMxFRh9UE9ZxnEopkXyx8pvpSeGpdu7",
+        "user": "4s4vL1TLZSNMxhG6FZgc2GevwLSLP5XyHEhPdAaKqNLR",
+        "account": "GXvmNGZXLvk1rgR7r928EZHRhqwcpJxsRziPuuB8bpre"
+      },
+      {
+        "signature": "3BL46WWueDmNeyinusbdXuqbehLbgEaiosHRBsCiymZEfqVu3mbECj4jwmkuGKLkb8iVYbbWqAKfr4D218SrY2Gr",
+        "user": "FvFbRnmBPPwsoPF4c73dWRkA9JLESPjo2cNwQFJdtvPL",
+        "account": "7M5ocAJYFL6NU4RL5yiu83PErQMvuCB15RE7heWNLtMK"
+      },
+      {
+        "signature": "3FSsHNhr7DbB6JMBHqJwJmHrDdfbQbAqjwWP95aJAgLtZAmsR5smHXXfnr4qFKZdqzbzuLSKDrGFSrLht3izv6g6",
+        "user": "4ceNqujf4DEZy9jkPW9JzdYq4petdFd9njBvcFaDH47k",
+        "account": "8vGMbokLkvJeJxbXQQ3TZBE32J6z9VcGeJv2QASbsQib"
+      },
+      {
+        "signature": "3ffxUHgQrVYUAJ65WoWXt9apM2WesXLbuSWabXo6RVeDZog44CJvemVaR5movNRo1NVxNb6jXUY2b36Y3ngnPH53",
+        "user": "4z8P79vfvxceqEVeSb9GYJmhkKdGxo6qS3uy1TP53QjS",
+        "account": "3BZBq8F8LyatKUa7PHweD6KxRDRFPoZCW29YPYFww4vp"
+      },
+      {
+        "signature": "4rwdxcEJ9mBjj3JNPvhERTMmLhrENk29rk1xvmrUqHkKpz4GDs56psmEHFxcAwohnfb4ySnkeAEHtzFqWYc4n5Ya",
+        "user": "owAMurkzZnskDhGzLp6Qvu2UDHoJEdy7gAKYGsVzTQC",
+        "account": "EBZAT87GTmfP9FZnqHYfiTan6wkptoaTK5pzginha7W9"
+      },
+      {
+        "signature": "2vKpDMKTQ4yhhLWBfv1DwBe99UCXQHMxyNg8ozrBWpGoFNdS4ziYae18whVRbXsAP8QnEzJeBDu17RYTo3VmRHhz",
+        "user": "6wiZqdvSAVqpGSdP72tHQ27XWoty2eTcRLKUEYAE3FGR",
+        "account": "8r3Hc9L7GRHU3YtWuUR5NF3FUDQnrZd9g8QwQMPY7aUa"
+      }
+    ],
+    "addresses": [
+      "BFuRnKDz7qAMBi867bSMuMvoSkEtFY6bqni3q1FUZfvT",
+      "GXvmNGZXLvk1rgR7r928EZHRhqwcpJxsRziPuuB8bpre",
+      "7M5ocAJYFL6NU4RL5yiu83PErQMvuCB15RE7heWNLtMK",
+      "8vGMbokLkvJeJxbXQQ3TZBE32J6z9VcGeJv2QASbsQib",
+      "3BZBq8F8LyatKUa7PHweD6KxRDRFPoZCW29YPYFww4vp",
+      "EBZAT87GTmfP9FZnqHYfiTan6wkptoaTK5pzginha7W9",
+      "8r3Hc9L7GRHU3YtWuUR5NF3FUDQnrZd9g8QwQMPY7aUa"
+    ],
+    "context": {
+      "slot": 456152613,
+      "apiVersion": "4.3.0-alpha.2"
+    },
+    "value": [
+      {
+        "lamports": 296336310,
+        "data": [
+          "Vv9wDmY1mvpxqEZmTAkC+7c29QYwu5kSTgB4VThqTnOUAGmP2TUBVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeMZURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1416797,
+        "data": [
+          "Vv9wDmY1mvo5ZohwLQXtAfF2Onvw8MwxkZsfpYxu+jK5Zqc1zClg2gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFEwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1346200,
+        "data": [
+          "Vv9wDmY1mvrdp+aerJK+rc11z1QAcRVCE32f3us8zs13Uf8bc5mOWwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAenA4AAAAAADY2FgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1417160,
+        "data": [
+          "Vv9wDmY1mvo1tKalcwJUXYprfUbj5GW7bncqrgO3zSRzitaGoMfB0wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwFQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1951638,
+        "data": [
+          "Vv9wDmY1mvo7NYNFZDGOkewC/k8w/PRqA7G31+2HkE4LMSCPEN2uqQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADmogEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1443695,
+        "data": [
+          "Vv9wDmY1mvoMBfUrfLR+Af3Weqfpj5rds2grg22+BL57ka1QSXugEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADXfAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      },
+      {
+        "lamports": 1417594,
+        "data": [
+          "Vv9wDmY1mvpYTswfYAfOXSTOLL/rXDU1Ymq3Zu6qyd8f/6wDMBlRdgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC7iyAAAAAAAPEOJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          "base64"
+        ],
+        "owner": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "executable": false,
+        "rentEpoch": 18446744073709552000,
+        "space": 137
+      }
+    ]
+  },
+  "primaryAbiSha256": "6a19bad7758fb822cee79a91575e51a7bd60391c670200408676643e00a79a6d",
+  "coreVerification": {
+    "command": "cargo test --locked -p dex-swaps --lib pump",
+    "result": "pass",
+    "positiveTransactions": 19,
+    "positiveNativeSells": 19,
+    "nativeFinancialNegativeVariants": 95,
+    "dedicatedCashbackPositiveTransactions": 4,
+    "dedicatedCashbackNegativeVariants": 20
+  }
+}

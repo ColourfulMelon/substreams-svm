@@ -1,0 +1,642 @@
+{
+  "source": "Publisher riptide-amm2.1.1; complete finalized RPC/PB instruction/account/balance parity; exact shared runtime prefix and independently committed swap ancestry in each original record; owned primary market PDA/mints and treasury roles; original physical input/output conservation",
+  "sdkSha256": "7ff4b3eb277827544fce2c29ef976053f182485c2e8b8a7637de0c6719db2553",
+  "ownedContext": {
+    "slot": 456156766,
+    "apiVersion": "4.3.0-alpha.2"
+  },
+  "ownedMarkets": 9,
+  "ownedMints": 11,
+  "financialRows": [
+    {
+      "signature": "58tgmkAWQCPViXSpzudjdWJ2bQwYsiaQMo4vDtqhTDLYxR8mRsyri98Su327UhjYXBbAcR6xQyV6ZPaSexCGyn9K",
+      "protocol": 60,
+      "source_index": 6,
+      "first_transfer_index": 7,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "G9pQE63etkaFuuX7UNGB8YnvBufNNZMo9GchQNCxrYeD",
+      "user": "2U2psEbuk4t8WS5xaa7uwQYfR4XdnAJvqhfMpHY2pMPk",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "12961544",
+      "output_mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "output_amount": "1654847"
+    },
+    {
+      "signature": "izvr8wy3eTCrLq5Ty4tJiBbe7PAVy4vNKX7ynMBEsqbUkbJaFY3YLjn94DmmTwxQ52uSz8oT2ssLNgbMzRqmVzN",
+      "protocol": 60,
+      "source_index": 3,
+      "first_transfer_index": 4,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "9PwXMVkFzWk5We1FUaQi8C1mp6YekUvuLsqHLY2vyJcf",
+      "user": "RustUSBDaDcRRbT8JRmJ8GpomiXiMdgt3iYwbA59xvB",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "1600000",
+      "output_mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "output_amount": "1888023"
+    },
+    {
+      "signature": "rSSbmtvssxsNxv6iw3ViPUKFjwXQZrNPEJVjndB9rKGcARZjFiwCkdH3BxJDc3UbpC7ve1MQ1EzpccHv7CR83Uf",
+      "protocol": 60,
+      "source_index": 3,
+      "first_transfer_index": 4,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "9PwXMVkFzWk5We1FUaQi8C1mp6YekUvuLsqHLY2vyJcf",
+      "user": "btcf1R5sJNgZSwmkLNcKTsw15vGY3LZrXTqU2Ke7DfE",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "550000",
+      "output_mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "output_amount": "649364"
+    },
+    {
+      "signature": "3A8PPvEmBz2TePyRHXYeCQMvCLEiK8r3CTuMrjieRkTMTVFMeW7WZEYthPNzrR4PLCLEASis9YKPFnbCHXGW8c6y",
+      "protocol": 60,
+      "source_index": 18,
+      "first_transfer_index": 19,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "CNp3etjEmWP4mGuXWJR6FwT4ffX7pqhcCYW9a9eU22rd",
+      "user": "2bi8oPt1LrygSfauDU9MricJwPhUBieobB59ebTXBiag",
+      "input_mint": "XsP7xzNPvEHS1m6qfanPUGjNmdnmsLKEoNAnHjdxxyZ",
+      "input_amount": "980226741",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_amount": "1537993543"
+    },
+    {
+      "signature": "5z5mDu79iC7kUXrMgTzKxzYY4dFYcz8b4eNsk9fXeLMhEqAVF5d6jStjmYjsYBDFWCtT2dViT7wYWRx4uhKzhW4w",
+      "protocol": 60,
+      "source_index": 2,
+      "first_transfer_index": 3,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "HpGbZwwQ667NnTQToNfp8xyXu9qvmiZ51jLdoo4LsiSG",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "1934855",
+      "output_mint": "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN",
+      "output_amount": "1005257"
+    },
+    {
+      "signature": "2LrYLLYexoLDpbPk4R6iQik9HAnmQJ1GnffbxXPCvN2a4ZExwGv6mVZqYtaPcdyG2u14wd7gKW4E65a2kGGs9C6",
+      "protocol": 60,
+      "source_index": 13,
+      "first_transfer_index": 14,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "G9pQE63etkaFuuX7UNGB8YnvBufNNZMo9GchQNCxrYeD",
+      "user": "3AEnGqWSz2wjfLoK3VQ3CmQNQMut7WRH1AoDDCEAfEUA",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "32973522",
+      "output_mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "output_amount": "4210784"
+    },
+    {
+      "signature": "5wj8ctbYwV1tb9inub1Nk7rxA61q35PWH2phESYvckAhTQ8LEAZZTAgvnJTM1sFDoUegjCF8nHKXTz5zXnNRQmdx",
+      "protocol": 60,
+      "source_index": 4,
+      "first_transfer_index": 5,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "9PwXMVkFzWk5We1FUaQi8C1mp6YekUvuLsqHLY2vyJcf",
+      "user": "GvyLS9WFxUBzoiVPKTJAR2bGLocnoEVWRYh4D8i5z7m1",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "4127717",
+      "output_mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "output_amount": "4878897"
+    },
+    {
+      "signature": "orQ5hWVUEJgdURXpNZAprxVRrtyTfB2w69SM5RCA1PDnFvcuDLDbVxfeKey4T66sePDTo9G2hsb9G1hX6o6Jmbj",
+      "protocol": 60,
+      "source_index": 8,
+      "first_transfer_index": 9,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "9PwXMVkFzWk5We1FUaQi8C1mp6YekUvuLsqHLY2vyJcf",
+      "user": "En3NPq8o9Cynf1Q3eP69AqZmPKmBaDugYnE832o2YuzP",
+      "input_mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "input_amount": "167057820",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_amount": "141521414"
+    },
+    {
+      "signature": "5UynzfJZ9fcSaFnAMNHa5quB6MT7g2kw3ccpooYdr7ywD4aeyrP5rDPuuU9aUV5ydCsxytoZBev4GM97ZE33sjSE",
+      "protocol": 60,
+      "source_index": 8,
+      "first_transfer_index": 9,
+      "amm": "riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j",
+      "pool": "9PwXMVkFzWk5We1FUaQi8C1mp6YekUvuLsqHLY2vyJcf",
+      "user": "GvyLS9WFxUBzoiVPKTJAR2bGLocnoEVWRYh4D8i5z7m1",
+      "input_mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "input_amount": "57446892",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_amount": "48663101"
+    }
+  ],
+  "transactions": [
+    {
+      "signature": "58tgmkAWQCPViXSpzudjdWJ2bQwYsiaQMo4vDtqhTDLYxR8mRsyri98Su327UhjYXBbAcR6xQyV6ZPaSexCGyn9K",
+      "slot": 456073067,
+      "transactionPbSha256": "7af6d1a5bb7462f78d323c0d8c1dfd254859b16e484d188f4148ac059791ba3d",
+      "finalizedRpcSha256": "6d5af2a9a250e172643d2a42bfc3504f0d95861ce213610fb20260df2cdae8a7",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 52,
+        "matchedRpcInvocations": 14,
+        "matchedPbInvocations": 14,
+        "provenSources": [
+          6
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 6,
+          "argument": "12961544",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            7,
+            8
+          ],
+          "ledger": [
+            {
+              "account": "6A74H6ge8TkbhotVyFcoWs78hvk6UKJciXANCGRMKbaE",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            },
+            {
+              "account": "B1wi8gwEc5CDyHi8q6tD2FBpKC58TMHkDUobCUjygV2N",
+              "kind": "token",
+              "expected": "12961544",
+              "actual": "12961544"
+            },
+            {
+              "account": "En9pUA2JtWH5FX1Uw1mbhKphceWdUwYsF4DBPesU5Lgn",
+              "kind": "token",
+              "expected": "-1654847",
+              "actual": "-1654847"
+            },
+            {
+              "account": "3N8BdJRiEEnrkcdSsDTukxxPuvZDZnJ4pXT7kPb3wYuo",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "izvr8wy3eTCrLq5Ty4tJiBbe7PAVy4vNKX7ynMBEsqbUkbJaFY3YLjn94DmmTwxQ52uSz8oT2ssLNgbMzRqmVzN",
+      "slot": 456073076,
+      "transactionPbSha256": "40f059a59bf063038d3c34b00ecc5257df1930ba12418a03f64ebff593f1b290",
+      "finalizedRpcSha256": "84576089354db3b321e6e7d50eba782d1c61e6caf7de4300f6eb971d92c98faa",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 40,
+        "matchedRpcInvocations": 11,
+        "matchedPbInvocations": 11,
+        "provenSources": [
+          3
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 3,
+          "argument": "1600000",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            4,
+            5
+          ],
+          "ledger": [
+            {
+              "account": "GDrMq2DBxggZqwiMtSKYwXjxN9wgzbcvXK72kLJxapHw",
+              "kind": "token",
+              "expected": "1161",
+              "actual": "1161"
+            },
+            {
+              "account": "4PiuG6CaMXsAXmhv9cnZMmcQj2eYdghzcFg5d39hUwCw",
+              "kind": "token",
+              "expected": "1600000",
+              "actual": "1600000"
+            },
+            {
+              "account": "3oPXiwQ1QnQkVsbeSPHYu6xJ3mCofsct3iosakXrFc4W",
+              "kind": "token",
+              "expected": "-1888023",
+              "actual": "-1888023"
+            },
+            {
+              "account": "8jP2jEvfdDiGNTsv2E1e3CCrv9DsRgdyTAWHxM7Fkb7J",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "rSSbmtvssxsNxv6iw3ViPUKFjwXQZrNPEJVjndB9rKGcARZjFiwCkdH3BxJDc3UbpC7ve1MQ1EzpccHv7CR83Uf",
+      "slot": 456073183,
+      "transactionPbSha256": "4ae35d1879fb56f414be32d4aedd4c3cea862888702035862a64923c4f617db2",
+      "finalizedRpcSha256": "9df71a393cc713303e5cc12cc43038814302ae51bb4ac0f16c833f3508be79f1",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 52,
+        "matchedRpcInvocations": 14,
+        "matchedPbInvocations": 14,
+        "provenSources": [
+          3
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 3,
+          "argument": "550000",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            4,
+            5
+          ],
+          "ledger": [
+            {
+              "account": "9J3LpvS6N7iuPPzP3phRRThQ39Pe4hFKzzZHCmVDJnsR",
+              "kind": "token",
+              "expected": "813",
+              "actual": "813"
+            },
+            {
+              "account": "4PiuG6CaMXsAXmhv9cnZMmcQj2eYdghzcFg5d39hUwCw",
+              "kind": "token",
+              "expected": "550000",
+              "actual": "550000"
+            },
+            {
+              "account": "3oPXiwQ1QnQkVsbeSPHYu6xJ3mCofsct3iosakXrFc4W",
+              "kind": "token",
+              "expected": "-649364",
+              "actual": "-649364"
+            },
+            {
+              "account": "9CgiqhPLeiuuwpChUkzsdJwExRkfGJ9rk3T5ghSvsmmq",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "3A8PPvEmBz2TePyRHXYeCQMvCLEiK8r3CTuMrjieRkTMTVFMeW7WZEYthPNzrR4PLCLEASis9YKPFnbCHXGW8c6y",
+      "slot": 456073193,
+      "transactionPbSha256": "3e09f00809ddb5e6bd636ce855f20a3e9c46342c6b4cff04922d29d7b7a15744",
+      "finalizedRpcSha256": "b53bd778e8a0100b0ebe30da2f3802d0c60cfe868a1d28e0a6340e978215546e",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 122,
+        "matchedRpcInvocations": 35,
+        "matchedPbInvocations": 35,
+        "provenSources": [
+          18
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 18,
+          "argument": "980226741",
+          "direction": 1,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            19,
+            20
+          ],
+          "ledger": [
+            {
+              "account": "8oznEUVbPktS7Uh1tnu1Aq9hYqMnSdSAD6DhWRhoZs6g",
+              "kind": "token",
+              "expected": "-980226741",
+              "actual": "-980226741"
+            },
+            {
+              "account": "CVvttGi1Nx81YnxfVT5Bu1BbxisaSii2n1q2cTsfE8VQ",
+              "kind": "token",
+              "expected": "980226741",
+              "actual": "980226741"
+            },
+            {
+              "account": "J9nymd2zGejC4n1tko2PpA97faUwk4FiNZGapDDtE8NG",
+              "kind": "token",
+              "expected": "-1537993543",
+              "actual": "-1537993543"
+            },
+            {
+              "account": "9xrXCd9sWJNQDrXVCpr1pyp6MkM8rEao5AyM43ZkAsGo",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "5z5mDu79iC7kUXrMgTzKxzYY4dFYcz8b4eNsk9fXeLMhEqAVF5d6jStjmYjsYBDFWCtT2dViT7wYWRx4uhKzhW4w",
+      "slot": 456073300,
+      "transactionPbSha256": "3982c3ecfb994e9d377a0450d8191fa39e513830f457014617507c8fdaf63db5",
+      "finalizedRpcSha256": "b4b4f98fcce0ce7825d298b696b86e2cd89d8356669e1baaaecdc1d915c8d74b",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 36,
+        "matchedRpcInvocations": 11,
+        "matchedPbInvocations": 11,
+        "provenSources": [
+          2
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 2,
+          "argument": "1934855",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            3,
+            4
+          ],
+          "ledger": [
+            {
+              "account": "DHxtZH1RPR9LQHkdP3AKGXkCYsF6DthVFRjhaR1VNH8E",
+              "kind": "token",
+              "expected": "1604",
+              "actual": "1604"
+            },
+            {
+              "account": "isWhU4VRKFLjddnWFgSKhmqkcj5yhVwDhYwnerNcpZw",
+              "kind": "token",
+              "expected": "1934855",
+              "actual": "1934855"
+            },
+            {
+              "account": "GsaC3f2RGdnRo38w1xurLfNc5k7F7zY7fVrCyWwPVukX",
+              "kind": "token",
+              "expected": "-1005257",
+              "actual": "-1005257"
+            },
+            {
+              "account": "BuGgEpNtZThRL7kk4L6KYqiFuvyt93AzvQXJ8tvrUchY",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "2LrYLLYexoLDpbPk4R6iQik9HAnmQJ1GnffbxXPCvN2a4ZExwGv6mVZqYtaPcdyG2u14wd7gKW4E65a2kGGs9C6",
+      "slot": 456073380,
+      "transactionPbSha256": "6553399144d40ef4fddc3a26a5520c00e1c5170bfa7aaa841a9ca35e7c3b7928",
+      "finalizedRpcSha256": "9b5eeaaaf35a486a8d53ec024bfbd74e9cf3e05e74fe19447273eb5dd6903cc0",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 79,
+        "matchedRpcInvocations": 22,
+        "matchedPbInvocations": 22,
+        "provenSources": [
+          13
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 13,
+          "argument": "32973522",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            14,
+            15
+          ],
+          "ledger": [
+            {
+              "account": "GDWkT3tcvbr1v5qv2oFbEUJLMhCyVxi9tXEuhgfxrXTa",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            },
+            {
+              "account": "B1wi8gwEc5CDyHi8q6tD2FBpKC58TMHkDUobCUjygV2N",
+              "kind": "token",
+              "expected": "32973522",
+              "actual": "32973522"
+            },
+            {
+              "account": "En9pUA2JtWH5FX1Uw1mbhKphceWdUwYsF4DBPesU5Lgn",
+              "kind": "token",
+              "expected": "-4210784",
+              "actual": "-4210784"
+            },
+            {
+              "account": "BbPvGW26DTZvkNyP2Mtm7LCiAEvoWcNSZiGv8BoDJfH7",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "5wj8ctbYwV1tb9inub1Nk7rxA61q35PWH2phESYvckAhTQ8LEAZZTAgvnJTM1sFDoUegjCF8nHKXTz5zXnNRQmdx",
+      "slot": 456073442,
+      "transactionPbSha256": "669ab3c2d6a9ca97bc58c1c5a0036a38572e98cab450f21176cf4fe6bdfec387",
+      "finalizedRpcSha256": "a82b15d7d65b9f655b91c15f1c32e8206d3a980831ea3b9380b8ddf9c47ae2c6",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 62,
+        "matchedRpcInvocations": 17,
+        "matchedPbInvocations": 17,
+        "provenSources": [
+          4
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 4,
+          "argument": "4127717",
+          "direction": 0,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            5,
+            6
+          ],
+          "ledger": [
+            {
+              "account": "9dwLQBhS6szDmK8AMXwFZDJyecn4hemWvCcGCtN2RXxq",
+              "kind": "token",
+              "expected": "1532",
+              "actual": "1532"
+            },
+            {
+              "account": "4PiuG6CaMXsAXmhv9cnZMmcQj2eYdghzcFg5d39hUwCw",
+              "kind": "token",
+              "expected": "4127717",
+              "actual": "4127717"
+            },
+            {
+              "account": "3oPXiwQ1QnQkVsbeSPHYu6xJ3mCofsct3iosakXrFc4W",
+              "kind": "token",
+              "expected": "-4878897",
+              "actual": "-4878897"
+            },
+            {
+              "account": "8RBG9KKri8dgsJhZAM7GoMcDy582bBiVTr3jggT3uWay",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "orQ5hWVUEJgdURXpNZAprxVRrtyTfB2w69SM5RCA1PDnFvcuDLDbVxfeKey4T66sePDTo9G2hsb9G1hX6o6Jmbj",
+      "slot": 456073446,
+      "transactionPbSha256": "77b7972a77b707953c6d9c1403af06e45e57781a5c360352ad4b8acdef578c79",
+      "finalizedRpcSha256": "72bf33dd67705b42b9ed192fdd6520a8c74bffae76439baa1780340299d4aada",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 47,
+        "matchedRpcInvocations": 13,
+        "matchedPbInvocations": 13,
+        "provenSources": [
+          8
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 8,
+          "argument": "167057820",
+          "direction": 1,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            9,
+            10
+          ],
+          "ledger": [
+            {
+              "account": "AVAAr7qMMow7irqrS6Sukh9Wbi6yqz591mMbcDTjoSTV",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            },
+            {
+              "account": "3oPXiwQ1QnQkVsbeSPHYu6xJ3mCofsct3iosakXrFc4W",
+              "kind": "token",
+              "expected": "167057820",
+              "actual": "167057820"
+            },
+            {
+              "account": "4PiuG6CaMXsAXmhv9cnZMmcQj2eYdghzcFg5d39hUwCw",
+              "kind": "token",
+              "expected": "-141521414",
+              "actual": "-141521414"
+            },
+            {
+              "account": "FecrqCWWyUCcYgp13XqtPGADML6kRhLwCgtVsVMGuL4G",
+              "kind": "token",
+              "expected": "21414",
+              "actual": "21414"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "signature": "5UynzfJZ9fcSaFnAMNHa5quB6MT7g2kw3ccpooYdr7ywD4aeyrP5rDPuuU9aUV5ydCsxytoZBev4GM97ZE33sjSE",
+      "slot": 456073447,
+      "transactionPbSha256": "881d65acd3ea2d05b3a2383fe2e13610d4cdf462e9881b3502f45b3bfb19d239",
+      "finalizedRpcSha256": "f07076fc25a47b159c07b6e13d14768d7e02fffefb94eafeeef497b5cf1464d2",
+      "runtime": {
+        "rpcTruncated": false,
+        "pbTruncated": false,
+        "commonLogPrefixLength": 44,
+        "matchedRpcInvocations": 12,
+        "matchedPbInvocations": 12,
+        "provenSources": [
+          8
+        ]
+      },
+      "tokenBatches": [],
+      "legs": [
+        {
+          "source": 8,
+          "argument": "57446892",
+          "direction": 1,
+          "partialFill": true,
+          "accounts": 13,
+          "principals": [
+            9,
+            10
+          ],
+          "ledger": [
+            {
+              "account": "8RBG9KKri8dgsJhZAM7GoMcDy582bBiVTr3jggT3uWay",
+              "kind": "token",
+              "expected": "0",
+              "actual": "0"
+            },
+            {
+              "account": "3oPXiwQ1QnQkVsbeSPHYu6xJ3mCofsct3iosakXrFc4W",
+              "kind": "token",
+              "expected": "57446892",
+              "actual": "57446892"
+            },
+            {
+              "account": "4PiuG6CaMXsAXmhv9cnZMmcQj2eYdghzcFg5d39hUwCw",
+              "kind": "token",
+              "expected": "-48663101",
+              "actual": "-48663101"
+            },
+            {
+              "account": "9dwLQBhS6szDmK8AMXwFZDJyecn4hemWvCcGCtN2RXxq",
+              "kind": "token",
+              "expected": "2387",
+              "actual": "2387"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coreVerification": {
+    "all9HostFinancialTuplesMatched": true,
+    "exactPrincipalLedgers": 36,
+    "newRuntimeChangeRequired": false
+  },
+  "primaryReference": "../riptide-native/riptide-amm-2.1.1.crate",
+  "globalCoverageProven": false
+}
