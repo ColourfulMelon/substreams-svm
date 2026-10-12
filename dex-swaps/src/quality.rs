@@ -227,6 +227,8 @@ pub(crate) fn verify_with_fees(
     }
     let mut deltas = HashMap::<Vec<u8>, i128>::new();
     let mut observed_balances = HashSet::new();
+    let mut observed_start = HashSet::new();
+    let mut observed_end = HashSet::new();
     let accounts = tx.resolved_accounts();
     if let Some(meta) = &tx.meta {
         for (balances, sign) in [(&meta.pre_token_balances, -1i128), (&meta.post_token_balances, 1)] {
@@ -235,6 +237,11 @@ pub(crate) fn verify_with_fees(
                     if let Ok(value) = amount.amount.parse::<u64>() {
                         *deltas.entry((*account).clone()).or_default() += sign * i128::from(value);
                         observed_balances.insert((*account).clone());
+                        if sign < 0 {
+                            observed_start.insert((*account).clone());
+                        } else {
+                            observed_end.insert((*account).clone());
+                        }
                     }
                 }
             }
@@ -244,10 +251,44 @@ pub(crate) fn verify_with_fees(
     // ending spendable tokens. Its outgoing debits prove a unique receipt,
     // including Token-2022 fees and explicit burns; mints and unknown
     // extension operations still block it.
+    let mut proven_closed = HashSet::new();
     for (account, count) in &closes {
         if *count == 1 && initializations.get(account) == Some(&1) && !observed_balances.contains(account) {
             deltas.insert(account.clone(), 0);
         } else {
+            // A previously initialized account can receive tokens, burn or
+            // forward them, then close. A committed CloseAccount proves its
+            // final spendable balance is zero. Keep the observed starting
+            // balance rather than rejecting every closed, observed account.
+            // Reinitialization, a post balance, an unproven CPI close or token
+            // access after closure cannot supply this missing end balance.
+            let committed_close =
+                (*count == 1 && !initializations.contains_key(account) && observed_start.contains(account) && !observed_end.contains(account))
+                    .then(|| {
+                        instructions.iter().enumerate().find(|(position, ix)| {
+                            (ix.program_id().0 == &token::PROGRAM_ID || ix.program_id().0 == &token_2022::PROGRAM_ID)
+                                && ix.data().as_slice() == [9]
+                                && ix.accounts().len() >= 3
+                                && ix.accounts()[0].0 == account
+                                && (ix.is_root() || successful_invocations.contains(&(*position as u32)))
+                        })
+                    })
+                    .flatten();
+            if let Some((position, _)) = committed_close {
+                if !instructions[position + 1..].iter().any(|ix| {
+                    (ix.program_id().0 == &token::PROGRAM_ID || ix.program_id().0 == &token_2022::PROGRAM_ID) && ix.accounts().iter().any(|a| a.0 == account)
+                }) {
+                    proven_closed.insert(account.clone());
+                    continue;
+                }
+            }
+            other_token_operations.insert(account.clone());
+        }
+    }
+    // An omitted post balance alone is not evidence of a zero end balance.
+    // Conservation needs an actual close with the lifecycle proof above.
+    for account in observed_start.difference(&observed_end) {
+        if !closes.contains_key(account) {
             other_token_operations.insert(account.clone());
         }
     }
@@ -285,7 +326,12 @@ pub(crate) fn verify_with_fees(
             let received = deltas
                 .get(account)
                 .map(|delta| delta + debits.get(&key).unwrap_or(&0) - known_receipts.get(&key).unwrap_or(&0));
-            let net = if received == gross_receipts.get(&key).copied() {
+            // A committed non-native Token-2022 close also requires zero
+            // withheld fees. Unknown extension operations are already blocked;
+            // without them, the unknown receipts must conserve their full gross.
+            let net = if proven_closed.contains(account) && received != gross_receipts.get(&key).copied() {
+                None
+            } else if received == gross_receipts.get(&key).copied() {
                 Some(transfer.amounts[0])
             } else if receipt_counts.get(&key) == Some(&1) {
                 received
@@ -1484,6 +1530,220 @@ pub(crate) fn verify_with_fees(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn observed_accounts_burned_and_closed_after_a_swap_prove_the_receipt() {
+        use substreams_solana::pb::sf::solana::r#type::v1::{InnerInstruction, InnerInstructions};
+        for (fixture, expected_input, expected_output) in [
+            (
+                include_bytes!("../fixtures/token-fees/dbc-burned-closed-output-1.transaction.pb").as_slice(),
+                1_991_396u64,
+                191_137_459_852u64,
+            ),
+            (
+                include_bytes!("../fixtures/token-fees/dbc-burned-closed-output-2.transaction.pb").as_slice(),
+                9_960_986u64,
+                955_273_467_705u64,
+            ),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let native = tx.walk_instructions().nth(8).unwrap();
+            let destination = native.accounts()[4].0.clone();
+            drop(native);
+            let position = tx.resolved_accounts().iter().position(|key| **key == destination).unwrap() as u32;
+            let start = tx
+                .meta
+                .as_ref()
+                .unwrap()
+                .pre_token_balances
+                .iter()
+                .find(|balance| balance.account_index == position)
+                .unwrap()
+                .clone();
+            assert_eq!(start.ui_token_amount.as_ref().unwrap().amount, "0");
+            let decode = |transaction| crate::process_transaction(transaction).unwrap();
+            let decoded = decode(tx.clone());
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(8)).collect();
+            assert_eq!(swaps.len(), 1);
+            assert_eq!(swaps[0].protocol, pb::Protocol::MeteoraDbc as i32);
+            assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (expected_input, expected_output));
+            assert!(swaps[0].transfer_verified);
+            let burn_data = tx.walk_instructions().nth(21).unwrap().data().clone();
+            assert_eq!(burn_data[0], 8);
+            assert_eq!(u64::from_le_bytes(burn_data[1..9].try_into().unwrap()), expected_output);
+            // A nonzero observed starting balance must be subtracted, rather
+            // than treating every successfully closed account as starting at 0.
+            let mut nonzero_start = tx.clone();
+            nonzero_start
+                .meta
+                .as_mut()
+                .unwrap()
+                .pre_token_balances
+                .iter_mut()
+                .find(|balance| balance.account_index == position)
+                .unwrap()
+                .ui_token_amount
+                .as_mut()
+                .unwrap()
+                .amount = "100".into();
+            for group in &mut nonzero_start.meta.as_mut().unwrap().inner_instructions {
+                for instruction in &mut group.instructions {
+                    if instruction.data == burn_data {
+                        instruction.data[1..9].copy_from_slice(&(expected_output + 100).to_le_bytes());
+                    }
+                }
+            }
+            let decoded = decode(nonzero_start);
+            assert_eq!(
+                decoded.swaps.iter().find(|swap| swap.source_index == Some(8)).unwrap().output_amount,
+                expected_output
+            );
+            for mode in 0..7 {
+                let mut altered = tx.clone();
+                match mode {
+                    0 => altered
+                        .meta
+                        .as_mut()
+                        .unwrap()
+                        .pre_token_balances
+                        .retain(|balance| balance.account_index != position),
+                    1 => altered.meta.as_mut().unwrap().post_token_balances.push(start.clone()),
+                    2 => {
+                        altered
+                            .transaction
+                            .as_mut()
+                            .unwrap()
+                            .message
+                            .as_mut()
+                            .unwrap()
+                            .instructions
+                            .iter_mut()
+                            .find(|ix| ix.data.as_slice() == [9] && ix.accounts.first() == Some(&(position as u8)))
+                            .unwrap()
+                            .data[0] = 5
+                    }
+                    3 => {
+                        let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                        let close = message
+                            .instructions
+                            .iter()
+                            .find(|ix| ix.data.as_slice() == [9] && ix.accounts.first() == Some(&(position as u8)))
+                            .unwrap()
+                            .clone();
+                        message.instructions.push(close);
+                    }
+                    4 => {
+                        for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                            for instruction in &mut group.instructions {
+                                if instruction.data == burn_data {
+                                    instruction.data[1..9].copy_from_slice(&(expected_output + 1).to_le_bytes());
+                                }
+                            }
+                        }
+                    }
+                    5 => {
+                        altered
+                            .meta
+                            .as_mut()
+                            .unwrap()
+                            .pre_token_balances
+                            .iter_mut()
+                            .find(|balance| balance.account_index == position)
+                            .unwrap()
+                            .ui_token_amount
+                            .as_mut()
+                            .unwrap()
+                            .amount = "100".into()
+                    }
+                    6 => {
+                        let close = altered
+                            .transaction
+                            .as_mut()
+                            .unwrap()
+                            .message
+                            .as_mut()
+                            .unwrap()
+                            .instructions
+                            .iter_mut()
+                            .find(|ix| ix.data.as_slice() == [9] && ix.accounts.first() == Some(&(position as u8)))
+                            .unwrap();
+                        close.accounts[0] = close.accounts[1];
+                    }
+                    _ => unreachable!(),
+                }
+                assert!(
+                    decode(altered).swaps.iter().all(|swap| swap.source_index != Some(8)),
+                    "closed receipt mode {mode}"
+                );
+            }
+            // Model the same close through a CPI. Its enclosing invocation
+            // must finish too; transaction success alone cannot prove a child.
+            let mut cpi_close = tx.clone();
+            let message = cpi_close.transaction.as_mut().unwrap().message.as_mut().unwrap();
+            let close_root = message
+                .instructions
+                .iter()
+                .position(|ix| ix.data.as_slice() == [9] && ix.accounts.first() == Some(&(position as u8)))
+                .unwrap();
+            let close = message.instructions[close_root].clone();
+            let wrapper = message.instructions[0].clone();
+            let wrapper_program = base58::encode(&message.account_keys[wrapper.program_id_index as usize]);
+            let token_program = base58::encode(&message.account_keys[close.program_id_index as usize]);
+            message.instructions[close_root] = wrapper;
+            let meta = cpi_close.meta.as_mut().unwrap();
+            meta.inner_instructions.push(InnerInstructions {
+                index: close_root as u32,
+                instructions: vec![InnerInstruction {
+                    program_id_index: close.program_id_index,
+                    accounts: close.accounts,
+                    data: close.data,
+                    stack_height: Some(2),
+                }],
+            });
+            let original_close = meta
+                .log_messages
+                .iter()
+                .rposition(|line| line == &format!("Program {token_program} invoke [1]"))
+                .unwrap();
+            meta.log_messages.truncate(original_close);
+            meta.log_messages.extend([
+                format!("Program {wrapper_program} invoke [1]"),
+                format!("Program {token_program} invoke [2]"),
+                format!("Program {token_program} success"),
+                format!("Program {wrapper_program} success"),
+            ]);
+            assert_eq!(
+                decode(cpi_close.clone())
+                    .swaps
+                    .iter()
+                    .find(|swap| swap.source_index == Some(8))
+                    .unwrap()
+                    .output_amount,
+                expected_output
+            );
+            for mode in 0..3 {
+                let mut altered = cpi_close.clone();
+                let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                match mode {
+                    0 => {
+                        logs.truncate(logs.len() - 2);
+                    }
+                    1 => {
+                        let index = logs.len() - 2;
+                        logs[index] = format!("Program {token_program} failed: custom program error: 0x1");
+                    }
+                    2 => {
+                        *logs.last_mut().unwrap() = format!("Program {wrapper_program} failed: custom program error: 0x1");
+                    }
+                    _ => unreachable!(),
+                }
+                assert!(
+                    decode(altered).swaps.iter().all(|swap| swap.source_index != Some(8)),
+                    "unproven CPI close mode {mode}"
+                );
+            }
+        }
+    }
 
     #[test]
     fn native_v3_sell_requires_both_pool_and_buyback_lamport_evidence() {

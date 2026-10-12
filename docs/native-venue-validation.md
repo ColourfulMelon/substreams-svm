@@ -177,6 +177,38 @@ unchanged. Independent finalized CPI byte checks cover all 68 additional
 financial legs beyond the original 77-leg baseline. Full swap coverage and a
 live rollout remain outstanding.
 
+## Receipts burned and closed after a swap (staged after pluto.12)
+
+Two finalized DBC transfer-hook swaps pay positive base-token output, then burn
+that output and close the previously initialized recipient account. The earlier
+conservation check rejected every closed account with an observed balance.
+The decoder now retains the observed starting balance and proves the missing
+end balance from one committed close, with no reinitialization, post balance
+or later token-account access. An omitted post balance without an actual close
+cannot supply a zero end balance. Root closes use successful transaction
+status; CPI closes require completed ancestors too.
+
+The [pinned Token-2022 processor](https://github.com/solana-program/token-2022/blob/b4724e6e7fecc8fc36295f861a769401bf92b270/program/src/processor.rs)
+requires a non-native account's spendable balance and withheld transfer fees to
+be zero before closing. Unknown extension operations still invalidate
+conservation. Unknown receipts into these closed accounts must conserve their
+full gross amounts; a smaller burn cannot be interpreted as an invented fee.
+
+`token-fees/dbc-burned-closed-output-1/2.transaction.pb` and
+`closed-output-proof.json` retain the original finalized transactions and
+balance evidence. Independent raw-byte inspection finds exactly a primary
+receipt, equal burn and root close on each destination, a zero starting balance,
+no post balance and no intervening unknown token operation. Core tests cover
+both receipts, nonzero starting balances, inconsistent burns, missing balances,
+missing/duplicate/wrong closes and completed, truncated, failed or rolled-back
+CPI closes.
+
+The correction preserves all 145 earlier full financial payloads and restores
+two DBC financial legs, for 147 across the 65-transaction sample. All 140 full
+financial payloads in the separate DLMM sample remain unchanged. Four other
+sampled DBC calls have zero output and are excluded from pricing. This source
+change has not yet been included in a live release.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains

@@ -6,6 +6,8 @@ These protobuf-encoded `sf.solana.type.v1.ConfirmedTransaction` fixtures are der
 
 `native-venues/fluxbeam-rounded-input-1/2.transaction.pb` retain two finalized Fluxbeam swaps whose exact input debits are below the requested amount. `fluxbeam-input-proof.json` retains the original instruction and balance evidence. The core test verifies their actual debit/receipt pairs and rejects failed bounds or changed declared account roles; no fee metadata is needed to prove these two receipts by conservation.
 
+`token-fees/dbc-burned-closed-output-1/2.transaction.pb` retain finalized DBC transfer-hook outputs subsequently burned and closed. `closed-output-proof.json` retains the native instruction, pre/post balances and byte hashes. The core test proves each receipt from its observed starting balance, burn and committed close, and rejects incomplete or contradictory lifecycle evidence.
+
 - `privacy.transaction.pb`: slot 453196517, 2026-10-04 08:00:54 UTC. [Transaction](https://solscan.io/tx/36YvcbZZk5T78iCXMPrEsnTsKa1DY3v3qpLaf55VCirC9CFBMfnmrd7BbBKpXEFVUq6eZgrRpoV1s4kuXgVtL5Y4). Meteora DAMM v2 `swap2` includes the swap-mode byte. A separate Raydium leg must remain indexed.
 - `knet.transaction.pb`: slot 452949660, 2026-10-03 13:40:22 UTC. [Transaction](https://solscan.io/tx/FdvAFiiouw5APC1CXXLpQjqcDPnYXKVVBCHAnbyBiFLXbosgpgQDjeC2PL3eJayPhpV89qpEiju2UYHJ3YHUfcj). The WSOL destination is initialized and closed within the transaction and absent from both balance snapshots.
 - `oilinu.transaction.pb`: slot 452919823, 2026-10-03 11:27:34 UTC. [Transaction](https://solscan.io/tx/4jDUraxyc3j49eH6wQZDVSNG7KPDbDypAyuqmwFNbATA5LYkda1yBbgqmnvexFRC48gTay8oWbWPnc2BSYbPpAVs). PumpSwap `buy` includes the volume-tracking flag.
