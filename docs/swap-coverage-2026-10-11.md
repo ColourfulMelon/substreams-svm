@@ -710,6 +710,13 @@ rows are replayed into the sink. The live and preflight evidence is retained
 under `fixtures/native-venues/release15-*.json`. Retained
 originals and independent proofs are in `fixtures/swap-coverage/onedex-aliased-*`.
 
+A separate observation at 2026-10-12 07:25:40 UTC proves .15 has caught up:
+actual sink slot 455963568 and stream slot 455963570 are both about 3.47 seconds
+behind, with no stream errors. A subsequent finalized RPC head is 13 slots
+ahead of the saved sink observation; the reads are sequential. The initial
+catchup proof remains unchanged. This observation is retained separately in
+`fixtures/native-venues/release15-freshness-proof.json`.
+
 ## Remaining Pump V3 shared-buyback-recipient gap
 
 A retained original finalized transaction at slot 455950129 contains a V3 sell

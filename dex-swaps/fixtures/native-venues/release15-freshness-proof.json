@@ -1,0 +1,29 @@
+{
+  "scope": "Separate post-catchup observations, not an atomic database/chain snapshot. Actual saved and streamed blocks with drift are used; container health alone is insufficient.",
+  "sink": {
+    "timestamp": "2026-10-12T07:25:40.470451658Z",
+    "message": "postgres sink stats",
+    "last_block": "#455963568 (DPAFSn6mSGFCnjS2z3qRpkasRLBWzNtU8wyJAw6u3Dai)",
+    "drift": 3.470446398,
+    "buffered_rows": 135,
+    "flushed_rows": 546631,
+    "time_since_last_flush": 0.274026986,
+    "db_flush_rate": "0.900 flush/s (1039 total)",
+    "db_flush_duration_rate": "202.47ms per flush (avg over 30s)",
+    "running_from_tier1": true
+  },
+  "stream": {
+    "timestamp": "2026-10-12T07:25:40.470446748Z",
+    "message": "substreams stream stats",
+    "last_block": "#455963570 (7v6oU1aj7CT2HvRjg7rsr98wS695uzZR3PgAtzCXEPzB)",
+    "drift": 3.470444308,
+    "data_msg_rate": "4.467 msg/s (5492 total)"
+  },
+  "errorCount": 0,
+  "chainObservation": {
+    "checkedAt": "2026-10-12T07:25:47.193812+00:00",
+    "chainFinalizedSlot": 455963581,
+    "savedPricingSlot": 455963568,
+    "slotsBehind": 13
+  }
+}
