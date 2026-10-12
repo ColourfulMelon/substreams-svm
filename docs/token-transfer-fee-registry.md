@@ -132,8 +132,13 @@ returning the five blocks. Its confirmation run was cancelled when the depth
 error was identified. Neither run establishes a clean deployment-ready replay
 of the corrected package.
 
-Finalized remote store warming and live single-writer continuity must still pass
-before deployment. This snapshot proves future metadata availability from its
+The corrected package, with pinned metadata handlers and a separate pricing
+binary, completed the five-block production-mode replay cleanly. All seven
+metadata hashes are unchanged. Its exact marker/count guards passed and all
+423 baseline financial rows, including their depth fields, are unchanged.
+One additional Manifest wallet Swap was verified independently against the
+original Firehose/RPC calls, actual Token CPIs and reserve deltas. Broader replay
+and live single-writer continuity still need to pass before deployment. This snapshot proves future metadata availability from its
 completed boundary; it does not justify applying absent mint keys as zero-fee
 proof to older historical swaps.
 

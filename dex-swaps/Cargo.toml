@@ -4,6 +4,10 @@ description = "Normalized DEX swaps"
 edition = { workspace = true }
 version = { workspace = true }
 
+[features]
+default = ["metadata-handlers"]
+metadata-handlers = []
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 

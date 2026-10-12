@@ -42,3 +42,42 @@ replay change. Historical recovery needs
 a separate versioned canonical replay and full replacements: appending old
 swaps to live tables double-counts OHLC aggregates. The older history manifest
 remains pinned to its original decoder.
+
+## Candidate pluto.13 metadata and pricing binaries
+
+The pricing module uses the current `dex_swaps.wasm`, built without default
+features. All seven metadata modules use `dex_swaps_metadata.wasm`, built from
+immutable source commit `5db51e774846de14bd4100e0243603161a98fa04` with Rust 1.85.1.
+The separate binary is pinned by `dex-swaps/metadata-binary.json`. Its bytes and
+all metadata module hashes match the registry that passed the complete fee
+snapshot count/marker checks. Routine price-decoder changes must retain those
+bytes so existing metadata stores and their native-change replay remain usable.
+A change to metadata semantics requires a new pinned artifact and fresh replay.
+
+For builds after `.13` is published, obtain the pinned metadata artifact from
+that release before packing. It contains the same public owned-mint seed as
+its source tree; no network requests execute inside WASM.
+
+```sh
+gh release download v0.5.2-pluto.13 --repo ColourfulMelon/substreams-svm \
+  --pattern dex_swaps_metadata.wasm --dir target/wasm32-unknown-unknown/release
+python3 - <<'PYCODE'
+import hashlib, json
+from pathlib import Path
+pin = json.loads(Path('dex-swaps/metadata-binary.json').read_text())
+blob = Path('target/wasm32-unknown-unknown/release/dex_swaps_metadata.wasm').read_bytes()
+assert len(blob) == pin['sizeBytes'] and hashlib.sha256(blob).hexdigest() == pin['sha256']
+PYCODE
+cargo +1.85.1 test -p dex-swaps -p svm-dex --locked --no-default-features
+cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --no-default-features \
+  --target wasm32-unknown-unknown --release
+substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.13.spkg
+substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.13.spkg
+substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.13.spkg
+```
+
+The initial metadata artifact was built from that pinned source before the
+pricing-only DLMM depth correction. The frozen binary's unused pricing export
+is never referenced by the manifest. The corrected current pricing export is
+the sole source of swap events. The package must pass a fresh finalized replay
+and the coordinated single-writer cursor transition before live deployment.

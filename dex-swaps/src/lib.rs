@@ -54,6 +54,7 @@ pub(crate) const SOL_MINT: [u8; 32] = [
     6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1,
 ]; // So11111111111111111111111111111111111111111
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_phoenix_markets(block: Block, output: StoreSetRaw) {
     for (ordinal, key, value) in phoenix_metadata::updates(&block) {
@@ -61,6 +62,7 @@ fn store_phoenix_markets(block: Block, output: StoreSetRaw) {
     }
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_openbook_markets(block: Block, output: StoreSetRaw) {
     for (ordinal, key, value) in openbook_metadata::updates(&block) {
@@ -68,6 +70,7 @@ fn store_openbook_markets(block: Block, output: StoreSetRaw) {
     }
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::map]
 fn map_token_fee_updates(block: Block) -> Result<pb::TokenFeeUpdates, Error> {
     // Mainnet's owned EpochSchedule is retained with the fee fixtures: no
@@ -76,6 +79,7 @@ fn map_token_fee_updates(block: Block) -> Result<pb::TokenFeeUpdates, Error> {
     token_fees::updates(&block, token_fee_snapshot::SEED, token_fee_snapshot::ANCHOR, token_fee_snapshot::COMPLETE_AT)
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_token_fee_mints(updates: pb::TokenFeeUpdates, output: StoreSetRaw) {
     for update in updates.changes {
@@ -94,6 +98,7 @@ fn store_token_fee_mints(updates: pb::TokenFeeUpdates, output: StoreSetRaw) {
     }
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_token_fee_history(updates: pb::TokenFeeUpdates, mints: StoreGetRaw, output: StoreAppend<String>) {
     for update in updates.changes {
@@ -113,6 +118,7 @@ fn store_token_fee_history(updates: pb::TokenFeeUpdates, mints: StoreGetRaw, out
     }
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_token_fee_seed_count(updates: pb::TokenFeeUpdates, output: StoreAddInt64) {
     for update in updates.changes {
@@ -122,6 +128,7 @@ fn store_token_fee_seed_count(updates: pb::TokenFeeUpdates, output: StoreAddInt6
     }
 }
 
+#[cfg(feature = "metadata-handlers")]
 #[substreams::handlers::store]
 fn store_token_fee_state(updates: pb::TokenFeeUpdates, history: StoreGetString, output: StoreSetRaw) {
     for update in updates.changes {
