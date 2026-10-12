@@ -795,6 +795,21 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                // Opcode 48's XOR-encoded tail is 48 ^ 58 ^ 3. The layout
+                // above already pins its observed direction and shape.
+                if layout.protocol == pb::Protocol::Humidifi && ix.data().len() == 25 && ix.data()[24] == (48 ^ 58 ^ 3) {
+                    let calls = &instructions[index + 1..end as usize];
+                    if scoped.len() != 2 || calls.len() != 2
+                        || calls.iter().any(|child| child.data().len() != 9 || child.data()[0] != 3 || child.accounts().len() != 3)
+                        || output.authority != *accounts[1].0
+                        || [0, 2, 3, 4, 5, 10, 11].iter().any(|role| accounts[1].0 == accounts[*role].0)
+                        || input.mint != *accounts[10].0 || output.mint != *accounts[11].0
+                        || instructions[input.index as usize].program_id().0 != accounts[7].0
+                        || instructions[output.index as usize].program_id().0 != accounts[8].0
+                        || !successful_invocations.contains(&(index as u32))
+                        || !successful_invocations.contains(&input.index) || !successful_invocations.contains(&output.index)
+                    { continue; }
+                }
                 if layout.protocol == pb::Protocol::Tesserav && ix.data().first() == Some(&17) {
                     let a = usize::from(ix.data()[1] == 0);
                     let b = 1 - a;

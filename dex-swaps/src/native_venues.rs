@@ -100,6 +100,23 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
             *byte ^= key[i % 8] ^ position.to_le_bytes()[i % 2];
         }
     }
+    if protocol == Protocol::Humidifi && data.len() == 25 && data[24] == 48 {
+        // The retained original opcode-48 call has eighteen accounts and
+        // direction zero. Do not infer other directions or shorter layouts.
+        let accounts = ix.accounts();
+        if accounts.len() != 18 || data[16..24] != [0; 8]
+            || accounts[6].0.as_slice() != b58!("SysvarC1ock11111111111111111111111111111111")
+            || [7, 8].iter().any(|i| accounts[*i].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID)
+            || accounts[10].0 == accounts[11].0
+        { return None; }
+        let amount = u64::from_le_bytes(data[8..16].try_into().ok()?);
+        if amount == 0 { return None; }
+        return Some(Layout {
+            protocol, pool: 1, authority: 0, users: [4, 5], vaults: [2, 3], amount,
+            exact_input: true, input_limit: false, input_first: true, fixed_users: true,
+            minimum_output: 0,
+        });
+    }
     if protocol == Protocol::Tesserav && data.first() == Some(&17) {
         // Finalized checked-transfer calls pin the newer ABI. Only its
         // observed zero trailing flag and fourteen-account shape are known.
@@ -1352,6 +1369,58 @@ mod tests {
                 assert!(crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(source))),
                     "{} unsuccessful invocation", fields[0]);
             }
+        }
+    }
+
+    #[test]
+    fn finalized_humidifi48_requires_proven_direction_roles_and_committed_flows() {
+        let bytes = include_bytes!("../fixtures/swap-coverage/dflow-native-gaps/humidi.pb");
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+        assert_eq!(base58::encode(tx.hash()), "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW");
+        let native = tx.walk_instructions().nth(16).unwrap();
+        let native_data = native.data().clone();
+        let native_accounts: Vec<_> = native.accounts().iter().map(|a| a.0.clone()).collect();
+        drop(native);
+        let decoded = crate::process_transaction(tx.clone()).unwrap();
+        let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(16)).collect();
+        assert_eq!(swaps.len(), 1);
+        let swap = swaps[0];
+        assert_eq!(swap.protocol, Protocol::Humidifi as i32);
+        assert!(swap.transfer_verified);
+        assert_eq!(swap.amm_pool, native_accounts[1]);
+        assert_eq!(swap.user, native_accounts[0]);
+        assert_eq!(swap.input_mint, native_accounts[10]);
+        assert_eq!(swap.output_mint, native_accounts[11]);
+        assert_eq!((swap.input_amount, swap.output_amount), (8_974_777, 1_000_030));
+        assert_eq!(swap.source_transfer_index, Some(17));
+        for mode in 0..25 {
+            let mut wrong = tx.clone();
+            let meta = wrong.meta.as_mut().unwrap();
+            let group = meta.inner_instructions.iter_mut().find(|group| group.instructions.iter().any(|ix| ix.data == native_data)).unwrap();
+            let position = group.instructions.iter().position(|ix| ix.data == native_data).unwrap();
+            let accounts = group.instructions[position].accounts.clone();
+            match mode {
+                0 => group.instructions[position].data[24] ^= 1,
+                1 => group.instructions[position].data[16] ^= 1,
+                2 => group.instructions[position].data[8] ^= 1,
+                3 => { group.instructions[position].data.pop(); },
+                4 => group.instructions[position].data.push(0),
+                5 => { group.instructions[position].accounts.pop(); },
+                6..=16 => group.instructions[position].accounts[[0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11][mode - 6]] = accounts[12],
+                17 => group.instructions[position].accounts.push(accounts[12]),
+                18 => group.instructions[position + 1].accounts[2] = accounts[0],
+                19 => group.instructions[position + 2].accounts[2] = accounts[1],
+                20 => group.instructions[position + 1].stack_height = Some(4),
+                21 => { group.instructions.remove(position + 1); },
+                22 => { let duplicate = group.instructions[position + 2].clone(); group.instructions.insert(position + 3, duplicate); },
+                23..=24 => {
+                    let exit = meta.log_messages.iter().position(|log| log == "Program 9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp success").unwrap();
+                    if mode == 23 { meta.log_messages[exit] = "Program 9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp failed: custom program error: 1".into(); }
+                    else { meta.log_messages.truncate(exit); }
+                }
+                _ => unreachable!(),
+            }
+            assert!(crate::process_transaction(wrong).map_or(true, |decoded| decoded.swaps.iter().all(|s| s.source_index != Some(16))), "HumidiFi48 mutation {mode}");
         }
     }
 

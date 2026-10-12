@@ -947,3 +947,15 @@ compatibility needs bounded shape validation before adding it. This protocol
 is not yet decoded. Prediction-market receipts still need primary layout and
 settlement evidence. None of these newly retained cases is a coverage claim or
 an authorization to price router totals.
+
+
+The next source change adds only the independently proven HumidiFi opcode-48
+direction-zero shape: exactly eighteen accounts, canonical clock/classic token
+programs, directed users/vaults/mints and exactly two committed immediate SPL
+transfers with the pool as output authority. Other directions, lengths and
+unproven layouts remain diagnostic. All 163 core Rust tests pass, including
+the original swap and 25 negative cases. Eighteen overlapping corpora preserve
+all 2801 prior full financial occurrences, modify/drop none, and add two
+occurrences of the same independently proven HumidiFi leg. This source fix is
+not in the live .19 package; versioned package replay and rollout remain pending.
+Jupiter Lend and prediction-market normalization are still pending.
