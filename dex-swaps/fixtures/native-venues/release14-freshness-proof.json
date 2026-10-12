@@ -1,0 +1,30 @@
+{
+  "scope": "Separate sanitized post-catchup observations; sequential sink and RPC observations are not atomic. No container health inference.",
+  "sink": {
+    "timestamp": "2026-10-12T06:52:57.987249626Z",
+    "message": "postgres sink stats",
+    "last_block": "#455954566 (EHApNv38vRqCxBkfB2AhgsnBzhENebrNUmrFYRUwA2QP)",
+    "drift": 4.987248116,
+    "buffered_rows": 375,
+    "flushed_rows": 950186,
+    "time_since_last_flush": 1.218326246,
+    "db_flush_rate": "0.900 flush/s (1487 total)",
+    "db_flush_duration_rate": "198.15ms per flush (avg over 30s)",
+    "running_from_tier1": true
+  },
+  "stream": {
+    "timestamp": "2026-10-12T06:52:57.987240767Z",
+    "message": "substreams stream stats",
+    "last_block": "#455954570 (AhV9XLv7pvotWDPUX7ZAFjS7moAnRt3oMqbwPQo4iFKt)",
+    "drift": 3.987238487,
+    "data_msg_rate": "4.600 msg/s (9974 total)"
+  },
+  "errorCount": 0,
+  "chainObservation": {
+    "checkedAt": "2026-10-12T06:53:00.162941+00:00",
+    "chainFinalizedSlot": 455954563,
+    "savedPricingSlot": 455954566,
+    "slotsBehind": -3
+  },
+  "interpretation": "Sink lag about five seconds and stream lag about four seconds. The RPC observation can trail the sink observation by a few slots; negative slotsBehind does not mean advancing beyond finality."
+}
