@@ -794,7 +794,7 @@ repeated same-curve swaps and other unverified variants still need work;
 this rollout does not establish universal coverage.
 
 
-## Legacy and V2 native sell settlement (.17 candidate)
+## Legacy and V2 native sell settlement (published and deployed .17)
 
 The decoder now isolates net SOL proceeds for canonical legacy and V2 Pump
 sells. A committed event alone cannot establish a price: matching token CPIs,
@@ -837,3 +837,24 @@ the exact insertion/removal shift. Physical trade positions remain unchanged.
 All parent links and sealed counts agree. The frozen metadata binary and all
 seven module hashes are unchanged. The package is validated for publication;
 .16 remains the active writer until a coordinated strict-cursor rollout.
+
+Release .17 is published to the existing fork and PR #22 is merged as
+`cfcf3b37a7009801e61796cd48373b994d75ac01`. Coolify deployment
+`qewxn9ilmvjudol8dxzqsarc` finished at 2026-10-12 10:04:19 UTC using that
+exact source. The old writer was actually exited before cursor adoption; its
+saved block 456006564 and all four old-version tails are unchanged. The first
+actual .17 block is 456006565 with the exact saved parent hash. At the retained
+10:17 check, 189695 nonzero verified unique swaps and 2297 linked unique blocks
+have no invalid rows, duplicates or broken parents; sealed counters agree.
+Both original automatic deployment settings are restored. Production API remains
+healthy with custom order creation and execution disabled. No historical financial
+rows were appended. The separate read-only primer verified 5163 blocks and 429027
+swaps before deliberate termination after live boundary validation; it is not a
+clean finite replay.
+
+Freshness recovery is still pending: sink lag was 428.8 seconds and stream lag
+423.8 seconds at 10:17:15 UTC, down from about 512 seconds. The saved cursor is
+advancing with no reported errors, but these prices are not yet current. Retain
+the ongoing stream and verify actual wall-clock freshness. This rollout does not
+establish universal swap coverage; the remaining independently unverified formats
+still need work.

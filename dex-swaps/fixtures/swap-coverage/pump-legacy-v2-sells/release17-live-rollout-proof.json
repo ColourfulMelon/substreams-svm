@@ -1,0 +1,104 @@
+{
+  "release": "v0.5.2-pluto.17",
+  "releaseUrl": "https://github.com/ColourfulMelon/substreams-svm/releases/tag/v0.5.2-pluto.17",
+  "packageSourceCommit": "b417dbba4f7d2e59ca998e3fddd286d72bb90377",
+  "repairSourceCommit": "3282d8c2c050336d2e4965dbc11e4143286c48d2",
+  "packageSha256": "a316ff7fa48e479967ccc69f0c2400f8dea76b1410c0601cff195d5e73d98af6",
+  "allSixUploadedAssetDigestsVerified": true,
+  "pullRequest": "https://github.com/Pluto-ZA/pluto-monorepo/pull/22",
+  "prHead": "acabf73b3102a2849a91ce9c04196fa4434c4375",
+  "mergeCommit": "cfcf3b37a7009801e61796cd48373b994d75ac01",
+  "deployedCommit": "cfcf3b37a7009801e61796cd48373b994d75ac01",
+  "deploymentUuid": "qewxn9ilmvjudol8dxzqsarc",
+  "deploymentFinishedAt": "2026-10-12T10:04:19Z",
+  "strictHashMode": "error",
+  "oldOutputHash": "73ad93159c7ad976e9c139c3100e0f8628c55152",
+  "newOutputHash": "7d3dde68ae1dba2553125c5a32101d8cbf33dcb0",
+  "oldWriterExitedBeforeCursorAdoption": true,
+  "oldVersionCursorStableAndAllFourTailsEmpty": true,
+  "exactOpaqueCursorBackedUpAndAdopted": true,
+  "oldOpaqueCursorPreserved": true,
+  "automaticDeployOriginalSettingsRestored": true,
+  "productionApiHealthy": true,
+  "productionCustomCreationEnabled": false,
+  "productionCustomExecutionEnabled": false,
+  "liveVerification": {
+    "oldDurableBlock": 456006564,
+    "cursors": [
+      {
+        "id": "7d3dde68ae1dba2553125c5a32101d8cbf33dcb0",
+        "block_num": 456008865
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 456006565,
+        "parent_slot": 456006564,
+        "parent_hash": "Aoi55RUurLp4hEpT5m6FCZUjBhgi4t3jK8nk649jLPpZ",
+        "block_hash": "2aNrhJXxcK6rZdoXLYUeHL5wWsCharVCipGEsfK9KK8Y",
+        "timestamp": "2026-10-12 10:02:03"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 2297,
+        "unique_blocks": 2297,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 456008865,
+        "lag_seconds": 421
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 189695,
+        "unique_events": 189695,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "raydium_cpmm",
+        "rows": 1608,
+        "unique_events": 1608
+      },
+      {
+        "protocol": "manifest",
+        "rows": 1276,
+        "unique_events": 1276
+      }
+    ],
+    "cut": 456008765,
+    "coverage": [
+      {
+        "candidates": 9730,
+        "raw": 7519,
+        "expected_candidates": 9730,
+        "expected_raw": 7519
+      }
+    ]
+  },
+  "cachePreparation": {
+    "receivedBlocks": 5163,
+    "verifiedSwaps": 429027,
+    "lastBlock": 456008091,
+    "firstFiveOutputsSha256": "754ab5fd79e61ed1629427b51904bf3ad961a68604a7963c475854f17e290a94",
+    "databaseWrites": false,
+    "termination": "Owned read-only primer stopped after actual live writes and exact restart boundary were verified; child exit 1 is the expected SIGTERM, parent reaped 0. This is separate from the clean-exit finite package replay."
+  },
+  "freshness": {
+    "sinkTimestamp": "2026-10-12T10:17:15.800625578Z",
+    "sinkLagSeconds": 428.800622748,
+    "streamTimestamp": "2026-10-12T10:17:15.800706227Z",
+    "streamLagSeconds": 423.800705777,
+    "streamBlockRate": "6.100 msg/s (2246 total)",
+    "reportedErrors": 0,
+    "complete": false,
+    "status": "Verified writes and decreasing lag; catch-up still ongoing. Advancing cursor is not proof of freshness."
+  },
+  "universalSwapCoverageEstablished": false
+}
