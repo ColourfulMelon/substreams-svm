@@ -1,0 +1,38 @@
+{
+  "scope": [
+    456081974,
+    456081974
+  ],
+  "transactions": 1,
+  "financial_legs": 1,
+  "token_ledgers": 4,
+  "native_ledgers": 20,
+  "results": [
+    {
+      "signature": "z8XRtddP3xDxZqQkJv8NkWfTH3QoQQCnkX3fXPkqxoxW5SucPvxDwQ5TywDbZiZyUsxC7Aw9fhT9S3nGb9Dbr1T",
+      "slot": 456081974,
+      "raw_pb_sha256": "2e3195e7ea7670da82c7cf12ec1999c052d634a012b255223260f3aa2c1f9023",
+      "finalized_rpc_sha256": "0ab0b2166e582b2ab42cd899a503e4eb0cada9f85fe3821f4140bffa538f8f2b",
+      "legs": [
+        {
+          "source_index": 2,
+          "first_transfer_index": null,
+          "physical_quest_transfer_index": 4,
+          "source_log_index": 14,
+          "amm": "CQwWoJENUtKmwCMqnyGbEYkg41oxdat23kkNdJLvY7v9",
+          "pool": "4dJgjB2v6rVNh2sMaVX1TcpwKXXwV4UELCXv1zaBzJpg",
+          "user": "HoUseFgqjatXiL3AFjtewENhBKk15fRW8GCX6Gdjw8hQ",
+          "input_mint": "QUESTP8xKMfot3ErcdfWXsHbG3kN9mutieAqrVNw74s",
+          "input_amount": "63750000000",
+          "output_mint": "CQTGW6T5NxPPBNw7u15RQsq24BSLXi7Uav3dNcQ1LJbt",
+          "output_amount": "2000000",
+          "net_quest_transfer": "58968750000",
+          "quest_burn": "4781250000",
+          "event_log_index": 14,
+          "buyer_perspective": true
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

@@ -33,6 +33,7 @@ in `quality.rs`. Additional native
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
+The pluto.26 batch additionally documents [current proprietary formats](current-proprietary-native-validation.md), [bounded anchor suffixes](anchor-swap-suffix-native-validation.md), [custody/Numeraire swaps](custody-numeraire-native-validation.md), [Futarchy/Guacswap](futarchy-guacswap-native-validation.md), [additional native exchanges](additional-native-exchange-validation.md), and [typed non-spot classifications](residual-nonspot-native-validation.md). Combined package replay and deployment proofs determine which candidate decoders are released and live.
 See [`pump-repeated-native-sell-validation.md`](pump-repeated-native-sell-validation.md)
 for implicit Pump sell allocation from committed state witnesses, exact fee
 returns, bounded integer rounding and physical ledgers.

@@ -311,3 +311,33 @@ node dex-swaps/fixtures/swap-coverage/hadron-native/independent-oracle.cjs ./app
 The same arguments work for `saber-solfi-expanded`, `triangle-native`, `meteora-swap2-padding`, and their retained `repeat-native` copies. `repeat-native/verify-combined-originals.cjs` compares all 111 additional independently derived financial tuples with the packaged replay and verifies full original RPC/protobuf parity.
 
 [`non-swap-classification`](../dex-swaps/fixtures/swap-coverage/non-swap-classification/summary.json) retains the source-specific Manifest and BLX proof for the finalized 4,081-block scope, slots 456081600–456085680. All 2,047 Manifest batch diagnostics are committed calls without an instruction-scoped FillLog. Three are unfilled siblings of a separate filled source already indexed; that source's exact mints and atoms reconcile to the original 232-byte FillLog. All 53 BLX router calls contain 142 already-indexed physical child swaps. Their exact native source, program, declared pool, bounded execution position and verified financial rows agree with the original committed instruction walk. None requires an additional router price row. This evidence classifies those original calls; it does not establish universal historical or future coverage.
+
+## Live Meteora and Whirlpool exclusions (2026-10-12)
+
+The deployed `.25` audit at slots 456163419–456164844 reported 19 DAMM `swap2` calls and 10 Whirlpool `swap_v2` calls without verified flows. All 19 DAMM calls are canonical exact-input attempts with one input atom, zero output and a zero referral payment. Their committed current `EvtSwap2` records the same exact request and receipts. All 10 Whirlpool calls have zero input and zero output; the committed `Traded` events also report zero amounts and fees. These calls produce no executable swap price.
+
+[`live-meteora-whirlpool26`](../dex-swaps/fixtures/swap-coverage/live-meteora-whirlpool26) retains the 17 finalized original RPC/protobuf transactions, canonical pool/vault/mint ownership, complete runtime mapping and 58 full user-account ledgers. The core regression covers all 29 original source identities and 29 fabricated positive-event mutations, preserving the requirement for a positive committed recipient receipt.
+
+The same live corpus contains 1,468 additional Meteora/Whirlpool liquidity, fee collection and position operations. All 1,497 diagnostic sources match primary instruction discriminators and source-specific original runtime names, have complete successful invocation ancestry and contain no nested native swap sources. None emitted a financial row under that native source. The two newer Whirlpool tags are `increase_liquidity_by_token_amounts_v2` (20 calls) and `reposition_liquidity_v2` (one call), pinned to official `orca-so/whirlpools` source commit `cc683ec92acb5e7606caa3d8e514d9383e9c7c11`. Existing DLMM and DAMM primary pins remain unchanged.
+
+To rerun the 29 zero-output financial proofs, use the dependency provider arguments documented above. To rerun the complete classification, supply the original corpus containing `candidates.json`, `swaps.json` and each signature's `.pb` as the third command-line argument after those dependency providers:
+
+```sh
+node dex-swaps/fixtures/swap-coverage/live-meteora-whirlpool26/classify-originals.cjs ./app-deps/package.json ./protobuf-deps/package.json ./original-corpus
+```
+
+Full independent finalized RPC/ownership/ledger proof is asserted for the 29 zero-output attempts. Classification of the other 1,468 operations uses retained original protobuf runtime, immutable primary ABI and existing indexed source identities; it does not claim all their financial actions were independently reconstructed.
+
+
+### Additional Anchor spot venues (combined 26)
+
+Ghosty and Memefun are bound to their program-owned swap IDLs and exact two committed checked-transfer principals. Omnipair additionally binds its native PairUpdate and Swap events to the pool, user and physical amounts. Dr Fraudsworth permits only its declared Token-2022 hook account forwarding and the exact committed Execute child. The retained finalized corpus contains 29 source instructions; the combined core check verifies every exact financial tuple and rejects 319 malformed argument, receipt, authority, decimal, runtime or vault-owner variants.
+
+The Dr Fraudsworth WSOL case `53Qh...`, source 15, starts with 577320 atoms, spends 516117 across its committed transfers and unwraps the remaining 61203 on CloseAccount. The remaining balance is a lifecycle debit and is never added to swap output. Its delegated close authority is established by the exact committed classic SetAuthority( CloseAccount, Some(authority) ) receipt; subsequent account accesses are prohibited. The independent original RPC/PB ledger includes that unwrap and all other token transfers, mints and burns. Fixture roots: `anchor-markets26` and `parent-spot26`.
+
+These are finite finalized source proofs. They do not assert coverage of every future instruction or fee extension.
+
+
+The v26 Sanctum Infinity native V2 profile additionally retains two finalized invocations and twelve complete token-account ledger equations. Its ABI is pinned to the primary igneous-labs/inf-1.5 source d4bfdd4d1d34985f8639433c0308941fc84bf1a2, with exact native pool/list/program roles, six calculator CPIs, pricing CPI and two checked principal transfers. The shared anchor core now checks 31 financial positives and 341 malformed variants including those two profiles. This proof is in `dex-swaps/fixtures/swap-coverage/sanctum-infinity26`.
+
+SatRush payout classification in `dex-swaps/fixtures/swap-coverage/satrush-payout-classification26` independently verifies 304 finalized native invocations in 178 original transactions with 1,756 complete persistent token-account ledger equations. All retained SettleDeployPublic, RotateRound and ClaimSats legs flow out of program-owned authorities, with no opposing native asset exchange. This finite classification does not exclude other instructions from that program or claim network-wide swap coverage.
