@@ -1393,6 +1393,50 @@ mod tests {
         assert_eq!(swap.output_mint, native_accounts[11]);
         assert_eq!((swap.input_amount, swap.output_amount), (8_974_777, 1_000_030));
         assert_eq!(swap.source_transfer_index, Some(17));
+        // Retain the original account/amount evidence in a standalone shape.
+        // Its classic-only transfers must not depend on another router leg
+        // causing the invocation scanner to run.
+        let mut standalone = tx.clone();
+        let resolved: Vec<_> = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect();
+        let message = standalone.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        message.account_keys = resolved;
+        let original = tx.walk_instructions().nth(16).unwrap();
+        let group = tx.meta.as_ref().unwrap().inner_instructions.iter().find(|group| group.instructions.iter().any(|ix| ix.data == native_data)).unwrap();
+        let position = group.instructions.iter().position(|ix| ix.data == native_data).unwrap();
+        let native = &group.instructions[position];
+        message.instructions = vec![substreams_solana::pb::sf::solana::r#type::v1::CompiledInstruction {
+            program_id_index: native.program_id_index, accounts: native.accounts.clone(), data: native.data.clone(),
+        }];
+        let meta = standalone.meta.as_mut().unwrap();
+        meta.loaded_writable_addresses.clear();
+        meta.loaded_readonly_addresses.clear();
+        let mut transfers = group.instructions[position + 1..position + 3].to_vec();
+        for child in &mut transfers { child.stack_height = Some(2); }
+        meta.inner_instructions = vec![substreams_solana::pb::sf::solana::r#type::v1::InnerInstructions { index: 0, instructions: transfers }];
+        // The routed original creates/closes its WSOL account. Model the
+        // standalone caller's already initialized accounts and exact debits.
+        meta.pre_token_balances.clear();
+        meta.post_token_balances.clear();
+        for (role, mint, delta) in [(2, 10, 8_974_777i64), (3, 11, -1_000_030), (4, 10, -8_974_777), (5, 11, 1_000_030)] {
+            for (balances, amount) in [(&mut meta.pre_token_balances, 1_000_000_000u64),
+                (&mut meta.post_token_balances, (1_000_000_000i64 + delta) as u64)] {
+                balances.push(substreams_solana::pb::sf::solana::r#type::v1::TokenBalance {
+                    account_index: u32::from(native.accounts[role]), mint: base58::encode(&native_accounts[mint]),
+                    ui_token_amount: Some(substreams_solana::pb::sf::solana::r#type::v1::UiTokenAmount {
+                        amount: amount.to_string(), decimals: if mint == 10 { 9 } else { 6 }, ..Default::default()
+                    }), ..Default::default()
+                });
+            }
+        }
+        let program = base58::encode(original.program_id().0);
+        let token = base58::encode(substreams_solana_idls::spl::token::PROGRAM_ID);
+        meta.log_messages = vec![format!("Program {program} invoke [1]"), format!("Program {token} invoke [2]"), format!("Program {token} success"),
+            format!("Program {token} invoke [2]"), format!("Program {token} success"), format!("Program {program} success")];
+        let direct = crate::process_transaction(standalone).unwrap();
+        assert_eq!(direct.swaps.len(), 1);
+        assert_eq!((direct.swaps[0].input_amount, direct.swaps[0].output_amount), (swap.input_amount, swap.output_amount));
+        assert_eq!(direct.swaps[0].source_index, Some(0));
+        assert!(direct.swaps[0].transfer_verified);
         for mode in 0..25 {
             let mut wrong = tx.clone();
             let meta = wrong.meta.as_mut().unwrap();

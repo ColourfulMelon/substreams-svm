@@ -74,6 +74,8 @@ pub(crate) fn verify_with_fees(
                         | pumpfun::instructions::PumpFunInstruction::SellV2(_))))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
                 || ix.program_id().0.as_slice() == substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") && ix.data().first() == Some(&17)
+                || ix.program_id().0.as_slice() == substreams_solana::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp")
+                    && ix.data().len() == 25 && ix.data()[24] == (48 ^ 58 ^ 3)
         }) {
         crate::logs::successful_invocations(tx)
     } else {

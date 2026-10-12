@@ -974,3 +974,13 @@ selected current market/maker states and outcome mints are unavailable; this
 read does not establish historical ownership or mint-fee state. Historical
 market and net receipt evidence are still pending, and no Tri3 decoder was
 added. Source/receipt differences alone are not classified as lost transactions.
+
+### HumidiFi48 standalone invocation scan (source only)
+
+The source fix also enables the committed-invocation scan for classic-only
+HumidiFi48 calls. Its standalone regression uses the original account and amount
+evidence in a synthetic initialized-account shape; it fails without the scan
+gate and passes with it. All 163 core tests pass. Across 18 overlapping finalized
+corpora, all 2,803 prior financial occurrences remain unchanged with no added
+rows. This source correction is not yet a packaged or deployed release. See
+`dex-swaps/fixtures/swap-coverage/dflow-native-gaps/humidi48-standalone-parity-proof.json`.
