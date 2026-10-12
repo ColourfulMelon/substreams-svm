@@ -4,12 +4,15 @@
 use proto::pb::dex::swaps::v1::Protocol;
 use substreams_solana::{b58, block_view::InstructionView};
 
+pub(crate) const ORCA_V1: [u8; 32] = b58!("DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1");
+
 pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::GoonfiV2, b58!("goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE")),
     (Protocol::Bisonfi, b58!("BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi")),
     (Protocol::Manifest, b58!("MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms")),
     (Protocol::Humidifi, b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp")),
     (Protocol::OrcaV2, b58!("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP")),
+    (Protocol::SplTokenSwap, ORCA_V1),
     (Protocol::Alphaq, b58!("ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA")),
     (Protocol::Kipseli, b58!("3TK9D8aoBFYjYZtKCjciPrVrRStsnvo7KmpcJqDavpaU")),
     (Protocol::Flux, b58!("FLUX6xBayGxLX9UcimVRxXFMHH6q43mAbRvDzSpCsvfK")),
@@ -66,6 +69,25 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     let protocol = VENUES.iter().find(|(_, id)| id.as_slice() == program.0.as_slice())?.0;
     let raw = ix.data();
     let mut data = raw.clone();
+    if protocol == Protocol::SplTokenSwap {
+        // Orca V1 uses the legacy SPL Token Swap ABI, not the later
+        // Token-2022 extension with separate mint/program accounts.
+        let accounts = ix.accounts();
+        if data.len() != 17 || data[0] != 1 || !matches!(accounts.len(), 10 | 11)
+            || accounts[9].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID
+        {
+            return None;
+        }
+        let amount = u64::from_le_bytes(data[1..9].try_into().ok()?);
+        if amount == 0 {
+            return None;
+        }
+        return Some(Layout {
+            protocol, pool: 0, authority: 2, users: [3, 6], vaults: [4, 5], amount,
+            minimum_output: u64::from_le_bytes(data[9..17].try_into().ok()?),
+            exact_input: true, input_limit: true, input_first: true, fixed_users: true,
+        });
+    }
     if protocol == Protocol::Humidifi {
         // XOR is symmetrical. Decode with byte operations (no alignment or
         // host-endianness assumptions in WASM).
@@ -740,6 +762,78 @@ pub(crate) fn extract_pool(ix: &InstructionView) -> Option<Vec<u8>> {
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn finalized_orca_v1_swaps_require_exact_committed_user_and_vault_flows() {
+        for (fixture, index, input, output) in [
+            (include_bytes!("../fixtures/native-venues/orca-v1-route-1.transaction.pb").as_slice(), 7, 5_914_841_313u64, 655_895u64),
+            (include_bytes!("../fixtures/native-venues/orca-v1-route-2.transaction.pb").as_slice(), 12, 46_517u64, 5_175u64),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let native = tx.walk_instructions().nth(index as usize).unwrap();
+            let native_data = native.data().clone();
+            let expected_pool = native.accounts()[0].0.clone();
+            let expected_user = native.accounts()[2].0.clone();
+            drop(native);
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1);
+            assert_eq!(swaps[0].protocol, Protocol::SplTokenSwap as i32);
+            assert_eq!(swaps[0].amm, ORCA_V1);
+            assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (input, output));
+            assert_eq!(swaps[0].amm_pool, expected_pool);
+            assert_eq!(swaps[0].user, expected_user);
+            assert_eq!(swaps[0].source_transfer_index, Some(index + 1));
+            assert!(swaps[0].transfer_verified);
+            for mode in 0..19 {
+                let mut altered = tx.clone();
+                let meta = altered.meta.as_mut().unwrap();
+                let (group, position) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)| {
+                    group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))
+                }).unwrap();
+                let instructions = &mut meta.inner_instructions[group].instructions;
+                let accounts = instructions[position].accounts.clone();
+                match mode {
+                    0 => instructions[position].data[1..9].copy_from_slice(&(input - 1).to_le_bytes()),
+                    1 => instructions[position].data[9..17].copy_from_slice(&(output + 1).to_le_bytes()),
+                    2 => instructions[position].data[0] = 2,
+                    3 => { instructions[position].data.pop(); }
+                    4 => instructions[position].data.push(0),
+                    5 => instructions[position].accounts[9] = accounts[0],
+                    6 => instructions[position].accounts[1] = accounts[0],
+                    7 => instructions[position].accounts[4] = accounts[0],
+                    8 => instructions[position].accounts[2] = accounts[0],
+                    9 => instructions[position + 1].accounts[2] = accounts[0],
+                    10 => instructions[position + 2].accounts[2] = accounts[0],
+                    11 => { instructions.remove(position + 2); }
+                    12 => { let duplicate = instructions[position + 2].clone(); instructions.insert(position + 3, duplicate); }
+                    13 => instructions[position + 2].stack_height = Some(4),
+                    14 | 15 => {
+                        let program = base58::encode(ORCA_V1);
+                        let invoke = meta.log_messages.iter().position(|log| log == &format!("Program {program} invoke [2]")).unwrap();
+                        let end = meta.log_messages.iter().enumerate().skip(invoke).find(|(_, log)| {
+                            if mode == 14 {
+                                **log == format!("Program {} success", base58::encode(substreams_solana_idls::jupiter::v4::PROGRAM_ID))
+                            } else {
+                                **log == format!("Program {program} success")
+                            }
+                        }).map(|(i, _)| i).unwrap();
+                        if mode == 14 {
+                            meta.log_messages[end] = format!("Program {} failed: custom program error: 1", base58::encode(substreams_solana_idls::jupiter::v4::PROGRAM_ID));
+                        } else {
+                            meta.log_messages.truncate(end);
+                        }
+                    }
+                    16 => instructions[position + 1].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
+                    17 => instructions[position + 2].program_id_index = instructions[position].program_id_index,
+                    _ => { let duplicate = instructions[position + 1].clone(); instructions.insert(position + 2, duplicate); }
+                }
+                assert!(crate::process_transaction(altered).map_or(true, |decoded| {
+                    decoded.swaps.iter().all(|swap| swap.source_index != Some(index))
+                }), "Orca V1 mode {mode}");
+            }
+        }
+    }
 
     #[test]
     fn launchpad_native_user_receipts_do_not_depend_on_event_version() {

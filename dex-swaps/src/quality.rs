@@ -52,6 +52,7 @@ pub(crate) fn verify_with_fees(
     let successful_invocations = if caught_failure
         || instructions.iter().any(|ix| {
             ix.program_id().0 == &token_2022::PROGRAM_ID
+                || ix.program_id().0 == &crate::native_venues::ORCA_V1
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || crate::native_venues::defituna_two_hop(ix).is_some()
         }) {
@@ -1235,6 +1236,47 @@ pub(crate) fn verify_with_fees(
                             && accounts.iter().any(|account| account.0 == &transfer.destination)
                     })
                     .collect();
+                if ix.program_id().0 == &crate::native_venues::ORCA_V1 {
+                    let Some(layout) = crate::native_venues::layout(ix) else { continue };
+                    if !successful_invocations.contains(&(index as u32)) {
+                        continue;
+                    }
+                    let inputs: Vec<_> = scoped.iter().filter(|t| {
+                        t.depth == depth + 1 && t.source == *accounts[3].0
+                            && t.destination == *accounts[4].0 && t.authority == *accounts[2].0
+                            && instructions[t.index as usize].program_id().0 == accounts[9].0
+                            && successful_invocations.contains(&t.index)
+                    }).collect();
+                    let outputs: Vec<_> = scoped.iter().filter(|t| {
+                        t.depth == depth + 1 && t.source == *accounts[5].0
+                            && t.destination == *accounts[6].0 && t.authority == *accounts[1].0
+                            && instructions[t.index as usize].program_id().0 == accounts[9].0
+                            && successful_invocations.contains(&t.index)
+                    }).collect();
+                    if inputs.len() != 1 || outputs.len() != 1 {
+                        continue;
+                    }
+                    let (input, output) = (inputs[0], outputs[0]);
+                    let net = *output.amounts.iter().min().unwrap();
+                    let identity = (index as u32, input.index, output.index);
+                    if swap.amm_pool != *accounts[0].0 || swap.user != *accounts[2].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || input.mint == output.mint
+                        || mints.mint_for(accounts[4].0).as_ref() != Some(&input.mint)
+                        || mints.mint_for(accounts[5].0).as_ref() != Some(&output.mint)
+                        || input.amounts[0] > layout.amount || net < layout.minimum_output
+                        || (swap.input_amount, swap.output_amount) != (input.amounts[0], net)
+                        || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
+                        || native_evidence.contains(&identity)
+                        || scoped.iter().any(|t| t.index != input.index && t.index != output.index
+                            && [t.source.as_slice(), t.destination.as_slice()].iter()
+                                .any(|account| *account == accounts[3].0.as_slice() || *account == accounts[6].0.as_slice()))
+                    {
+                        continue;
+                    }
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
                 if let Some(legs) = two_hop_receipts.get(&(index as u32)) {
                     for hop in 0..2 {
                         let (input, output) = (&transfers[legs[hop]], &transfers[legs[hop + 1]]);

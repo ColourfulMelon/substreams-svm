@@ -385,3 +385,31 @@ samples. This change does not demonstrate new financial legs in that sample;
 native decoders already supplied them. All 144 core tests and the release WASM
 build pass. The source candidate remains separate from the deployed immutable
 pluto.12 package, pending complete fee metadata and controlled pluto.13 rollout.
+
+## Legacy Orca V1 native swaps (pluto.13 candidate)
+
+Two previously unclassified finalized Jupiter v4 legs execute in Orca V1
+(`DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1`). Jupiter's public SPL
+Token Swap implementation identifies this program; the legacy SPL v2.0.0
+instruction source declares its ten-account swap prefix and optional host fee.
+This differs from the later Token-2022 SPL swap account extension.
+
+The decoder uses protocol `SPL_TOKEN_SWAP` with the actual Orca V1 program and
+pool identity. Only opcode 1's complete swap payload and declared legacy Token
+program are accepted. Executed, committed immediate token transfers establish
+the user debit and receipt, including pool/user authority and vault/mint roles.
+The debit must satisfy the instruction's input maximum and the receipt its
+minimum output. Extra user transfers, ambiguous legs, caught failures or an
+incomplete ancestor trace cannot provide a financial row. Router events share
+these checks and cannot bypass them.
+
+The independent oracle retains two original finalized transactions and later
+program-owned, initialized pool headers. The headers corroborate immutable
+vault/mint/PDA fields, not historical reserve amounts. Exact CPI atoms restore
+5,914,841,313 KIN into 655,895 wrapped-SOL atoms and 46,517 wrapped-SOL into
+5,175 USDT atoms. Thirty-eight core mutations across the two fixtures check
+bounds, opcodes, payloads, roles, missing/duplicate CPIs and failed/truncated
+ancestors. All 145 core tests pass. Full payload comparison preserves all 690
+previous audited financial rows and adds precisely the two oracle-proven legs;
+the two Orca V1 unclassified candidates disappear from that 60-transaction
+sample. Other unclassified programs remain and are not covered by this result.

@@ -1,0 +1,42 @@
+{
+  "scope": "Original finalized transactions; strict two immediate SPL Token transfers, exact user/vault/authority/mint roles, owned initialized SwapV1 pool/PDA and instruction bounds. The later owned read corroborates immutable vault/mint fields, not historical reserve amounts.",
+  "primarySources": [
+    "https://github.com/jup-ag/jupiter-amm-implementation/blob/main/jupiter-core/src/amms/spl_token_swap_amm.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/instruction.rs",
+    "https://github.com/solana-labs/solana-program-library/blob/token-swap-v2.0.0/token-swap/program/src/state.rs"
+  ],
+  "fixtures": [
+    {
+      "fixture": "orca-v1-route-1.transaction.pb",
+      "signature": "4DmjDpxFGpVktBY8WeYW13NwzBiMd8AjArS1U6gsnNzAdu8AxGLsFrnkBVSLFPzvnEE5qRoB9Ve8NTmLJJe4HTSY",
+      "slot": 455801076,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 7,
+      "inputCpiIndex": 8,
+      "outputCpiIndex": 9,
+      "ownedPoolReadContext": 455864508,
+      "poolOwner": "DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1",
+      "poolDataSha256": "5616cf6843431b18d698b9fb5452ae6a40a540a1176d86ef21d5eb437a894b70",
+      "rpcJsonSha256": "b3a68fc8c335a1fb16dbc40df48dc732a780d917a7217b5d093382c1cd62070c",
+      "protobufSha256": "a02d63fd8ad791007eac362732c5d2ba3b0646b23c2df986fb439f8e1842732a",
+      "declaredInputMaximum": "5914843081",
+      "declaredOutputMinimum": "0"
+    },
+    {
+      "fixture": "orca-v1-route-2.transaction.pb",
+      "signature": "VtVdshjW6Jrvs461692CMnBHqc1SeoKfYeY3NevUxnUBt7kc8cf6KhDcr9cZVo4dEHrfErroKpwbJqxUPb7ZR1C",
+      "slot": 455767574,
+      "commitment": "finalized",
+      "nativeInstructionIndex": 12,
+      "inputCpiIndex": 13,
+      "outputCpiIndex": 14,
+      "ownedPoolReadContext": 455864508,
+      "poolOwner": "DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1",
+      "poolDataSha256": "025f866050efea9a101e78720e0b36c8b4737f1b5912ebc3bcc6651e7eab9a1a",
+      "rpcJsonSha256": "4d78f7a3fea6d3c921e0e38f9d76fc0068d69864d948a05b104423e52e7d9425",
+      "protobufSha256": "debf238e0f1fdbadc7d8c2132809dfa2f14d33a84b96e2999d79cc8418205057",
+      "declaredInputMaximum": "46519",
+      "declaredOutputMinimum": "0"
+    }
+  ]
+}
