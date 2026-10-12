@@ -6,6 +6,7 @@ mod dumpfun;
 mod jupiter_v4;
 mod jupiter_v6;
 mod logs;
+mod manifest;
 mod meteora_amm;
 mod meteora_daam;
 mod meteora_dlmm;
@@ -330,6 +331,7 @@ pub fn process_transaction_with_metadata(
     }
 
     let rejected_swaps = quality::verify_with_fees(&tx, &token_mints, &mut swaps, true, fee_lookup);
+    swaps.extend(manifest::decode_fills(&tx));
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0.as_slice() != phoenix::PROGRAM_ID || !matches!(ix.data().first(), Some(0 | 1 | 2 | 3)) {
             continue;

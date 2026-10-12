@@ -1,0 +1,28 @@
+{
+  "sourceRevision": "5718d3eed80fa7472a826f346c0668644ff32138",
+  "sampledSuccessfulTransactions": 837,
+  "sampledBatchCalls": 1567,
+  "transactionsWithBatch": 537,
+  "observedLedgerFills": 0,
+  "fixtures": [
+    {
+      "fixture": "manifest-unfilled-batch-1.transaction.pb",
+      "signature": "2BsZSmX3LQcGpJs5Eemh7T3m1wTKHVSkuHPTYLacL4hPToN15y3ybcWEqidy1sn2Y1ygbRb2n2X53PH7wXwgCqka",
+      "slot": 455854686,
+      "sha256": "86f08fbe6b782d2b83b2a13299489444e5e6da148d465e77ab430c97d183c8d4",
+      "candidateIndex": 4,
+      "expectedFinancialRows": 0,
+      "finalized": true
+    },
+    {
+      "fixture": "manifest-unfilled-batch-2.transaction.pb",
+      "signature": "2T62PepUh2crN5ULpuXccS4P3CPJmyVDP1RVeBD2mwzPb6J3EKJV5P5bXRQpjyvazSe7ogchkMNmtVBqaBsQkN8J",
+      "slot": 455854734,
+      "sha256": "14acea28ee440c8b2db8e071c4a5e5eec36df59329bdc484be351010ca2f200d",
+      "candidateIndex": 4,
+      "expectedFinancialRows": 0,
+      "finalized": true
+    }
+  ],
+  "positiveFinancialTests": "Explicitly constructed instruction/log cases matching the pinned program ABI; not presented as observed finalized batch fills."
+}

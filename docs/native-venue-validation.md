@@ -252,9 +252,40 @@ bounds additionally use altered fixture arguments; this audit's observed route
 is exact-input, with first direction A→B and second B→A. This staged source has
 not yet been included in the live release.
 
+## Manifest deposited-balance fills (staged)
+
+Manifest `BatchUpdate` (opcode 6) can match deposited balances without user
+Token CPIs. The pinned official program's `FillLog` is an exact 232-byte record:
+market, maker, taker, both mints, fixed-point price, traded base/quote atoms,
+order sequence numbers and direction/global flags. Its program source debits
+and credits those exact ledger amounts before emitting the log. The decoder
+publishes each match once as an orderbook fill, with its native instruction
+and runtime log identity. It excludes swap opcodes 4/13, which already publish
+aggregate user-transfer rows, so their individual fill logs are not duplicated.
+
+The batch decoder fully consumes Borsh hints, cancels and placement records.
+A cancel-only, post-only or global-only batch cannot create a taker intent.
+Only a fill emitted directly by the declared market's Manifest invocation is
+accepted, after that invocation and every ancestor committed. The taker must
+match the declared payer; flags, padding, distinct mints, positive quantities
+and the floor/ceiling price arithmetic must agree. Nested foreign program data,
+failed ancestors and incomplete invocation logs cannot prove a financial fill.
+These are deposited ledger amounts; Token-2022 fees on separate deposits or
+withdrawals do not substitute for or reduce the matched ledger quantities.
+
+Core tests construct exact buy/sell events, multiple fill identities and nested
+success/failure traces against the pinned ABI. Two unmodified finalized empty
+batch fixtures additionally prove that marketable intents with no fill publish
+no price. A wider finalized audit inspected 837 successful transactions,
+including 1,567 batch calls across 537 transactions, with **zero observed batch
+fills**. It preserves all 402 existing full financial payloads in the other
+validation samples and creates zero financial rows in these empty batches.
+The positive tests are contract-derived; this bounded live sample does not
+verify a real deposited-balance fill or establish complete chain coverage.
+
 ## Stream and rollout
 
-No diagnostic rows or new stored tables are introduced. The output still contains
+The decoder uses the existing coverage tables for unverified marketable intents. The output still contains
 swaps with the existing 24 fields and compact block counters. Previously missing
 trades can increase swap-row volume; native/router deduplication prevents counting
 the same physical leg twice. The targeted sample does not predict billing growth.
