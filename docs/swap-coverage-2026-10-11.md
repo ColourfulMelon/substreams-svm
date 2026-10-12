@@ -694,7 +694,20 @@ preserves all 4,577 swaps, every financial and diagnostic row field/key/ordinal
 except the decoder-version label, parent links and sealed counters. This range
 does not contain the older aliased-recipient positive; its original finalized
 RPC/PB proof and core replay provide that evidence separately.
-Deployed .14 does not include this repair. Retained
+Release .15 is published, and PR #19 is merged as
+`108d18428540ad9c3aac41da0ed6018147056b4b`. The exact merged shared-pricing image
+deployed at 2026-10-12 07:07:28 UTC. A graceful stop saved slot 455958071 with
+no rows beyond it in the four financial/diagnostic tables. The exact opaque
+cursor was adopted under the new output hash with strict checks retained.
+The first actual .15 block is 455958072 with that exact parent slot/hash.
+Initial observations show 373 unique linked blocks and 31,105 unique, nonzero,
+verified swaps, with sealed coverage counts matching. Queries are sequential,
+not atomic. Pricing remains about five minutes behind at this observation;
+freshness is a separate pending check. The production API stays healthy with
+custom orders disabled; its backend is not deployed. Original automatic-deploy
+settings are restored after actual writes are verified. No historical financial
+rows are replayed into the sink. The live and preflight evidence is retained
+under `fixtures/native-venues/release15-*.json`. Retained
 originals and independent proofs are in `fixtures/swap-coverage/onedex-aliased-*`.
 
 ## Remaining Pump V3 shared-buyback-recipient gap

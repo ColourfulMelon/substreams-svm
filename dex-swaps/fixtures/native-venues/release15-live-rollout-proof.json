@@ -1,0 +1,94 @@
+{
+  "scope": "Actual post-rollout version-specific rows; queries are sequential and not atomic. First actual parent and all observed financial identities are verified. Initial catch-up lag is explicitly retained; container health is not evidence of freshness.",
+  "observedAt": "2026-10-12T07:13:23.274244+00:00",
+  "release": "v0.5.2-pluto.15",
+  "packageSourceCommit": "9164190ca33b962f3b85d7fd3de2787708db1676",
+  "sourceRepairCommit": "5518c095ba834f059c57566057c635574a85d000",
+  "pullRequest": "https://github.com/Pluto-ZA/pluto-monorepo/pull/19",
+  "mergeCommit": "108d18428540ad9c3aac41da0ed6018147056b4b",
+  "deployment": "vgqkvpaajfwokvangmw94iuu",
+  "deploymentFinishedAt": "2026-10-12T07:07:28Z",
+  "moduleHashMode": "error",
+  "cursorAdoption": {
+    "oldHash": "8b636b3b1edd4429c84f4f2fffcb910d6991c6d4",
+    "newHash": "f6daada698dd6b56d4be5eb292a75a21eace75f4",
+    "durableSlot": 455958071,
+    "durableBlockHash": "2Gkdfb9SyufuvmZRzWW5UzC84MgsSm29jWP5ojrhUDgP",
+    "exactOpaqueCursorCopied": true,
+    "allFourTableTailsEmptyBeforeAdoption": true,
+    "privateBackupSaved": true
+  },
+  "actualLiveEvidence": {
+    "oldDurableBlock": 455958071,
+    "cursors": [
+      {
+        "id": "f6daada698dd6b56d4be5eb292a75a21eace75f4",
+        "block_num": 455958422
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 455958072,
+        "parent_slot": 455958071,
+        "parent_hash": "2Gkdfb9SyufuvmZRzWW5UzC84MgsSm29jWP5ojrhUDgP",
+        "block_hash": "BWUcuYSqkkFLsQqgdob27p4FFdcud1wkM3D8NXoexG4f",
+        "timestamp": "2026-10-12 07:05:37"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 373,
+        "unique_blocks": 373,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 455958422,
+        "lag_seconds": 303
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 31105,
+        "unique_events": 31105,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "raydium_cpmm",
+        "rows": 304,
+        "unique_events": 304
+      },
+      {
+        "protocol": "manifest",
+        "rows": 247,
+        "unique_events": 247
+      },
+      {
+        "protocol": "openbook_v2",
+        "rows": 1,
+        "unique_events": 1
+      },
+      {
+        "protocol": "mercurial",
+        "rows": 7,
+        "unique_events": 7
+      }
+    ],
+    "cut": 455958322,
+    "coverage": [
+      {
+        "candidates": 1470,
+        "raw": 1066,
+        "expected_candidates": 1470,
+        "expected_raw": 1066
+      }
+    ]
+  },
+  "freshness": "catching up at this initial observation; about five minutes lag; further freshness verification required",
+  "productionCustomOrdersEnabled": false,
+  "productionCustomExecutionEnabled": false
+}
