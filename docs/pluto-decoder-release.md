@@ -43,7 +43,7 @@ a separate versioned canonical replay and full replacements: appending old
 swaps to live tables double-counts OHLC aggregates. The older history manifest
 remains pinned to its original decoder.
 
-## Candidate pluto.13 metadata and pricing binaries
+## pluto.13 metadata and pricing binaries
 
 The pricing module uses the current `dex_swaps.wasm`, built without default
 features. All seven metadata modules use `dex_swaps_metadata.wasm`, built from

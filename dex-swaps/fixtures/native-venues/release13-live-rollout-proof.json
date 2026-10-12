@@ -1,0 +1,79 @@
+{
+  "oldDurableBlock": 455919420,
+  "cursors": [
+    {
+      "id": "89753c04b00ecc396a2219f51bcd36940253c5b0",
+      "block_num": 455921771
+    }
+  ],
+  "firstActualBlock": [
+    {
+      "block_num": 455919421,
+      "parent_slot": 455919420,
+      "parent_hash": "FWcEYuMS98adh3mV9A4JUFWfiHtaJbKYRkr1iiuuxigN",
+      "block_hash": "S2CzkFoFhffUgDaxYjhUnVTbsHxwvN5j2vHgjM7fYSK",
+      "timestamp": "2026-10-12 04:45:10"
+    }
+  ],
+  "boundaryMatches": true,
+  "continuity": [
+    {
+      "blocks": 2376,
+      "unique_blocks": 2376,
+      "broken_parents": 0
+    }
+  ],
+  "health": [
+    {
+      "saved_block": 455921771,
+      "lag_seconds": 454
+    }
+  ],
+  "swaps": [
+    {
+      "rows": 212359,
+      "unique_events": 212359,
+      "invalid": 0
+    }
+  ],
+  "venues": [
+    {
+      "protocol": "raydium_cpmm",
+      "rows": 2857,
+      "unique_events": 2857
+    },
+    {
+      "protocol": "manifest",
+      "rows": 1738,
+      "unique_events": 1738
+    },
+    {
+      "protocol": "openbook_v2",
+      "rows": 2,
+      "unique_events": 2
+    },
+    {
+      "protocol": "mercurial",
+      "rows": 17,
+      "unique_events": 17
+    }
+  ],
+  "cut": 455921671,
+  "coverage": [
+    {
+      "candidates": 13060,
+      "raw": 10120,
+      "expected_candidates": 13060,
+      "expected_raw": 10120
+    }
+  ],
+  "deploymentCommit": "0cb202c0e14e85b75b248c6d402ed08e63f1d2b8",
+  "publishedSourceCommit": "84d42c5",
+  "decoderVersion": "v0.5.2-pluto.13",
+  "observedAt": "2026-10-12T05:01:18.745959+00:00",
+  "productionCustomOrdersEnabled": false,
+  "productionCustomExecutionEnabled": false,
+  "productionApiHealthy": true,
+  "autoDeploymentSettingsRestored": true,
+  "historicalRowsAppended": false
+}

@@ -1,9 +1,20 @@
-# Token-2022 fee registry work in progress
+# Token-2022 fee registry and replay proof
 
-The deployed package remains `v0.5.2-pluto.12`. The fee registry is staged
-source and is now wired into the `.13` candidate manifest, but is **not live pricing yet**.
-Do not package these changes under the immutable `.12` release. A subsequent
-release requires the complete registry, ordinal-aware lookups and replay proof.
+`v0.5.2-pluto.13` is published and deployed to Pluto's shared pricing writer.
+The complete registry and ordinal-aware lookups are live. The writer resumes
+from the exact saved `.12` cursor at slot 455919420; its first actual `.13`
+block is 455919421 with the matching parent hash. Source/aggregate history is
+preserved. Production custom limit orders remain disabled and the API remains
+running. The original automatic deployment settings are restored.
+
+`native-venues/release13-live-rollout-proof.json` retains the observed live
+parent-chain, unique verified financial-row and exact coverage-counter checks.
+The newer pre-deployment stream completed cleanly after 24,190 metadata blocks,
+returning five finalized blocks and 926 unique verified swaps; its proof is also
+retained. At the recorded rollout observation, the writer is catching up and
+pricing is several minutes behind; deployment success does not establish fresh
+prices or universal swap coverage. Subsequent checks must confirm near-head
+freshness. Releases `.12` and `.13` are immutable.
 
 ## Verified financial gap
 
@@ -154,8 +165,8 @@ zero-balance lifecycle prove 1,548,418 received atoms from a gross transfer of
 1,564,059. The retained `native-venues/release13-broad-*-proof.json` and
 original transaction fixtures document these checks. The corrected package also
 returned five finalized blocks from the newer durable-cursor window after
-replaying 66,104 metadata blocks. Live single-writer continuity still needs to
-pass before deployment. This snapshot proves future metadata availability from its
+replaying 66,104 metadata blocks. The live single-writer continuity checks are retained in the rollout proof
+described above. This snapshot proves future metadata availability from its
 completed boundary; it does not justify applying absent mint keys as zero-fee
 proof to older historical swaps.
 
