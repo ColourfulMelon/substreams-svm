@@ -1,0 +1,86 @@
+{
+  "scope": "Original finalized transactions. Raw 120-byte v4 SwapEvent bytes and manually audited runtime/native coordinates; pool accounts are legacy Whirlpool account 2 and BonkSwap account 1, per IDL accounts.rs. These bind declared pools without claiming independent pool-owner reads.",
+  "fixtures": [
+    {
+      "fixture": "jupiter-v4-three-hop.transaction.pb",
+      "signature": "2ntxsMLR26E4NrhoSme1pZSvqQGyNMLnCPQ34Q4XKc1Vw9QZh5gJh2qY98dV7jewsmtA8XXgoGvFdE7bbZN4WRyg",
+      "slot": 455786825,
+      "commitment": "finalized",
+      "rpcJsonSha256": "737e5ec2ed51fb303aff6422e4b699368c81e2735116bffab98a59f32f704613",
+      "protobufSha256": "b5005326d298393aaba862a8ac90097bce1db88cb18442a0bb278b5345b23ffd",
+      "routeAndAmmInstructionCoordinates": [
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          9
+        ]
+      ],
+      "rawSwapEvents": 3
+    },
+    {
+      "fixture": "jupiter-v4-after-v6.transaction.pb",
+      "signature": "32rCs4CaLhpcMkbPofAgKn88o1gSp3T7iTVWbRCGyMnaaebFcFCxzLYFDcyKR8oHLDuDWgZYxVoivBB9Qk1rGF79",
+      "slot": 455804928,
+      "commitment": "finalized",
+      "rpcJsonSha256": "f5ad8c6bd0d2cd9352aebc3329e2a9e070da050f6cb7ab1d96ece98f2073e780",
+      "protobufSha256": "aecaa98c2ea6d22aefa87a9ddc0448a1836a8a28a592e94d6bc8ee6565ba7a95",
+      "routeAndAmmInstructionCoordinates": [
+        [
+          11,
+          12
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          11,
+          18
+        ]
+      ],
+      "rawSwapEvents": 3
+    },
+    {
+      "fixture": "jupiter-v4-two-routes.transaction.pb",
+      "signature": "5TYjfs5woqG3wRjTHMWVJTe3EWhKQQNRW3EpThGHjKgvgUiYAnvN9Aw4PbRMTW3P59KkUGPDZp75RpNPw47VCCa3",
+      "slot": 455790031,
+      "commitment": "finalized",
+      "rpcJsonSha256": "42e6e4ce0dc540ca2889611cd83bec9cef9426346b2d137e4ece8e9426eaaf7e",
+      "protobufSha256": "dc59f95024831e9863f42f1b03864b6ccaf7599e7962b84101bfbf160b134abb",
+      "routeAndAmmInstructionCoordinates": [
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          19
+        ]
+      ],
+      "rawSwapEvents": 6
+    }
+  ]
+}

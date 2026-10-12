@@ -1,19 +1,18 @@
-//! Pool-account lookup for routed AMM invocations.
-//!
-//! Jupiter v6 binds each legacy or plural event record to instruction-scoped
-//! history through `extract_pool`, including repeated visits to one program.
-//! This legacy latest-wins tracker remains for the v4 second-pass log handler;
-//! its interleaved same-program routes still require per-instruction log
-//! attribution. The dispatch list covers recognized native swap layouts.
+//! Pool-account extraction for instruction-scoped routed AMM history.
+//! Jupiter v4 and v6 bind events to completed calls in their own route;
+//! transaction-global latest-wins tracking is used only by extractor tests.
 
+#[cfg(test)]
 use std::collections::HashMap;
 
 use substreams_solana::block_view::InstructionView;
 
+#[cfg(test)]
 pub(crate) struct Tracker {
     pools: HashMap<[u8; 32], Vec<u8>>,
 }
 
+#[cfg(test)]
 impl Tracker {
     pub(crate) fn new() -> Self {
         Self { pools: HashMap::new() }

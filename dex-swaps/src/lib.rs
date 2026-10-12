@@ -248,12 +248,10 @@ pub fn process_transaction_with_metadata(
     let mut raydium_clmm_state = raydium_clmm::State::new();
     let mut raydium_cpmm_state = raydium_cpmm::State::new();
     let mut orca_whirlpool_state = orca_whirlpool::State::new();
-    let mut routed_pools = routed_pool::Tracker::new();
     let token_mints = token_mints::TokenMintLookup::new(&tx, tx_meta);
 
     let instructions: Vec<_> = tx.walk_instructions().collect();
     for (index, instruction) in instructions.iter().enumerate() {
-        routed_pools.observe(instruction);
         swaps.extend(jupiter_v6::decode_instruction(&tx, index, &instructions));
         byreal_state.handle_instruction(&instruction, &token_mints);
         if let Some(swap) = pumpfun::handle_instruction(&mut pumpfun_pending, &instruction) {
@@ -286,11 +284,8 @@ pub fn process_transaction_with_metadata(
         }
     }
 
-    let mut jupiter_v4_state = jupiter_v4::State::new();
+    swaps.extend(jupiter_v4::decode_logs(&tx));
     for log_message in tx_meta.log_messages.iter() {
-        if let Some(swap) = jupiter_v4_state.handle_log(&tx, log_message, &routed_pools) {
-            swaps.push(swap);
-        }
         if let Some(swap) = boop_state.handle_log(log_message) {
             swaps.push(swap);
         }

@@ -360,3 +360,28 @@ both price insert views use execution positions. No reordered runtime-fill row
 had reached the live view when its definition was refreshed atomically.
 The published pluto.12 decoder package is unchanged; existing installations
 must apply this companion migration before admitting mixed runtime fills.
+
+## Jupiter v4 route attribution candidate (pluto.13)
+
+The v4 second-pass decoder used transaction-global latest-pool history and the
+fee payer. It now accepts only the route program's own committed runtime events
+and binds each event to an unconsumed, completed AMM call inside that route.
+Repeated visits, later routes and preceding v6 routes cannot replace a pool.
+A typed route or exact-output adapter supplies its declared transfer authority;
+an absent authority or ambiguous pending calls leave the event unverified.
+Failed ancestors and incomplete traces cannot establish financial settlement.
+
+Three original finalized transactions retain twelve manually audited v4 events,
+including repeated Whirlpool calls and a BonkSwap leg. Fixture proofs record
+signatures, slots, byte hashes, declared pool positions and native coordinates.
+Core mutations cover a sponsored fee payer, unknown authority, foreign program
+data, ambiguous repeated calls and failed/truncated ancestors. These mutations
+are constructed checks, not additional observed mainnet trade types.
+
+The 60-transaction v4 sample contains 89 route calls and 270 v4 events. Full
+financial payload comparison preserves its 288 existing native financial rows
+and all 402 previously audited rows from the recognized, DLMM and DefiTuna
+samples. This change does not demonstrate new financial legs in that sample;
+native decoders already supplied them. All 144 core tests and the release WASM
+build pass. The source candidate remains separate from the deployed immutable
+pluto.12 package, pending complete fee metadata and controlled pluto.13 rollout.
