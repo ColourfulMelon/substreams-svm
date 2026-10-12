@@ -1,0 +1,38 @@
+{
+  "scope": "Read-only finalized db_out replay; every row key, operation, ordinal and field compared, excluding only decoder_version. Original aliased-recipient positive is separately proven from finalized RPC/PB because its slot precedes the metadata seed boundary.",
+  "range": {
+    "start": 455929225,
+    "endInclusive": 455929274
+  },
+  "versions": {
+    "baseline": "v0.5.2-pluto.14",
+    "candidate": "v0.5.2-pluto.15"
+  },
+  "outputs": {
+    "baseline14": {
+      "sha256": "5005f44700559492da9f5ea77c0a473e16d460c12469710b83d95c629a45aac9",
+      "blocks": 50,
+      "tables": {
+        "swaps": 4577,
+        "swap_coverage_transactions": 216,
+        "swap_coverage": 327,
+        "blocks": 50
+      }
+    },
+    "candidate": {
+      "sha256": "e169f7ad06000d33788a1ef7f3d2e4d139cd370d7da8b19bbff01a0fef723246",
+      "blocks": 50,
+      "tables": {
+        "swaps": 4577,
+        "swap_coverage_transactions": 216,
+        "swap_coverage": 327,
+        "blocks": 50
+      }
+    }
+  },
+  "allRowsAndFieldsPreserved": true,
+  "verifiedNonzeroSwaps": 4577,
+  "parentChainAndSealedCountersValid": true,
+  "writesToLiveDatabase": false,
+  "candidateProcessExitCode": 0
+}

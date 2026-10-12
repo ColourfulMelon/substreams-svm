@@ -661,6 +661,12 @@ still catching up at this initial observation; freshness remains a separate
 check. No replayed financial history is appended. The live and recent-registry
 proofs are retained under `fixtures/native-venues/release14-*.json`.
 
+A separate post-catchup observation at 2026-10-12 06:52:57 UTC shows actual
+sink block 455954566 with 4.99 seconds lag, stream block 455954570 with
+3.99 seconds lag and no stream errors. The sequential RPC observation is
+not atomic with the sink read; its head can trail by a few slots. The initial
+catchup proof is preserved unchanged, alongside `release14-freshness-proof.json`.
+
 
 ## 1DEX aliased fee recipients (candidate .15)
 
@@ -681,6 +687,12 @@ never prove past execution amounts.
 All 158 core tests pass, including this original, an aliased-recipient synthetic
 case and the existing rejection cases. Full-payload replay preserves all 1,042
 previous published-fixture financial rows and adds exactly this one leg. The
-recent native SOL sample preserves all 96 rows. Packaging and remote validation
-remain pending for .15; deployed .14 does not include this repair. Retained
+recent native SOL sample preserves all 96 rows. All three .15 packages build,
+and their frozen metadata binary and all seven metadata module hashes match
+the pinned artifact. A clean-exit read-only finalized 50-block remote replay
+preserves all 4,577 swaps, every financial and diagnostic row field/key/ordinal
+except the decoder-version label, parent links and sealed counters. This range
+does not contain the older aliased-recipient positive; its original finalized
+RPC/PB proof and core replay provide that evidence separately.
+Deployed .14 does not include this repair. Retained
 originals and independent proofs are in `fixtures/swap-coverage/onedex-aliased-*`.
