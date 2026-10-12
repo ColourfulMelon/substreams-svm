@@ -4,7 +4,7 @@ These tools compare the immutable .25 baseline and final .26 SPKG bytes and fina
 
 The finite replay scopes are slots 456163419–456164844 and 456081600–456085680. Actual finalized block counts come from completed replays. These scopes and the independently proved original families do not establish global or future format coverage. A source commit is a captured build reference, not cryptographic proof that a WASM was built from that commit.
 
-Set the shell variables below to available local artifacts. `source_repo` is this substreams repository, `replay_dir` contains the `pluto-combined26-{baseline25,candidate26,wide25,wide26}.jsonl` files and their `-status.json` files, and `blocks_dir` contains retained finalized `getBlock` responses named `<slot>.json.gz`. Dependency paths must point to package manifests providing `bs58` and `protobufjs`; no machine-specific path is embedded in these tools.
+Set the shell variables below to available local artifacts. `source_repo` is this substreams repository, `replay_dir` contains the `pluto-combined26-{baseline25,candidate26,wide25,wide26}.jsonl` files and their `-status.json` files, and `blocks_dir` contains retained finalized `getBlock` responses named `<slot>.json.gz`. Node must retain JSON reviver source context for exact unsafe integers; the helper fails if it cannot. Dependency paths must point to package manifests providing `bs58` and `protobufjs`; no machine-specific path is embedded in these tools.
 
 ```sh
 proof_tools="$source_repo/dex-swaps/fixtures/swap-coverage/combined26"
