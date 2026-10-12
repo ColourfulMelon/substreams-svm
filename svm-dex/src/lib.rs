@@ -5,6 +5,8 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
+const DECODER_VERSION: &str = "v0.5.2-pluto.19";
+
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
         pb::Protocol::Unspecified => "unspecified",
@@ -91,7 +93,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             }
             let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
             row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", "v0.5.2-pluto.17")
+                .set("decoder_version", DECODER_VERSION)
                 .set("transaction_proto_hex", raw);
             set_clock(&clock, row);
         }
@@ -108,7 +110,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
                 .set("transfer_count", candidate.transfer_count)
                 .set("reason", candidate.reason.clone())
-                .set("decoder_version", "v0.5.2-pluto.17");
+                .set("decoder_version", DECODER_VERSION);
             set_clock(&clock, row);
         }
         // Row identity positions live in two coordinate domains. For a
@@ -185,7 +187,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
                 .set("event_id", event_id)
-                .set("decoder_version", "v0.5.2-pluto.17")
+                .set("decoder_version", DECODER_VERSION)
                 .set("source_instruction_index", swap.source_index.unwrap_or_default())
                 .set(
                     "execution_position",
@@ -214,7 +216,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
     let row = tables.create_row("blocks", [("block_num", clock.number.to_string())]);
     row.set("parent_slot", swaps.parent_slot)
         .set("parent_hash", swaps.parent_hash)
-        .set("decoder_version", "v0.5.2-pluto.17")
+        .set("decoder_version", DECODER_VERSION)
         .set(
             "verified_swaps",
             all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
@@ -287,6 +289,11 @@ mod tests {
             },
         )
         .unwrap();
+        let version = include_str!("../substreams.yaml").lines().find_map(|line| line.strip_prefix("  version: ")).unwrap();
+        for manifest in [include_str!("../clickhouse/substreams.yaml"), include_str!("../../dex-swaps/substreams.yaml")] {
+            assert!(manifest.lines().any(|line| line == format!("  version: {version}")));
+        }
+        assert!(changes.table_changes.iter().all(|row| row.fields.iter().any(|field| field.name == "decoder_version" && field.value == version)));
         let financial = changes.table_changes.iter().filter(|row| row.table == "swaps").collect::<Vec<_>>();
         assert_eq!(financial.len(), 1);
         let Some(PrimaryKey::CompositePk(key)) = &financial[0].primary_key else {
@@ -466,6 +473,8 @@ mod tests {
             },
         )
         .unwrap();
+        let version = include_str!("../substreams.yaml").lines().find_map(|line| line.strip_prefix("  version: ")).unwrap();
+        assert!(changes.table_changes.iter().all(|row| row.fields.iter().any(|field| field.name == "decoder_version" && field.value == version)));
         assert!(changes.table_changes.iter().all(|row| row.table != "swaps"));
         assert_eq!(changes.table_changes.iter().filter(|row| row.table == "swap_coverage").count(), 2);
         let raw: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swap_coverage_transactions").collect();

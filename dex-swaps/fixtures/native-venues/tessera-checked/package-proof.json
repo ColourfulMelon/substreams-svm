@@ -31,5 +31,11 @@
   "priorFullFinancialOccurrencesUnchanged": 2787,
   "modifiedPriorFinancialOccurrences": 0,
   "droppedPriorFinancialOccurrences": 0,
-  "frozenMetadataSourceUnchanged": true
+  "frozenMetadataSourceUnchanged": true,
+  "withdrawn": true,
+  "neverDeployed": true,
+  "publishedRelease": "v0.5.2-pluto.18",
+  "provenanceValidated": false,
+  "actualRowDecoderVersion": "v0.5.2-pluto.17",
+  "reason": "Preparation rejected mismatched row provenance; the financial replay did not validate the excluded version field."
 }

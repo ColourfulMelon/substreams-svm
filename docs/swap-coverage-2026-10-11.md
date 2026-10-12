@@ -860,7 +860,7 @@ parent-chain and sealed-counter validation. This establishes actual freshness
 for this rollout, not universal swap coverage; the remaining independently
 unverified formats still need work.
 
-## Verified Tessera checked-transfer variant (.18 candidate)
+## Verified Tessera checked-transfer variant (.18 withdrawn)
 
 A bounded 2901-slot .17 diagnostic range (456009160–456012060) retained 52
 DFlow candidate transactions and 124 per-leg CPI receipts. Nine Tessera legs
@@ -894,5 +894,17 @@ has identical bytes. All seven metadata hashes and the frozen artifact remain
 unchanged. Full proofs and original data are retained under
 `dex-swaps/fixtures/native-venues/tessera-checked/`.
 
-This candidate is ready for publication and coordinated cursor adoption. It is
-not deployed yet and does not establish complete coverage of all swap types.
+Preparation rejected .18 because all four sink tables still emitted the old
+.17 decoder_version label. The previously retained financial replay excluded
+that field and therefore did not validate provenance. The public .18 release
+is marked withdrawn and was never deployed; immutable assets/tag remain for
+audit. Its adoption PR was merged while automatic deployments were paused,
+so the live writer continued using fresh .17 prices.
+
+The .19 correction uses one shared version constant for all four sink tables.
+Existing core tests now verify financial/block and diagnostic/raw row versions
+against the price, aggregate and ClickHouse package manifests. Finite replay
+also requires the expected version on every emitted row before financial
+comparison. All seven metadata hashes remain unchanged. The Tessera decoder
+and original financial evidence are unchanged. A coordinated rollout remains
+pending, and complete coverage of all swap types is still unproven.
