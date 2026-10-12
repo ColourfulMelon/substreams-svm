@@ -1,0 +1,1026 @@
+{
+  "originals": [
+    {
+      "signature": "3WkzKhejywGFPsb4tYh65DSaa6DgUhycdC83DqivoiYuKwLfzKGP4zxyhgAW1Nh7WgF7ESGSPUeT3PqPgNt4SixS",
+      "slot": 456163446,
+      "instruction_index": 14,
+      "program_id": "6LtLpnUFNByNXLyCoK9wA2MykKAmQNZKBdY8s47dehDc",
+      "classification": "strategy-liquidity-deposit-with-new-shares",
+      "principal": {
+        "assetADeposited": "240987968",
+        "assetBDeposited": "258218770",
+        "assetAMint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+        "assetBMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "sharesMint": "38wQFRuj6FezzGYegzHdqrRK7hkEkBx7wSqxDBYXpKpy",
+        "newSharesMinted": "162635967198",
+        "postDepositMinima": [
+          "0",
+          "0"
+        ],
+        "stakingForwardIndex": 21
+      },
+      "ledger": [
+        {
+          "address": "6wPGhXb2CwUjTkFBuQuNCiPq2gUEMj4NFeDrZSxqAE5d",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "credit": "0",
+          "debit": "499175628",
+          "delta": "-499175628"
+        },
+        {
+          "address": "CJJdsVKXsPDcfKsYafBMYb6ZhtgnnjUk5JgBAehXjdzi",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "credit": "240987968",
+          "debit": "0",
+          "delta": "240987968"
+        },
+        {
+          "address": "C2jHQnHJQuuwsSRwabarrLfvFqC3iwZP22Cne6FBTPgU",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "credit": "258218771",
+          "debit": "258218770",
+          "delta": "1"
+        },
+        {
+          "address": "7ZVPknXkeDJYwJmrSy9Ei4KMbfo59EpyarGtPTu1ppJv",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "credit": "258218770",
+          "debit": "0",
+          "delta": "258218770"
+        },
+        {
+          "address": "Bpf2qoyi63Ujrde2fGurr3FbiQjH8P5xzfRSUfy1Saes",
+          "mint": "38wQFRuj6FezzGYegzHdqrRK7hkEkBx7wSqxDBYXpKpy",
+          "credit": "162635967198",
+          "debit": "162635967198",
+          "delta": "0"
+        },
+        {
+          "address": "5QrP6xPqDUhvShodFxHk8wG2NaALRrPo1EQadpcgpifd",
+          "mint": "38wQFRuj6FezzGYegzHdqrRK7hkEkBx7wSqxDBYXpKpy",
+          "credit": "162635967198",
+          "debit": "0",
+          "delta": "162635967198"
+        }
+      ],
+      "nativeLedger": [
+        {
+          "address": "A9EmRfYins4wLUZDppM2GBQWXzeBvd8Aj8rt2AAkAzAa",
+          "pre": "64888672",
+          "post": "57973900",
+          "delta": "-6914772"
+        },
+        {
+          "address": "6r1QuGCSXLd6AVu97ATdLx5ZXt78ZzHRiBCjmEwByRav",
+          "pre": "0",
+          "post": "5323840",
+          "delta": "5323840"
+        },
+        {
+          "address": "6wPGhXb2CwUjTkFBuQuNCiPq2gUEMj4NFeDrZSxqAE5d",
+          "pre": "1600200",
+          "post": "1600200",
+          "delta": "0"
+        },
+        {
+          "address": "Bpf2qoyi63Ujrde2fGurr3FbiQjH8P5xzfRSUfy1Saes",
+          "pre": "0",
+          "post": "1488440",
+          "delta": "1488440"
+        },
+        {
+          "address": "C2jHQnHJQuuwsSRwabarrLfvFqC3iwZP22Cne6FBTPgU",
+          "pre": "1488440",
+          "post": "1488440",
+          "delta": "0"
+        },
+        {
+          "address": "EZpDa45msoiZVX7yjxkK8vX98yDqLxQerGkv2RxTS4FW",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "6LtLpnUFNByNXLyCoK9wA2MykKAmQNZKBdY8s47dehDc",
+          "pre": "1141444",
+          "post": "1141444",
+          "delta": "0"
+        },
+        {
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "pre": "3388612899",
+          "post": "3388612899",
+          "delta": "0"
+        },
+        {
+          "address": "BinAnceLh73MadMEF4zdi47Q3FN2kfMuQHG3fzuhhbs5",
+          "pre": "1141440",
+          "post": "1141440",
+          "delta": "0"
+        },
+        {
+          "address": "ComputeBudget111111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          "pre": "1141440",
+          "post": "1141440",
+          "delta": "0"
+        },
+        {
+          "address": "HMTCNNU941GzvTGcwLy3GGTgsAyRRUHwJr7kN9b2StRY",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "3iCcc5iXwqtnZeJ3x5aui6j4SCAGSXwz6fDYjr2nueVA",
+          "pre": "2042572",
+          "post": "2042572",
+          "delta": "0"
+        },
+        {
+          "address": "4SMRzaLXsuvTi2B5cSVs4LuCUUqQhB2uByTWUvbixjfF",
+          "pre": "6233191351",
+          "post": "6233191351",
+          "delta": "0"
+        },
+        {
+          "address": "6KzHa7L1MDTkaUb4qGiJqMvnmAy1qztGDeLvSHdS9ooU",
+          "pre": "4087649",
+          "post": "4087649",
+          "delta": "0"
+        },
+        {
+          "address": "DXK4yMpigbTSqv33nJk1tJucXB4E3rDmTXn3yZmiFAXt",
+          "pre": "2164821",
+          "post": "2164821",
+          "delta": "0"
+        },
+        {
+          "address": "GVJfHJsvrsWZmVj2JVQ3KyY1n7azyi8Z2FdBPxucUe58",
+          "pre": "241896117",
+          "post": "241896117",
+          "delta": "0"
+        },
+        {
+          "address": "38wQFRuj6FezzGYegzHdqrRK7hkEkBx7wSqxDBYXpKpy",
+          "pre": "1461600",
+          "post": "1461600",
+          "delta": "0"
+        },
+        {
+          "address": "5QrP6xPqDUhvShodFxHk8wG2NaALRrPo1EQadpcgpifd",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "7ZVPknXkeDJYwJmrSy9Ei4KMbfo59EpyarGtPTu1ppJv",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "CJJdsVKXsPDcfKsYafBMYb6ZhtgnnjUk5JgBAehXjdzi",
+          "pre": "2164560",
+          "post": "2164560",
+          "delta": "0"
+        },
+        {
+          "address": "GfBgvke3G6JGnfJcD8hXwgDGC29sgRDPXrLWMGqbQoAN",
+          "pre": "58909479",
+          "post": "58909479",
+          "delta": "0"
+        },
+        {
+          "address": "Hmj82e48X9LNW8LeMLk186iE4UKPoUwWuLwoiqMpUiGm",
+          "pre": "29176320",
+          "post": "29176320",
+          "delta": "0"
+        },
+        {
+          "address": "275r6rNn5nRKn3ZWPC5fxdi6e42nHEaYTkmUCDxF1uxj",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "6TYDxGmVxkBPBmEfnmLXx6jVff9LknsjRHqdTjVyZmG8",
+          "pre": "166064217445",
+          "post": "166064217445",
+          "delta": "0"
+        },
+        {
+          "address": "HuTkmnrv4zPnArMqpbMbFhfwzTR7xfWQZHH1aQKzDKFZ",
+          "pre": "1327443",
+          "post": "1327443",
+          "delta": "0"
+        },
+        {
+          "address": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "pre": "2078412093",
+          "post": "2078412093",
+          "delta": "0"
+        },
+        {
+          "address": "7L2CTsgivHdz6gjq9aHYnAwJPA2ymEP64cs1Gh85E3dK",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "8hXTpuvJQRar4Pf6BZiEWquFgtAtSf2RFDM6EL2FCcf1",
+          "pre": "70407360",
+          "post": "70407360",
+          "delta": "0"
+        },
+        {
+          "address": "9tXiuRRw7kbejLhZXtxDxYs2REe43uH2e7k1kocgdM9B",
+          "pre": "5767213",
+          "post": "5767213",
+          "delta": "0"
+        },
+        {
+          "address": "ASpNM9AyzccT4By8QZJkNQYKhv61u7aCjVoJHDKZauDS",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "B1jXbjDzenSy8kPNaGw3GSKAVQis5K5tRLeXuaskZTpS",
+          "pre": "70407360",
+          "post": "70407360",
+          "delta": "0"
+        },
+        {
+          "address": "BzQ8gcpXorH3MxMVLkVB4qJ2q1xy9h3UQ29LNEZUFKiv",
+          "pre": "3953280",
+          "post": "3953280",
+          "delta": "0"
+        },
+        {
+          "address": "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+          "pre": "2545443",
+          "post": "2545443",
+          "delta": "0"
+        },
+        {
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "pre": "70228638",
+          "post": "70228638",
+          "delta": "0"
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+          "pre": "200726442",
+          "post": "200726442",
+          "delta": "0"
+        },
+        {
+          "address": "3v6ootgJJZbSWEDfZMA1scfh7wcsVVfeocExRxPqCyWH",
+          "pre": "456464681",
+          "post": "456464681",
+          "delta": "0"
+        },
+        {
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "pre": "549535699757",
+          "post": "549535699757",
+          "delta": "0"
+        },
+        {
+          "address": "GKnHiWh3RRrE1zsNzWxRkomymHc374TvJPSTv2wPeYdB",
+          "pre": "187641648",
+          "post": "187641648",
+          "delta": "0"
+        },
+        {
+          "address": "Sysvar1nstructions1111111111111111111111111",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "SysvarRent111111111111111111111111111111111",
+          "pre": "1009200",
+          "post": "1009200",
+          "delta": "0"
+        },
+        {
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "230130698",
+          "post": "230130698",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "1d5d5f202d39b05f938a28de9eea1ab83ae58073f2157e70c065b125c1454584",
+      "rpcSha256": "7a061a8d7fba77fed9061c8acdeb429b7c8e68cf825b28687029a5a1e601df30",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "5JmMvUAcC8G6EDYSEovRUED3ehN8WzgarxCNF9ppe1gwAGK27dCQa9fmC4rwnzPyo26Eij4cj9wCgz6M6MEYDBd5",
+      "slot": 456163992,
+      "instruction_index": 2,
+      "program_id": "XzTT4XB8m7sLD2xi6snefSasaswsKCxx5Tifjondogm",
+      "classification": "issuer-attested-GM-redemption-for-USDC",
+      "principal": {
+        "assetMint": "jzCvs2Pk8tDcfsFRqnEMjurgaQW4iQfEkandUR8ondo",
+        "assetBurned": "9487726",
+        "payoutMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "payoutAmount": "4996574",
+        "newIntermediateUSDon": "4996574284",
+        "intermediateUSDonToIssuerVault": "4996574000",
+        "attestedPrice": "526635601000",
+        "attestationId": "56154fce404c4f11b7ce1450b5a99105"
+      },
+      "ledger": [
+        {
+          "address": "AcdgdayfkxhhG6MuxQRnRvqvC51m3Bm7wqWVpjXVCaRs",
+          "mint": "jzCvs2Pk8tDcfsFRqnEMjurgaQW4iQfEkandUR8ondo",
+          "credit": "0",
+          "debit": "9487726",
+          "delta": "-9487726"
+        },
+        {
+          "address": "AKWFr71wjg1GJWjwW6ArS9Zv87FoVDgjqYDRMH7wFgux",
+          "mint": "ZPFtoCe7WWqG4N3ZFRccS8T9SMBeHsd1Vmgv2i7ondo",
+          "credit": "4996574284",
+          "debit": "4996574000",
+          "delta": "284"
+        },
+        {
+          "address": "CKeSkoxSU8uvyYU5Hoz3TxdPwQpYJDnApW8jNv57jvzs",
+          "mint": "ZPFtoCe7WWqG4N3ZFRccS8T9SMBeHsd1Vmgv2i7ondo",
+          "credit": "4996574000",
+          "debit": "0",
+          "delta": "4996574000"
+        },
+        {
+          "address": "21MqWTzhM5BHykeXK264D8AQjwWrdi6vurbX4epaovPU",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "credit": "0",
+          "debit": "4996574",
+          "delta": "-4996574"
+        },
+        {
+          "address": "8raAdppi7DegxmkdWZVEtH3axsSSF9oRM43DrHgF7i3e",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "credit": "4996574",
+          "debit": "0",
+          "delta": "4996574"
+        }
+      ],
+      "nativeLedger": [
+        {
+          "address": "DSqMPMsMAbEJVNuPKv1ZFdzt6YvJaDPDddfeW7ajtqds",
+          "pre": "1180506423",
+          "post": "1179315983",
+          "delta": "-1190440"
+        },
+        {
+          "address": "ZPFtoCe7WWqG4N3ZFRccS8T9SMBeHsd1Vmgv2i7ondo",
+          "pre": "5623680",
+          "post": "5623680",
+          "delta": "0"
+        },
+        {
+          "address": "jzCvs2Pk8tDcfsFRqnEMjurgaQW4iQfEkandUR8ondo",
+          "pre": "5414880",
+          "post": "5414880",
+          "delta": "0"
+        },
+        {
+          "address": "21MqWTzhM5BHykeXK264D8AQjwWrdi6vurbX4epaovPU",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "3cKyGYojYbFxeUnBf5xak3cTpaxmYuzpFbSnP9n3kyui",
+          "pre": "1287600",
+          "post": "1287600",
+          "delta": "0"
+        },
+        {
+          "address": "6ipdj6w8PRZqwESgGyDnmJr2vcwu51bKNFk7yd2K96Bz",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "8raAdppi7DegxmkdWZVEtH3axsSSF9oRM43DrHgF7i3e",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5",
+          "pre": "700880",
+          "post": "900880",
+          "delta": "200000"
+        },
+        {
+          "address": "9SwwzETreiehDkAJQGVokUE5jQwZJ8fjWJh93VWvCjKr",
+          "pre": "1398960",
+          "post": "1398960",
+          "delta": "0"
+        },
+        {
+          "address": "AKWFr71wjg1GJWjwW6ArS9Zv87FoVDgjqYDRMH7wFgux",
+          "pre": "2136720",
+          "post": "2136720",
+          "delta": "0"
+        },
+        {
+          "address": "ALnfAXowM9FGNoucnPzBkhVmY46nyR1gW7nFTFwdEGdS",
+          "pre": "1691280",
+          "post": "1691280",
+          "delta": "0"
+        },
+        {
+          "address": "AcdgdayfkxhhG6MuxQRnRvqvC51m3Bm7wqWVpjXVCaRs",
+          "pre": "2136720",
+          "post": "2136720",
+          "delta": "0"
+        },
+        {
+          "address": "CKeSkoxSU8uvyYU5Hoz3TxdPwQpYJDnApW8jNv57jvzs",
+          "pre": "2136720",
+          "post": "2136720",
+          "delta": "0"
+        },
+        {
+          "address": "F6ogeiiNiwYCd36RiCcFVzs8MKr3j4b8snr7YKtXYEHX",
+          "pre": "1774800",
+          "post": "1774800",
+          "delta": "0"
+        },
+        {
+          "address": "He87kksx2o9CcWDMcjPGz4hfWtJSNeiXBx67H2Z1ySXj",
+          "pre": "0",
+          "post": "980440",
+          "delta": "980440"
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "KeccakSecp256k11111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "Sysvar1nstructions1111111111111111111111111",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "230130698",
+          "post": "230130698",
+          "delta": "0"
+        },
+        {
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "pre": "70228638",
+          "post": "70228638",
+          "delta": "0"
+        },
+        {
+          "address": "XzTT4XB8m7sLD2xi6snefSasaswsKCxx5Tifjondogm",
+          "pre": "1141440",
+          "post": "1141440",
+          "delta": "0"
+        },
+        {
+          "address": "9foMHsSDq7nMg4WPusSz9eY7tyxyukqborA8GyU5cUxD",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "pre": "3388612899",
+          "post": "3388612899",
+          "delta": "0"
+        },
+        {
+          "address": "C2moE8vPUVsuVVWQGU9gM5bf8dPy9kYivd3hHCyDZjcv",
+          "pre": "1169280",
+          "post": "1169280",
+          "delta": "0"
+        },
+        {
+          "address": "CKW82CT7QtJUDkxCa6sSHZ3UXvUSu6EuGDXUtKyXgn67",
+          "pre": "2155540",
+          "post": "2155540",
+          "delta": "0"
+        },
+        {
+          "address": "Dpw1EAVrSB1ibxiDQyTAW6Zip3J4Btk2x4SgApQCeFbX",
+          "pre": "1823631",
+          "post": "1823631",
+          "delta": "0"
+        },
+        {
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "pre": "549535699757",
+          "post": "549535699757",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "b980dd3fbea9d2a71cded49151dd6ca9eb3cc4e53d9bea203166baf6d6d7b0ac",
+      "rpcSha256": "8d265a520fca551a9504a60940240e9f43124f633842adb2126f219f5be442d9",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2CTjHGTFixoEoTFwpN8X3X9P4MdzAvX8ZQgmQzhP4Jssfsu3vjLnmhKi3x9nGtBi42ujQDUq8B16pgwxPzpxNz43",
+      "slot": 456164034,
+      "instruction_index": 1,
+      "program_id": "oLFtGo1ELVbN7x4wDwoNYqhG2YQ8QrDS5QUj82CLieu",
+      "classification": "committed-DLMM-liquidity-fee-claim-and-forwarding",
+      "principal": {
+        "claimSource": 3,
+        "pool": "zxTpi4BtaWX3mgdAPoezkMD1hxx8CdeCfrqXMWvSCLX",
+        "position": "8Eun99XkJTs473sSjK1dj6SHBbGiMz1BnDfenh3eQsSC",
+        "feeOwner": "J6QBP4uuRcp86rVFCigvHk3n52suoNugi8oFu7y7iCv8",
+        "claimedX": "696422486",
+        "claimedY": "894075",
+        "forwardedX": "62678023",
+        "forwardedY": "80466",
+        "mintX": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+        "mintY": "So11111111111111111111111111111111111111112",
+        "wrapperAbiDecoded": false
+      },
+      "ledger": [
+        {
+          "address": "3AeDHaaCjxXZ6mZRkPooXjstZG5AFMtNQF7Ld4P6MH9a",
+          "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "credit": "0",
+          "debit": "696422486",
+          "delta": "-696422486"
+        },
+        {
+          "address": "3mZ7ftpz1XSNHKNQqk9a4bUvzWp95rC9qXsBC9VAXNPN",
+          "mint": "So11111111111111111111111111111111111111112",
+          "credit": "0",
+          "debit": "894075",
+          "delta": "-894075"
+        },
+        {
+          "address": "9hpd7M3DWP2sstxaseJ51K7HSKwMJTN9mTBKSb5ax1MQ",
+          "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "credit": "696422486",
+          "debit": "62678023",
+          "delta": "633744463"
+        },
+        {
+          "address": "5Mi2UAYUZFdu3uLVvDhzw7WfDa2KxDpSodk7uTcEdTdU",
+          "mint": "So11111111111111111111111111111111111111112",
+          "credit": "894075",
+          "debit": "80466",
+          "delta": "813609"
+        },
+        {
+          "address": "Fpuf4gacX2KxRw1WvAUxrkKtDFLWuTBP1MXxcJL3L5bm",
+          "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "credit": "62678023",
+          "debit": "0",
+          "delta": "62678023"
+        },
+        {
+          "address": "AMTZx8guDRH814PDM9LqBokGXGou9uJySw7RKRKpwx81",
+          "mint": "So11111111111111111111111111111111111111112",
+          "credit": "80466",
+          "debit": "0",
+          "delta": "80466"
+        }
+      ],
+      "nativeLedger": [
+        {
+          "address": "EopZ1N3wVNdpiikjpiJPdpJ1evmnh698JdzQCEcRLBo8",
+          "pre": "122325215",
+          "post": "122320215",
+          "delta": "-5000"
+        },
+        {
+          "address": "J6QBP4uuRcp86rVFCigvHk3n52suoNugi8oFu7y7iCv8",
+          "pre": "101064664",
+          "post": "101064664",
+          "delta": "0"
+        },
+        {
+          "address": "zxTpi4BtaWX3mgdAPoezkMD1hxx8CdeCfrqXMWvSCLX",
+          "pre": "7182720",
+          "post": "7182720",
+          "delta": "0"
+        },
+        {
+          "address": "8Eun99XkJTs473sSjK1dj6SHBbGiMz1BnDfenh3eQsSC",
+          "pre": "71485760",
+          "post": "71485760",
+          "delta": "0"
+        },
+        {
+          "address": "3AeDHaaCjxXZ6mZRkPooXjstZG5AFMtNQF7Ld4P6MH9a",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "3mZ7ftpz1XSNHKNQqk9a4bUvzWp95rC9qXsBC9VAXNPN",
+          "pre": "9282185949503",
+          "post": "9282185055428",
+          "delta": "-894075"
+        },
+        {
+          "address": "9hpd7M3DWP2sstxaseJ51K7HSKwMJTN9mTBKSb5ax1MQ",
+          "pre": "1488440",
+          "post": "1488440",
+          "delta": "0"
+        },
+        {
+          "address": "5Mi2UAYUZFdu3uLVvDhzw7WfDa2KxDpSodk7uTcEdTdU",
+          "pre": "3824221",
+          "post": "4637830",
+          "delta": "813609"
+        },
+        {
+          "address": "2GUB6yioyW6BAYera5hmgBZKRYEEb57UnJA46EdLNysG",
+          "pre": "65001912",
+          "post": "65001912",
+          "delta": "0"
+        },
+        {
+          "address": "BaNVW1TwXr4hVzycDhNJjs8EL4kodyrfpQkRVviM3gdC",
+          "pre": "65001912",
+          "post": "65001912",
+          "delta": "0"
+        },
+        {
+          "address": "24sUbHgmkDqPvDTAc1PMaQ7BSWLYyLY9BkjpsJGEddSP",
+          "pre": "65001912",
+          "post": "65001912",
+          "delta": "0"
+        },
+        {
+          "address": "Fpuf4gacX2KxRw1WvAUxrkKtDFLWuTBP1MXxcJL3L5bm",
+          "pre": "1488440",
+          "post": "1488440",
+          "delta": "0"
+        },
+        {
+          "address": "AMTZx8guDRH814PDM9LqBokGXGou9uJySw7RKRKpwx81",
+          "pre": "1488440",
+          "post": "1568906",
+          "delta": "80466"
+        },
+        {
+          "address": "ComputeBudget111111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "oLFtGo1ELVbN7x4wDwoNYqhG2YQ8QrDS5QUj82CLieu",
+          "pre": "1141440",
+          "post": "1141440",
+          "delta": "0"
+        },
+        {
+          "address": "212zWwbJSvYqUXncxPMF6gqkKtjxsv1ccYsskC3DouqY",
+          "pre": "904240",
+          "post": "904240",
+          "delta": "0"
+        },
+        {
+          "address": "FGBFwXnDhKUzfyX1hofRhGfXZVLjjuPVQ5AkMPC82gj6",
+          "pre": "2582160",
+          "post": "2582160",
+          "delta": "0"
+        },
+        {
+          "address": "DRW8JVQvgnTuPzXxdzvpw7aiLJNo7tuf2DJsKYoHSE2c",
+          "pre": "5435760",
+          "post": "5435760",
+          "delta": "0"
+        },
+        {
+          "address": "B5a7wqXdHbFjkBtr4oGs6dD4c8z4ncEMeYdrPaw39PnC",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "pre": "46705822553",
+          "post": "46705822553",
+          "delta": "0"
+        },
+        {
+          "address": "So11111111111111111111111111111111111111112",
+          "pre": "1852116092148",
+          "post": "1852116092148",
+          "delta": "0"
+        },
+        {
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "230130698",
+          "post": "230130698",
+          "delta": "0"
+        },
+        {
+          "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+          "pre": "523015235",
+          "post": "523015235",
+          "delta": "0"
+        },
+        {
+          "address": "D1ZN9Wj1fRSUQfCjhvnu1hqDMT7hzjzBBpi12nVniYD6",
+          "pre": "5987435",
+          "post": "5987435",
+          "delta": "0"
+        },
+        {
+          "address": "Ffg1RNTJjjqMTspz7jhrjrjKFzNtmW7xXjijedhV5oKk",
+          "pre": "1141440",
+          "post": "1141440",
+          "delta": "0"
+        },
+        {
+          "address": "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo",
+          "pre": "79027466",
+          "post": "79027466",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "940c5f73f130cb124cfedb4518fd0fa1599a15225b79a59814fc4042657dc2d5",
+      "rpcSha256": "af8dfa1520c662d610a1bb8787576efda032b41eef540b0a252026e4bbb376e7",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2rSLm7FusHbGZXApb2FbQSiBkxH9tgRgRs7iF1JW2ZTkE9kYPemn8iZixGjmQXUG2BfL4EB43n27pzFzBZ9ZaVzA",
+      "slot": 456163479,
+      "instruction_index": 8,
+      "program_id": "stkitrT1Uoy18Dk1fTrgPw8W6MVzoCfYoAFT4MLsmhq",
+      "classification": "stake-pool-SOL-deposit",
+      "principal": {
+        "depositLamports": "7883929016",
+        "receiptMint": "xSoL18r4U1k2ALa4yF857VDZJqCKecLtty92nscre3o",
+        "newlyMintedReceipts": "6670180008",
+        "previousProofReference": "jupiter-receipt-classification/independent-proof.json",
+        "sameNativeSourceIndex": 8
+      },
+      "ledger": [
+        {
+          "address": "91bUbswo6Di8235jAPwim1At4cPZLbG2pkpneyqKg4NQ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "credit": "7883929016",
+          "debit": "7883929016",
+          "delta": "0"
+        },
+        {
+          "address": "3EbssmkztUEh6oV93UyTtyTQQuXoraGfN4Go8AUC4EgH",
+          "mint": "xSoL18r4U1k2ALa4yF857VDZJqCKecLtty92nscre3o",
+          "credit": "6670180008",
+          "debit": "6670180008",
+          "delta": "0"
+        }
+      ],
+      "nativeLedger": [
+        {
+          "address": "A9gMQmqDuk9vcAerqnJiqpvULtBh3jWL1aJ8rSbZ3AXj",
+          "pre": "8204293",
+          "post": "8094640",
+          "delta": "-109653"
+        },
+        {
+          "address": "3EbssmkztUEh6oV93UyTtyTQQuXoraGfN4Go8AUC4EgH",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "5fv1VXrfCvURfeUtyDsZSFfzuo7ibuqv8HQfr2waDXL5",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "75jTZDE78xpBJokeB2BcimRNY5BZ7U45bWhpgUrTzWZC",
+          "pre": "2039287",
+          "post": "2039287",
+          "delta": "0"
+        },
+        {
+          "address": "7UWZDKjBT1dTvAzdjoSCYKnML3SPt9tfFkANGarEq5r3",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+          "pre": "15600304",
+          "post": "15600304",
+          "delta": "0"
+        },
+        {
+          "address": "91bUbswo6Di8235jAPwim1At4cPZLbG2pkpneyqKg4NQ",
+          "pre": "4982689",
+          "post": "4982689",
+          "delta": "0"
+        },
+        {
+          "address": "A3C9xwv4Hfx92M5HQpxUiibSqCa5pYhD2kTwnU5fEPq",
+          "pre": "2508301",
+          "post": "2508301",
+          "delta": "0"
+        },
+        {
+          "address": "Bz2TwrNkjFseLBLSSymxWF7L5mT3WZUqZcLh7J7JKNBE",
+          "pre": "46275864870802",
+          "post": "46283748799818",
+          "delta": "7883929016"
+        },
+        {
+          "address": "EJpfeQVKPbbymk62sKTsvdtxiR5VfkQFvaS5TSjvTTbY",
+          "pre": "1488440",
+          "post": "1488440",
+          "delta": "0"
+        },
+        {
+          "address": "EzgCtBq1Ls1TEdqufpHsHuPE4LERXdnPzydcaKMvcaeq",
+          "pre": "2039280",
+          "post": "2039280",
+          "delta": "0"
+        },
+        {
+          "address": "Gggen7WnfEKYxSFGhAJ7CGuhb2D6ovvXz2xp4EMgdw8P",
+          "pre": "2039281",
+          "post": "2039281",
+          "delta": "0"
+        },
+        {
+          "address": "Gjmjory7TWKJXD2Jc6hKzAG991wWutFhtbXudzJqgx3p",
+          "pre": "2163608",
+          "post": "2163608",
+          "delta": "0"
+        },
+        {
+          "address": "H292B1VbSvD6GuUmSvUvfQstg1Acfzog796uQ7d1ccCw",
+          "pre": "139709550314",
+          "post": "131825621298",
+          "delta": "-7883929016"
+        },
+        {
+          "address": "noz9EPNcT7WH6Sou3sr3GGjHQYVkN3DNirpbvDkv9YJ",
+          "pre": "650240",
+          "post": "754893",
+          "delta": "104653"
+        },
+        {
+          "address": "spp1mo6shdcrRyqDK2zdurJ8H5uttZE6H6oVjHxN1QN",
+          "pre": "205143474",
+          "post": "205143474",
+          "delta": "0"
+        },
+        {
+          "address": "xSoL18r4U1k2ALa4yF857VDZJqCKecLtty92nscre3o",
+          "pre": "1461600",
+          "post": "1461600",
+          "delta": "0"
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "pre": "1",
+          "post": "1",
+          "delta": "0"
+        },
+        {
+          "address": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "pre": "102454617",
+          "post": "102454617",
+          "delta": "0"
+        },
+        {
+          "address": "9hBXL6fzku6smnDHUXsCDrTnEk3uL4n4Jbwc2NSiMbzP",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "pre": "3388612899",
+          "post": "3388612899",
+          "delta": "0"
+        },
+        {
+          "address": "CapuXNQoDviLvU1PxFiizLgPNQCxrsag1uMeyk6zLVps",
+          "pre": "6827650314",
+          "post": "6827650314",
+          "delta": "0"
+        },
+        {
+          "address": "D8cy77BBepLMngZx6ZukaTff5hCt1HrWyKk3Hnd9oitf",
+          "pre": "6711053",
+          "post": "6711053",
+          "delta": "0"
+        },
+        {
+          "address": "EpH4ZKSeViL5qAHA9QANYVHxdmuzbUH2T79f32DmSCaM",
+          "pre": "2984759753",
+          "post": "2984759753",
+          "delta": "0"
+        },
+        {
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "pre": "549535699757",
+          "post": "549535699757",
+          "delta": "0"
+        },
+        {
+          "address": "J1to1yufRnoWn81KYg1XkTWzmKjnYSnmE2VY8DGUJ9Qv",
+          "pre": "10365191761",
+          "post": "10365191761",
+          "delta": "0"
+        },
+        {
+          "address": "jitodontfronttitans111111111111111111111111",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
+          "pre": "6956115527",
+          "post": "6956115527",
+          "delta": "0"
+        },
+        {
+          "address": "So11111111111111111111111111111111111111112",
+          "pre": "1852116092148",
+          "post": "1852116092148",
+          "delta": "0"
+        },
+        {
+          "address": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+          "pre": "153141440",
+          "post": "153141440",
+          "delta": "0"
+        },
+        {
+          "address": "stkitrT1Uoy18Dk1fTrgPw8W6MVzoCfYoAFT4MLsmhq",
+          "pre": "1141462",
+          "post": "1141462",
+          "delta": "0"
+        },
+        {
+          "address": "Sysvar1nstructions1111111111111111111111111",
+          "pre": "0",
+          "post": "0",
+          "delta": "0"
+        },
+        {
+          "address": "SysvarC1ock11111111111111111111111111111111",
+          "pre": "1169280",
+          "post": "1169280",
+          "delta": "0"
+        },
+        {
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "230130698",
+          "post": "230130698",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "d6be3de44110964b791654384af7db1d39d07ba96cb2421385f5291c43cac0d7",
+      "rpcSha256": "f68b0096aebdbde039291acb6eaed3a3377e2d9d3fb5b4099feb2d031c8194ed",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    }
+  ],
+  "excludedSpotSources": 4,
+  "newClassifications": 3,
+  "reusedPreviouslyProvedSources": 1,
+  "fullOriginalRpcPbParity": true,
+  "primaryTypedClassification": true,
+  "globalCoverageClaim": false
+}

@@ -1,0 +1,139 @@
+{
+  "originals": [
+    {
+      "signature": "2rSLm7FusHbGZXApb2FbQSiBkxH9tgRgRs7iF1JW2ZTkE9kYPemn8iZixGjmQXUG2BfL4EB43n27pzFzBZ9ZaVzA",
+      "slot": 456163479,
+      "instruction_index": 8,
+      "program_id": "stkitrT1Uoy18Dk1fTrgPw8W6MVzoCfYoAFT4MLsmhq",
+      "classification": "stake-pool-SOL-deposit",
+      "principal": {
+        "depositLamports": "7883929016",
+        "receiptMint": "xSoL18r4U1k2ALa4yF857VDZJqCKecLtty92nscre3o",
+        "newlyMintedReceipts": "6670180008"
+      },
+      "ledger": [
+        {
+          "address": "91bUbswo6Di8235jAPwim1At4cPZLbG2pkpneyqKg4NQ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "received": "7883929016",
+          "spent": "7883929016",
+          "delta": "0"
+        },
+        {
+          "address": "3EbssmkztUEh6oV93UyTtyTQQuXoraGfN4Go8AUC4EgH",
+          "mint": "xSoL18r4U1k2ALa4yF857VDZJqCKecLtty92nscre3o",
+          "received": "6670180008",
+          "spent": "6670180008",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "d6be3de44110964b791654384af7db1d39d07ba96cb2421385f5291c43cac0d7",
+      "rpcSha256": "f68b0096aebdbde039291acb6eaed3a3377e2d9d3fb5b4099feb2d031c8194ed",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "4CaBNC7SMMEEAHRtC7FoZtoGaYY9CAC4d8QxVYdJtBsWoV52nzqzs1ww4BwbsHXNbM9PmXDHU9vq79U3gFAUR7hN",
+      "slot": 456163937,
+      "instruction_index": 4,
+      "program_id": "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9",
+      "classification": "receipt-share-redemption",
+      "principal": {
+        "sharesMint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+        "underlyingMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "sharesBurned": "52360911",
+        "underlyingReceived": "55710730"
+      },
+      "ledger": [
+        {
+          "address": "DncqXXsKN5sbBwH2thNUzqj5f4ZAT1HDxxJx4eo21Edb",
+          "mint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+          "received": "52360911",
+          "spent": "52360911",
+          "delta": "0"
+        },
+        {
+          "address": "E6LAwCLSHLkDCoMXZPtnDtpcvCYWcs3ZZLHLreiFwjUi",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "received": "55710730",
+          "spent": "55710730",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "7786270cad5d02ee92bf0cdc561435b90cba6797d8be772a3608968213cab25d",
+      "rpcSha256": "25fc7e4693364b7512cebaecf99e636079ed204863cfef764e366aa21e52b757",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "5nJmxtF5Xk7ZZPcs35wzEGv2nA19HTzkN8C1RLbpK2DXuEAqbewL7W12PCsagQdkLJF75duS1rJkvTxhb7T5jzo5",
+      "slot": 456164122,
+      "instruction_index": 4,
+      "program_id": "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9",
+      "classification": "receipt-share-redemption",
+      "principal": {
+        "sharesMint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+        "underlyingMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "sharesBurned": "9419439",
+        "underlyingReceived": "10022053"
+      },
+      "ledger": [
+        {
+          "address": "CgmGC6n7Gtt1BghetQbzmEtcQR2gHsJ2Ycuf4V7F5BgJ",
+          "mint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+          "received": "9419439",
+          "spent": "9419439",
+          "delta": "0"
+        },
+        {
+          "address": "HoBCz6z9AG92GGozMWEkBPE9UhQWGZ5cXhYcjoGJvwP2",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "received": "10022053",
+          "spent": "10022053",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "993e400b1d38985614110d12f657be233729833c3e341f246bebfc98bb138eb4",
+      "rpcSha256": "c6db9878239eac6321b9f49dbfcaebbcb114140dc4e6837e26f652e68530eef1",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2hHXBbY9QPYcURXMpqTKPKpWn8DfJABARakUdhhiwJ64jMMdtKPJPXrrAXaN3XjHwMZt4wDEChByFnfjVnLEjCzD",
+      "slot": 456164306,
+      "instruction_index": 4,
+      "program_id": "jup3YeL8QhtSx1e253b2FDvsMNC87fDrgQZivbrndc9",
+      "classification": "receipt-share-redemption",
+      "principal": {
+        "sharesMint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+        "underlyingMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "sharesBurned": "20688090",
+        "underlyingReceived": "22011625"
+      },
+      "ledger": [
+        {
+          "address": "FCAecCngV2WV13hrwL1rUHtqok6xahZ1gc1BZFy2WXc1",
+          "mint": "9BEcn9aPEmhSPbPQeFGjidRiEKki46fVQDyPpSQXPA2D",
+          "received": "20688090",
+          "spent": "20688090",
+          "delta": "0"
+        },
+        {
+          "address": "5SPztfEn1VAaWDBAXjQKwVrGbr6e8g3F6JJnUc9eCuSe",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "received": "22011625",
+          "spent": "22011625",
+          "delta": "0"
+        }
+      ],
+      "pbSha256": "29db8af3809d5017e1ca595f717df610e119faf92ab424996d806535f72c92f2",
+      "rpcSha256": "47448d2692871a8af7fc4070368d9ddbb2c3673c465ac2180a58ce75f04690da",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    }
+  ],
+  "excludedSpotSources": 4,
+  "fullOriginalRpcPbParity": true,
+  "primaryTypedClassification": true,
+  "globalCoverageClaim": false
+}

@@ -1,0 +1,130 @@
+{
+  "originals": [
+    {
+      "block_num": 456163701,
+      "block_hash": "3N34acdSzkDu2ka85iBkX5SwX657bgoJrHLh2VEdDAxL",
+      "timestamp": "2026-10-12 19:35:36",
+      "transaction_index": 571,
+      "instruction_index": 14,
+      "signature": "5d1u8zqymocQEcxgMrfWv2bBkpR8w4S16oPr4mZJGiVnNVmk3eN3qFSix4acJdfamxB1xCZjfVQj4g917WBkFkGu",
+      "program_id": "HCrCy6bzHhZ1b6bXwQAucEFkKXyzYMh3hgAR8UPrYSEP",
+      "stack_height": 1,
+      "instruction_tag": "8fbe5adac41e33de",
+      "mints_raw": "So11111111111111111111111111111111111111112,DpyVL7crxmDAgKuCZ6heGVkPzGAWyx7fkRDRrASadeep",
+      "transfer_count": 2,
+      "reason": "token_exchange_unclassified",
+      "decoder_version": "v0.5.2-pluto.25",
+      "pbSha256": "c5157d0926936e6cec896cf7adc7c19c1f7597e7cb8e1143d66d88b44ab86eee",
+      "nativeAccounts": [
+        "GtqVAUiAvduGtZnaTF3xcu2t3GxZyCj8aNmqFX2qeCfw",
+        "9Ed3EyFMgN3q2SbAJPcPNp6aDacgRGF5RyFT7smVSn8o",
+        "8UY49GiUH4jR9RkUYTCHPpuKu5WQsFaf6KCTeUxQojoS",
+        "F3fSrURu58o7n5iNqGRyPgzZPo5VfMtVrWggMD2TeFdp",
+        "69f4gV2EM7KNBGbGSovv9EcuyNjfNPLNJee6DDnA5PEg",
+        "J51mgQzbAWGdedLn4bcf98Zon7XBRhwRejjmBTMTTwzs",
+        "F4dgCnntQ6pdCmNPAf7F8hB7qNFHueQ3thfyA3KGcrCy",
+        "2cUjCeH5uzZGFnjBmnAE8mFP8GuqZEFFi3ZHvJ63zXCH",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "So11111111111111111111111111111111111111112",
+        "DpyVL7crxmDAgKuCZ6heGVkPzGAWyx7fkRDRrASadeep",
+        "J2wpt1faiCMPynhJrRDZBVAZXubPnVBc1tpx5qdMBAjM"
+      ],
+      "nativeDataHex": "8fbe5adac41e33de007ddaac00000000160e992788000000",
+      "nativeLabels": [
+        "SwapBaseInput"
+      ],
+      "nativeCommitted": true,
+      "runtimeMappingComplete": true,
+      "runtimeTruncated": false,
+      "immediateTokenTransfers": [
+        {
+          "index": 15,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "2900000000",
+          "source": "69f4gV2EM7KNBGbGSovv9EcuyNjfNPLNJee6DDnA5PEg",
+          "destination": "F4dgCnntQ6pdCmNPAf7F8hB7qNFHueQ3thfyA3KGcrCy",
+          "authority": "GtqVAUiAvduGtZnaTF3xcu2t3GxZyCj8aNmqFX2qeCfw",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        },
+        {
+          "index": 16,
+          "mint": "DpyVL7crxmDAgKuCZ6heGVkPzGAWyx7fkRDRrASadeep",
+          "amount": "590686761914",
+          "source": "2cUjCeH5uzZGFnjBmnAE8mFP8GuqZEFFi3ZHvJ63zXCH",
+          "destination": "J51mgQzbAWGdedLn4bcf98Zon7XBRhwRejjmBTMTTwzs",
+          "authority": "9Ed3EyFMgN3q2SbAJPcPNp6aDacgRGF5RyFT7smVSn8o",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        }
+      ],
+      "positiveMintCount": 2,
+      "existingSourceEventIds": [],
+      "existingChildEventIds": [],
+      "protocol": "raydium_cpmm_fork",
+      "pool": "F3fSrURu58o7n5iNqGRyPgzZPo5VfMtVrWggMD2TeFdp",
+      "user": "GtqVAUiAvduGtZnaTF3xcu2t3GxZyCj8aNmqFX2qeCfw",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "2900000000",
+      "outputMint": "DpyVL7crxmDAgKuCZ6heGVkPzGAWyx7fkRDRrASadeep",
+      "output": "590686761914",
+      "sourceTransfer": 15,
+      "eventProof": {
+        "logIndex": 45,
+        "dataHex": "40c6cde8260871e2d0b23fd3c4cb8cfd91b53adf3dce93138cec17d51aacca92049bc1f8d7d0c757a8be60c9550000001618961bba450000007ddaac00000000bab3ac87890000000000000000000000000000000000000001069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001be9669aef96641c943d8c756e44efa529d5b6d4ac631bb2574132b6b902c6ad570e09a00000000004081ba010000000001",
+        "tradeFee": "10150000",
+        "creatorFee": "29000000",
+        "elfDispatch": [
+          74344,
+          71407,
+          71521,
+          71761,
+          73730
+        ],
+        "elfNativeAccountValidator": 38751
+      },
+      "ledger": [
+        {
+          "address": "69f4gV2EM7KNBGbGSovv9EcuyNjfNPLNJee6DDnA5PEg",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "0",
+          "closing": "0",
+          "credit": "0",
+          "debit": "2900000000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "2900000000",
+          "created": true,
+          "closed": true
+        },
+        {
+          "address": "J51mgQzbAWGdedLn4bcf98Zon7XBRhwRejjmBTMTTwzs",
+          "mint": "DpyVL7crxmDAgKuCZ6heGVkPzGAWyx7fkRDRrASadeep",
+          "opening": "0",
+          "closing": "590686761914",
+          "credit": "590686761914",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": false
+        }
+      ],
+      "rpcSha256": "202d717cb2198443ebf1705bd6e15dfa4981e798e786156f9151602818487a60",
+      "originalNativeCommitted": true,
+      "separateOutputReferral": "0",
+      "primaryExecutable": {
+        "program": "HCrCy6bzHhZ1b6bXwQAucEFkKXyzYMh3hgAR8UPrYSEP",
+        "programData": "CiWMKfJDcZhGtaYx9kM1bZ3byrxDZVRZXKN5hd5oBuj8",
+        "deployedSlot": "454595916",
+        "contextSlot": 456183822,
+        "elfBytes": 827155,
+        "elfSha256": "2c8251b92925ec7d5e3bf3d5bddcbd4aa297a6434537aeaf4bb3ecd77497359e"
+      }
+    }
+  ],
+  "originalTransactions": 1,
+  "completeUserLedgers": 2,
+  "globalCoverageClaim": false,
+  "historicalReserveClaim": false
+}

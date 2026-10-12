@@ -1,0 +1,192 @@
+{
+  "originals": [
+    {
+      "signature": "LMXHRNRfMsEUXwLLu1QgBxDXqeKcdGDbEvsyHaKBRa9BZNC8K5HKmdxKUNfAH8cMJJ1QMMkDBXgoaMiMcEfnGRu",
+      "slot": 455882043,
+      "program_id": "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE",
+      "protocol": "omnipair",
+      "instruction_index": 8,
+      "sourceTransfer": 10,
+      "pool": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+      "user": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+      "inputMint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+      "input": "10120621",
+      "outputMint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+      "output": "1753261255",
+      "minimumOutput": "0",
+      "native": [
+        {
+          "instruction_index": 10,
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "source": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+          "destination": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "authority": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+          "amount": "10120621",
+          "decimals": 6
+        },
+        {
+          "instruction_index": 11,
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "source": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+          "destination": "4ifQBsmGU4jot33np4NpHeMELz2AN4m1xJbWpjpUaLGF",
+          "authority": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+          "amount": "1753261255",
+          "decimals": 11
+        }
+      ],
+      "events": [
+        {
+          "instruction_index": 9,
+          "name": "UpdatePairEvent",
+          "data": {
+            "price0_ema": "173760638417",
+            "price1_ema": "5755040",
+            "rate0": "10000000",
+            "rate1": "10000000",
+            "accrued_interest0": "0",
+            "accrued_interest1": "0",
+            "lp_interest0": "0",
+            "lp_interest1": "0",
+            "protocol_interest0": "0",
+            "protocol_interest1": "0",
+            "cash_reserve0": "175536631187",
+            "cash_reserve1": "30487325268601",
+            "reserve0_after_interest": "175536631187",
+            "reserve1_after_interest": "30487325268601",
+            "metadata": {
+              "signer": "11111111111111111111111111111111",
+              "pair": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+              "slot": "455882043"
+            }
+          }
+        },
+        {
+          "instruction_index": 12,
+          "name": "SwapEvent",
+          "data": {
+            "reserve0": "175546749277",
+            "reserve1": "30485572007346",
+            "is_token0_in": true,
+            "amount_in": "10120621",
+            "amount_out": "1753261255",
+            "amount_in_after_fee": "10095319",
+            "lp_fee": "22771",
+            "protocol_fee": "2531",
+            "metadata": {
+              "signer": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+              "pair": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+              "slot": "455882043"
+            }
+          }
+        }
+      ],
+      "ledger": [
+        {
+          "address": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "owner": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "0",
+          "post": "0",
+          "credit": "10120621",
+          "debit": "10120621",
+          "delta": "0",
+          "movements": [
+            {
+              "instruction_index": 5,
+              "source": "DYBbqhcJbQJdcdcQ4iTzMpc3M751VM5JcP2fCgzXgAfU",
+              "destination": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+              "amount": "10118588"
+            },
+            {
+              "instruction_index": 6,
+              "source": "DYBbqhcJbQJdcdcQ4iTzMpc3M751VM5JcP2fCgzXgAfU",
+              "destination": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+              "amount": "2033"
+            },
+            {
+              "instruction_index": 10,
+              "source": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+              "destination": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+              "amount": "10120621"
+            }
+          ]
+        },
+        {
+          "address": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "owner": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "175834404319",
+          "post": "175844524940",
+          "credit": "10120621",
+          "debit": "0",
+          "delta": "10120621",
+          "movements": [
+            {
+              "instruction_index": 10,
+              "source": "7GRLQVA6sZu1Xrh4Pn8L3Y2tUsCMzD6MeXEXA6qxLt3k",
+              "destination": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+              "amount": "10120621"
+            }
+          ]
+        },
+        {
+          "address": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "owner": "FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "30554649340227",
+          "post": "30552896078972",
+          "credit": "0",
+          "debit": "1753261255",
+          "delta": "-1753261255",
+          "movements": [
+            {
+              "instruction_index": 11,
+              "source": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+              "destination": "4ifQBsmGU4jot33np4NpHeMELz2AN4m1xJbWpjpUaLGF",
+              "amount": "1753261255"
+            }
+          ]
+        },
+        {
+          "address": "4ifQBsmGU4jot33np4NpHeMELz2AN4m1xJbWpjpUaLGF",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "owner": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "pre": "118683900",
+          "post": "118683900",
+          "credit": "1753261255",
+          "debit": "1753261255",
+          "delta": "0",
+          "movements": [
+            {
+              "instruction_index": 11,
+              "source": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+              "destination": "4ifQBsmGU4jot33np4NpHeMELz2AN4m1xJbWpjpUaLGF",
+              "amount": "1753261255"
+            },
+            {
+              "instruction_index": 15,
+              "source": "4ifQBsmGU4jot33np4NpHeMELz2AN4m1xJbWpjpUaLGF",
+              "destination": "7eqhEnr4WM35tWfYH7rp6yWyaHc5u7epyXRfUNjy9bqg",
+              "amount": "1753261255"
+            }
+          ]
+        }
+      ],
+      "pbSha256": "d6c0da519116002e8e49a9742278f632493ff9d773d294643c0fffee2398bc35",
+      "rpcSha256": "e28dbc65c3a4e7d2479d34fda3b75e2d92f1b2af2bb06d21d25cac1d03fcbba7",
+      "ownedIdlSha256": "c647ae389812cfcec343354fa6d1f24ac44f4d13a0b5ac58d982d470f4c5f3ee",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true,
+      "currentOwnedStateAuthenticatesIdentityOnly": true,
+      "decoderOutputUsed": false
+    }
+  ],
+  "fullOriginalRpcPbParity": true,
+  "independentNativePrimaryAbiAndFinancialReceipts": true,
+  "fullPrincipalLedgers": 4,
+  "globalCoverageClaim": false
+}

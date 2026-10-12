@@ -1,0 +1,262 @@
+{
+  "originals": [
+    {
+      "block_num": 456163878,
+      "block_hash": "FjFZZZGoTN6GrQqRBwfq4vCno2vsgK2FEVzQeaRoQFeX",
+      "timestamp": "2026-10-12 19:36:14",
+      "transaction_index": 496,
+      "instruction_index": 8,
+      "signature": "5dcegoRKqQ92kyaH4X4p4FVEDhTYq2oLPJVw4fEJug3za2geAnvtFy25usjBQRs9YDpRw6CNUyy1GFTkGRUgSFsC",
+      "program_id": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+      "stack_height": 2,
+      "instruction_tag": "00608b5a05000000",
+      "mints_raw": "So11111111111111111111111111111111111111112,jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+      "transfer_count": 2,
+      "reason": "token_exchange_unclassified",
+      "decoder_version": "v0.5.2-pluto.25",
+      "pbSha256": "a31b8176f07c8f00b9117ad2cb6db73522284879979ca2049f34ea0e0ff26881",
+      "nativeAccounts": [
+        "4ZxzmVtMhB29oxHbrPpk1UbKgKj4Jg6j87zkS6LcLhKL",
+        "HsoCTNVnWGybgY4HsNxU27Lap4FHajGZEU6NDGqfT7xd",
+        "7G2oxeZBkeznRDhQmnwePkkV675QgTYRLfP3MfoYfL82",
+        "GWTv6VBbtcegGWvDxMQt1L13PcoL5AX789DbmMfLPZqp",
+        "Gqr26oiiadsxBNAWUejQbPvVZ6VkouUDTDLqouTQQ84E",
+        "24z7sGqWD8cK6xrQ3Hb6a6e5y8RoyoPD8oeByY7htmyK",
+        "8Nvoi2pqCy143Bv9RbHsQzQVNBUWj5q4frHfwuudDPmL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "nativeDataHex": "00608b5a05000000000000000000000000",
+      "nativeLabels": [],
+      "nativeCommitted": true,
+      "runtimeMappingComplete": true,
+      "runtimeTruncated": false,
+      "immediateTokenTransfers": [
+        {
+          "index": 9,
+          "mint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+          "amount": "89820000",
+          "source": "4ZxzmVtMhB29oxHbrPpk1UbKgKj4Jg6j87zkS6LcLhKL",
+          "destination": "HsoCTNVnWGybgY4HsNxU27Lap4FHajGZEU6NDGqfT7xd",
+          "authority": "24z7sGqWD8cK6xrQ3Hb6a6e5y8RoyoPD8oeByY7htmyK",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        },
+        {
+          "index": 10,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "109001570",
+          "source": "GWTv6VBbtcegGWvDxMQt1L13PcoL5AX789DbmMfLPZqp",
+          "destination": "7G2oxeZBkeznRDhQmnwePkkV675QgTYRLfP3MfoYfL82",
+          "authority": "8Nvoi2pqCy143Bv9RbHsQzQVNBUWj5q4frHfwuudDPmL",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        }
+      ],
+      "positiveMintCount": 2,
+      "existingSourceEventIds": [],
+      "existingChildEventIds": [],
+      "protocol": "peg",
+      "pool": "Gqr26oiiadsxBNAWUejQbPvVZ6VkouUDTDLqouTQQ84E",
+      "user": "24z7sGqWD8cK6xrQ3Hb6a6e5y8RoyoPD8oeByY7htmyK",
+      "inputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+      "input": "89820000",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "109001570",
+      "sourceTransfer": 9,
+      "eventProof": {
+        "instructionHex": "00608b5a05000000000000000000000000",
+        "elfDispatch": [
+          2222,
+          2396,
+          2515,
+          1117
+        ],
+        "elfStrictWidth": [
+          2517,
+          2519
+        ],
+        "elfPrincipalCalls": [
+          1612,
+          1625,
+          1635,
+          1662
+        ],
+        "elfPoolPda": [
+          1137,
+          1161,
+          1193,
+          1209
+        ],
+        "nativeAuthorityBytes": "773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b00"
+      },
+      "ledger": [
+        {
+          "address": "4ZxzmVtMhB29oxHbrPpk1UbKgKj4Jg6j87zkS6LcLhKL",
+          "mint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+          "opening": "1417952383",
+          "closing": "1327952383",
+          "credit": "0",
+          "debit": "90000000",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "7G2oxeZBkeznRDhQmnwePkkV675QgTYRLfP3MfoYfL82",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "0",
+          "closing": "0",
+          "credit": "109001570",
+          "debit": "109001570",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": true,
+          "closed": true
+        }
+      ],
+      "rpcSha256": "670c3cf84843605bc15748b355f138a7bfc623f1b77191a4600c29c0917ae63b",
+      "originalNativeCommitted": true,
+      "separateOutputReferral": "0",
+      "primaryExecutable": {
+        "program": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+        "programData": "Ah2VRRgWvPggGUweu2SpDyiC41Z71jKqdFp27X7HJt1D",
+        "deployedSlot": "421860943",
+        "contextSlot": 456183851,
+        "elfBytes": 35600,
+        "elfSha256": "8b5f206355a05d6afb46ecc8da134d6812cc0616ec41a84618eb66739b81fd3b"
+      }
+    },
+    {
+      "block_num": 456164325,
+      "block_hash": "EUm3h3nkbC1zDLA4Diji7yGA7nxWKkfH7tdaxwsmyF6t",
+      "timestamp": "2026-10-12 19:37:51",
+      "transaction_index": 399,
+      "instruction_index": 10,
+      "signature": "4P1Xf4k1sMxKMHf6j5ZHx6zMNvwurnGv8HnGgEEfSjCqZBPiRQxEQgtfRUC41D1bX8EknLWXcVKeweYaxoQ4gx3u",
+      "program_id": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+      "stack_height": 2,
+      "instruction_tag": "00b90fb307000000",
+      "mints_raw": "So11111111111111111111111111111111111111112,jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+      "transfer_count": 2,
+      "reason": "token_exchange_unclassified",
+      "decoder_version": "v0.5.2-pluto.25",
+      "pbSha256": "ec30c2c69fbdec6aa586387ea5fd3a6bd396277399810ccf8360e802125b0626",
+      "nativeAccounts": [
+        "ANZFjpSHctALi63gkAYhRnBUjHNWHJ92stdwPY1Pf7u5",
+        "GWTv6VBbtcegGWvDxMQt1L13PcoL5AX789DbmMfLPZqp",
+        "EgKEWBc74a1Cocp1T4vctox73Vj3cNdy9itkXb6f9yz5",
+        "HsoCTNVnWGybgY4HsNxU27Lap4FHajGZEU6NDGqfT7xd",
+        "Gqr26oiiadsxBNAWUejQbPvVZ6VkouUDTDLqouTQQ84E",
+        "9t4TMkR38K9tWBrsbemrEQr1BLGf3fC79bE3qxZdArSu",
+        "8Nvoi2pqCy143Bv9RbHsQzQVNBUWj5q4frHfwuudDPmL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "nativeDataHex": "00b90fb307000000000000000000000000",
+      "nativeLabels": [],
+      "nativeCommitted": true,
+      "runtimeMappingComplete": true,
+      "runtimeTruncated": false,
+      "immediateTokenTransfers": [
+        {
+          "index": 11,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "129175481",
+          "source": "ANZFjpSHctALi63gkAYhRnBUjHNWHJ92stdwPY1Pf7u5",
+          "destination": "GWTv6VBbtcegGWvDxMQt1L13PcoL5AX789DbmMfLPZqp",
+          "authority": "9t4TMkR38K9tWBrsbemrEQr1BLGf3fC79bE3qxZdArSu",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        },
+        {
+          "index": 12,
+          "mint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+          "amount": "106441083",
+          "source": "HsoCTNVnWGybgY4HsNxU27Lap4FHajGZEU6NDGqfT7xd",
+          "destination": "EgKEWBc74a1Cocp1T4vctox73Vj3cNdy9itkXb6f9yz5",
+          "authority": "8Nvoi2pqCy143Bv9RbHsQzQVNBUWj5q4frHfwuudDPmL",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "committed": true
+        }
+      ],
+      "positiveMintCount": 2,
+      "existingSourceEventIds": [],
+      "existingChildEventIds": [],
+      "protocol": "peg",
+      "pool": "Gqr26oiiadsxBNAWUejQbPvVZ6VkouUDTDLqouTQQ84E",
+      "user": "9t4TMkR38K9tWBrsbemrEQr1BLGf3fC79bE3qxZdArSu",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "129175481",
+      "outputMint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+      "output": "106441083",
+      "sourceTransfer": 11,
+      "eventProof": {
+        "instructionHex": "00b90fb307000000000000000000000000",
+        "elfDispatch": [
+          2222,
+          2396,
+          2515,
+          1117
+        ],
+        "elfStrictWidth": [
+          2517,
+          2519
+        ],
+        "elfPrincipalCalls": [
+          1612,
+          1625,
+          1635,
+          1662
+        ],
+        "elfPoolPda": [
+          1137,
+          1161,
+          1193,
+          1209
+        ],
+        "nativeAuthorityBytes": "773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b773e8a896cde184b3e212d54ea5e8ff735b4b8b5c96ac08240bf0367051f533b00"
+      },
+      "ledger": [
+        {
+          "address": "ANZFjpSHctALi63gkAYhRnBUjHNWHJ92stdwPY1Pf7u5",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "0",
+          "closing": "0",
+          "credit": "0",
+          "debit": "2082202677",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "2082202677",
+          "created": true,
+          "closed": true
+        },
+        {
+          "address": "EgKEWBc74a1Cocp1T4vctox73Vj3cNdy9itkXb6f9yz5",
+          "mint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+          "opening": "0",
+          "closing": "0",
+          "credit": "1713983089",
+          "debit": "1713983089",
+          "nativeCloseAtoms": "0",
+          "nativeSyncCredit": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "rpcSha256": "08c873f16883e0bc32a9f4dfab7189d88596ff6243b24d4aefa9572a31585e91",
+      "originalNativeCommitted": true,
+      "separateOutputReferral": "0",
+      "primaryExecutable": {
+        "program": "pegVkBpfR9GFi5Jaa9YXAHACyM9CzCNvhc5bf8GWNyW",
+        "programData": "Ah2VRRgWvPggGUweu2SpDyiC41Z71jKqdFp27X7HJt1D",
+        "deployedSlot": "421860943",
+        "contextSlot": 456183851,
+        "elfBytes": 35600,
+        "elfSha256": "8b5f206355a05d6afb46ecc8da134d6812cc0616ec41a84618eb66739b81fd3b"
+      }
+    }
+  ],
+  "originalTransactions": 2,
+  "completeUserLedgers": 4,
+  "globalCoverageClaim": false,
+  "historicalReserveClaim": false
+}

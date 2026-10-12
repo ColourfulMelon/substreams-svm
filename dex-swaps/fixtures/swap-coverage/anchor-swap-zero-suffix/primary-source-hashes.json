@@ -1,0 +1,15 @@
+{
+  "repositories": {
+    "raydium-io/raydium-cp-swap": "b3187ae53a1b95a201f855a59024a12ca8f5b51a",
+    "MeteoraAg/dynamic-bonding-curve": "f552f20aa3c1c7631427c3827aeea7c58b902813"
+  },
+  "files": {
+    "primary-raydium/programs/cp-swap/src/lib.rs": "d4151c3959d5b066d459e02f8ffcb45c842944231d68aaff659909c232639f7b",
+    "primary-raydium/programs/cp-swap/src/instructions/swap_base_input.rs": "5878ed09654745b5725030c5d84a8794a07088e836330890cbae2b0d7d7b1349",
+    "primary-raydium/programs/cp-swap/src/utils/token.rs": "c9137c9aa1824fa4c235193475d04d687ba5ba1eaefe4eb4741d542fb29e0a1a",
+    "primary-dbc/programs/dynamic-bonding-curve/src/lib.rs": "1275566d51509245a461c966bf6f2256ba1b1b1358423a63735928888e39ecf9",
+    "primary-dbc/programs/dynamic-bonding-curve/src/instructions/swap/ix_swap.rs": "c39c6d61c8d316198f5eaa78eccb4473dac07d650ea99d98c71c931beff613aa",
+    "primary-dbc/programs/dynamic-bonding-curve/src/instructions/swap/process_swap.rs": "5ac8ac76f53899b993e51b52e5a80990f80e84d740a47418d96d022c38892ddc",
+    "primary-dbc/programs/dynamic-bonding-curve/src/event.rs": "b96fab4ebe518955d599d1875f9d0fde631697194be971022ed0647d10e783f3"
+  }
+}

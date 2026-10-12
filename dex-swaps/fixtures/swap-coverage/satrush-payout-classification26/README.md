@@ -1,0 +1,3 @@
+These 304 finalized native invocations in 178 transactions are one-way payouts from program-owned authorities. They do not prove an opposing native asset exchange. This is a finite classification of the retained SettleDeployPublic, RotateRound and ClaimSats sources, not a blanket exclusion for the program. The independent oracle binds PB/RPC instruction parity, complete committed runtime frames, source authority ownership and 1,756 complete persistent token-account ledger equations.
+
+To rerun: install `bs58`, `@solana/web3.js` and `protobufjs` in your working directory, then run `node verify.cjs` from this fixture directory.

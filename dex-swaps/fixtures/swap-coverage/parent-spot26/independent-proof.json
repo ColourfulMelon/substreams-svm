@@ -1,0 +1,1146 @@
+{
+  "sources": [
+    {
+      "signature": "42rhJysj4toci5kAy8xyXhU8sQ8mpoFRWoXhUUpP4yYnmVzHWiwaXFJTXhZ1BECL9EoCag9ziSWUB9JsmiB98gQx",
+      "slot": 456163456,
+      "sourceIndex": 17,
+      "protocol": "omnipair",
+      "pbSha256": "1b2f1590105f35f7572afa9b116667070668d00b8194166e6559cc3435a29066",
+      "rpcSha256": "0da0ddf8974bf95acfac0e4e83f73ce77353643967bbdb9214c5496b997f3355",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "2514737233",
+      "exactOutput": "3923151",
+      "ledgers": [
+        {
+          "account": "8NqukGFVSgcnhaMjMJkDnCYGsQ3ULp2K4P3HVk59M2yx",
+          "mint": "3dQTr7ror2QPKQ3GbBCokJUmjErGg8kTJzdnYjNfvi3Z",
+          "expected": "-2514737233",
+          "actual": "-2514737233"
+        },
+        {
+          "account": "hXiTXSj1bt9BVfEUaic7t4a1yGkXqnfe48mKxysCM4N",
+          "mint": "3dQTr7ror2QPKQ3GbBCokJUmjErGg8kTJzdnYjNfvi3Z",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "6LVTuLLfmAEvrtv6JRG9zJZ41wYNad8vDgWVTEeBvsZe",
+          "mint": "3dQTr7ror2QPKQ3GbBCokJUmjErGg8kTJzdnYjNfvi3Z",
+          "expected": "2514737233",
+          "actual": "2514737233"
+        },
+        {
+          "account": "5vXKMnckG24ZDTzvCwHXKpbPR1AJEHfEJGiC3NbZyK3a",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "5707",
+          "actual": "5707"
+        },
+        {
+          "account": "5pVN5XZB8cYBjNLFrsBCPWkCQBan5K5Mq2dWGzwPgGJV",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "3917444",
+          "actual": "3917444"
+        },
+        {
+          "account": "7cCpHS9oLcDqeNePM1wmM2dsmKfrUb5MqhBaNPsPWCxH",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "-3923151",
+          "actual": "-3923151"
+        }
+      ]
+    },
+    {
+      "signature": "4qYQ3V6vcgnJhVu7CwHXzsLE31faMVALaLW4ChCksGbZgj6FdHQqrhc2XiBept4ZKE4frbp59GwefYNbUyzir74h",
+      "slot": 456163549,
+      "sourceIndex": 3,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "4776ae2299d721b74aa26ad2bb7bce9fcddeba0c891250654b9bab1bda4522fa",
+      "rpcSha256": "1fa4f23d1840635427465f69cb84cb4577a0809299c2c3d3341fb85ee27175c5",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "3040089192",
+      "exactOutput": "41479976",
+      "ledgers": [
+        {
+          "account": "CAYPjnDpsYoZQHvJz1U1p2wMyRBmmryu4JLYPwu66DXp",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "-3040089192",
+          "actual": "-3040089192"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "3040089192",
+          "actual": "3040089192"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-41479976",
+          "actual": "-41479976"
+        },
+        {
+          "account": "Frjg5wtS29tJJo8WVWvNWyVxhj1uNYbmLJAMmtcFCZ9n",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "959951",
+          "actual": "959951"
+        },
+        {
+          "account": "8Dc4KHbH6LnPo1iSsKs43sXfvqfKebSP9y85EDCtUtxK",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "FDNiPEBtf5gTzX91wc3H2riudcFdXzz1k8kJJaZP4MyJ",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "40520025",
+          "actual": "40520025"
+        }
+      ]
+    },
+    {
+      "signature": "4qYQ3V6vcgnJhVu7CwHXzsLE31faMVALaLW4ChCksGbZgj6FdHQqrhc2XiBept4ZKE4frbp59GwefYNbUyzir74h",
+      "slot": 456163549,
+      "sourceIndex": 15,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "4776ae2299d721b74aa26ad2bb7bce9fcddeba0c891250654b9bab1bda4522fa",
+      "rpcSha256": "1fa4f23d1840635427465f69cb84cb4577a0809299c2c3d3341fb85ee27175c5",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "3357830",
+      "exactOutput": "3040089880",
+      "ledgers": [
+        {
+          "account": "G4zxFHdZ8nqeHeX9bvhRLfFYGEeZLSVQhRdK5BTGaEwh",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-3379964",
+          "actual": "-3379964"
+        },
+        {
+          "account": "3ErnaWksZksTSFU5eCZX1e8RGhfwQPCBFoCAdQ9ugaFb",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "7R8SxUfXYLaiUXd1LjCNfSMK7JdSVEwCWaKpGkSKcWio",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "22134",
+          "actual": "22134"
+        },
+        {
+          "account": "HwXRHmEsLNs6ur5p3wGEjvZUctfRXDqAe3dWEb6ptLdU",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "3357830",
+          "actual": "3357830"
+        },
+        {
+          "account": "6xktNabGR4S1aEZikpZzTQu3EZ1aL2zTSNTmzzihbcyA",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "-3040089880",
+          "actual": "-3040089880"
+        },
+        {
+          "account": "3BUHFXw1FLsvV73kJUCWBuriabtzz677YLcCgG7zGPi7",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "3040089880",
+          "actual": "3040089880"
+        }
+      ]
+    },
+    {
+      "signature": "5aKvKqXP5rq4QSasRTmsEmYvZejqcodnYZGMmdZxg6ubhkKGyovFSRL5wzJdmCNfam5iu4UAL9R6aHXdGp2Lq4qq",
+      "slot": 456163664,
+      "sourceIndex": 2,
+      "protocol": "omnipair",
+      "pbSha256": "31e47926ab566dca7c2d235b2755eedfbdddac1bde47e965d3a54c6a0698306d",
+      "rpcSha256": "cb46e209020f0398ba3dc1503a2a1e57197dbb3795f76e631ea3477befedd57b",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "114000000",
+      "exactOutput": "20005545",
+      "ledgers": [
+        {
+          "account": "B2UnQCtepcM8kz1utUcSC4xyzyjjckZCyZaCAyXEGSQz",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-120000000",
+          "actual": "-120000000"
+        },
+        {
+          "account": "3R4adQGpTB2pYoG4gPgGjg5pch6h6xc2E2SM9RmGnRid",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "114000000",
+          "actual": "114000000"
+        },
+        {
+          "account": "6j4RZA6Ye2mAWr3cKo5YGyWCSY4DEkbJB9xDZg9jJZQe",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "6000000",
+          "actual": "6000000"
+        },
+        {
+          "account": "G4ZYQa3Cx22vZvePskR4qWB43RfHkLL4RaL2gbZurWfr",
+          "mint": "METAwkXcqyXKy1AtsSgJ8JiUHwGCafnZL38n3vYmeta",
+          "expected": "-20005545",
+          "actual": "-20005545"
+        },
+        {
+          "account": "8RjEVAq7CHni53CHhrQL5kwCTud1GxZbmEkKUcQz7qqJ",
+          "mint": "METAwkXcqyXKy1AtsSgJ8JiUHwGCafnZL38n3vYmeta",
+          "expected": "21058089",
+          "actual": "21058089"
+        },
+        {
+          "account": "Ds563Gh96o29mwYfzcJDtKPcCGzYL2muvN2eKUgWGTnr",
+          "mint": "METAwkXcqyXKy1AtsSgJ8JiUHwGCafnZL38n3vYmeta",
+          "expected": "-1052544",
+          "actual": "-1052544"
+        }
+      ]
+    },
+    {
+      "signature": "2rsmDp2X6sidnZv8bc6rZcnwVko6y1i6jnC5GfcKvEnSD4Rnjq7B9SUWnk37fXevc7d7yMCk81ZzSeftgXngh5f5",
+      "slot": 456163882,
+      "sourceIndex": 3,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "6d678decbfd505108ec028c62b7b1af6e2da9f201b48967e63798cff02288b6c",
+      "rpcSha256": "8a6b8a10ef7b6ebf27f8b272206caab1e959eeeb84f66e1ed903fd0f79a4fc7f",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "2503777800",
+      "exactOutput": "34154746",
+      "ledgers": [
+        {
+          "account": "CAYPjnDpsYoZQHvJz1U1p2wMyRBmmryu4JLYPwu66DXp",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "-2503777800",
+          "actual": "-2503777800"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "2503777800",
+          "actual": "2503777800"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-34154746",
+          "actual": "-34154746"
+        },
+        {
+          "account": "Frjg5wtS29tJJo8WVWvNWyVxhj1uNYbmLJAMmtcFCZ9n",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "8Dc4KHbH6LnPo1iSsKs43sXfvqfKebSP9y85EDCtUtxK",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "8318BcJpvfRRrPDZUzfN2zCueNVfNpTMJAeKudqaZzmz",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "FDNiPEBtf5gTzX91wc3H2riudcFdXzz1k8kJJaZP4MyJ",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "34154746",
+          "actual": "34154746"
+        }
+      ]
+    },
+    {
+      "signature": "2rsmDp2X6sidnZv8bc6rZcnwVko6y1i6jnC5GfcKvEnSD4Rnjq7B9SUWnk37fXevc7d7yMCk81ZzSeftgXngh5f5",
+      "slot": 456163882,
+      "sourceIndex": 19,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "6d678decbfd505108ec028c62b7b1af6e2da9f201b48967e63798cff02288b6c",
+      "rpcSha256": "8a6b8a10ef7b6ebf27f8b272206caab1e959eeeb84f66e1ed903fd0f79a4fc7f",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "25568468",
+      "exactOutput": "2503777845",
+      "ledgers": [
+        {
+          "account": "5BzogZvHNEuwstR4iwTWdd7jknFBZqJQWVjxPsDfEUD6",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "-26355212",
+          "actual": "-26355212"
+        },
+        {
+          "account": "H1qQ6Hent1C5wa4Hc3GK2V1sgg4grvDBbmKd5H8dsTmo",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "99HoCiRQ8Jb7sq9u3LCfH93aGU3uuLypKyLx83NADrQm",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "786744",
+          "actual": "786744"
+        },
+        {
+          "account": "14rFLiXzXk7aXLnwAz2kwQUjG9vauS84AQLu6LH9idUM",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "25568468",
+          "actual": "25568468"
+        },
+        {
+          "account": "6s6cprCGxTAYCk9LiwCpCsdHzReW7CLZKqy3ZSCtmV1b",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "-2503777845",
+          "actual": "-2503777845"
+        },
+        {
+          "account": "3BUHFXw1FLsvV73kJUCWBuriabtzz677YLcCgG7zGPi7",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "2503777845",
+          "actual": "2503777845"
+        }
+      ]
+    },
+    {
+      "signature": "3BJLjpNxumSNKg97VxEqTPGm3n2gYMrWQ5PgrMfaLFh74rYvw4zFTgSeV1XaRbnneACH2CthbByxmxV2YRRacsXo",
+      "slot": 456164095,
+      "sourceIndex": 5,
+      "protocol": "omnipair",
+      "pbSha256": "329d9ef51f70d8dc653613c65fe86835b0b7396ac2cfa0e5036b9e0ccfbec382",
+      "rpcSha256": "d6a9432adc8b4eee5f11b9ca581a3d60ba3aceff2927bf01e773bde479703336",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "5271445",
+      "exactOutput": "4293206316",
+      "ledgers": [
+        {
+          "account": "dwxR9YF7WwnJJu7bPC4UNcWFpcSsooH6fxbpoa3fTbJ",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-5271445",
+          "actual": "-5271445"
+        },
+        {
+          "account": "7osJ2JciuCdvsjm3sFL7PkXDwKzvGHQPHfJoBqSL3ojj",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "EFLHDZJgpTyCEYHijCe4Tjd9SBgDVLp2PNuCrWFibQ6u",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "5271445",
+          "actual": "5271445"
+        },
+        {
+          "account": "6zpyjdY6wmPojxeb9fx5xz4fwfAnQt6mYhkGDUTZZZ9P",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-4293206316",
+          "actual": "-4293206316"
+        },
+        {
+          "account": "A8SYeQE1uT8QftXCR7MxSbp7wbTYYgZ8wEp5tNMWCsr3",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "4JxwqqMoA192LQbhyvJewNRJCDYABCmvZ7fACBG772kK",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "4293206316",
+          "actual": "4293206316"
+        }
+      ]
+    },
+    {
+      "signature": "5R6arQBjMhRPBa83xqcq42xQA1wtAo968AfqbuCskXtyfhPKv527iHXm9ZmFaKYFZxU2fVkQnmwPtrEAJacHKteC",
+      "slot": 456164096,
+      "sourceIndex": 3,
+      "protocol": "omnipair",
+      "pbSha256": "68d7ab22188e7733c85742420029b9756d7a77c1c5d918842b8e8edf678c0bc6",
+      "rpcSha256": "b25d80ce7186fac099e550ec9c4beea5fc56846806ee2b5d7248192d85cf3a54",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "558960",
+      "exactOutput": "454728900",
+      "ledgers": [
+        {
+          "account": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "761",
+          "actual": "761"
+        },
+        {
+          "account": "EFLHDZJgpTyCEYHijCe4Tjd9SBgDVLp2PNuCrWFibQ6u",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "558960",
+          "actual": "558960"
+        },
+        {
+          "account": "8S8HjmPZr8tNNEmMj5pcqS5RN73uF6DmcUDEDaoUQ1Ei",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-559721",
+          "actual": "-559721"
+        },
+        {
+          "account": "6zpyjdY6wmPojxeb9fx5xz4fwfAnQt6mYhkGDUTZZZ9P",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-454728900",
+          "actual": "-454728900"
+        },
+        {
+          "account": "4FmyAFVGB5bxSzWxXuMiWA7N13YF6Cdbop2UHeLNhHVZ",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "3kCwtMmyWBVfUb6bxLF5yB1kzcXKTK6JZFXfiUZXi8FQPMTUsV6ZzQ6w5Qf33k6gK56eTRpfJXyjiPVynsWuokBf",
+      "slot": 456164101,
+      "sourceIndex": 13,
+      "protocol": "omnipair",
+      "pbSha256": "bfc3366911ac56b1af3340f8a9a61da1c9d4a5c7be3b9fe99422c9348673febc",
+      "rpcSha256": "6ad6634bf6846e220d3b4aa96e93f992f15bffb73e511c71fce017d9c586e8b1",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "47292355",
+      "exactOutput": "8179688124",
+      "ledgers": [
+        {
+          "account": "D9qPboXwfi8bDR3oS6udcCzv2eyj4JTx9ZcqQk9zR9Dm",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "-47292355",
+          "actual": "-47292355"
+        },
+        {
+          "account": "FosCvueUuhQxSfPXjNv38i5htbYASAv2DBR1oM3ZYfDc",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "47292355",
+          "actual": "47292355"
+        },
+        {
+          "account": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-8179688124",
+          "actual": "-8179688124"
+        },
+        {
+          "account": "FpMUyPqToGR64YcQ1P7E5ecesAPUvKWfXkSYnAmKqAYB",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "4JxwqqMoA192LQbhyvJewNRJCDYABCmvZ7fACBG772kK",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "8179688124",
+          "actual": "8179688124"
+        }
+      ]
+    },
+    {
+      "signature": "ctXFEY67kTXf94iVnUZNELP5GPoA2pWw58M4TqvE9WxQ1rF8FcnZenRLBMTqUV8PW16t7mkxS28XTmuVqrcp9b9",
+      "slot": 456164103,
+      "sourceIndex": 3,
+      "protocol": "omnipair",
+      "pbSha256": "f752fc3065d95fe73e26d1c27f586c8304be5037eb422cc597ce6b00fd5da9ec",
+      "rpcSha256": "f61fc51cef700811ee24c3ff3db42891c14db14f18d4e0a8b36a51a7e8d8499f",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "2062937",
+      "exactOutput": "1677423931",
+      "ledgers": [
+        {
+          "account": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "2145",
+          "actual": "2145"
+        },
+        {
+          "account": "EFLHDZJgpTyCEYHijCe4Tjd9SBgDVLp2PNuCrWFibQ6u",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "2062937",
+          "actual": "2062937"
+        },
+        {
+          "account": "CRKZr6Y9t2hzVNWY4gJk5eig8uznyykB4RTuGSqJDw7n",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-2065082",
+          "actual": "-2065082"
+        },
+        {
+          "account": "6zpyjdY6wmPojxeb9fx5xz4fwfAnQt6mYhkGDUTZZZ9P",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-1677423931",
+          "actual": "-1677423931"
+        },
+        {
+          "account": "4FmyAFVGB5bxSzWxXuMiWA7N13YF6Cdbop2UHeLNhHVZ",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "22JVa3BbWjJXdrH6UzeXtUEqXm4sT2cCorHkagSNxR39ARG8FV1EKuiM6yFgLLCdxv813PAzWpvK7cVE2mRT1nRi",
+      "slot": 456164106,
+      "sourceIndex": 3,
+      "protocol": "omnipair",
+      "pbSha256": "1cceb601b445b36ef317dbf898eddb4f111a92e8cd3e747d2d3eb51e2907aa5c",
+      "rpcSha256": "b73ae9164a7d701dad7deecd41def73d9891a8472415de814dbb840fdee2617f",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "21978783",
+      "exactOutput": "103644402",
+      "ledgers": [
+        {
+          "account": "4YeUv1MHfPsV63Tn1GZQfp2x7rjv7WWmVDRrJg2Wy2bS",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "37643",
+          "actual": "37643"
+        },
+        {
+          "account": "BHYRdBsqZAg6fFfW37jG8LST1kUGq8nM3dfxGd8nwxW6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "21978783",
+          "actual": "21978783"
+        },
+        {
+          "account": "2WLWEuKDgkDUccTpbwYp1GToYktiSB1cXvreHUwiSUVP",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-22016426",
+          "actual": "-22016426"
+        },
+        {
+          "account": "FiX6AEGRsR4CiySTLWx7toCMhgP63iYmtaGPXsCAdn8R",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "-103644402",
+          "actual": "-103644402"
+        },
+        {
+          "account": "6E3A2cEV4nCNEjk2cvg5ZG2KCfiM4euhXMmAETsdSiL4",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "103644402",
+          "actual": "103644402"
+        }
+      ]
+    },
+    {
+      "signature": "22JVa3BbWjJXdrH6UzeXtUEqXm4sT2cCorHkagSNxR39ARG8FV1EKuiM6yFgLLCdxv813PAzWpvK7cVE2mRT1nRi",
+      "slot": 456164106,
+      "sourceIndex": 9,
+      "protocol": "omnipair",
+      "pbSha256": "1cceb601b445b36ef317dbf898eddb4f111a92e8cd3e747d2d3eb51e2907aa5c",
+      "rpcSha256": "b73ae9164a7d701dad7deecd41def73d9891a8472415de814dbb840fdee2617f",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "103644402",
+      "exactOutput": "17910979644",
+      "ledgers": [
+        {
+          "account": "FiX6AEGRsR4CiySTLWx7toCMhgP63iYmtaGPXsCAdn8R",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "-103644402",
+          "actual": "-103644402"
+        },
+        {
+          "account": "6E3A2cEV4nCNEjk2cvg5ZG2KCfiM4euhXMmAETsdSiL4",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "103644402",
+          "actual": "103644402"
+        },
+        {
+          "account": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-17910979644",
+          "actual": "-17910979644"
+        },
+        {
+          "account": "HTde8z398Zcjn4oBNtj2YuS7cPmFkewTtYz9xStLoPro",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "4JxwqqMoA192LQbhyvJewNRJCDYABCmvZ7fACBG772kK",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "17910979644",
+          "actual": "17910979644"
+        }
+      ]
+    },
+    {
+      "signature": "3uWdmrQxJw3dTB7WikDasgvZYvsFeeQLwRe6NTrECyJZzkgisNQKpH8Z2ihRJGPiz3L8YS1YaV6TpxLKsVdZRLKE",
+      "slot": 456164121,
+      "sourceIndex": 6,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "5a17085f78ab64c72096049b06ecb6553e9620e9525d15723b8fbc22d9422c42",
+      "rpcSha256": "3ff95605c0f2235211a7308055d1b34c20ab14997bc6a91341f748a2c2d24301",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "221616",
+      "exactOutput": "15924222",
+      "ledgers": [
+        {
+          "account": "Ddnsggd2M2KmfA8oQs4y22Jt2gtnoKDc462XU4k4kxeF",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-441015",
+          "actual": "-441015"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "441015",
+          "actual": "441015"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "FhEM4j1HxKqytom21ovpHkjhrHyq3GhuKzaYT9rw4taT",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "84wfeJQkidkisUcx6WsNMnsjTCqLbb31qVS4HFuPVS7N",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "3uWdmrQxJw3dTB7WikDasgvZYvsFeeQLwRe6NTrECyJZzkgisNQKpH8Z2ihRJGPiz3L8YS1YaV6TpxLKsVdZRLKE",
+      "slot": 456164121,
+      "sourceIndex": 15,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "5a17085f78ab64c72096049b06ecb6553e9620e9525d15723b8fbc22d9422c42",
+      "rpcSha256": "3ff95605c0f2235211a7308055d1b34c20ab14997bc6a91341f748a2c2d24301",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "18708",
+      "exactOutput": "16933124",
+      "ledgers": [
+        {
+          "account": "9Y8qWZuBVtMuKVDrcD4Jo4Jp5Kfuo1Gs52WzwFmowVNT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-37229",
+          "actual": "-37229"
+        },
+        {
+          "account": "HwXRHmEsLNs6ur5p3wGEjvZUctfRXDqAe3dWEb6ptLdU",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "37228",
+          "actual": "37228"
+        },
+        {
+          "account": "7DuDzMEXCKZp8xQzyWF7FForTakTTMdJQzAUjUBtQoed",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "1",
+          "actual": "1"
+        },
+        {
+          "account": "6xktNabGR4S1aEZikpZzTQu3EZ1aL2zTSNTmzzihbcyA",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "HBjaG5dRuzzdJsmQGVmhH4VffUtDjU267cdR9N4xo2wn",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "HmXEN6ZwF1CZcKYuMX12MNmWSDcQmjsd2yvCmZwTrwmt",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "53QhQjdkVDoYnV7SGBxua94PFEQ2iekdNTfV3Rca7e43BiXVZ8uHjMAp57QrvJRbhQ2vLEqVGbAH76gPGzyiS9HN",
+      "slot": 456164420,
+      "sourceIndex": 6,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "400a813f33946ea044a08371e0d5347aaefa26631ddb09d0a60584b058ec9319",
+      "rpcSha256": "8499a41a7e3eaa12f9b1a07d866c63b564a5dec81d1625508ef58bbc831b5377",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "332212",
+      "exactOutput": "23871089",
+      "ledgers": [
+        {
+          "account": "9ue6pYkBcKDk6zaFUdVtixowoAr71hiQK7UPGCtQBqjx",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-661101",
+          "actual": "-661101"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "661101",
+          "actual": "661101"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "FhEM4j1HxKqytom21ovpHkjhrHyq3GhuKzaYT9rw4taT",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "G3mhXYM9FGE9zYUPJJkttk4XGJWkpraP5ZYtYBKJhW7H",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "53QhQjdkVDoYnV7SGBxua94PFEQ2iekdNTfV3Rca7e43BiXVZ8uHjMAp57QrvJRbhQ2vLEqVGbAH76gPGzyiS9HN",
+      "slot": 456164420,
+      "sourceIndex": 15,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "400a813f33946ea044a08371e0d5347aaefa26631ddb09d0a60584b058ec9319",
+      "rpcSha256": "8499a41a7e3eaa12f9b1a07d866c63b564a5dec81d1625508ef58bbc831b5377",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "259355",
+      "exactOutput": "25395653",
+      "ledgers": [
+        {
+          "account": "8FVa8LGZzMGpuzq9a4dYEqgwZRmp1hRSQuoH5Rz1TeX5",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "dQDddbivHUdDMWHPPNXnNRsshfb9RDH9tDXBNp4ubUR",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "-577320",
+          "actual": "-577320"
+        },
+        {
+          "account": "14rFLiXzXk7aXLnwAz2kwQUjG9vauS84AQLu6LH9idUM",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "516116",
+          "actual": "516116"
+        },
+        {
+          "account": "3Xtk29rnjSMXDhh1BPcUP78bCaFfCCHDA27fHv4ihU35",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "1",
+          "actual": "1"
+        },
+        {
+          "account": "6s6cprCGxTAYCk9LiwCpCsdHzReW7CLZKqy3ZSCtmV1b",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Bh1q8XnbXQyN2ni7JbAkUwRyAoiTC4rXpN3AZs3wEX5F",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "2sc9n8BU96aQJyRoS3EeciY8KgdFt3tCK3xCYZ6TDo5H",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "5gSh1tzAb96iPXpvf3v1JRfo5VqqZviq2st7p7z2mcRsoHv4UVEMupAwUh3r1iFV6KSWAd5ctEKy4GgLXFFKMb8j",
+      "slot": 456164430,
+      "sourceIndex": 3,
+      "protocol": "omnipair",
+      "pbSha256": "7b48fd0fb250f82af197a48535b904fa0c789bda6b65678eb4aa4d8c091c4f65",
+      "rpcSha256": "892168836852ef59ba5afb4861e86fa452f043f828aff3ebd289910afb9a3869",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "13253852",
+      "exactOutput": "62439709",
+      "ledgers": [
+        {
+          "account": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "13799",
+          "actual": "13799"
+        },
+        {
+          "account": "BHYRdBsqZAg6fFfW37jG8LST1kUGq8nM3dfxGd8nwxW6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "13253852",
+          "actual": "13253852"
+        },
+        {
+          "account": "2WLWEuKDgkDUccTpbwYp1GToYktiSB1cXvreHUwiSUVP",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-13267651",
+          "actual": "-13267651"
+        },
+        {
+          "account": "FiX6AEGRsR4CiySTLWx7toCMhgP63iYmtaGPXsCAdn8R",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "-62439709",
+          "actual": "-62439709"
+        },
+        {
+          "account": "8s7npUjNDGV8ouESBH8xqroZg8bXT12fKZFnipCVSk8b",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "62439709",
+          "actual": "62439709"
+        }
+      ]
+    },
+    {
+      "signature": "5gSh1tzAb96iPXpvf3v1JRfo5VqqZviq2st7p7z2mcRsoHv4UVEMupAwUh3r1iFV6KSWAd5ctEKy4GgLXFFKMb8j",
+      "slot": 456164430,
+      "sourceIndex": 8,
+      "protocol": "omnipair",
+      "pbSha256": "7b48fd0fb250f82af197a48535b904fa0c789bda6b65678eb4aa4d8c091c4f65",
+      "rpcSha256": "892168836852ef59ba5afb4861e86fa452f043f828aff3ebd289910afb9a3869",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "62439709",
+      "exactOutput": "10780143112",
+      "ledgers": [
+        {
+          "account": "FiX6AEGRsR4CiySTLWx7toCMhgP63iYmtaGPXsCAdn8R",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "-62439709",
+          "actual": "-62439709"
+        },
+        {
+          "account": "8s7npUjNDGV8ouESBH8xqroZg8bXT12fKZFnipCVSk8b",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "Fxa4DfUwsGY3L7LQEyuuYpjBRGn1jCH3QdbE19tAkWF7",
+          "mint": "omfgRBnxHsNJh6YeGbGAmWenNkenzsXyBXm3WDhmeta",
+          "expected": "62439709",
+          "actual": "62439709"
+        },
+        {
+          "account": "35TxuqVKvcPRLk9oCnTU59Rbst8vzekvPaooG78ZetqW",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "-10780143112",
+          "actual": "-10780143112"
+        },
+        {
+          "account": "4FmyAFVGB5bxSzWxXuMiWA7N13YF6Cdbop2UHeLNhHVZ",
+          "mint": "storenSbvkfzircixnaosc5CbzNZVrHJ6S3EKrS1yqR",
+          "expected": "0",
+          "actual": "0"
+        }
+      ]
+    },
+    {
+      "signature": "61XoiwfpWESKJ6kSNeURujHQ1yP79neP4vniYLoEzTqWPxJjAYGu3EC4mzLUtJMjfcWLi3uDbCfgXuYHhmbyPwUi",
+      "slot": 456164471,
+      "sourceIndex": 3,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "ae385d3355e167d95deabb316fd931a235bc1495a98829b3ccdbe238355501a8",
+      "rpcSha256": "828f2451cd5b17a96597402b62a292974f3918c8818ef65a6908f2119a487fa3",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "2279936368",
+      "exactOutput": "31095377",
+      "ledgers": [
+        {
+          "account": "CAYPjnDpsYoZQHvJz1U1p2wMyRBmmryu4JLYPwu66DXp",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "-2279936368",
+          "actual": "-2279936368"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "2279936368",
+          "actual": "2279936368"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-31095377",
+          "actual": "-31095377"
+        },
+        {
+          "account": "Frjg5wtS29tJJo8WVWvNWyVxhj1uNYbmLJAMmtcFCZ9n",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "696695",
+          "actual": "696695"
+        },
+        {
+          "account": "8Dc4KHbH6LnPo1iSsKs43sXfvqfKebSP9y85EDCtUtxK",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "ARQoqFRpG1gQqFBA9F2yEheuLJvWWCEcMGE8T1aAruVA",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "FDNiPEBtf5gTzX91wc3H2riudcFdXzz1k8kJJaZP4MyJ",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "29200973",
+          "actual": "29200973"
+        },
+        {
+          "account": "51yb1auJdWiXunPPRKgjHMd23E5ip7ST4PurRHypYonv",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "1197709",
+          "actual": "1197709"
+        }
+      ]
+    },
+    {
+      "signature": "61XoiwfpWESKJ6kSNeURujHQ1yP79neP4vniYLoEzTqWPxJjAYGu3EC4mzLUtJMjfcWLi3uDbCfgXuYHhmbyPwUi",
+      "slot": 456164471,
+      "sourceIndex": 26,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "ae385d3355e167d95deabb316fd931a235bc1495a98829b3ccdbe238355501a8",
+      "rpcSha256": "828f2451cd5b17a96597402b62a292974f3918c8818ef65a6908f2119a487fa3",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "2519205",
+      "exactOutput": "2279937169",
+      "ledgers": [
+        {
+          "account": "G4zxFHdZ8nqeHeX9bvhRLfFYGEeZLSVQhRdK5BTGaEwh",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-2443751",
+          "actual": "-2443751"
+        },
+        {
+          "account": "Gjmjory7TWKJXD2Jc6hKzAG991wWutFhtbXudzJqgx3p",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "GduA8oUCRwKx63Ns3FczGU3cNWpRJ2tm5NWB4e9FFbCf",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "-100467",
+          "actual": "-100467"
+        },
+        {
+          "account": "7R8SxUfXYLaiUXd1LjCNfSMK7JdSVEwCWaKpGkSKcWio",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "25013",
+          "actual": "25013"
+        },
+        {
+          "account": "HwXRHmEsLNs6ur5p3wGEjvZUctfRXDqAe3dWEb6ptLdU",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "expected": "2519205",
+          "actual": "2519205"
+        },
+        {
+          "account": "6xktNabGR4S1aEZikpZzTQu3EZ1aL2zTSNTmzzihbcyA",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "-2279937169",
+          "actual": "-2279937169"
+        },
+        {
+          "account": "3BUHFXw1FLsvV73kJUCWBuriabtzz677YLcCgG7zGPi7",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "2279937169",
+          "actual": "2279937169"
+        }
+      ]
+    },
+    {
+      "signature": "5nejjKmpcmrEbJpu86QZz3VkDJrCArWzTzKDQ4RcAGxeRPVkyMRC5DfbyU6EuozaCD4UfJc55LpRwJbbk86mDc1W",
+      "slot": 456164580,
+      "sourceIndex": 3,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "d2d9448770c3b022e313786ac1eaca0d56721d2aad2f1e29ba1de52514a7efff",
+      "rpcSha256": "db7d98f73bb0b821d692ca487583f6aae0cad20408e8e452f6cd8d3893e2e3cd",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "3428271696",
+      "exactOutput": "46746461",
+      "ledgers": [
+        {
+          "account": "CAYPjnDpsYoZQHvJz1U1p2wMyRBmmryu4JLYPwu66DXp",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "-3428271696",
+          "actual": "-3428271696"
+        },
+        {
+          "account": "CLdfbnfZyg2GBj3uyCALVVfjBhYZaF6WaQCGsfBSPzxh",
+          "mint": "FraUdp6YhtVJYPxC2w255yAbpTsPqd8Bfhy9rC56jau5",
+          "expected": "3428271696",
+          "actual": "3428271696"
+        },
+        {
+          "account": "FP2P3t22xpQSG5rif11zJHQnWo3x9AkmvzNjJUEdB1sw",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "-46746461",
+          "actual": "-46746461"
+        },
+        {
+          "account": "Frjg5wtS29tJJo8WVWvNWyVxhj1uNYbmLJAMmtcFCZ9n",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "8Dc4KHbH6LnPo1iSsKs43sXfvqfKebSP9y85EDCtUtxK",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "8318BcJpvfRRrPDZUzfN2zCueNVfNpTMJAeKudqaZzmz",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "9tSTDjLGJWhesGzTPWiVVBJKpf1pX1YbnWFFiom19e8Z",
+          "mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+          "expected": "46746461",
+          "actual": "46746461"
+        }
+      ]
+    },
+    {
+      "signature": "5nejjKmpcmrEbJpu86QZz3VkDJrCArWzTzKDQ4RcAGxeRPVkyMRC5DfbyU6EuozaCD4UfJc55LpRwJbbk86mDc1W",
+      "slot": 456164580,
+      "sourceIndex": 19,
+      "protocol": "dr_fraudsworth",
+      "pbSha256": "d2d9448770c3b022e313786ac1eaca0d56721d2aad2f1e29ba1de52514a7efff",
+      "rpcSha256": "db7d98f73bb0b821d692ca487583f6aae0cad20408e8e452f6cd8d3893e2e3cd",
+      "completeCommittedRuntime": true,
+      "poolOwnedStateVerified": true,
+      "exactInput": "35014207",
+      "exactOutput": "3428271792",
+      "ledgers": [
+        {
+          "account": "HgFLBWQugxt6qbPaWiwXjrqauXdQmcpMV6H6t8ttD8s1",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "-36142979",
+          "actual": "-36142979"
+        },
+        {
+          "account": "H1qQ6Hent1C5wa4Hc3GK2V1sgg4grvDBbmKd5H8dsTmo",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "0",
+          "actual": "0"
+        },
+        {
+          "account": "99HoCiRQ8Jb7sq9u3LCfH93aGU3uuLypKyLx83NADrQm",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "1128772",
+          "actual": "1128772"
+        },
+        {
+          "account": "14rFLiXzXk7aXLnwAz2kwQUjG9vauS84AQLu6LH9idUM",
+          "mint": "So11111111111111111111111111111111111111112",
+          "expected": "35014207",
+          "actual": "35014207"
+        },
+        {
+          "account": "6s6cprCGxTAYCk9LiwCpCsdHzReW7CLZKqy3ZSCtmV1b",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "-3428271792",
+          "actual": "-3428271792"
+        },
+        {
+          "account": "3BUHFXw1FLsvV73kJUCWBuriabtzz677YLcCgG7zGPi7",
+          "mint": "cRiMEhAxoDhcEuh3Yf7Z2QkXUXUMKbakhcVqmDsqPXc",
+          "expected": "3428271792",
+          "actual": "3428271792"
+        }
+      ]
+    }
+  ],
+  "ownedPrograms": [
+    {
+      "program": "5JsSAL3kJDUWD4ZveYXYZmgm1eVqueesTZVdAvtZg8cR",
+      "programData": "Di6MCjoitm8UNnhDLsEnMssT1avPjkriXnQ2PycLd4yr",
+      "deployedSlot": "448427697",
+      "contextSlot": 456183796,
+      "elfBytes": 517772,
+      "elfSha256": "867f87070a4eea15054bbc515393982b9c73ccb800ecea46ec2ad0b1d6f36154"
+    },
+    {
+      "program": "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE",
+      "programData": "CtdTN3od14hyJm7DwmZABPxZBLiuUi7kKrHoNUkSQuMM",
+      "deployedSlot": "439721901",
+      "contextSlot": 456183837,
+      "elfBytes": 1489464,
+      "elfSha256": "e0a962a59706bc20f7b4bb96c7343c9348b74e736312a04ca6ca3013b24cae5c"
+    }
+  ],
+  "ownedAccountContext": [
+    [
+      456183854,
+      456183857
+    ],
+    [
+      456183860,
+      456183861
+    ],
+    [
+      456183863,
+      456183864
+    ],
+    [
+      456183866,
+      456183870
+    ]
+  ]
+}

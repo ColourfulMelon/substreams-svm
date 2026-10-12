@@ -1,0 +1,77 @@
+[
+  {
+    "block_num": 456163788,
+    "block_hash": "2Ys2KdgW1gtYX9T82XpUm8kSRUaVaUGL5mMjUcGK1jrf",
+    "timestamp": "2026-10-12 19:35:55",
+    "transaction_index": 1764,
+    "instruction_index": 0,
+    "signature": "2Yk4CAM5mdocwbbLkE2i2zhJZUF8E5zTvW5DHrq487KFt6NshVT25DPuivECVDXJaDnMAg57yuKwMMmJKEkVz4a",
+    "program_id": "9KuRi5CasX6XWCK846nhfRQmW32g6uuFdfaBkfxjgMpG",
+    "stack_height": 1,
+    "instruction_tag": "f8c69e91e17587c8",
+    "mints_raw": "FyEjtHGGK9M4kaWVNutdkAKnh2QhRsHtzqCHkpnteHE6,GYM7pcQDVTFoCtfQnLAJdFNbBGR5tt52QBiWPwhQZDNj",
+    "transfer_count": 3,
+    "reason": "token_exchange_unclassified",
+    "decoder_version": "v0.5.2-pluto.25",
+    "pbSha256": "66db6b4ee8d2ca5bfdc25dbe93dcc914cf9751337f84b74040dd7d75d6319909",
+    "nativeAccounts": [
+      "6X3EXxG9sMNETi5A9pQXJzYm9PDLR8VjciNczPUrp2Cf",
+      "42nyq7fLePm1PcSAz2e3HgHj6kPb2ypZVDdbFXZQvftP",
+      "GYM7pcQDVTFoCtfQnLAJdFNbBGR5tt52QBiWPwhQZDNj",
+      "FyEjtHGGK9M4kaWVNutdkAKnh2QhRsHtzqCHkpnteHE6",
+      "EEkzCYMypPLDERczjxHUWNHUAThonuhJC8uEaaoLUWsk",
+      "D5Yw9d3r9qgATAHqDkZaBnMoM4aminrtkHNosokjT47x",
+      "8qk8LSV9dqQuaVVkMAuqPWTba2fDobDfP8NXUTp7HCWy",
+      "AJn1EjXNsrgJiD8gSnVqC4rXcyMd4T72npfsGE93N6hi",
+      "HW5MvVWVUNc85A5MWsB57VXthCXeMDVAQzXVazAJFAe9",
+      "3gGjjVhgysbX1KdzA5Z7xRF6UQRuP5FL35qArKonS193",
+      "D53qg3uxsv83qXNUQpdq3FAi3Ui9Yfng5Je8j2i6ur8V",
+      "SysvarRent111111111111111111111111111111111",
+      "11111111111111111111111111111111",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+    ],
+    "nativeDataHex": "f8c69e91e17587c8001718cc040000000100000000000000",
+    "nativeLabels": [
+      "Swap"
+    ],
+    "nativeCommitted": true,
+    "runtimeMappingComplete": true,
+    "runtimeTruncated": false,
+    "immediateTokenTransfers": [
+      {
+        "index": 1,
+        "mint": "GYM7pcQDVTFoCtfQnLAJdFNbBGR5tt52QBiWPwhQZDNj",
+        "amount": "20604000000",
+        "source": "8qk8LSV9dqQuaVVkMAuqPWTba2fDobDfP8NXUTp7HCWy",
+        "destination": "EEkzCYMypPLDERczjxHUWNHUAThonuhJC8uEaaoLUWsk",
+        "authority": "D53qg3uxsv83qXNUQpdq3FAi3Ui9Yfng5Je8j2i6ur8V",
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "committed": true
+      },
+      {
+        "index": 2,
+        "mint": "FyEjtHGGK9M4kaWVNutdkAKnh2QhRsHtzqCHkpnteHE6",
+        "amount": "36078463",
+        "source": "D5Yw9d3r9qgATAHqDkZaBnMoM4aminrtkHNosokjT47x",
+        "destination": "AJn1EjXNsrgJiD8gSnVqC4rXcyMd4T72npfsGE93N6hi",
+        "authority": "42nyq7fLePm1PcSAz2e3HgHj6kPb2ypZVDdbFXZQvftP",
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "committed": true
+      },
+      {
+        "index": 3,
+        "mint": "FyEjtHGGK9M4kaWVNutdkAKnh2QhRsHtzqCHkpnteHE6",
+        "amount": "364429",
+        "source": "D5Yw9d3r9qgATAHqDkZaBnMoM4aminrtkHNosokjT47x",
+        "destination": "3gGjjVhgysbX1KdzA5Z7xRF6UQRuP5FL35qArKonS193",
+        "authority": "42nyq7fLePm1PcSAz2e3HgHj6kPb2ypZVDdbFXZQvftP",
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "committed": true
+      }
+    ],
+    "positiveMintCount": 2,
+    "existingSourceEventIds": [],
+    "existingChildEventIds": []
+  }
+]

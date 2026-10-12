@@ -1,0 +1,10 @@
+{
+  "command": "cargo test -p dex-swaps current_proprietary::tests --no-default-features -- --nocapture",
+  "exitCode": 0,
+  "originalSpotPositives": 86,
+  "invalidNativeAndRoutedCases": 2752,
+  "lendingClassifications": 27,
+  "principalLedgerCount": 344,
+  "sourceSha256": "5d9973c7bb95196a34418452f664a9307687c142fb213cc0939e83776861a9a9",
+  "independentProofSha256": "27804a47dd270e606ff4194f103fd76fc7acdbc38e6b1da109f07ca45208a74e"
+}

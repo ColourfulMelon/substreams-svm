@@ -1,0 +1,9 @@
+{
+  "command": "cargo test -p dex-swaps suffixed_anchor_swaps::tests --no-default-features -- --nocapture",
+  "exitCode": 0,
+  "originalSpotPositives": 6,
+  "invalidNativeAndRoutedCases": 288,
+  "principalLedgerCount": 24,
+  "sourceSha256": "8d852e1a3c519be2933b7ccde7235f1909cf4c2ad57e39ca00bf09ee3e41a036",
+  "independentProofSha256": "42114da6734b9446e970ba3c6f8c7e355f6518b2a0c910ff109e1db15e35efd7"
+}

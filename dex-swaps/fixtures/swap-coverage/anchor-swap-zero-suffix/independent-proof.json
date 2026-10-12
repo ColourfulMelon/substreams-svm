@@ -1,0 +1,302 @@
+{
+  "originals": [
+    {
+      "signature": "5CLss4Qp7MJvHhcuoKgAjMSmvk8wQTigRaDbRJWHd8MbZnDTf5kMjFnjhy84Hy8cYeFoT86faPnHiMhhu8aFvtnb",
+      "slot": 456164061,
+      "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "protocol": "meteora_dbc",
+      "instruction_index": 14,
+      "sourceTransfer": 15,
+      "pool": "3PNvbnHaaivNvfNyMGUvTjz57zrA6hqjFC2YWCe7LRuE",
+      "user": "CkRiRUw4UoQHvAEcapWVpprhzM4Z7RwEbkjrf7tiuor7",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "2000000",
+      "outputMint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+      "output": "5326343606",
+      "minimumOutput": "4393585635",
+      "ledger": [
+        {
+          "address": "7D6aXrY7s9C6zwMd9ac9DD6nFjKPy7CdqtF3ovyTQagw",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "0",
+          "credit": "2000000",
+          "debit": "2000000"
+        },
+        {
+          "address": "CCwL28bUVM4DR4r39wGPukmHBSS4WbJJM3nVkcSS61LA",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "2000000",
+          "credit": "2000000",
+          "debit": "0"
+        },
+        {
+          "address": "5ZomrCk112WrULJc8ZsVjS4iyBApg3wY5MY4yFHe3Eie",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "-5326343606",
+          "credit": "0",
+          "debit": "5326343606"
+        },
+        {
+          "address": "4SR2Gspw2JbSPf1JkSxPQdJPasuVPWuxbNBV22fMLASw",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "5326343606",
+          "credit": "5326343606",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "7f9198397da4e0d298fe59e7391c2debc554bb6bcd13989cee15cbf45aa60714",
+      "rpcSha256": "754adbae96530187bca1fcdddaa53a500813596db9821e31d693740e63a0bafd",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2CJDowqX6Lcu3iU9v2kbN1MHKukPKY6KkU5xDR4umhg6UKgk7PBdRbWfs54tzETya6wQFtxTUGj6ytDQaAitmaky",
+      "slot": 456164087,
+      "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "protocol": "meteora_dbc",
+      "instruction_index": 9,
+      "sourceTransfer": 10,
+      "pool": "3PNvbnHaaivNvfNyMGUvTjz57zrA6hqjFC2YWCe7LRuE",
+      "user": "CkRiRUw4UoQHvAEcapWVpprhzM4Z7RwEbkjrf7tiuor7",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "2000000",
+      "outputMint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+      "output": "6772738711",
+      "minimumOutput": "5610616810",
+      "ledger": [
+        {
+          "address": "7D6aXrY7s9C6zwMd9ac9DD6nFjKPy7CdqtF3ovyTQagw",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "0",
+          "credit": "2000000",
+          "debit": "2000000"
+        },
+        {
+          "address": "CCwL28bUVM4DR4r39wGPukmHBSS4WbJJM3nVkcSS61LA",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "2000000",
+          "credit": "2000000",
+          "debit": "0"
+        },
+        {
+          "address": "5ZomrCk112WrULJc8ZsVjS4iyBApg3wY5MY4yFHe3Eie",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "-6772738711",
+          "credit": "0",
+          "debit": "6772738711"
+        },
+        {
+          "address": "4SR2Gspw2JbSPf1JkSxPQdJPasuVPWuxbNBV22fMLASw",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "6772738711",
+          "credit": "6772738711",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "fc7074e018d81537ff65156b3a51d6c71b77457f3dda1e0c19280dfed3f216cf",
+      "rpcSha256": "2ad421a1411545a0bacddc3f074a05bd168254e096d5b85db786333ce9383984",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2CdGf2YAbhhs6Px22aJ8Jh8XcsGozxeKo1bCebhMEqP4sBNAjNsJNM79XFHek9WaThsAA2w6Y7GzpAjWUEB8eH3W",
+      "slot": 456164096,
+      "program_id": "dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN",
+      "protocol": "meteora_dbc",
+      "instruction_index": 7,
+      "sourceTransfer": 8,
+      "pool": "3PNvbnHaaivNvfNyMGUvTjz57zrA6hqjFC2YWCe7LRuE",
+      "user": "CkRiRUw4UoQHvAEcapWVpprhzM4Z7RwEbkjrf7tiuor7",
+      "inputMint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+      "input": "12099082317",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "3126852",
+      "minimumOutput": "1878028",
+      "ledger": [
+        {
+          "address": "4SR2Gspw2JbSPf1JkSxPQdJPasuVPWuxbNBV22fMLASw",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "-12099082317",
+          "credit": "0",
+          "debit": "12099082317"
+        },
+        {
+          "address": "5ZomrCk112WrULJc8ZsVjS4iyBApg3wY5MY4yFHe3Eie",
+          "mint": "3go3BhzprRjYwKnPTKxxRD6Xs6mM7MAeydHoqWaYanrn",
+          "delta": "12099082317",
+          "credit": "12099082317",
+          "debit": "0"
+        },
+        {
+          "address": "CCwL28bUVM4DR4r39wGPukmHBSS4WbJJM3nVkcSS61LA",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "-3126852",
+          "credit": "0",
+          "debit": "3126852"
+        },
+        {
+          "address": "7D6aXrY7s9C6zwMd9ac9DD6nFjKPy7CdqtF3ovyTQagw",
+          "mint": "So11111111111111111111111111111111111111112",
+          "delta": "0",
+          "credit": "3126852",
+          "debit": "3126852"
+        }
+      ],
+      "pbSha256": "8c6aad492aca279d5d42a2951bc129c4110f73160f1a455296758d456e57717a",
+      "rpcSha256": "f2a30465bf96075c1fe95715b4d1d29eb96267d5e4b41c29c217819d442060fd",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "4ih1KoJN65vNKNd1dMFtroqmyHnnuZ25Q56LjUKsZPRstoPCEHjVHGvyax3iMCB8qqR458LmCUWHYWDJ2H8QyUmx",
+      "slot": 456164392,
+      "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+      "protocol": "raydium_cpmm",
+      "instruction_index": 11,
+      "sourceTransfer": 12,
+      "pool": "BY668k2zBEjqxFvrPmBnXtCQVgqxznuGrcBsm4JEn177",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+      "input": "261556430",
+      "outputMint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+      "output": "1728370647824",
+      "minimumOutput": "0",
+      "ledger": [
+        {
+          "address": "AyLz3Z1t31bAzzzdRDvkQptv2hrKshsJvRr2F59zv1Xh",
+          "mint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+          "delta": "0",
+          "credit": "261556430",
+          "debit": "261556430"
+        },
+        {
+          "address": "EHvMTGtFioVCN4cqSUrYguMGZqQcGrNfrCkFwjdFvinW",
+          "mint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+          "delta": "261556430",
+          "credit": "261556430",
+          "debit": "0"
+        },
+        {
+          "address": "9LpckBFZkNT6xMzmHBPou9TF2B7pH64Kiinp4389HxvF",
+          "mint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+          "delta": "-1728370647824",
+          "credit": "0",
+          "debit": "1728370647824"
+        },
+        {
+          "address": "3CpCwVeU8zuFfuWE1QrLwRafJ3XuHVgWUWfofpeWbAYz",
+          "mint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+          "delta": "0",
+          "credit": "1728370647824",
+          "debit": "1728370647824"
+        }
+      ],
+      "pbSha256": "9b1c8b266c127af0d165ad42e1083e44e4a36bf7d06e5d93e1be86bd5182ea42",
+      "rpcSha256": "5c527f74b0e968d5d92d8d61eb30ac97695ec40a9d68af5e466f39b4436c5bdd",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "4LnAzd6iucWnJU9qXxUaiTF3P8q6YqxVkfqTx3Lg8S8aBzyDfgc6c7nfT2cZpL9dzKEREysDDDqFG4bQDKbcXrVp",
+      "slot": 456164393,
+      "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+      "protocol": "raydium_cpmm",
+      "instruction_index": 7,
+      "sourceTransfer": 8,
+      "pool": "BY668k2zBEjqxFvrPmBnXtCQVgqxznuGrcBsm4JEn177",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+      "input": "715206748",
+      "outputMint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+      "output": "4725526921518",
+      "minimumOutput": "0",
+      "ledger": [
+        {
+          "address": "AyLz3Z1t31bAzzzdRDvkQptv2hrKshsJvRr2F59zv1Xh",
+          "mint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+          "delta": "0",
+          "credit": "715206748",
+          "debit": "715206748"
+        },
+        {
+          "address": "EHvMTGtFioVCN4cqSUrYguMGZqQcGrNfrCkFwjdFvinW",
+          "mint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+          "delta": "715206748",
+          "credit": "715206748",
+          "debit": "0"
+        },
+        {
+          "address": "9LpckBFZkNT6xMzmHBPou9TF2B7pH64Kiinp4389HxvF",
+          "mint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+          "delta": "-4725526921518",
+          "credit": "0",
+          "debit": "4725526921518"
+        },
+        {
+          "address": "3CpCwVeU8zuFfuWE1QrLwRafJ3XuHVgWUWfofpeWbAYz",
+          "mint": "APmLv2VarkC5yEjjutYkeK3byr9L2KwCgrVMWHWsgaG7",
+          "delta": "0",
+          "credit": "4725526921518",
+          "debit": "4725526921518"
+        }
+      ],
+      "pbSha256": "5792810db36899e906f852849c133c2445d3b5d66c6f223ccea1da3405878013",
+      "rpcSha256": "59313ceeea74a45b3d636c6708ef6b23911084c8b83822dacaf952e0d886c0e5",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    },
+    {
+      "signature": "2PqGMdnE42x71n4dzyizHVNVUA3kjaqqUePmQ7ELYsFV2RmSyTx5VFpCiqPGVh2HQZjAiXiEAbAYgbLHms8J8ccm",
+      "slot": 456164721,
+      "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+      "protocol": "raydium_cpmm",
+      "instruction_index": 11,
+      "sourceTransfer": 12,
+      "pool": "AP2JBkb6vq3cE2fv9DduniyA3KUp51xhNLon9vLK1kgz",
+      "user": "3U2tSmABCEnt9ePiRf2kyqgja3Bh58gtHjHvdWrZv7QF",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input": "94990",
+      "outputMint": "ENWC66tsY6cyqSrd8a7S9ETc712xCcSAuGcRUwSMWhyo",
+      "output": "270757953462",
+      "minimumOutput": "0",
+      "ledger": [
+        {
+          "address": "DHxtZH1RPR9LQHkdP3AKGXkCYsF6DthVFRjhaR1VNH8E",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "delta": "0",
+          "credit": "94990",
+          "debit": "94990"
+        },
+        {
+          "address": "6YntQfevHpTEqn8aki9Pn8s6YRECszNeYHa6wbVEjBe4",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "delta": "94990",
+          "credit": "94990",
+          "debit": "0"
+        },
+        {
+          "address": "BzhmBvrMPgES3c1dz4EnW48FQrBtsw6CWu2vEr3Xf5Gb",
+          "mint": "ENWC66tsY6cyqSrd8a7S9ETc712xCcSAuGcRUwSMWhyo",
+          "delta": "-270757953462",
+          "credit": "0",
+          "debit": "270757953462"
+        },
+        {
+          "address": "Fvb6z3v9sjq8uvdw8ZuB5cn1X5q87fP9DUvaoEGaZPEb",
+          "mint": "ENWC66tsY6cyqSrd8a7S9ETc712xCcSAuGcRUwSMWhyo",
+          "delta": "0",
+          "credit": "270757953462",
+          "debit": "270757953462"
+        }
+      ],
+      "pbSha256": "6c825223f468a3b4e123cd0a9539eceafd58ca5c59073af0fdfedbe48599c679",
+      "rpcSha256": "c62e5c46e7937bc89ca722b980070fb64ef5485e891debf1f569e108526d2f76",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    }
+  ],
+  "nonSpot": [],
+  "allFinalizedOriginalRpcPbParity": true,
+  "allFourPrincipalLedgers": true,
+  "globalCoverageClaim": false
+}
