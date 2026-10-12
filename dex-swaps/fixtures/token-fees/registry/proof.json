@@ -1,0 +1,35 @@
+{
+  "anchorSlot": 455821803,
+  "minimumContext": 455821803,
+  "maximumContext": 455893377,
+  "scanned": 13327547,
+  "initialized": 13327473,
+  "fees": 238409,
+  "pages": 13728,
+  "complete": true,
+  "ownershipDigest": "9e9a7b4c64058685303cff6fa09fb359228638737630b9de715f905cc5136e8c",
+  "filters": [
+    {
+      "memcmp": {
+        "offset": 82,
+        "bytes": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+      }
+    }
+  ],
+  "accountTypes": [
+    0,
+    1
+  ],
+  "feeRecordsSha256": "2638a04e649edb104fe89d0649e04fa16c598ce6d8df0b52bf3f6ddc467dce10",
+  "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "seedRecords": 238409,
+  "seedSha256": "9205180efdde8d0a6badb04c764b4ecfe55ebb29fec1990808d2faf696d70e7d",
+  "seedRecordSize": 80,
+  "epochSchedule": {
+    "address": "SysvarEpochSchedu1e111111111111111111111111",
+    "owner": "Sysvar1111111111111111111111111111111111111",
+    "contextSlot": 455819586,
+    "dataBase64": "gJcGAAAAAACAlwYAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  "pendingFeeMints": 38
+}

@@ -32,6 +32,8 @@ mod rfq;
 mod routed_pool;
 mod spl_token_swap;
 pub mod token_fees;
+#[path = "../fixtures/token-fees/registry/snapshot.rs"]
+mod token_fee_snapshot;
 mod token_mints;
 
 use std::collections::VecDeque;
@@ -41,7 +43,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams::{
     errors::Error,
     log,
-    store::{Appender, StoreAdd, StoreAddInt64, StoreAppend, StoreGet, StoreGetRaw, StoreGetString, StoreNew, StoreSet, StoreSetRaw},
+    store::{Appender, StoreAdd, StoreAddInt64, StoreAppend, StoreGet, StoreGetInt64, StoreGetRaw, StoreGetString, StoreNew, StoreSet, StoreSetRaw},
 };
 use substreams_solana::{
     base58,
@@ -71,17 +73,7 @@ fn map_token_fee_updates(block: Block) -> Result<pb::TokenFeeUpdates, Error> {
     // Mainnet's owned EpochSchedule is retained with the fee fixtures: no
     // warmup, firstNormalEpoch/Slot=0, slotsPerEpoch=432000. This package is
     // pinned to network solana; other schedules require a different package.
-    let epoch = block.slot / 432_000;
-    Ok(pb::TokenFeeUpdates {
-        changes: token_fees::native_changes(&block, epoch)
-            .into_iter()
-            .map(|(ordinal, mint, change)| pb::TokenFeeUpdate {
-                ordinal,
-                mint,
-                change: change.encode(),
-            })
-            .collect(),
-    })
+    token_fees::updates(&block, token_fee_snapshot::SEED, token_fee_snapshot::ANCHOR, token_fee_snapshot::COMPLETE_AT)
 }
 
 #[substreams::handlers::store]
@@ -145,12 +137,18 @@ fn store_token_fee_state(updates: pb::TokenFeeUpdates, history: StoreGetString, 
 }
 
 #[substreams::handlers::map]
-fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw) -> Result<pb::Events, Error> {
+fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw, fee_states: StoreGetRaw, fee_seeds: StoreGetInt64) -> Result<pb::Events, Error> {
     if markets.get_last("__phoenix_snapshot").as_deref() != Some(&phoenix_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
         return Err(Error::msg("Phoenix registry snapshot missing or mismatched"));
     }
     if openbook_markets.get_last("__openbook_snapshot").as_deref() != Some(&openbook_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
         return Err(Error::msg("OpenBook registry snapshot missing or mismatched"));
+    }
+    if block.slot <= token_fee_snapshot::COMPLETE_AT
+        || fee_states.get_last("__token22_snapshot").as_deref() != Some(&token_fee_snapshot::COMPLETE_AT.to_le_bytes())
+        || fee_seeds.get_last("__token22_seeds") != Some(token_fee_snapshot::COUNT)
+    {
+        return Err(Error::msg("Token-2022 registry snapshot missing, incomplete or mismatched"));
     }
     let slot = block.slot;
     Ok(pb::Events {
@@ -164,7 +162,7 @@ fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw)
                 if !tx.is_successful() {
                     return None;
                 }
-                let mut transaction = process_transaction_with_markets(
+                let mut transaction = process_transaction_with_metadata(
                     tx,
                     Some(slot),
                     |address, instruction_index| {
@@ -184,6 +182,15 @@ fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw)
                             return None;
                         }
                         openbook::Market::from_owned_header(address, &openbook::PROGRAM_ID, &definition[1..])
+                    },
+                    |mint, instruction_index| {
+                        let ordinal = phoenix_metadata::ordinal(index, instruction_index);
+                        match fee_states.get_at(ordinal, base58::encode(mint)) {
+                            Some(bytes) => token_fees::State::decode(&bytes)?.at(slot / 432_000),
+                            // Absence proves zero only after the complete owned
+                            // scan, its native changes and exact seed count.
+                            None => Some(token_fees::TransferFee { basis_points: 0, maximum_fee: 0 }),
+                        }
                     },
                 )?;
                 transaction.source_index = Some(index as u32);

@@ -1,7 +1,7 @@
 # Token-2022 fee registry work in progress
 
 The deployed package remains `v0.5.2-pluto.12`. The fee registry is staged
-source and is **not wired into the streaming manifest or live pricing yet**.
+source and is now wired into the `.13` candidate manifest, but is **not live pricing yet**.
 Do not package these changes under the immutable `.12` release. A subsequent
 release requires the complete registry, ordinal-aware lookups and replay proof.
 
@@ -44,7 +44,7 @@ The business logic tests include rounding/caps/u64 maximum amounts,
 epoch-delayed fee changes, superseded pending changes, mint close/re-creation,
 unproven calls, malformed owned mint data, history corruption, real repeated
 receipts, deliberately incorrect fee settings and successful children rolled
-back by failed ancestors. All 116 decoder tests and 12 SQL mapper tests pass;
+back by failed ancestors. All 142 decoder tests and 12 SQL mapper tests pass;
 the staged source also compiles for wasm32-unknown-unknown with Rust 1.85.1.
 
 ## Native DLMM receipts
@@ -98,6 +98,31 @@ excludes unextended 82-byte mints, which cannot carry transfer fee config.
 The [Helius pagination contract](https://github.com/helius-labs/helius-rust-sdk/blob/dev/llms.txt)
 requires continuing until paginationKey is absent. Short or empty filtered
 pages do not prove completion. Keep pagination keys local and private.
+
+## Complete owned snapshot and candidate integration
+
+The finalized stable-filter scan terminated normally after 13,728 pages and
+13,327,547 owned mint records. It includes 238,409 transfer-fee configurations,
+including 38 pending mints. Contexts range from slot 455821803 through 455893377.
+The generated 19,072,720-byte seed has SHA-256
+`9205180efdde8d0a6badb04c764b4ecfe55ebb29fec1990808d2faf696d70e7d`.
+Its deterministic seed, original scan proof and owned EpochSchedule are retained
+in `dex-swaps/fixtures/token-fees/registry/`.
+
+The candidate replays native metadata changes from the anchor, seeds records
+at each read context, and begins pricing after the last context. Pricing requires
+both the matching completion marker and exactly 238,409 seed records. Transfer
+lookups use the actual compiled instruction ordinal; pending, unknown and closed
+mint states cannot silently become zero-fee states. The registry test processes
+all retained records through the real update/state codecs, proving uniqueness,
+complete emission and pending-state preservation, including a skipped-slot
+completion boundary. The eight replay corpora preserve all 1,202 previous full
+financial payloads. Release WASM and all three candidate packages build.
+
+Finalized remote store warming and live single-writer continuity must still pass
+before deployment. This snapshot proves future metadata availability from its
+completed boundary; it does not justify applying absent mint keys as zero-fee
+proof to older historical swaps.
 
 ## Required streaming integration
 

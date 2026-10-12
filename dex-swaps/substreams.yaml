@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: dex_swaps
-  version: v0.5.2-pluto.12
+  version: v0.5.2-pluto.13
   url: https://github.com/ColourfulMelon/substreams-svm
   description: Normalized swap events across Solana DEX protocols.
   image: ../image.png
@@ -35,14 +35,57 @@ modules:
     valueType: bytes
     inputs:
       - source: sf.solana.type.v1.Block
+  - name: map_token_fee_updates
+    kind: map
+    initialBlock: 455821803
+    inputs:
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:dex.swaps.v1.TokenFeeUpdates
+  - name: store_token_fee_mints
+    kind: store
+    initialBlock: 455821803
+    updatePolicy: set
+    valueType: bytes
+    inputs:
+      - map: map_token_fee_updates
+  - name: store_token_fee_history
+    kind: store
+    initialBlock: 455821803
+    updatePolicy: append
+    valueType: string
+    inputs:
+      - map: map_token_fee_updates
+      - store: store_token_fee_mints
+        mode: get
+  - name: store_token_fee_seed_count
+    kind: store
+    initialBlock: 455821803
+    updatePolicy: add
+    valueType: int64
+    inputs:
+      - map: map_token_fee_updates
+  - name: store_token_fee_state
+    kind: store
+    initialBlock: 455821803
+    updatePolicy: set
+    valueType: bytes
+    inputs:
+      - map: map_token_fee_updates
+      - store: store_token_fee_history
+        mode: get
   - name: map_events
     kind: map
-    initialBlock: 455779698
+    initialBlock: 455893378
     inputs:
       - source: sf.solana.type.v1.Block
       - store: store_phoenix_markets
         mode: get
       - store: store_openbook_markets
+        mode: get
+      - store: store_token_fee_state
+        mode: get
+      - store: store_token_fee_seed_count
         mode: get
     output:
       type: proto:dex.swaps.v1.Events

@@ -1022,6 +1022,54 @@ mod tests {
     }
 
     #[test]
+    fn complete_owned_registry_seeds_every_mint_once_and_preserves_pending_state() {
+        use crate::token_fee_snapshot::{ANCHOR, COMPLETE_AT, COUNT, SEED};
+        use substreams_solana::pb::sf::solana::r#type::v1::Block;
+        let mut contexts = Vec::new();
+        let mut mints = std::collections::HashSet::new();
+        for row in SEED.chunks_exact(80) {
+            let context = u64::from_le_bytes(row[..8].try_into().unwrap());
+            assert!((ANCHOR..=COMPLETE_AT).contains(&context));
+            assert!(contexts.last().map_or(true, |last| *last <= context));
+            if contexts.last() != Some(&context) {
+                contexts.push(context);
+            }
+            assert!(mints.insert(row[8..40].to_vec()));
+        }
+        assert_eq!(mints.len(), COUNT as usize);
+        let mut parent_slot = ANCHOR - 1;
+        let mut seeded = std::collections::HashSet::new();
+        let mut pending = 0;
+        for slot in contexts {
+            let result = updates(&Block { slot, parent_slot, ..Default::default() }, SEED, ANCHOR, COMPLETE_AT).unwrap();
+            for update in result.changes {
+                assert_eq!(update.ordinal, i64::MAX as u64);
+                assert!(seeded.insert(update.mint));
+                let change = Change::decode(&update.change).unwrap();
+                assert!(matches!(change, Change::Snapshot { .. }));
+                let mut state = State::default();
+                state.apply(change);
+                let restored = State::decode(&state.encode()).unwrap();
+                assert_eq!(state.at(slot / 432_000), restored.at(slot / 432_000));
+                if state.at(slot / 432_000).is_none() {
+                    pending += 1;
+                    state.apply(Change::InitializeMint);
+                    assert!(state.at(slot / 432_000).is_some());
+                }
+            }
+            parent_slot = slot;
+        }
+        assert_eq!(seeded, mints);
+        assert_eq!(pending, 38);
+        let completion = updates(&Block { slot: COMPLETE_AT + 3, parent_slot, ..Default::default() }, SEED, ANCHOR, COMPLETE_AT).unwrap();
+        assert_eq!(completion.changes.len(), 1);
+        assert!(completion.changes[0].mint.is_empty());
+        assert_eq!(completion.changes[0].ordinal, 0);
+        assert_eq!(completion.changes[0].change, COMPLETE_AT.to_le_bytes());
+        assert!(updates(&Block { slot: COMPLETE_AT + 4, parent_slot: COMPLETE_AT + 3, ..Default::default() }, SEED, ANCHOR, COMPLETE_AT).unwrap().changes.is_empty());
+    }
+
+    #[test]
     fn context_seeds_follow_native_changes_and_complete_after_all_read_slots() {
         use substreams_solana::{
             base58,
