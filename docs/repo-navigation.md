@@ -33,6 +33,19 @@ in `quality.rs`. Additional native
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
+See [`pump-repeated-native-sell-validation.md`](pump-repeated-native-sell-validation.md)
+for implicit Pump sell allocation from committed state witnesses, exact fee
+returns, bounded integer rounding and physical ledgers.
+See [`pump-native-cashback-validation.md`](pump-native-cashback-validation.md)
+for native cashback, inert suffixes, same-wallet buy cycles and exact account
+closure refunds proved against finalized originals. See
+[`pump-gross-net-correction-validation.md`](pump-gross-net-correction-validation.md)
+for independently proved corrections to existing gross SOL price outputs.
+See [`riptide-native-validation.md`](riptide-native-validation.md) for native
+exact-input settlement, token-program roles and original principal receipts.
+See [`quay-native-validation.md`](quay-native-validation.md) for both Quay
+directions and [`damm-legacy-suffix-validation.md`](damm-legacy-suffix-validation.md)
+for bounded DAMM suffixes and canonical event binding.
 See [`swap-coverage-2026-10-11.md`](swap-coverage-2026-10-11.md) for finalized
 replay results, newer instruction variants, net-receipt verification and gaps
 that still require investigation. See [`token-transfer-fee-registry.md`](token-transfer-fee-registry.md)

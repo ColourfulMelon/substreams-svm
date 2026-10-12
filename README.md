@@ -98,6 +98,12 @@ Native support means swaps are decoded directly from on-chain program instructio
 | Deriverse | DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD |
 | ZeroFi | ZERor4xhbUycZ6gb9ntrhqscUcZmAbQDjEAtCf4hbZY |
 
+The pluto.25 normalized stream also supports the verified native layouts for
+Saber, Dooar, Dexlab, Quantum, BinaryFi, Triangle, Archer, Riptide, Hadron and
+Quay, plus the observed Jupiter Lend, SolFi, Meteora and Pump variants.
+Exact supported shapes and settlement exclusions are documented in the
+[release guide](docs/pluto-decoder-release.md) and per-format validation notes.
+
 The additional native venues are normalized in `dex-swaps/src/native_venues.rs`.
 Only recognized swap instruction variants with exact scoped token-flow evidence
 are emitted. See [the Helius validation notes](docs/native-venue-validation.md)

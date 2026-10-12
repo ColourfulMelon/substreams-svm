@@ -292,3 +292,22 @@ the same physical leg twice. The targeted sample does not predict billing growth
 
 See [`pluto-decoder-release.md`](pluto-decoder-release.md) for package builds and
 cursor-safe deployment. Existing history is not rewritten by deploying this decoder.
+
+## Combined native format validation (2026-10-12)
+
+The finalized `.24` replay at slots456081600–456085680 (4,081 blocks) independently proves **1,123 newly supported native financial tuples**:144 Saber,489 SolFi V2,119 Triangle,55 DLMM swap2,11 DAMM swap2 and305 Hadron. Across these families,2,246 complete user ledgers agree with original RPC/PB instructions, runtime, applicable mint fees and owned pool identities. Router wrappers and liquidity, fee claims, conversions and close_pool calls are classified separately; they are not additional physical swaps. The combined count covers these identified diagnostic sources, not universal chain coverage.
+
+See [Saber/SolFi validation](saber-solfi-native-validation.md), [Triangle validation](triangle-native-validation.md), [Meteora swap2 validation](meteora-swap2-padding-validation.md) and [Hadron validation](hadron-native-validation.md) for exact source pins, receipt/fee semantics, mutation checks and exclusions. Their independent full tuples matched the combined host decoder before the final DAMM pool-binding guard; its targeted positives remain unchanged. Packaged replay and deployment evidence is recorded separately by the release process.
+
+## Independent oracle dependencies and retained non-swap classifications
+
+The Saber/SolFi, Triangle, Hadron and Meteora swap2 fixture oracles require Node.js with `bs58`, `@solana/web3.js` and `protobufjs`. Their evidence inputs resolve relative to each script's own directory. By default dependencies resolve with ordinary Node `require`. An optional first command-line argument selects a dependency provider's `package.json`; an optional second argument selects a different `package.json` provider for `protobufjs`:
+
+```sh
+node dex-swaps/fixtures/swap-coverage/hadron-native/independent-oracle.cjs ./proof-deps/package.json
+node dex-swaps/fixtures/swap-coverage/hadron-native/independent-oracle.cjs ./app-deps/package.json ./protobuf-deps/package.json
+```
+
+The same arguments work for `saber-solfi-expanded`, `triangle-native`, `meteora-swap2-padding`, and their retained `repeat-native` copies. `repeat-native/verify-combined-originals.cjs` compares all 111 additional independently derived financial tuples with the packaged replay and verifies full original RPC/protobuf parity.
+
+[`non-swap-classification`](../dex-swaps/fixtures/swap-coverage/non-swap-classification/summary.json) retains the source-specific Manifest and BLX proof for the finalized 4,081-block scope, slots 456081600–456085680. All 2,047 Manifest batch diagnostics are committed calls without an instruction-scoped FillLog. Three are unfilled siblings of a separate filled source already indexed; that source's exact mints and atoms reconcile to the original 232-byte FillLog. All 53 BLX router calls contain 142 already-indexed physical child swaps. Their exact native source, program, declared pool, bounded execution position and verified financial rows agree with the original committed instruction walk. None requires an additional router price row. This evidence classifies those original calls; it does not establish universal historical or future coverage.

@@ -1,15 +1,22 @@
 # Pluto DEX decoder release
 
-`v0.5.2-pluto.9` extends `.8` with 1DEX exact-input swaps (48), JupiterZ
-RFQ settlement (49), both Jupiter v6 singular/plural swap event formats and
-event-independent settlement for existing typed Raydium Launchpad swaps.
-Native transfers and independently proven recipient amounts determine prices.
-For RFQ, `amm_pool` is the actual maker liquidity-source identity; asset-pair
-columns keep its markets separate. Forty finalized 1DEX and forty RFQ fixtures
-match independent contract/transfer audits. The 78-transaction Jupiter corpus
-preserves all 213 existing financial legs. See [the coverage audit](swap-coverage-2026-10-11.md)
-for fixtures and remaining formats. This release does not establish universal
-support for every current or future swap program.
+`v0.5.2-pluto.25` combines the independently verified missing native swap
+formats from the finalized coverage audit: Saber, Dooar and Dexlab SPL swap
+forks, Quantum/BinaryFi, Triangle, Archer, Riptide, Hadron and Quay; Jupiter
+Lend oracle-backed settlement; SolFi u64 direction forms; bounded Meteora
+swap2 and legacy suffixes; and uniquely proven repeated/native Pump sells.
+New protocol IDs 55–62 are appended without renumbering existing protocols.
+Pricing uses actual committed principal receipts, verified net token outputs
+and exact native payout allocation. Fee/referral payments remain separate.
+
+Native bindings apply to routed candidates too. Unknown payloads, uncommitted
+ancestry, ambiguous repeated payouts and unsupported fee states remain
+rejected. Legacy classic Token Batch255 operations can contribute separately
+validated transaction ledgers; they never create synthetic swap principals.
+See the per-format validation notes linked in [the repository map](repo-navigation.md).
+The combined finalized packaged replay proof is retained with the release.
+Finite replay evidence does not establish universal support for all current,
+historical or future Solana swap programs.
 
 IDL source is pinned to immutable revision
 `785533d59d0b258500cbbce60890fe58b8c14405`. Existing protocol IDs remain unchanged.
@@ -22,12 +29,12 @@ Create all tables, columns and enum values before starting the new writer.
 Build with Rust 1.85.1 and Substreams CLI 1.18.2, matching Pluto's SQL sink:
 
 ```sh
-cargo +1.85.1 test -p dex-swaps -p svm-dex --locked
-cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --target wasm32-unknown-unknown --release
-substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.9.spkg
-substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.9.spkg
+cargo +1.85.1 test -p dex-swaps -p svm-dex --locked --no-default-features
+cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --no-default-features --target wasm32-unknown-unknown --release
+substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.25.spkg
+substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.25.spkg
 make -C svm-dex/clickhouse schema
-substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.9.spkg
+substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.25.spkg
 ```
 
 Stop the old writer gracefully before upgrading and preserve its exact durable
