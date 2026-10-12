@@ -1,0 +1,344 @@
+{
+  "scope": "Unmodified finalized RPC/PB/runtime parity, bounded observed boolean sell suffixes, exact principal token debits/receipts, program-owned immutable pool/mint/vault identity and available user ledger conservation. Fee payouts remain separate from the primary output.",
+  "transactions": [
+    {
+      "case": 0,
+      "signature": "4wnZjhfCLoe7j1zG3XWG3K44KyXyYfYygA8NSeyJNfZAeACBWNkLar9iP7tmgxeiQuaehvnMnE6fystWPLVFfHb9",
+      "slot": 455887509,
+      "pbSha256": "904c949b4f1bfa7e6fd90a003e317e527275bb419e28629fe30d84dd4fea8865",
+      "rpcSha256": "250b9d22c2f3a2d950460e8f6a53d9e7f2564938ebbdb20d3756d9a4af7f9d84",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "3yqFrXBkKVEBTYxiFMpKQGf8k86vfSUAT4ApikA9fycN",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "ADRUEnDtxBiRGq1stSxDVWztWAtfoi1LrfxEuJ3Tpump",
+      "input": "470581848568",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1543966886",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "hvJNKD3FsDbUzHvBPBMwTfEJBDauWNha6ytrR4YnTGA",
+          "observed": "-470581848568",
+          "expected": "-470581848568"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1543966886",
+          "expected": "1543966886"
+        }
+      ]
+    },
+    {
+      "case": 1,
+      "signature": "kaHJDXdPF5nKZsR9Q9zX5UinRUZPEZY1gr4kddp4v1Gs4EYhiEMwSMuhgTMCd3QE3sB5gz2usDKbnDXEEtvNHxW",
+      "slot": 455887436,
+      "pbSha256": "7e2e85b97676f0d329117c23a86ac3d0941d4a4e252b54238dcb390eecd2b830",
+      "rpcSha256": "1ef713c5a2b0b560ad05a9b7fc17bbc1566b7c3d196fe9fb8cecce27161a2361",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "2Sc4fgQxVjKbmikf5E8zeBFrbHpuskZeuFpPLN25Y8jb",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "6TmiQTKsc9VzhK1n2rKVB96JbweeZqtt1xZqspyZpump",
+      "input": "397915066216",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1152925496",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "4LAj9p82paX9VN9Jpmx7YCP6viA8zbMWUY4YCGvEmFsc",
+          "observed": "-397915066216",
+          "expected": "-397915066216"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1152925496",
+          "expected": "1152925496"
+        }
+      ]
+    },
+    {
+      "case": 2,
+      "signature": "59kNhKY4r3mYVfu1N8sYUGQ3DQas8ZWeucsiesRvQaR3NYAFhGaTZGEthnRvHrqBF8hKzMoneueAoVFTzbnnpGHB",
+      "slot": 455887418,
+      "pbSha256": "522327372a6d2493c1aaf21a3ef7600c6f9a825322eaaef6e2776bb7c3f18cc7",
+      "rpcSha256": "98656c5de7d4be6a11f0c8ffe96252f69b6428e098abe3d0e313b7f6b4123a77",
+      "source": 1,
+      "firstTransfer": 3,
+      "pool": "BMuZfadopeYcKjxxr2jGzjebyEYMeDZDAvga35U8TAXX",
+      "user": "3KcPSJ8ouE7H1feoWHmhDwXhLnXhpxP6R6713uytFmBM",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "30000",
+      "outputMint": "SYTNT49UpNtcpUXuyrKtiAYT23sg66KAprSEf5Mpump",
+      "output": "38713941",
+      "suffix": "01",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "Aut8Lr3ZDWU58zMcgvNcBTijj41Ay778fjYPgZg8M4r8",
+          "observed": "-30000",
+          "expected": "-30000"
+        },
+        {
+          "address": "Bpt6X5mvaj5XZ2TS8f1kKW83m4iDacqXHmsQCpko8e9U",
+          "observed": "38713941",
+          "expected": "38713941"
+        }
+      ]
+    },
+    {
+      "case": 3,
+      "signature": "5vDR6UVWYk3tAPQsK35ZPicG8YKyQXHVV6ngXdmQnCPjQa5xr1tL7PcukopxcRUBEFWMXASchkWuoYbC8ohukgoh",
+      "slot": 455887355,
+      "pbSha256": "dc398a9e649e892b4b9659c974a0aef07a28d26840cb1aa8d0da3ad444bfff97",
+      "rpcSha256": "c9fd3c3886ea514ad3f02ea7967f0c49bfe9e09174fce5982692c4252142900e",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "2Sc4fgQxVjKbmikf5E8zeBFrbHpuskZeuFpPLN25Y8jb",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "6TmiQTKsc9VzhK1n2rKVB96JbweeZqtt1xZqspyZpump",
+      "input": "367663771662",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1535442553",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "4LAj9p82paX9VN9Jpmx7YCP6viA8zbMWUY4YCGvEmFsc",
+          "observed": "-367663771662",
+          "expected": "-367663771662"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1535442553",
+          "expected": "1535442553"
+        }
+      ]
+    },
+    {
+      "case": 4,
+      "signature": "2VfULf3f8LKSVt7n9GuLFdKgGqTSzfYfKNYQHsVzh7Xvrxc58ro6m9Zkw52S2vrU85Xpa3ruzXscU9gqeQH9eKTF",
+      "slot": 455887348,
+      "pbSha256": "654014b1ca066048ace0cd6194ea236198fcdd96856ac1371bfb2c749655404a",
+      "rpcSha256": "7ed2ee9da426cbce785b1ae100859754337be497c65f45264012c4150bcaaef2",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "2Sc4fgQxVjKbmikf5E8zeBFrbHpuskZeuFpPLN25Y8jb",
+      "user": "AYt71Hz9vsgtbds1tsYDfr9R9wcAp12TCpD9qhBB8pT3",
+      "inputMint": "6TmiQTKsc9VzhK1n2rKVB96JbweeZqtt1xZqspyZpump",
+      "input": "738210026875",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "3140563259",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "A3pwck8DExfj65NDrgZMMaLDALf3sD5P19Bb6C5LFQ6Y",
+          "observed": "-738210026875",
+          "expected": "-738210026875"
+        },
+        {
+          "address": "7La3BrzWa526BeXPEGMjw6dsNF9NSZEyUjQoqnJ1tLAk",
+          "observed": "3140563259",
+          "expected": "3140563259"
+        }
+      ]
+    },
+    {
+      "case": 5,
+      "signature": "3gtXHBrudZsaxZ2pt7zdQ3r1ABSepSk2sUttZ8LzWapDq5795c3akwjAQFet5oDt3cSeysK3ybEFuEb4pjfcHfUi",
+      "slot": 455887335,
+      "pbSha256": "d5a7f8ec1919dda2a44379d8ea26bbe727f126944b4bc18d2ae5b5c1af722e49",
+      "rpcSha256": "e4393c383154fa8c99d975d6717e0f0ce86d2a02fab73df97b46d1c7f2f7211a",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "3yqFrXBkKVEBTYxiFMpKQGf8k86vfSUAT4ApikA9fycN",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "ADRUEnDtxBiRGq1stSxDVWztWAtfoi1LrfxEuJ3Tpump",
+      "input": "443767433507",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1565031290",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "hvJNKD3FsDbUzHvBPBMwTfEJBDauWNha6ytrR4YnTGA",
+          "observed": "-443767433507",
+          "expected": "-443767433507"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1565031290",
+          "expected": "1565031290"
+        }
+      ]
+    },
+    {
+      "case": 6,
+      "signature": "2ttBAc6ahxcJhAgMvqGU778QUCRNFhztBoy3R2mAu4Spz9JPDFbs8sJSMnHEZpEb8qhsLeJUcv1jTu2pBF2CVx5r",
+      "slot": 455887304,
+      "pbSha256": "8cfdeb14dfeee61710d4bd8dd146eb11b14a360547d9a112afdffd8721962d6e",
+      "rpcSha256": "c9bec850d929c2a3922210b77bcf05c18cffecb7cda9cc11987afc142a8716d9",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "2Sc4fgQxVjKbmikf5E8zeBFrbHpuskZeuFpPLN25Y8jb",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "6TmiQTKsc9VzhK1n2rKVB96JbweeZqtt1xZqspyZpump",
+      "input": "374563392963",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1562172143",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "4LAj9p82paX9VN9Jpmx7YCP6viA8zbMWUY4YCGvEmFsc",
+          "observed": "-374563392963",
+          "expected": "-374563392963"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1562172143",
+          "expected": "1562172143"
+        }
+      ]
+    },
+    {
+      "case": 7,
+      "signature": "3ZEKK18k6zfm1D1BVLQtxWVz6kHgYt2XGKSgk542khESXSpbevmBNP7PKtfoSNTwd1U1RUHPfMxwjkLacyxCGszt",
+      "slot": 455887134,
+      "pbSha256": "00aee13c601b2f1284fc98be2716599d6b28e0defa00c036c77789be2648c16c",
+      "rpcSha256": "f350b6c2278bae449bcc1705eebef1c12eb8f0a0e6780dae1296ac65f94fb63e",
+      "source": 2,
+      "firstTransfer": 4,
+      "pool": "HWYqjPWKQJAMaN2onj4NR77xzNDqYcwvYfM4927NYNxN",
+      "user": "69J2HyLoXLbCzLANV4cFqydGLbkqypt51XrJPqvVwWVS",
+      "inputMint": "B32RrQH7bKATY8UcoajsHSEXdUE5MfDy4fsNPmhcpump",
+      "input": "5445394864831",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "523639063",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "3Nm6kGSxA7TfKVL4zEAqwPsKDk8Z3bbZoctxxjDLx1o3",
+          "observed": "-5445394864831",
+          "expected": "-5445394864831"
+        },
+        {
+          "address": "8SCkMoVTXcQuRr3yZqTt2HhCuLoXm81JET9PaQKyYeeF",
+          "observed": "0",
+          "expected": "0"
+        }
+      ]
+    },
+    {
+      "case": 8,
+      "signature": "4L4mJpxTDdbRKWUDAyUame8LVWM3TCqpET7X3BYPN8b9M19BCt9aayVbVt8ay2XihndGqwHtDWuQieH7WbSKkBcx",
+      "slot": 455887077,
+      "pbSha256": "768bc9267b6897705af3528a4bdd30718ecf9d072b747d7bdf407d656f841840",
+      "rpcSha256": "0d11d4a2e7f93d41af26db81f2ecad987c8ae2e5c09f4639b9123f186b8672bd",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "2Sc4fgQxVjKbmikf5E8zeBFrbHpuskZeuFpPLN25Y8jb",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "6TmiQTKsc9VzhK1n2rKVB96JbweeZqtt1xZqspyZpump",
+      "input": "319212424700",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1529671767",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "4LAj9p82paX9VN9Jpmx7YCP6viA8zbMWUY4YCGvEmFsc",
+          "observed": "-319212424700",
+          "expected": "-319212424700"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1529671767",
+          "expected": "1529671767"
+        }
+      ]
+    },
+    {
+      "case": 9,
+      "signature": "5hm9V7rTZPTohw3j6Zf3WBcxvdTN5jMzC11ca4fxL2HEoSnAXJK4cLc5Y9BHtkBu3dgkfpfh7FennpUyJL44bYA3",
+      "slot": 455886836,
+      "pbSha256": "5b67023d1beb58c810f3c64e459366980761aa5e200fd540321988b44cff62b9",
+      "rpcSha256": "382f42a7e736ba14ee0440e4e8c091d09f65cf2b0a534367adf6d236d9156bf8",
+      "source": 5,
+      "firstTransfer": 7,
+      "pool": "HPEY6ex6bu9zDw1Lz6otETUUDNhrRV2oYtjj2UVb2Ed2",
+      "user": "3KcPSJ8ouE7H1feoWHmhDwXhLnXhpxP6R6713uytFmBM",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "30000",
+      "outputMint": "EeR6j4h6aT64wynvZwTgMMa3FjL3gNGSBQ2fQ4KcYGan",
+      "output": "75702931",
+      "suffix": "01",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "Aut8Lr3ZDWU58zMcgvNcBTijj41Ay778fjYPgZg8M4r8",
+          "observed": "-30000",
+          "expected": "-30000"
+        }
+      ]
+    },
+    {
+      "case": 10,
+      "signature": "4XP9ct3dSEbv95MGLwpGXbz849hc8JF9b9uH8K7JxTeFyLL3kDsxEjZGrqWr7Hp8BJVaJAAeYbtiF3hRLgto59Uj",
+      "slot": 455886831,
+      "pbSha256": "368e1f015789ef375f6dfdd8557866ddc1a8ae7e02da199f599d3d08486cf7b5",
+      "rpcSha256": "9dca162036c8f476e0767b1148b7612205b771c0d3af0b89d905bfc228498199",
+      "source": 7,
+      "firstTransfer": 9,
+      "pool": "HWYqjPWKQJAMaN2onj4NR77xzNDqYcwvYfM4927NYNxN",
+      "user": "2t6ckXp6nRDpdf2UQ3GKuD38gowU4LTZ4Xsy3h8NDYim",
+      "inputMint": "B32RrQH7bKATY8UcoajsHSEXdUE5MfDy4fsNPmhcpump",
+      "input": "1012719108590",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "234313628",
+      "suffix": "00",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "94XY7mtjf5u4LoNvxUoKc7Vs2u4TtHgETBsp9EWsmc49",
+          "observed": "-1012719108590",
+          "expected": "-1012719108590"
+        }
+      ]
+    },
+    {
+      "case": 11,
+      "signature": "cCGiPxUR7BacwpfC4f7R4KN6yDAQLtpX9o8eKWMJqHjhnQD83zfZVT18n2xwFHJCXFZx7UkjLT5gruVsU865rTq",
+      "slot": 455886819,
+      "pbSha256": "77d409228b51a7b2717d714bea395eb25c052ea81a044a54cafc83ea79c35a5d",
+      "rpcSha256": "0440d83fbf4f5f047b2c97c46c495d5dbb3798b95c7b2c4a85c83663d18e3cc6",
+      "source": 6,
+      "firstTransfer": 8,
+      "pool": "3yqFrXBkKVEBTYxiFMpKQGf8k86vfSUAT4ApikA9fycN",
+      "user": "91oAkakrEy641g5m1QFRKgeXN3TiC5P1yy5jpi6VnwV8",
+      "inputMint": "ADRUEnDtxBiRGq1stSxDVWztWAtfoi1LrfxEuJ3Tpump",
+      "input": "462551565092",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "output": "1521468921",
+      "suffix": "0101",
+      "poolContext": 456096980,
+      "observedUserLedgers": [
+        {
+          "address": "hvJNKD3FsDbUzHvBPBMwTfEJBDauWNha6ytrR4YnTGA",
+          "observed": "-462551565092",
+          "expected": "-462551565092"
+        },
+        {
+          "address": "47gUzt3kee7t91RDrgYVdJtivxD8iFKcCJpMoXio6hVT",
+          "observed": "1521468921",
+          "expected": "1521468921"
+        }
+      ]
+    }
+  ],
+  "globalCoverageProven": false
+}

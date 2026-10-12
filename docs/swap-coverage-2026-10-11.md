@@ -1126,3 +1126,30 @@ A provider shutdown at 14:37 UTC caused an automatic reconnect. The persisted
 post-reconnect proof has 1,522 linked blocks and 207,081 unique valid swaps with
 matching sealed counts and no duplicate rows or broken parent links. Pricing
 freshness remains pending; this is not a claim that catch-up is complete.
+
+
+## PumpSwap legacy sell suffixes (.23 candidate)
+
+A retained current diagnostic sample exposes legacy PumpSwap sells carrying
+one or two boolean bytes after the two canonical amount arguments. The strict
+IDL parser accepts these bounded suffixes for buys, but rejected sells. The
+pricing adapter now validates this exact legacy sell discriminator, lengths
+25/26 and boolean values, then passes the unchanged amount prefix through the
+existing typed account parser. No suffix meaning is inferred. Historical
+24-byte sells remain supported. Other formats still require their own proof.
+
+Sixteen unmodified finalized originals at slots 456084768–456085670 restore
+exact primary user debits/receipts across nine program-owned pools. Their source
+positions, mints, vaults, user accounts and atom amounts independently match
+RPC and protobuf. Five outputs use Token-2022; isolated receiver conservation
+proves their exact net receipts, including newly initialized accounts. Fee
+payments remain separate. All 167 core tests pass, including 96 invalid-format
+and rolled-back-execution mutations. The 22 overlapping host audit corpora
+preserve 3,081 complete prior financial occurrences with no changes or losses,
+and add these 16 recent sells plus 12 older sample occurrences. All twelve older additions now independently match finalized RPC instructions,
+net receipts and the immutable identities of five program-owned pools.
+
+Evidence is in `dex-swaps/fixtures/swap-coverage/pumpswap-sell-flags/`. This
+is staged source, pending packaged replay and live deployment; the currently
+deployed release is `.22`. Repeated implicit-native Pump payouts, newer venue
+variants and global coverage remain unresolved.
