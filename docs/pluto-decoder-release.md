@@ -14,7 +14,16 @@ ancestry, ambiguous repeated payouts and unsupported fee states remain
 rejected. Legacy classic Token Batch255 operations can contribute separately
 validated transaction ledgers; they never create synthetic swap principals.
 See the per-format validation notes linked in [the repository map](repo-navigation.md).
-The combined finalized packaged replay proof is retained with the release.
+All 189 core decoder/mapper tests pass. Two clean packaged replays cover 4,565
+finalized blocks, preserve all 633,846 prior swap identities, add 3,726 swaps
+and correct 825 existing Pump outputs from gross payouts to actual net user
+receipts. No prior identity disappears and no other old financial field changes.
+Every added/corrected row independently matches all 25 financial/provenance
+fields from original source transactions and finalized RPC metadata. Four table
+versions, sealed counters, parent chains and unique operation ordinals pass.
+The [final attestation](../dex-swaps/fixtures/swap-coverage/combined25/packaged-release-proof.json)
+links the immutable comparator manifests to the completed independent proof;
+compressed complete evidence and checksums accompany the release.
 Finite replay evidence does not establish universal support for all current,
 historical or future Solana swap programs.
 
@@ -38,11 +47,11 @@ substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0
 ```
 
 Stop the old writer gracefully before upgrading and preserve its exact durable
-cursor. For this validated stateless upgrade, copy that cursor row under the
+cursor. For this validated pricing-only upgrade with unchanged metadata bytes and hashes, copy that cursor row under the
 new output-module hash before starting the new writer. Keep strict module-hash
 checking enabled: the pinned sink selects an exact hash before considering any
-fallback. Check that the first actual new block is the old saved block plus
-one, then verify cursor advancement, swap quality and coverage-table writes.
+fallback. Check that the first actual new block links to the old saved block and block
+ID (the next finalized block may follow skipped Solana slots), then verify cursor advancement, swap quality and coverage-table writes.
 The adopted cursor row is a restart boundary, not evidence of newly processed
 blocks. Do not use this migration for an unvalidated stateful or historical
 replay change. Historical recovery needs
