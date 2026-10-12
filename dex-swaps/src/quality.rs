@@ -1650,12 +1650,25 @@ pub(crate) fn verify_with_fees(
         }
         for (position, ix) in instructions.iter().enumerate() {
             let a = ix.accounts();
-            if ix.program_id().0.iter().all(|b| *b == 0) && ix.data().len() == 52 && ix.data()[..4] == [0; 4]
-                && a.len() >= 2 && successful_invocations.contains(&(position as u32))
-            {
-                let amount = i128::from(u64::from_le_bytes(ix.data()[4..12].try_into().unwrap()));
-                *native_changes.entry(a[0].0.clone()).or_default() -= amount;
-                *native_changes.entry(a[1].0.clone()).or_default() += amount;
+            if ix.program_id().0.iter().all(|b| *b == 0) && a.len() >= 2 && successful_invocations.contains(&(position as u32)) {
+                let data = ix.data();
+                let funding = if data.len() == 52 && data[..4] == [0; 4] {
+                    Some(u64::from_le_bytes(data[4..12].try_into().unwrap()))
+                } else if data.len() >= 92 && data[..4] == [3, 0, 0, 0] && matches!(a.len(), 2 | 3) {
+                    // System CreateAccountWithSeed encodes base, bincode string,
+                    // lamports, space and owner. Its committed funding debit
+                    // remains separate from the user's actual swap proceeds.
+                    let seed_len = u64::from_le_bytes(data[36..44].try_into().unwrap());
+                    if seed_len <= 32 && data.len() == 92 + seed_len as usize
+                        && &data[4..36] == a[if a.len() == 3 { 2 } else { 0 }].0.as_slice()
+                    {
+                        Some(u64::from_le_bytes(data[44 + seed_len as usize..52 + seed_len as usize].try_into().unwrap()))
+                    } else { None }
+                } else { None };
+                if let Some(amount) = funding {
+                    *native_changes.entry(a[0].0.clone()).or_default() -= i128::from(amount);
+                    *native_changes.entry(a[1].0.clone()).or_default() += i128::from(amount);
+                }
             }
         }
         if let Some(meta) = tx.meta.as_ref() {
@@ -2685,6 +2698,59 @@ mod tests {
             }
             assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
                 !(s.source_index == Some(9) && s.input_mint == crate::SOL_MINT))), "native SOL multi-hop mode {mode}");
+        }
+    }
+
+    #[test]
+    fn finalized_native_sells_with_seeded_wsol_funding_preserve_exact_proceeds() {
+        let fixtures = [
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/0.transaction.pb").as_slice(), 3674892520122u64, 146101095u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/1.transaction.pb").as_slice(), 27746164395248u64, 1073914637u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/2.transaction.pb").as_slice(), 40288505198799u64, 1451114076u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/3.transaction.pb").as_slice(), 46813406508987u64, 1684902330u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/4.transaction.pb").as_slice(), 35392381708333u64, 1361483540u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/5.transaction.pb").as_slice(), 28399267367389u64, 1100046313u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/6.transaction.pb").as_slice(), 16019211731366u64, 627855680u64),
+            (include_bytes!("../fixtures/swap-coverage/pump-seeded-wsol/7.transaction.pb").as_slice(), 35696936606446u64, 1375983428u64),
+        ];
+        for (bytes, input, output) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let native = tx.walk_instructions().nth(2).unwrap();
+            let a = native.accounts();
+            let (pool, user, mint) = (a[3].0.clone(), a[6].0.clone(), a[2].0.clone());
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let sell = decoded.swaps.iter().find(|s| s.source_index == Some(2)).expect("original finalized sell proceeds");
+            assert_eq!((sell.input_amount, sell.output_amount, sell.source_transfer_index), (input, output, Some(4)));
+            assert_eq!((sell.amm_pool.clone(), sell.user.clone(), sell.input_mint.clone()), (pool, user, mint));
+            assert_eq!(sell.output_mint, crate::SOL_MINT);
+            assert!(sell.transfer_verified);
+            for mode in 0..11 {
+                let mut altered = tx.clone();
+                let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                let pump_program = message.instructions[2].program_id_index;
+                let create = message.instructions.iter_mut().find(|ix| ix.data.starts_with(&[3, 0, 0, 0])).unwrap();
+                let seller = create.accounts[0] as usize;
+                let meta = altered.meta.as_mut().unwrap();
+                match mode {
+                    0 => create.data[52] ^= 1,
+                    1 => { create.data.pop(); }
+                    2 => create.data[36..44].copy_from_slice(&u64::MAX.to_le_bytes()),
+                    3 => create.data[36..44].copy_from_slice(&33u64.to_le_bytes()),
+                    4 => create.data[36..44].copy_from_slice(&0u64.to_le_bytes()),
+                    5 => create.data[4] ^= 1,
+                    6 => create.accounts[0] = create.accounts[1],
+                    7 => create.accounts[1] = create.accounts[0],
+                    8 => create.program_id_index = pump_program,
+                    9 => meta.post_balances[seller] += 1,
+                    10 => {
+                        let success = meta.log_messages.iter_mut().find(|log| log.as_str() == "Program 11111111111111111111111111111111 success").unwrap();
+                        *success = "Program 11111111111111111111111111111111 failed: custom program error: 0x1".into();
+                    }
+                    _ => unreachable!(),
+                }
+                assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s| s.source_index != Some(2))),
+                    "seeded funding mutation {mode}");
+            }
         }
     }
 

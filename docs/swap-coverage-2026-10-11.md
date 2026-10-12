@@ -1090,3 +1090,15 @@ three raw transactions are removed; no other diagnostics change. All four
 actual row versions, parent chains, sealed counts and contiguous per-block
 operation ordinals pass. The package is not yet published or deployed at this
 proof snapshot. No replay writes to financial tables.
+
+The seeded-account funding repair independently restores eight finalized Pump.fun
+sells whose proceeds fund a System `CreateAccountWithSeed` WSOL account. The
+native ledger now includes that separately committed funding debit, validating
+the exact bincode seed length and base-account binding. Original RPC/protobuf
+instructions, input token debits, curve debits, fee recipients and per-user SOL
+proceeds all agree; two current program-owned curves are verified. The existing
+multiple-payout-per-user guard remains. Eight original fixtures and 88 negative
+funding/runtime/balance mutations pass in the core suite (166 core tests). The
+retained host corpora preserve every previous full financial row and add exactly
+these eight swaps. This is not proof of universal coverage; packaging and live
+rollout of this repair remain pending.
