@@ -15,3 +15,7 @@ This is evidence for the retained swap profiles. It does not claim support for t
 Re-run `oracle.cjs` with Node and the `protobufjs` and `bs58` packages installed. Its default input directory is this fixture folder; an optional first argument selects another folder with the same files. The oracle is independent of decoder outputs. `cases.tsv` is the assertion table used by the Rust core test.
 
 The core test checks all57 financial tuples and 180 malformed witnesses across10 distinct retained ABI/token-program shapes. Both persistent pool vault pre/post token balances must equal their complete committed transaction transfer ledgers, which binds output even when its user WSOL account closes. Unknown operations touching either vault fail this proof.
+
+RPC runtime retention note: 3XiHYT348BZq6nxMeSf5rTrd2JkZwCin4Mj2kx94N8G3WqH6qAZVmZppyzngZUdD657k4Ppfv3Wbn4w8Q2UjDLUY contains a retained finalized RPC `Log truncated` marker. Its original retained PB contains the complete successful runtime. The oracle records `rpcLogsTruncated` per transaction and `runtimeProvenance` counts, matches the exact available RPC prefix and every retained tail entry in source order, and checks the complete PB invocation ancestry. All raw RPC/PB bytes remain unchanged. Other records receive an explicit false flag when no marker exists.
+
+The oracle.cjs script accepts backend and protobufjs package.json paths as optional dependency arguments; fixture paths default to its own directory in this mode.

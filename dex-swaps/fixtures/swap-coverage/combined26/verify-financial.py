@@ -67,7 +67,11 @@ def prepare():
    uncompressed=hashlib.sha256(gzip.decompress(rpc.read_bytes())).hexdigest() if rpc.suffix=='.gz' else rpchash
    assert retainedrpc in [None,rpchash,uncompressed],(name,sig,'RPC hash differs')
    original=dict(signature=sig,slot=slot,pbPath=str(pb),rpcPath=str(rpc),pbSha256=pbhash,rpcSha256=rpchash,oracleOriginalHashRetained=retainedpb is not None,explicitRpcRuntimeTruncation=t.get('rpcRuntimeTruncated',t.get('rpcLogsTruncated',False)))
-   w=walk_rpc(rpc_read(rpc)); txs[(sig,pbhash,rpchash)]=original
+   retention=[t[k] for k in ['rpcRuntimeTruncated','rpcLogsTruncated'] if k in t]
+   assert all(isinstance(v,bool) for v in retention) and len(set(retention))<=1,(name,sig,'conflicting/nonboolean RPC retention flags')
+   retained=rpc_read(rpc)
+   assert ('Log truncated' in retained['meta']['logMessages'])==original['explicitRpcRuntimeTruncation'],(name,sig,'explicit RPC retention limitation missing or incorrect')
+   w=walk_rpc(retained); txs[(sig,pbhash,rpchash)]=original
    legs=[t['financialRow']] if 'financialRow' in t else t.get('legs',[t]) if name in LEGS or isinstance(entry,dict) and entry.get('style')=='legs' else [t]
    for x in legs:
     if not x.get('priceable',True):exclusions.append(dict(family=name,signature=sig,source=x['source_index'],reason='independently proved zero proceeds'));continue

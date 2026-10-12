@@ -1,8 +1,12 @@
+const resolvePackage=require('module').createRequire;
+const packageMode=process.argv[2]?.endsWith('package.json');
+const packageRequire=packageMode?resolvePackage(require('path').resolve(process.argv[2])):require;
+const protobufRequire=packageMode&&process.argv[3]?resolvePackage(require('path').resolve(process.argv[3])):require;
 const fs=require('fs'),crypto=require('crypto'),z=require('zlib');
-const bs=require('bs58').default||require('bs58');
-const pb=require('protobufjs');
+const bs=packageRequire('bs58').default||packageRequire('bs58');
+const pb=protobufRequire('protobufjs');
 const T=pb.parse(fs.readFileSync(require('path').join(__dirname,'solana-type.proto'),'utf8')).root.lookupType('sf.solana.type.v1.ConfirmedTransaction');
-const dir=process.argv[2]||__dirname,amm='pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',token22='TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',fee='pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ',sol='So11111111111111111111111111111111111111112',system='11111111111111111111111111111111';
+const dir=packageMode?__dirname:process.argv[2]||__dirname,amm='pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA',token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',token22='TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',fee='pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ',sol='So11111111111111111111111111111111111111112',system='11111111111111111111111111111111';
 const assert=(p,msg)=>{if(!p)throw Error(msg)},hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),u=(b,o)=>b.readBigUInt64LE(o);
 const owned=JSON.parse(fs.readFileSync(dir+'/owned-mints.json')),feeConfigs=new Map();
 owned.addresses.forEach((address,n)=>{
@@ -25,6 +29,15 @@ for(const row of rows){try{
  assert(JSON.stringify(keys)===JSON.stringify(pk)&&pIx.length===ix.length,'PB RPC full keys/walk parity');
  pIx.forEach((p,i)=>assert(pk[p.programIdIndex]===ix[i].program&&p.stackHeight===ix[i].depth&&Buffer.from(p.data).equals(ix[i].data)&&JSON.stringify(Array.from(p.accounts||[]).map(n=>pk[n]))===JSON.stringify(ix[i].accounts),'PB RPC exact instruction parity'));
  assert(JSON.stringify(original.meta.preBalances.map(String))===JSON.stringify(tx.meta.preBalances.map(String))&&JSON.stringify(original.meta.postBalances.map(String))===JSON.stringify(tx.meta.postBalances.map(String)),'PB RPC all native balances');
+ const rpcTruncatedAt=tx.meta.logMessages.indexOf('Log truncated'),rpcLogsTruncated=rpcTruncatedAt>=0;
+ const sourceLogs=original.meta.logMessages,rpcLogs=tx.meta.logMessages;
+ if(!rpcLogsTruncated)assert(JSON.stringify(sourceLogs)===JSON.stringify(rpcLogs),'full original PB/RPC runtime parity');
+ else {
+  assert(JSON.stringify(sourceLogs.slice(0,rpcTruncatedAt))===JSON.stringify(rpcLogs.slice(0,rpcTruncatedAt)),'exact retained RPC runtime prefix');
+  let cursor=rpcTruncatedAt;
+  for(const line of rpcLogs.slice(rpcTruncatedAt+1)){const next=sourceLogs.indexOf(line,cursor);assert(next>=cursor,'every retained RPC tail entry ordered in complete source');cursor=next+1;}
+ }
+ const runtimeProvenance={source:'retained original PB',sourceLogCount:sourceLogs.length,rpcLogCount:rpcLogs.length,rpcTruncatedAt:rpcLogsTruncated?rpcTruncatedAt:null,retainedRpcTailEntries:rpcLogsTruncated?rpcLogs.length-rpcTruncatedAt-1:0};
  const stack=[],returns=new Map();let cursor=0;
  for(const l of original.meta.logMessages){assert(l!=='Log truncated','complete logs');const w=l.split(' ');if(w[0]!=='Program')continue;
   if(w[2]==='invoke'){assert(ix[cursor].program===w[1]&&ix[cursor].depth===stack.length+1&&Number(w[3].slice(1,-1))===ix[cursor].depth,'native runtime source/depth');stack.push({source:cursor++,returned:[]});}
@@ -74,6 +87,6 @@ for(const row of rows){try{
  const nativeLedgers=[...native].map(([account,expected])=>({account,expected:String(expected),actual:String(balance(account,'postBalances')-balance(account,'preBalances'))}));assert(nativeLedgers.every(l=>l.expected===l.actual),'every modeled native account '+JSON.stringify(nativeLedgers.filter(l=>l.expected!==l.actual)));
  const tokenLedgers=[...tokens].filter(([account])=>mints.get(account)!==sol).map(([account,expected])=>{const n=keys.indexOf(account),before=tx.meta.preTokenBalances.find(t=>t.accountIndex===n),after=tx.meta.postTokenBalances.find(t=>t.accountIndex===n);assert(before||after||expected===0n&&balance(account,'preBalances')===0n&&balance(account,'postBalances')===0n&&ix.some(c=>[token,token22].includes(c.program)&&c.data[0]===18&&c.accounts[0]===account)&&ix.some(c=>[token,token22].includes(c.program)&&c.data[0]===9&&c.accounts[0]===account),'full principal balance witness or exact zero creation/closure');return{account,mint:mints.get(account),expected:String(expected),actual:String(BigInt(after?.uiTokenAmount.amount||0)-BigInt(before?.uiTokenAmount.amount||0))};});assert(tokenLedgers.every(l=>l.expected===l.actual),'all principal token balances: '+sig+' '+JSON.stringify(tokenLedgers.filter(l=>l.expected!==l.actual)));
  assert(keys.every((account,n)=>BigInt(tx.meta.postBalances[n])-BigInt(tx.meta.preBalances[n])===(native.get(account)||0n)),'all resolved global native account ledgers');
- proof.push({signature:sig,slot:tx.slot,rawPbSha256:hash(dir+'/'+sig+'.pb'),rpcGzipSha256:hash(dir+'/'+sig+'.rpc.json.gz'),completeRuntime:true,ownedMintProofSha256:hash(dir+'/owned-mints.json'),legs,nativeLedgers,tokenLedgers});
+ proof.push({signature:sig,slot:tx.slot,rawPbSha256:hash(dir+'/'+sig+'.pb'),rpcGzipSha256:hash(dir+'/'+sig+'.rpc.json.gz'),completeRuntime:true,rpcLogsTruncated,runtimeProvenance,ownedMintProofSha256:hash(dir+'/owned-mints.json'),legs,nativeLedgers,tokenLedgers});
 }catch(e){failures.push({signature:row.signature,error:e.message,stack:e.stack});}}
 fs.writeFileSync(dir+'/independent-proof.json',JSON.stringify(proof,null,2));fs.writeFileSync(dir+'/independent-failures.json',JSON.stringify(failures,null,2));console.log(JSON.stringify({failures:failures.length,errors:failures.slice(0,5),transactions:proof.length,legs:proof.flatMap(t=>t.legs).length,restored:proof.length,nativeLedgers:proof.flatMap(t=>t.nativeLedgers).length,tokenLedgers:proof.flatMap(t=>t.tokenLedgers).length}));
