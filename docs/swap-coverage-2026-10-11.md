@@ -757,5 +757,15 @@ settlement mutations. Thirteen replay corpora preserve all 2,405 prior full
 financial-payload occurrences. Exactly one independently proven sell is added,
 appearing in both the published fixture corpus and a recent recognized-swap
 corpus; these are overlapping observations of the same trade. The financial
-proof is retained beside the original. Packaging and finalized remote replay
-remain pending; deployed .15 still has this gap.
+proof is retained beside the original. All three .16 packages build, with the
+frozen metadata binary and all seven module hashes unchanged. Both versions
+exit cleanly on a finalized 50-block remote replay containing the original.
+All 4,138 old swaps retain their exact financial fields and keys, excluding
+only the decoder-version label; the proven sell increases the total to 4,139.
+Its one resolved candidate/raw diagnostic disappears. Only that block's
+verified/coverage/corrected/quarantine counters change by the expected amounts.
+Database-operation ordinals are checked against the exact two diagnostic
+removals and one swap insertion: later ordinals shift by one in that block,
+while stored execution positions and physical identities stay unchanged.
+Parent links and sealed counters match. No replay writes to live financial
+tables. Deployed .15 still has this gap until a coordinated .16 rollout.

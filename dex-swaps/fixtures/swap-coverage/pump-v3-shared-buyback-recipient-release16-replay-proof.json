@@ -1,0 +1,106 @@
+{
+  "scope": "Clean-exit read-only finalized remote db_out comparison; every financial key, operation and field compared, excluding only decoder_version. Database operation ordinals are checked separately against the exact insertion/removal transformation; stored execution_position and source_instruction_index are never excluded.",
+  "range": {
+    "firstSlot": 455950100,
+    "lastSlot": 455950149
+  },
+  "outputs": {
+    "baseline15": {
+      "exitCode": 0,
+      "sha256": "f84c64ee845e287d34f265110edbde0ad88eba486d7c92c645f0d4cbb7b3d570",
+      "blocks": 50,
+      "tables": {
+        "swaps": 4138,
+        "swap_coverage_transactions": 198,
+        "swap_coverage": 248,
+        "blocks": 50
+      }
+    },
+    "candidate": {
+      "exitCode": 0,
+      "sha256": "3c7f6200b2a4f4df378a02f3f9ce1ceaac8c921254fc92f75f190144468074a1",
+      "blocks": 50,
+      "tables": {
+        "swaps": 4139,
+        "swap_coverage_transactions": 197,
+        "swap_coverage": 247,
+        "blocks": 50
+      }
+    }
+  },
+  "allPreviousSwapFieldsPreserved": true,
+  "additionalVerifiedLeg": {
+    "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "amm_pool": "8DrgebUtfnpccf4V2S5KBGsHmst9DrM1FP99qAitPYb1",
+    "block_hash": "4fj9WN4RiqjmWcsUBAJaMr1fj73Gxgn8KENqn4rAFAM6",
+    "block_num": "455950129",
+    "compute_units_consumed": "285201",
+    "event_id": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN:11:12",
+    "execution_position": "12",
+    "fee": "5343",
+    "fee_payer": "4vLJFJa5RdgXtcnhyVXH6Ec26pGCnkarojcj8D5fJjq8",
+    "input_amount": "7670888229084",
+    "input_mint": "Hk5pde1vSNG7P59jJaugUTUGwWzZmHh7H9PHE3ZGpump",
+    "orderbook_fill_verified": "0",
+    "output_amount": "228543099",
+    "output_mint": "So11111111111111111111111111111111111111112",
+    "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "protocol": "pumpfun",
+    "signature": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN",
+    "signers_raw": "4vLJFJa5RdgXtcnhyVXH6Ec26pGCnkarojcj8D5fJjq8",
+    "source_instruction_index": "11",
+    "stack_height": "3",
+    "timestamp": "1791787003",
+    "transfer_verified": "1",
+    "user": "4vLJFJa5RdgXtcnhyVXH6Ec26pGCnkarojcj8D5fJjq8"
+  },
+  "removedResolvedDiagnostics": {
+    "swap_coverage": {
+      "signature": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN",
+      "key": {
+        "keys": {
+          "block_hash": "4fj9WN4RiqjmWcsUBAJaMr1fj73Gxgn8KENqn4rAFAM6",
+          "instruction_index": "11",
+          "transaction_index": "90"
+        }
+      }
+    },
+    "swap_coverage_transactions": {
+      "signature": "2GS9jxF6u1ukkNzPGGtZFN3YEhraNwxKR9DYsYzWemTZwScnu1KZRtKXjy8yNqRotbxPGJCjdzfsBitxeshHRrLN",
+      "key": {
+        "keys": {
+          "block_hash": "4fj9WN4RiqjmWcsUBAJaMr1fj73Gxgn8KENqn4rAFAM6",
+          "instruction_index": "0",
+          "transaction_index": "90"
+        }
+      }
+    }
+  },
+  "onlyCorrespondingBlockCountersChange": true,
+  "changedBlockCounterDeltas": {
+    "verified_swaps": 1,
+    "coverage_candidates": -1,
+    "coverage_transactions": -1,
+    "corrected_events": 1,
+    "quarantined_swaps": -1
+  },
+  "databaseOperationOrdinalProof": {
+    "affectedSlot": 455950129,
+    "removedOrdinals": [
+      20,
+      21
+    ],
+    "addedOrdinal": 20,
+    "subsequentExistingOrdinalShift": -1,
+    "affectedRowsByTable": {
+      "swaps": 33,
+      "swap_coverage_transactions": 6,
+      "swap_coverage": 8,
+      "blocks": 1
+    },
+    "allOtherOrdinalsUnchanged": true,
+    "sourceSemantics": "substreams-database-change 4.0.0 Tables increments ordinal per emitted row. SQLSinker.applyDatabaseChanges inserts primary keys and stored fields; it does not persist this operation counter."
+  },
+  "parentLinksAndSealedCountersValid": true,
+  "liveFinancialWrites": false
+}

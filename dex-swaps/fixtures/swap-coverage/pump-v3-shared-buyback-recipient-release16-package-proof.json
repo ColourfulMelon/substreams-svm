@@ -1,0 +1,21 @@
+{
+  "sourceRepairCommit": "61b2360c71b82672c8f5b5e163ff94e262ceaa5f",
+  "coreTestsPassed": 159,
+  "frozenMetadataBinarySha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "frozenMetadataHashes": {
+    "store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075",
+    "store_token_fee_state": "9ea156073517933ea11355afd55e0029464dfb82"
+  },
+  "packageHashes": {
+    "dex-swaps": "49e948ec5a087dba95289a17af05a515572f3667070b01585270d42fded8ad2a",
+    "svm-dex": "c6324c47e32ccb9d7c121306e827ceb7687028e5d1633fd33ff1b3df1d680f4b",
+    "svm-clickhouse-dex": "36ab6bb30e7ea30523ece25a57eea7a8982dda54428aa12d9ed62d487f03ced1"
+  },
+  "dbOutHash": "73ad93159c7ad976e9c139c3100e0f8628c55152",
+  "previousRelease15BytesPreserved": true
+}
