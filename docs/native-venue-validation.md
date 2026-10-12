@@ -151,6 +151,32 @@ zero primary output and missing fee evidence/runtime logs.
 
 This source change has not yet been included in a live release.
 
+## Fluxbeam executed-input limits (staged after pluto.12)
+
+Two original finalized Fluxbeam calls request 480,000,000 and 1,175,237,976
+input atoms, but their native input CPIs debit 479,999,757 and 1,175,237,973.
+Requiring equality drops both real swaps. The decoder now bounds the actual
+debit by the instruction's requested input and checks the primary output
+against the minimum. It binds the declared input/output mints and token
+programs, user authority, pool authority and user/vault accounts in both native
+normalization and final verification. Prices use the actual debit and verified
+receipt; the requested amount never substitutes for the transferred amount.
+
+`fluxbeam-rounded-input-1/2.transaction.pb` and `fluxbeam-input-proof.json`
+retain the original finalized instructions, transfer order, balance evidence
+and source hashes. The core regression test checks exact executed amounts,
+duplicates, input/output bounds, malformed opcodes/payloads and changed declared
+accounts. The upstream [SPL Token Swap processor](https://github.com/solana-labs/solana-program-library/blob/master/token-swap/program/src/processor.rs)
+also recalculates the source transfer from the curve result. That source is
+background evidence; these fixtures do not prove Fluxbeam is an identical build.
+
+The correction recovers both sampled Fluxbeam trades and preserves all 143
+earlier full financial payloads, producing 145 financial legs across the 65
+transactions. All 140 full financial payloads in the separate DLMM sample stay
+unchanged. Independent finalized CPI byte checks cover all 68 additional
+financial legs beyond the original 77-leg baseline. Full swap coverage and a
+live rollout remain outstanding.
+
 ## Stream and rollout
 
 No diagnostic rows or new stored tables are introduced. The output still contains

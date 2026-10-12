@@ -526,6 +526,15 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::Fluxbeam
+                    && (output.authority != *accounts[1].0
+                        || input.mint != *accounts[9].0
+                        || output.mint != *accounts[10].0
+                        || instructions[input.index as usize].program_id().0 != accounts[11].0
+                        || instructions[output.index as usize].program_id().0 != accounts[12].0)
+                {
+                    continue;
+                }
                 if layout.protocol == pb::Protocol::OpenbookV2
                     && (output.authority != *accounts[3].0
                         || instructions[input.index as usize].program_id().0 != accounts[13].0
@@ -1284,6 +1293,52 @@ pub(crate) fn verify_with_fees(
                     }
                     swap.input_amount = input.amounts[0];
                     swap.output_amount = net;
+                    evidence = Some(identity);
+                    break 'candidate;
+                }
+                if ix.program_id().0.as_slice() == substreams_solana::b58!("FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X") {
+                    let Some(layout) = crate::native_venues::layout(ix) else { continue };
+                    let inputs: Vec<_> = scoped
+                        .iter()
+                        .filter(|t| {
+                            t.depth == depth + 1
+                                && t.source == *accounts[3].0
+                                && t.destination == *accounts[4].0
+                                && t.authority == *accounts[2].0
+                                && t.mint == *accounts[9].0
+                                && instructions[t.index as usize].program_id().0 == accounts[11].0
+                        })
+                        .collect();
+                    let outputs: Vec<_> = scoped
+                        .iter()
+                        .filter(|t| {
+                            t.depth == depth + 1
+                                && t.source == *accounts[5].0
+                                && t.destination == *accounts[6].0
+                                && t.authority == *accounts[1].0
+                                && t.mint == *accounts[10].0
+                                && instructions[t.index as usize].program_id().0 == accounts[12].0
+                        })
+                        .collect();
+                    if inputs.len() != 1 || outputs.len() != 1 {
+                        continue;
+                    }
+                    let (input, output) = (inputs[0], outputs[0]);
+                    let net = *output.amounts.iter().min().unwrap();
+                    let identity = (index as u32, input.index, output.index);
+                    if swap.amm_pool != *accounts[0].0
+                        || swap.user != *accounts[2].0
+                        || swap.input_mint != input.mint
+                        || swap.output_mint != output.mint
+                        || input.amounts[0] > layout.amount
+                        || net < layout.minimum_output
+                        || (output.fee_token && !output.net_verified)
+                        || (swap.input_amount, swap.output_amount) != (input.amounts[0], net)
+                        || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
+                        || native_evidence.contains(&identity)
+                    {
+                        continue;
+                    }
                     evidence = Some(identity);
                     break 'candidate;
                 }

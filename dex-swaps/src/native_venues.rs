@@ -675,7 +675,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         exact_input,
         input_limit: matches!(
             protocol,
-            Protocol::Manifest | Protocol::OrcaV2 | Protocol::Byreal | Protocol::Pancakeswap | Protocol::Saros
+            Protocol::Manifest | Protocol::OrcaV2 | Protocol::Byreal | Protocol::Pancakeswap | Protocol::Saros | Protocol::Fluxbeam
         ) || (protocol == Protocol::MeteoraDbc && !dbc_legacy && data[24] != 0),
         input_first,
         fixed_users: matches!(protocol, Protocol::MeteoraDbc | Protocol::Obsidian),
@@ -1029,6 +1029,80 @@ mod tests {
                     }
                 }
             }
+        }
+    }
+
+    #[test]
+    fn fluxbeam_prices_use_the_executed_debit_within_the_requested_limit() {
+        for (fixture, index, input, output) in [
+            (
+                include_bytes!("../fixtures/native-venues/fluxbeam-rounded-input-1.transaction.pb").as_slice(),
+                8,
+                479_999_757u64,
+                1_242_776u64,
+            ),
+            (
+                include_bytes!("../fixtures/native-venues/fluxbeam-rounded-input-2.transaction.pb").as_slice(),
+                11,
+                1_175_237_973u64,
+                92_246_249u64,
+            ),
+        ] {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
+            let native = tx.walk_instructions().nth(index as usize).unwrap();
+            let native_data = native.data().clone();
+            let declared_input = u64::from_le_bytes(native_data[1..9].try_into().unwrap());
+            assert!(declared_input > input);
+            let expected_pool = native.accounts()[0].0.clone();
+            let expected_user = native.accounts()[2].0.clone();
+            drop(native);
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
+            assert_eq!(swaps.len(), 1);
+            assert_eq!(swaps[0].protocol, Protocol::Fluxbeam as i32);
+            assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (input, output));
+            assert_eq!(swaps[0].amm_pool, expected_pool);
+            assert_eq!(swaps[0].user, expected_user);
+            assert_eq!(swaps[0].source_transfer_index, Some(index + 1));
+            assert!(swaps[0].transfer_verified);
+
+            for mode in 0..13 {
+                let mut altered = tx.clone();
+                let mut changed = 0;
+                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                    for instruction in &mut group.instructions {
+                        if instruction.data == native_data {
+                            match mode {
+                                0 => instruction.data[1..9].copy_from_slice(&(input - 1).to_le_bytes()),
+                                1 => instruction.data[9..17].copy_from_slice(&(output + 1).to_le_bytes()),
+                                2 => instruction.data[0] = 2,
+                                3 => {
+                                    instruction.data.pop();
+                                }
+                                _ => instruction.accounts[[1, 2, 3, 4, 5, 6, 9, 10, 11][mode - 4]] = instruction.accounts[0],
+                            }
+                            changed += 1;
+                        }
+                    }
+                }
+                assert_eq!(changed, 1);
+                assert!(
+                    crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(index))),
+                    "Fluxbeam mode {mode}"
+                );
+            }
+            let mut wrong_output_program = tx;
+            let mut changed = 0;
+            for group in &mut wrong_output_program.meta.as_mut().unwrap().inner_instructions {
+                for instruction in &mut group.instructions {
+                    if instruction.data == native_data {
+                        instruction.accounts[12] = instruction.accounts[0];
+                        changed += 1;
+                    }
+                }
+            }
+            assert_eq!(changed, 1);
+            assert!(crate::process_transaction(wrong_output_program).map_or(true, |decoded| decoded.swaps.iter().all(|swap| swap.source_index != Some(index))));
         }
     }
 
