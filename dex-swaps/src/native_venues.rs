@@ -973,6 +973,10 @@ mod tests {
         let mut no_fees = tx.clone();
         no_fees.meta.as_mut().unwrap().inner_instructions[0].instructions.drain(1..3);
         assert_eq!(crate::process_transaction(no_fees).unwrap().swaps[0].input_amount, 100);
+        let mut aliased_fees = tx.clone();
+        aliased_fees.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[9] = 10;
+        aliased_fees.meta.as_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10;
+        assert_eq!(crate::process_transaction(aliased_fees).unwrap().swaps[0].input_amount, 100);
         for mode in 0..10 {
             let mut wrong = tx.clone();
             match mode {
@@ -996,6 +1000,28 @@ mod tests {
                 "unproved 1DEX mode {mode}"
             );
         }
+    }
+
+    #[test]
+    fn onedex_preserves_declared_alias_fee_recipients() {
+        let tx = substreams::proto::decode::<substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/onedex-aliased-fee-recipients.transaction.pb").to_vec(),
+        ).unwrap();
+        let decoded = crate::process_transaction(tx).unwrap();
+        let legs: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == Protocol::Onedex as i32).collect();
+        // Independent original-RPC vault/user conservation proves both fees
+        // use the same declared recipient. Fees belong to the gross input.
+        assert_eq!(legs.len(), 1);
+        let leg = legs[0];
+        assert_eq!(leg.source_index, Some(23));
+        assert_eq!(leg.source_transfer_index, Some(24));
+        assert_eq!((leg.input_amount, leg.output_amount), (20_157_333, 2_254_971));
+        assert_eq!(leg.amm_pool, b58!("DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2"));
+        assert_eq!(leg.input_mint, b58!("So11111111111111111111111111111111111111112"));
+        assert_eq!(leg.output_mint, b58!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"));
+        assert!(leg.transfer_verified);
+        assert_eq!(decoded.swaps.len(), 4);
+        assert!(!decoded.coverage_candidates.iter().any(|c| c.source_index == 23));
     }
 
     #[test]

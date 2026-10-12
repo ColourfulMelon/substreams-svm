@@ -1,0 +1,32 @@
+{
+  "scope": "Original finalized RPC/PB call and runtime-log parity, declared classic Token input/output and two fee CPIs with aliased declared recipients, isolated actual pool-vault/fee balances and full-transaction user conservation. Later owned PoolState corroborates immutable roles; current reserves are never used as historical evidence.",
+  "signature": "LMXHRNRfMsEUXwLLu1QgBxDXqeKcdGDbEvsyHaKBRa9BZNC8K5HKmdxKUNfAH8cMJJ1QMMkDBXgoaMiMcEfnGRu",
+  "slot": 455882043,
+  "sourceIndex": 23,
+  "inputCpi": 24,
+  "outputCpi": 27,
+  "pool": "DbuvwPuLvH8uy2B1sKuu18aCd2QpCvfZdfDtdRZztBd2",
+  "user": "b619EzHShebQRX7oouwUD5fUo72ai8GgcMLAHkcqfG2",
+  "inputMint": "So11111111111111111111111111111111111111112",
+  "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "grossInputAtoms": "20157333",
+  "netOutputAtoms": "2254971",
+  "vaultPaidFees": [
+    {
+      "index": 25,
+      "recipient": "GswwnegnBMWEuEsptDCBDmRB9YtG5zjetTSw7RunUQMY",
+      "atoms": "201"
+    },
+    {
+      "index": 26,
+      "recipient": "GswwnegnBMWEuEsptDCBDmRB9YtG5zjetTSw7RunUQMY",
+      "atoms": "201"
+    }
+  ],
+  "transactionSha256": "d6c0da519116002e8e49a9742278f632493ff9d773d294643c0fffee2398bc35",
+  "rpcSha256": "e28dbc65c3a4e7d2479d34fda3b75e2d92f1b2af2bb06d21d25cac1d03fcbba7",
+  "ownedContext": 455942760,
+  "poolDataSha256": "1f1a57a5ca755c88b22335ab45aee3da4c87162f0fdeba78505522e4b74fe057",
+  "fixture": "onedex-aliased-fee-recipients.transaction.pb",
+  "decoderStatus": "Candidate .15 source and core tests recover this physical swap. Package and remote replay validation remain pending; it is not in deployed release .14."
+}

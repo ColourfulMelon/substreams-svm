@@ -826,7 +826,8 @@ pub(crate) fn verify_with_fees(
                                 || t.authority.as_slice() != accounts[2].0.as_slice()
                                 || (t.destination.as_slice() != accounts[8].0.as_slice() && t.destination.as_slice() != accounts[9].0.as_slice())
                         })
-                        || (fees.len() == 2 && fees[0].destination == fees[1].destination)
+                        || (fees.len() == 2 && fees[0].destination == fees[1].destination
+                            && accounts[8].0 != accounts[9].0)
                         || fees
                             .iter()
                             .try_fold(0u64, |total, t| total.checked_add(t.amounts[0]))

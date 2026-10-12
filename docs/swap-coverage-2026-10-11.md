@@ -650,3 +650,27 @@ change. Packaging passes. The frozen metadata binary and its seven module hashes
 remain pinned to .13's artifact; only the pricing binary changes. Controlled
 live deployment remains pending for .14. No live history is appended by this
 source change.
+
+
+## 1DEX aliased fee recipients (candidate .15)
+
+A retained finalized exact-input swap declares the same account in both fee
+recipient positions. Its two committed vault-paid fee CPIs transfer 201 atoms
+each to that account. The prior guard rejects equal actual fee destinations even
+when both declared roles explicitly alias. The source repair allows that exact
+alias while retaining the rejection of duplicate payments when the declared
+recipients differ.
+
+Original finalized RPC/protobuf calls and runtime logs match exactly. Isolated
+pool-vault and fee-account balances and complete user-account conservation prove
+the gross input of 20,157,333 WSOL atoms and net output of 2,254,971 USDC atoms.
+The 402 fee atoms already belong to the input debit. Later owned PoolState mint,
+vault and authority roles corroborate the declared accounts; current reserves
+never prove past execution amounts.
+
+All 158 core tests pass, including this original, an aliased-recipient synthetic
+case and the existing rejection cases. Full-payload replay preserves all 1,042
+previous published-fixture financial rows and adds exactly this one leg. The
+recent native SOL sample preserves all 96 rows. Packaging and remote validation
+remain pending for .15; deployed .14 does not include this repair. Retained
+originals and independent proofs are in `fixtures/swap-coverage/onedex-aliased-*`.
