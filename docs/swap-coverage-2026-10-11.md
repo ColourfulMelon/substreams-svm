@@ -1153,3 +1153,19 @@ Evidence is in `dex-swaps/fixtures/swap-coverage/pumpswap-sell-flags/`. This
 is staged source, pending packaged replay and live deployment; the currently
 deployed release is `.22`. Repeated implicit-native Pump payouts, newer venue
 variants and global coverage remain unresolved.
+
+The finalized .22/.23 packaged replay completed with clean exits over all 921
+blocks at slots 456084760–456085680. Every one of 130,160 prior full financial
+rows and execution positions remains unchanged. Exactly 17 additional PumpSwap
+sells independently match original finalized RPC/PB/runtime instructions, exact
+principal CPI amounts, receiver ledgers and nine program-owned pool identities.
+The extra original at slot 456084762 is included with the complete packaged
+evidence in `pumpswap-sell-flags/packaged/`. Seventeen diagnostics and raw records
+resolve. Each new parsed event reports gross output above the primary receipt,
+so `corrected_events` increases by 17 and quarantine is unchanged. All four
+table versions, unique contiguous operation ordinals, parent links and sealed
+counts pass. Three existing Manifest fills remain independently marked
+`orderbook_fill_verified`; they are preserved along with token-transfer trades.
+Twelve pricing integration tests pass with the exact tested package. The frozen
+metadata binary and seven module hashes are unchanged. The live rollout remains
+pending; universal swap coverage has not been demonstrated.
