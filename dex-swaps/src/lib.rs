@@ -497,6 +497,58 @@ mod tests {
     }
 
     #[test]
+    fn whirlpool_three_padding_bytes_preserve_finalized_native_receipts() {
+        let cases: [(&[u8], u32, u64, u64); 3] = [
+            (include_bytes!("../fixtures/swap-coverage/whirlpool-padding3/0.transaction.pb"), 7, 716_200_000, 578_627_903),
+            (include_bytes!("../fixtures/swap-coverage/whirlpool-padding3/1.transaction.pb"), 3, 250_589_815, 152_104_877),
+            (include_bytes!("../fixtures/swap-coverage/whirlpool-padding3/2.transaction.pb"), 3, 250_544_289, 152_094_514),
+        ];
+        for (raw, source, input, output) in cases {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&raw.to_vec()).unwrap();
+            let decoded = process_transaction(tx.clone()).unwrap();
+            assert_eq!(decoded.swaps.len(), 1);
+            let swap = &decoded.swaps[0];
+            assert_eq!(swap.protocol, pb::Protocol::OrcaWhirlpool as i32);
+            assert_eq!(swap.source_index, Some(source));
+            assert_eq!(swap.source_transfer_index, Some(source + 1));
+            assert_eq!((swap.input_amount, swap.output_amount), (input, output));
+            assert!(swap.transfer_verified);
+            let instructions: Vec<_> = tx.walk_instructions().collect();
+            let accounts = instructions[source as usize].accounts();
+            assert_eq!(&swap.amm_pool, accounts[4].0);
+            assert_eq!(&swap.user, accounts[3].0);
+            assert_eq!(&swap.input_mint, accounts[6].0);
+            assert_eq!(&swap.output_mint, accounts[5].0);
+            assert!(decoded.coverage_candidates.iter().all(|candidate| candidate.source_index != source));
+            for mode in 0..9 {
+                let mut changed = tx.clone();
+                let ix = changed.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut()
+                    .find(|ix| ix.data.len() == 46 && ix.data[..8] == [43, 4, 237, 11, 26, 201, 30, 98]).unwrap();
+                match mode {
+                    0 => ix.data[45] = 1,
+                    1 => ix.data[42] = 2,
+                    2 => ix.data[40] = 2,
+                    3 => ix.data[41] = 2,
+                    4 => ix.data[16..24].copy_from_slice(&u64::MAX.to_le_bytes()),
+                    5 => ix.data[8..16].copy_from_slice(&1u64.to_le_bytes()),
+                    6 => ix.accounts[3] = ix.accounts[4],
+                    7 => ix.accounts[8] = ix.accounts[10],
+                    8 => {
+                        let meta = changed.meta.as_mut().unwrap();
+                        for log in &mut meta.log_messages {
+                            if log == "Program whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc success" {
+                                *log = "Program whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc failed: custom program error: 0x1".to_string();
+                            }
+                        }
+                    }
+                    _ => unreachable!(),
+                }
+                assert!(process_transaction(changed).unwrap().swaps.iter().all(|swap| swap.source_index != Some(source)), "invalid padded swap mode {mode}");
+            }
+        }
+    }
+
+    #[test]
     fn defituna_two_hop_preserves_both_pool_legs_and_requires_complete_flows() {
         let tx =
             substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/swap-coverage/defituna-two-hop.transaction.pb").to_vec()).unwrap();

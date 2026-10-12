@@ -1,0 +1,58 @@
+{
+  "proofs": [
+    {
+      "signature": "5Vq7axagdmJKGUYMEV2j8t86hSaBDey4y38VEjwaem3Cr5s1NzJPCGRXrM5UXaRsDregoHAPHtSxd8RVHvkRVSC5",
+      "block": 456055271,
+      "instruction": 7,
+      "pool": "8erNF5u3CHrqZJXtkfY8CjSxFYF1yqHmN8uDbAhk6tWM",
+      "user": "FJx61bqznoVfVDFoujYGgJoJsJq4DxDQ8K3YG5kgRm6G",
+      "inputMint": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
+      "outputMint": "So11111111111111111111111111111111111111112",
+      "inputAmount": "716200000",
+      "outputAmount": "578627903",
+      "rpcSha256": "44f7d42516ccf266304fefb533e72a286085522ecebcfe1471c2251a4932c551",
+      "protobufSha256": "3eb338602510d8b51b7f5813899588392f87de1cd4ab72815004b1c8f4b2c1dd",
+      "instructionTransferBalanceLogParity": true,
+      "fixture": "0.transaction.pb",
+      "rpc": "0.rpc.json.gz"
+    },
+    {
+      "signature": "3ZUUF9LU7KF4wvcw6bSgaG3Jtjv9jHJnFKpuR6XXMtArNhstrhZL5hwm5Ssm5nxGUMueZYtchi5KHEsdidZCs3pR",
+      "block": 456055182,
+      "instruction": 3,
+      "pool": "ASAxmEaTT1HFe3mVC3zbKDE4tuB28W7732XQrEMBM5W2",
+      "user": "m7VmSjdSN6isudY6PVRa7GuZbG8rPBpB2X2DGHR5awz",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8",
+      "inputAmount": "250589815",
+      "outputAmount": "152104877",
+      "rpcSha256": "4422082db90b18d649424c248011e87656d7f81bc24dd1010d4d64d94697f6d2",
+      "protobufSha256": "0a21fa8c63a342d6b780927de0558197629bdc3735c33581b6182684067a2c49",
+      "instructionTransferBalanceLogParity": true,
+      "fixture": "1.transaction.pb",
+      "rpc": "1.rpc.json.gz"
+    },
+    {
+      "signature": "Ghm1roSDss9RF1bMWwN4vDedDj84MdTRQ1m3sCY8F6o7DeVLXktwThBPDjrEYLX8rG4AUyrA4LLuY6ATghGFSRq",
+      "block": 456055084,
+      "instruction": 3,
+      "pool": "ASAxmEaTT1HFe3mVC3zbKDE4tuB28W7732XQrEMBM5W2",
+      "user": "m7VmSjdSN6isudY6PVRa7GuZbG8rPBpB2X2DGHR5awz",
+      "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "outputMint": "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8",
+      "inputAmount": "250544289",
+      "outputAmount": "152094514",
+      "rpcSha256": "076d6a624815be1de77dc139913762c661786d859a53b6ecbca823e23ee34ba2",
+      "protobufSha256": "a598b82f2ff7276de1a699f4a55e3f1da0057f6c94b55bdd0a567a7f8745d6a5",
+      "instructionTransferBalanceLogParity": true,
+      "fixture": "2.transaction.pb",
+      "rpc": "2.rpc.json.gz"
+    }
+  ],
+  "marketOwnerContext": 456056373,
+  "owners": [
+    "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+  ],
+  "limitation": "These three finalized exact-input swaps prove the None remaining-account marker followed by three zero padding bytes; no unknown opcode or nonzero suffix is accepted."
+}

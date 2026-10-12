@@ -1039,3 +1039,27 @@ rather than independently decoded new native legs. All 164 core tests and twelve
 pricing integration tests pass, as does the deployment guard regression across
 all eight enum columns for IDs 52, 53 and 54. Live upgrade/preparation and cursor
 boundary verification remain pending. No replay writes to financial tables.
+
+
+## Orca SwapV2 three-byte padding (post-pluto.20 source)
+
+Three independently finalized RPC originals contain a valid SwapV2 `None`
+remaining-account marker followed by three zero bytes. The pinned IDL accepts
+seven-byte padding but rejects this observed three-byte suffix. A native-layout
+adapter now strips only that exact discriminator/length/zero-marker shape
+before applying the existing typed parser and scoped receipt verification.
+All three native tuples, user/pool identities, token balances and complete logs
+match finalized RPC; both market accounts are independently program-owned.
+The additions include two Token-2022 output receipts proven by transaction
+accounting. Nine negative mutations per original reject invalid padding,
+booleans, limits, accounts and failed execution. Zero-amount swap intents remain
+excluded from financial prices.
+
+Twenty overlapping host corpora preserve all 2,983 prior complete financial
+occurrences, with zero changed/missing rows, and add exactly the three verified
+Orca legs. Originals and proofs are in
+`dex-swaps/fixtures/swap-coverage/whirlpool-padding3/`. This source addition is
+not part of the immutable `.20` release and is not yet packaged or deployed.
+It does not complete unknown/new program or native conversion coverage.
+The public typed contract is Orca's
+[SwapV2 handler](https://github.com/orca-so/whirlpools/blob/main/programs/whirlpool/src/instructions/v2/swap.rs).

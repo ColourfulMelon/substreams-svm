@@ -205,7 +205,17 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     // instructions. Native CPIs remain usable when an event is absent.
     if protocol == Protocol::OrcaWhirlpool {
         use substreams_solana_idls::orca::whirlpool::instructions::{unpack, WhirlpoolInstruction};
-        let (amount, threshold, exact_input, legacy) = match unpack(&data).ok()? {
+        // Finalized SwapV2 instructions also append three zero padding
+        // bytes after a None remaining-account marker. Preserve the typed
+        // parser and every transfer check, accepting only this proven suffix.
+        let data = if data.len() == 46 && data[..8] == [43, 4, 237, 11, 26, 201, 30, 98]
+            && data[42..].iter().all(|byte| *byte == 0)
+        {
+            &data[..43]
+        } else {
+            &data
+        };
+        let (amount, threshold, exact_input, legacy) = match unpack(data).ok()? {
             WhirlpoolInstruction::Swap(x) => (x.amount, x.other_amount_threshold, x.amount_specified_is_input, true),
             WhirlpoolInstruction::SwapV2(x) => (x.amount, x.other_amount_threshold, x.amount_specified_is_input, false),
             _ => return None,
