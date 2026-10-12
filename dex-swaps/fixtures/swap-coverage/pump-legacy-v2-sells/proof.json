@@ -1,5 +1,5 @@
 {
-  "scope": "Original finalized successful RPC/PB/runtime and exact token-CPI parity; owned immutable curve roles; independently proven aggregate pool/reserve/buyback changes. Complex routed/closed source and user ledgers are explicitly marked incomplete. No decoder repair or universal coverage claim.",
+  "scope": "Original finalized successful RPC/PB/runtime and exact token-CPI parity; owned immutable curve roles; independently proven aggregate pool/reserve/fee changes, original token debits and user native SOL ledgers including temporary WSOL wrap/transfer/close and rent refunds. Separate extend_account calls remain explicitly marked for decoder validation. No decoder repair or universal coverage claim.",
   "primaryLegacyRemainingRoleSource": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/BREAKING_FEE_RECIPIENT.md",
   "transactions": [
     {
@@ -460,8 +460,8 @@
         {
           "address": "4P4fKZh76375s64AKv78T2RqRHemohMKXZRE2vbKoxHj",
           "debit": "353134727201",
-          "originalDebitProof": "unproven_route",
-          "simpleOriginalDebitVerified": false
+          "originalDebitProof": "initialized_routed_source",
+          "simpleOriginalDebitVerified": true
         }
       ],
       "unprovenNativeTouches": [
@@ -479,12 +479,6 @@
           "matches": true
         },
         {
-          "address": "AKYPdBTfGjiNTisrnk9otRfDk4SETXBDd44JuW2SpfXp",
-          "expected": "1855569",
-          "actual": "0",
-          "matches": false
-        },
-        {
           "address": "4P4fKZh76375s64AKv78T2RqRHemohMKXZRE2vbKoxHj",
           "expected": "1513840",
           "actual": "1513840",
@@ -498,15 +492,9 @@
         },
         {
           "address": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
-          "expected": "-11618865",
+          "expected": "0",
           "actual": "0",
-          "matches": false
-        },
-        {
-          "address": "DT2krA8vSP96D68nH86eAztZHVM18YB5i4gDXjLBDXm7",
-          "expected": "9763296",
-          "actual": "0",
-          "matches": false
+          "matches": true
         },
         {
           "address": "9yj3zvLS3fDMqi1F8zhkaWfq8TZpZWHe6cz1Sgt7djXf",
@@ -539,8 +527,8 @@
           "matches": true
         }
       ],
-      "simpleUserLedgerVerified": false,
-      "fullySimpleSourceDebits": false
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
     },
     {
       "signature": "26Q6hJXhxRNXy9LmtkSQ8eX9p8CcjZxk4f82JxGGgxwCFJqtxEV6NcZd8cUmfdWrN188vKS4GvyhuTHGBpfNN2pd",
@@ -943,15 +931,9 @@
       "lamportLedger": [
         {
           "address": "FptjoY4h378TL4mtTxpohhbB3QxANiE3vAg1o8EykNtE",
-          "expected": "-1488440",
+          "expected": "0",
           "actual": "0",
-          "matches": false
-        },
-        {
-          "address": "3KVoCgiV84dh1d7aYov1TdN4nHwU53mEPhWQVe1js6Go",
-          "expected": "9467458",
-          "actual": "0",
-          "matches": false
+          "matches": true
         },
         {
           "address": "FsFRaNzmRsCewZUwK2Po43tKkgq3tmbrVw9NmDGZZxnM",
@@ -969,6 +951,12 @@
           "address": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
           "expected": "10000",
           "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz",
+          "expected": "7979018",
+          "actual": "7979018",
           "matches": true
         },
         {
@@ -990,7 +978,7 @@
           "matches": true
         }
       ],
-      "simpleUserLedgerVerified": false,
+      "simpleUserLedgerVerified": true,
       "fullySimpleSourceDebits": true
     },
     {
@@ -1078,6 +1066,5 @@
   ],
   "observedDecoderVersion": "v0.5.2-pluto.16",
   "observedNativeSellsVerified": 0,
-  "observedNativeSellsRejected": 14,
-  "ownedCurvesSha256": "392cc80ece4667a0b08ce7d8ff7daa559576a07d931a77935132b9dc63ccac4d"
+  "observedNativeSellsRejected": 14
 }

@@ -792,3 +792,28 @@ planned bounded termination; its exit is not described as a clean replay.
 The separate finite package replay above exits cleanly. Legacy/V2 settlement,
 repeated same-curve swaps and other unverified variants still need work;
 this rollout does not establish universal coverage.
+
+
+## Legacy and V2 native sell settlement (.17 candidate)
+
+The decoder now isolates net SOL proceeds for canonical legacy and V2 Pump
+sells. A committed event alone cannot establish a price: matching token CPIs,
+original source conservation, aggregate curve/fee balances and the complete user
+SOL ledger must agree. Rent funding and committed refunds, temporary wrapped SOL,
+network fees and other known transfers are kept separate from native settlement.
+Unknown or failed contributors remain diagnostic. Distinct users may sell into
+one curve; multiple native payouts to the same user still require per-leg proof.
+
+Original finalized RPC evidence proves fourteen previously rejected sells in
+eleven transactions. Three previous golden sells used gross pool debits instead
+of net proceeds; their output amounts alone change, from 416523623 to 411317077,
+19970987 to 19721349, and 154093086 to 152166921 lamports. Every other financial
+field and physical identity remains unchanged. Original proof files retain token
+debits, fee allocation, wrapping, close-account refunds and native balance equations.
+
+All 161 core tests pass, including 41 mutations of legacy/V2 settlement and
+volume-account rent refunds. Fourteen retained corpora preserve 2405 of 2408 prior
+full financial occurrences exactly, make only those three proven output corrections,
+and drop none. Thirty-nine added occurrences deduplicate to twenty-five unique
+physical legs. Frozen metadata is unchanged. Package validation, publication and
+a coordinated strict-cursor rollout must precede any claim of live .17 coverage.

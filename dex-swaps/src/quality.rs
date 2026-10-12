@@ -27,6 +27,17 @@ struct Transfer {
     metadata_net: bool,
 }
 
+struct PumpNativeSell {
+    instruction: usize,
+    roles: [usize; 10],
+    input: u32,
+    net: u64,
+    gross: u64,
+    protocol_fee: u64,
+    creator_fee: u64,
+    buyback_fee: u64,
+}
+
 #[cfg(test)]
 pub(crate) fn verify_and_deduplicate(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swaps: &mut Vec<pb::Swap>, expand_native: bool) -> Vec<pb::Swap> {
     verify_with_fees(tx, mints, swaps, expand_native, |_, _| None)
@@ -58,7 +69,9 @@ pub(crate) fn verify_with_fees(
                 || ix.program_id().0 == &crate::oasis::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || ix.program_id().0 == &pumpfun::PROGRAM_ID && (ix.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
-                    || ix.data().starts_with(&pumpfun::instructions::SELL_V3))
+                    || ix.data().starts_with(&pumpfun::instructions::SELL_V3)
+                    || matches!(pumpfun::instructions::unpack(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
+                        | pumpfun::instructions::PumpFunInstruction::SellV2(_))))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
         }) {
         crate::logs::successful_invocations(tx)
@@ -1434,6 +1447,183 @@ pub(crate) fn verify_with_fees(
             }
         }
     }
+    // Legacy/V2 native sells pay the user and all fees directly from owned
+    // curve lamports. Build every independently token-proven contribution
+    // before checking shared curve/fee credits and each isolated user's net.
+    let mut legacy_native_sells = Vec::new();
+    for (index, ix) in instructions.iter().enumerate() {
+        if ix.program_id().0 != &pumpfun::PROGRAM_ID || !successful_invocations.contains(&(index as u32)) { continue; }
+        let a = ix.accounts();
+        let (roles, amount, minimum) = match pumpfun::instructions::unpack(ix.data()) {
+            Ok(pumpfun::instructions::PumpFunInstruction::Sell(args)) if a.len() == 16 && a[7].0.iter().all(|b| *b == 0)
+                && a[11].0.as_slice() == pumpfun::PROGRAM_ID => ([3, 2, 6, 5, 4, 9, 10, 1, 15, 8], args.amount, args.min_sol_output),
+            Ok(pumpfun::instructions::PumpFunInstruction::SellV2(args)) if a.len() == 26 && a[2].0.as_slice() == crate::SOL_MINT
+                && a[4].0.as_slice() == token::PROGRAM_ID && a[5].0 == &base58::decode("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL").unwrap() && a[23].0.iter().all(|b| *b == 0)
+                && a[25].0.as_slice() == pumpfun::PROGRAM_ID => ([10, 1, 13, 14, 11, 3, 24, 6, 8, 16], args.amount, args.min_sol_output),
+            _ => continue,
+        };
+        let [pool, mint, user, source, vault, token_program, event_authority, fee_recipient, buyback, creator] = roles;
+        let protected = [pool, user, fee_recipient, buyback, creator];
+        if a[mint].0.as_slice() == crate::SOL_MINT || a[source].0 == a[vault].0
+            || (a[token_program].0.as_slice() != token::PROGRAM_ID && a[token_program].0.as_slice() != token_2022::PROGRAM_ID)
+            || mints.mint_for(a[source].0).as_ref() != Some(a[mint].0) || mints.mint_for(a[vault].0).as_ref() != Some(a[mint].0)
+            || protected.iter().enumerate().any(|(p, role)| protected[p + 1..].iter().any(|other| a[*role].0 == a[*other].0))
+        { continue; }
+        let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+        let end = instructions.iter().enumerate().skip(index + 1).find(|(_, child)| child.is_root()
+            || child.stack_height() > 0 && child.stack_height() <= depth).map(|(position, _)| position).unwrap_or(instructions.len());
+        let base: Vec<_> = transfers.iter().filter(|t| t.index > index as u32 && (t.index as usize) < end && t.depth == depth + 1
+            && t.source == *a[source].0 && t.destination == *a[vault].0 && t.authority == *a[user].0 && t.mint == *a[mint].0
+            && instructions[t.index as usize].program_id().0 == a[token_program].0 && t.net_verified && successful_invocations.contains(&t.index)).collect();
+        if base.len() != 1 || base[0].amounts[0] != amount || other_token_operations.contains(a[source].0) { continue; }
+        let base = base[0];
+        let initialized_zero = initializations.get(a[source].0) == Some(&1) && !observed_start.contains(a[source].0)
+            && tx.resolved_accounts().iter().position(|key| *key == a[source].0)
+                .and_then(|p| tx.meta.as_ref()?.pre_balances.get(p)).is_some_and(|balance| *balance == 0);
+        if !observed_start.contains(a[source].0) && !initialized_zero
+            || !observed_end.contains(a[source].0) && !proven_closed.contains(a[source].0)
+                && !(initialized_zero && closes.get(a[source].0) == Some(&1))
+        { continue; }
+        let incoming: Vec<_> = transfers.iter().filter(|t| t.destination == *a[source].0 && t.mint == base.mint).collect();
+        if incoming.iter().any(|t| !t.net_verified) { continue; }
+        let received: i128 = incoming.iter().map(|t| i128::from(*t.amounts.iter().min().unwrap())).sum();
+        if deltas.get(a[source].0).copied() != Some(received - debits.get(&(a[source].0.clone(), base.mint.clone())).copied().unwrap_or(0)) { continue; }
+        let event_calls: Vec<_> = instructions.iter().enumerate().skip(index + 1).take(end - index - 1)
+            .filter(|(_, child)| child.program_id().0 == &pumpfun::PROGRAM_ID
+                && child.data().get(8..16) == Some(pumpfun::events::TRADE.as_slice())).collect();
+        if event_calls.len() != 1 { continue; }
+        let (event_index, event_ix) = event_calls[0];
+        if event_ix.stack_height() != depth + 1 || event_ix.accounts().len() != 1 || event_ix.accounts()[0].0 != a[event_authority].0
+            || !successful_invocations.contains(&(event_index as u32)) || event_ix.data().get(137..169) != Some(a[fee_recipient].0.as_slice())
+        { continue; }
+        let Ok(Some(event)) = pumpfun::events::unpack_trade_event_minimal(event_ix.data()) else { continue };
+        let Ok(quote) = pumpfun::events::unpack_quote_trade_amount(event_ix.data()) else { continue };
+        let Some(net) = quote.amount.checked_sub(quote.fee).and_then(|n| n.checked_sub(quote.creator_fee)) else { continue };
+        if event.is_buy || event.mint.as_slice() != a[mint].0.as_slice() || event.user.as_slice() != a[user].0.as_slice()
+            || event.token_amount != amount || quote.mint.iter().any(|b| *b != 0) || quote.amount != event.sol_amount
+            || net == 0 || net < minimum || quote.fee < quote.buyback_fee
+        { continue; }
+        legacy_native_sells.push(PumpNativeSell { instruction: index, roles, input: base.index, net, gross: quote.amount,
+            protocol_fee: quote.fee - quote.buyback_fee, creator_fee: quote.creator_fee, buyback_fee: quote.buyback_fee });
+    }
+    let mut legacy_native_receipts = HashMap::<u32, (u32, u64, Vec<u8>, Vec<u8>)>::new();
+    if !legacy_native_sells.is_empty() {
+        let resolved = tx.resolved_accounts();
+        let mut native_changes = HashMap::<Vec<u8>, i128>::new();
+        for t in transfers.iter().filter(|t| t.mint == crate::SOL_MINT && successful_invocations.contains(&t.index)) {
+            let program = instructions[t.index as usize].program_id().0;
+            if program.iter().all(|b| *b == 0) || program == &token::PROGRAM_ID
+                && mints.mint_for(&t.source).as_ref().is_some_and(|mint| mint.as_slice() == crate::SOL_MINT)
+                && mints.mint_for(&t.destination).as_ref().is_some_and(|mint| mint.as_slice() == crate::SOL_MINT)
+            {
+                *native_changes.entry(t.source.clone()).or_default() -= i128::from(t.amounts[0]);
+                *native_changes.entry(t.destination.clone()).or_default() += i128::from(t.amounts[0]);
+            }
+        }
+        for (position, ix) in instructions.iter().enumerate() {
+            let a = ix.accounts();
+            if ix.program_id().0.iter().all(|b| *b == 0) && ix.data().len() == 52 && ix.data()[..4] == [0; 4]
+                && a.len() >= 2 && successful_invocations.contains(&(position as u32))
+            {
+                let amount = i128::from(u64::from_le_bytes(ix.data()[4..12].try_into().unwrap()));
+                *native_changes.entry(a[0].0.clone()).or_default() -= amount;
+                *native_changes.entry(a[1].0.clone()).or_default() += amount;
+            }
+        }
+        if let Some(meta) = tx.meta.as_ref() {
+            if let Some(payer) = resolved.first() { *native_changes.entry((*payer).clone()).or_default() -= i128::from(meta.fee); }
+            let mut proven_volume_refunds = HashSet::new();
+            let protected: HashSet<_> = legacy_native_sells.iter().flat_map(|sell| {
+                let a = instructions[sell.instruction].accounts();
+                [sell.roles[0], sell.roles[2], sell.roles[7], sell.roles[8], sell.roles[9]].map(|role| a[role].0.clone())
+            }).collect();
+            for (position, ix) in instructions.iter().enumerate() {
+                let a = ix.accounts();
+                if ix.program_id().0 != &pumpfun::PROGRAM_ID || ix.data().as_slice() != [249, 69, 164, 218, 150, 103, 84, 138]
+                    || a.len() != 4 || a[3].0.as_slice() != pumpfun::PROGRAM_ID || a[0].0 == a[1].0
+                    || protected.contains(a[1].0) || !successful_invocations.contains(&(position as u32))
+                    || instructions.iter().filter(|call| call.program_id().0 == &pumpfun::PROGRAM_ID
+                        && call.data().as_slice() == ix.data().as_slice() && call.accounts().get(1).is_some_and(|key| key.0 == a[1].0)).count() != 1
+                    || instructions[position + 1..].iter().any(|later| later.accounts().iter().any(|key| key.0 == a[1].0))
+                { continue; }
+                let depth = if ix.is_root() { 1 } else { ix.stack_height() };
+                let children: Vec<_> = instructions.iter().enumerate().skip(position + 1).take_while(|(_, child)| !child.is_root()
+                    && (child.stack_height() == 0 || child.stack_height() > depth)).collect();
+                if children.len() != 1 { continue; }
+                let (event_index, event) = children[0];
+                if event.program_id().0 != &pumpfun::PROGRAM_ID || event.stack_height() != depth + 1
+                    || event.accounts().len() != 1 || event.accounts()[0].0 != a[2].0
+                    || event.data().get(..16) != Some([228, 69, 165, 46, 81, 203, 154, 29, 146, 159, 189, 172, 146, 88, 56, 244].as_slice())
+                    || event.data().get(16..48) != Some(a[0].0.as_slice()) || !successful_invocations.contains(&(event_index as u32))
+                { continue; }
+                let Some(index) = resolved.iter().position(|key| *key == a[1].0) else { continue };
+                let Some((&before, &after)) = meta.pre_balances.get(index).zip(meta.post_balances.get(index)) else { continue };
+                if after != 0 { continue; }
+                let refund = i128::from(before) + native_changes.get(a[1].0).copied().unwrap_or(0);
+                if refund < 0 { continue; }
+                *native_changes.entry(a[1].0.clone()).or_default() -= refund;
+                *native_changes.entry(a[0].0.clone()).or_default() += refund;
+                proven_volume_refunds.insert(position);
+            }
+            for (position, ix) in instructions.iter().enumerate() {
+                let a = ix.accounts();
+                if (ix.program_id().0 != &token::PROGRAM_ID && ix.program_id().0 != &token_2022::PROGRAM_ID)
+                    || ix.data().as_slice() != [9] || a.len() < 3 || !successful_invocations.contains(&(position as u32))
+                    || closes.get(a[0].0) != Some(&1) || protected.contains(a[0].0)
+                    || instructions[position + 1..].iter().any(|later| later.accounts().iter().any(|key| key.0 == a[0].0))
+                { continue; }
+                let Some(index) = resolved.iter().position(|key| *key == a[0].0) else { continue };
+                let Some((&before, &after)) = meta.pre_balances.get(index).zip(meta.post_balances.get(index)) else { continue };
+                if after != 0 { continue; }
+                let refund = i128::from(before) + native_changes.get(a[0].0).copied().unwrap_or(0);
+                if refund < 0 { continue; }
+                *native_changes.entry(a[0].0.clone()).or_default() -= refund;
+                *native_changes.entry(a[1].0.clone()).or_default() += refund;
+            }
+            for sell in &legacy_native_sells {
+                let a = instructions[sell.instruction].accounts();
+                for (role, change) in [(sell.roles[0], -i128::from(sell.gross)), (sell.roles[2], i128::from(sell.net)),
+                    (sell.roles[7], i128::from(sell.protocol_fee)), (sell.roles[8], i128::from(sell.buyback_fee)),
+                    (sell.roles[9], i128::from(sell.creator_fee))]
+                { *native_changes.entry(a[role].0.clone()).or_default() += change; }
+            }
+            for sell in &legacy_native_sells {
+                let a = instructions[sell.instruction].accounts();
+                // One native payout per user makes its observed proceeds
+                // independent even when several users sell into one curve.
+                if legacy_native_sells.iter().filter(|other| instructions[other.instruction].accounts()[other.roles[2]].0 == a[sell.roles[2]].0).count() != 1 { continue; }
+                let verified = [sell.roles[0], sell.roles[2], sell.roles[7], sell.roles[8], sell.roles[9]].iter().all(|role| {
+                    let address = a[*role].0;
+                    let exact = resolved.iter().position(|key| *key == address).and_then(|p|
+                        meta.post_balances.get(p).zip(meta.pre_balances.get(p)).map(|(after, before)| i128::from(*after) - i128::from(*before)));
+                    if exact != native_changes.get(address).copied() { return false; }
+                    instructions.iter().enumerate().filter(|(_, call)| call.program_id().0 == &pumpfun::PROGRAM_ID
+                        && call.accounts().iter().any(|key| key.0 == address)).all(|(position, call)| {
+                        if legacy_native_sells.iter().any(|s| s.instruction == position) { return true; }
+                        if proven_volume_refunds.contains(&position) { return true; }
+                        // A canonical committed account extension can only
+                        // contribute its separately recorded rent-funding CPI.
+                        let roles = call.accounts();
+                        if call.data().as_slice() != [234, 102, 194, 203, 150, 72, 62, 229] || roles.len() != 5
+                            || roles[2].0.iter().any(|b| *b != 0) || roles[4].0.as_slice() != pumpfun::PROGRAM_ID
+                            || !successful_invocations.contains(&(position as u32)) { return false; }
+                        let depth = if call.is_root() { 1 } else { call.stack_height() };
+                        instructions.iter().enumerate().skip(position + 1).take_while(|(_, child)| !child.is_root()
+                            && (child.stack_height() == 0 || child.stack_height() > depth)).all(|(p, child)| {
+                            let accounts = child.accounts();
+                            successful_invocations.contains(&(p as u32)) && child.stack_height() == depth + 1
+                                && (child.program_id().0.iter().all(|b| *b == 0) && child.data().len() == 12 && child.data()[..4] == [2, 0, 0, 0]
+                                    && accounts.len() == 2 && accounts[0].0 == roles[1].0 && accounts[1].0 == roles[0].0
+                                    || child.program_id().0 == &pumpfun::PROGRAM_ID && accounts.len() == 1 && accounts[0].0 == roles[3].0
+                                        && child.data().get(..8) == Some([228, 69, 165, 46, 81, 203, 154, 29].as_slice()))
+                        })
+                    })
+                });
+                if verified { legacy_native_receipts.insert(sell.instruction as u32,
+                    (sell.input, sell.net, a[sell.roles[0]].0.clone(), a[sell.roles[2]].0.clone())); }
+            }
+        }
+    }
     // Several V3 swaps on distinct curves can pay the same buyback recipient.
     // A whole-transaction credit is usable only after every contributing call
     // independently proves its exact native settlement. Unknown calls still
@@ -1718,6 +1908,31 @@ pub(crate) fn verify_with_fees(
                             | pumpfun::instructions::PumpFunInstruction::SellV3(_))
                     )
                 {
+                    if matches!(pumpfun::instructions::unpack(ix.data()),
+                        Ok(pumpfun::instructions::PumpFunInstruction::Sell(_))) && accounts.len() == 16
+                        || matches!(pumpfun::instructions::unpack(ix.data()),
+                            Ok(pumpfun::instructions::PumpFunInstruction::SellV2(_))) && accounts.len() == 26
+                    {
+                        if let Some((input_index, net, pool, user)) = legacy_native_receipts.get(&(index as u32)) {
+                            let input = transfers.iter().find(|t| t.index == *input_index).unwrap();
+                            let identity = (index as u32, *input_index, *input_index);
+                            if swap.amm_pool == *pool && swap.user == *user && swap.input_mint == input.mint
+                                && swap.input_amount == input.amounts[0] && !native_evidence.contains(&identity)
+                                && expected_transfer.is_none_or(|position| position == *input_index)
+                                && (expand_native || swap.output_amount == *net)
+                            {
+                                if swap.output_amount != *net {
+                                    let mut original = swap.clone();
+                                    original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                                    rejected.push(original);
+                                }
+                                swap.output_amount = *net;
+                                evidence = Some(identity);
+                                break 'candidate;
+                            }
+                        }
+                        continue;
+                    }
                     let calls = instructions
                         .iter()
                         .filter(|call| call.program_id().0 == &swap.amm && call.accounts().iter().any(|a| a.0 == &swap.amm_pool))
@@ -2284,6 +2499,129 @@ mod tests {
             }
             assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|s|
                 !(s.source_index == Some(9) && s.input_mint == crate::SOL_MINT))), "native SOL multi-hop mode {mode}");
+        }
+    }
+
+    #[test]
+    fn finalized_legacy_and_v2_native_sells_have_exact_net_receipts() {
+        let fixtures: &[(&[u8], &[(u32, u32, u64, u64)])] = &[
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn.transaction.pb").as_slice(), &[(3, 6, 133963973296, 3710455)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/5Xw7D7N2u5RxmdrYKvbntnhWKP3T6or8buRqQsZ7Yurni1S3M4SUWaCDeTJCWXBpLFfD9rQobf5XteiEFxXTKM6Z.transaction.pb").as_slice(), &[(3, 6, 13062704252309, 368099300)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/3mAJZQwLDEZpJzACW2jfHhbLzXvaB2j3bkGN1hTj9mbTj7QWVsRWfCNcsNUuqTLFZ4VV91RZo2uPK85kTnYw6zFP.transaction.pb").as_slice(), &[(3, 6, 1128916629009, 31201657)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/5Pz9g2q6UnNiY9V4fpr7TsJJtwxDB7sf1PfttcY5628Rzy42mpvgVFtopr8RpLdc2AJxUTAFSb42VcwkZycV3MQP.transaction.pb").as_slice(), &[(3, 6, 358276105896, 10238019)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4JofKx1AzNjqCUqctMGHUnVZK8dyJttqHhjs7rVjF39Qn8B8XM1MNdkVvi7srSar6tqS9YUJvrTQdgipCdM41Xxf.transaction.pb").as_slice(), &[(3, 5, 195724127499, 5404867)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/5iHZfCrUvrWtsXMSKiHfWFAxLo4FzgUUqbMhXA4jVPqh1eC4jZQmpVdRrWeajEWhCHM72nT95xjBfXUqx1qVkTsU.transaction.pb").as_slice(), &[(17, 19, 353134727201, 9763296)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/26Q6hJXhxRNXy9LmtkSQ8eX9p8CcjZxk4f82JxGGgxwCFJqtxEV6NcZd8cUmfdWrN188vKS4GvyhuTHGBpfNN2pd.transaction.pb").as_slice(), &[(3, 6, 911379232096, 25380819)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/3xFXJ4jbLaEfwLACBU8EDV5amTtyLBqCRfPPM8weMbDc27U7wujQsUTefQsb1YoCqCRoWa5FqDdUQYPrwiUSHLPi.transaction.pb").as_slice(), &[(8, 11, 23958121557, 662020)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN.transaction.pb").as_slice(), &[(2, 4, 103975629473576, 4156222862), (6, 8, 7127223838410, 251661465), (10, 12, 7037325258482, 244818582), (14, 16, 6826357804497, 234071979)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4dH6TUc4NgzxAGG27zY6WmbfD2cKk1eeew5BL5BnoyDVLZP4QPi3ne2rw1ygycVGkzuYMTmAmw4xXuPnUTxbMo9Z.transaction.pb").as_slice(), &[(7, 10, 295281484069, 8187298)]),
+            (include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/5AVsjgf2xiAyeeoJmYjKkRvGBVDMXes5T3VpdKA3P2Y9mJQSvqXaoCr6cYSF22Qmn3wifnix7JAzHRkAMxJS4UX9.transaction.pb").as_slice(), &[(3, 6, 2115327702796, 10665)]),
+        ];
+        for (bytes, legs) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let decoded = crate::process_transaction(tx).unwrap();
+            for &(source, transfer, input, output) in *legs {
+                let sell = decoded.swaps.iter().find(|swap| swap.source_index == Some(source))
+                    .expect("independently settled legacy/V2 native sell");
+                assert_eq!((sell.input_amount, sell.output_amount, sell.source_transfer_index), (input, output, Some(transfer)));
+                assert_eq!(sell.output_mint, crate::SOL_MINT);
+                assert!(sell.transfer_verified);
+            }
+        }
+    }
+
+    #[test]
+    fn native_legacy_sells_reject_inconsistent_settlement_and_unknown_contributors() {
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/pump-legacy-v2-sells/4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn.transaction.pb").to_vec(),
+        ).unwrap();
+        let root_program = base58::encode(tx.walk_instructions().nth(2).unwrap().program_id().0);
+        let pump_program = base58::encode(pumpfun::PROGRAM_ID);
+        let token_program = base58::encode(token_2022::PROGRAM_ID);
+        for mode in 0..33 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 2).unwrap().instructions;
+            let a = calls[0].accounts.clone();
+            match mode {
+                0..=4 => {
+                    let role = [6, 8, 16, 13, 10][mode];
+                    meta.post_balances[a[role] as usize] += 1;
+                }
+                5 => calls[0].data[8] ^= 1,
+                6 => calls[0].data[16..24].copy_from_slice(&3_710_456u64.to_le_bytes()),
+                7 => calls[3].data[1] ^= 1,
+                8 => calls[4].data[48] ^= 1,
+                9 => calls[4].data[56] ^= 1,
+                10 => calls[4].data[177] ^= 1,
+                11 => calls[4].data[225] ^= 1,
+                12 => calls[4].data[137] ^= 1,
+                13 => calls[4].data[65] ^= 1,
+                14 => calls[4].data[64] = 1,
+                15 => calls[4].accounts[0] = a[13],
+                16 => calls[3].accounts[0] = a[11],
+                17 => calls[3].accounts[2] = a[14],
+                18 => calls[3].accounts[3] = a[10],
+                19 => calls[0].accounts[10] = a[13],
+                20 => calls[0].accounts[3] = a[4],
+                21 => calls[0].accounts[2] = a[1],
+                22 | 23 => {
+                    let mut extra = calls[0].clone();
+                    extra.accounts = vec![a[if mode == 22 { 10 } else { 8 }]];
+                    extra.data = vec![0; 8];
+                    calls.push(extra);
+                    let position = meta.log_messages.iter().rposition(|line| line == &format!("Program {root_program} success")).unwrap();
+                    meta.log_messages.splice(position..position, [format!("Program {pump_program} invoke [2]"), format!("Program {pump_program} success")]);
+                }
+                24 => {
+                    let extra = calls[4].clone(); calls.push(extra);
+                    let position = meta.log_messages.iter().position(|line| line == &format!("Program {pump_program} success")).unwrap() + 1;
+                    meta.log_messages.splice(position..position, [format!("Program {pump_program} invoke [3]"), format!("Program {pump_program} success")]);
+                }
+                25..=27 => {
+                    let target = if mode == 25 { &root_program } else if mode == 26 { &pump_program } else { &token_program };
+                    let position = meta.log_messages.iter().position(|line| line == &format!("Program {target} success")).unwrap();
+                    meta.log_messages[position] = format!("Program {target} failed: custom program error: 0x1");
+                }
+                28 => meta.log_messages.clear(),
+                29 => calls[1].data[4] ^= 1,
+                30 | 31 => {
+                    let index = u32::from(a[if mode == 30 { 14 } else { 11 }]);
+                    let balances = if mode == 30 { &mut meta.pre_token_balances } else { &mut meta.post_token_balances };
+                    let amount = balances.iter_mut().find(|balance| balance.account_index == index).unwrap().ui_token_amount.as_mut().unwrap();
+                    amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
+                }
+                32 => calls[0].accounts[5] = a[4],
+                _ => unreachable!(),
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|swap|
+                swap.source_index != Some(3))), "legacy/V2 native settlement mutation {mode}");
+        }
+        // Rent returned by a volume-account close must have its own committed
+        // event and balance proof before it can be separated from sale proceeds.
+        let tx = substreams::proto::decode::<ConfirmedTransaction>(
+            &include_bytes!("../fixtures/swap-coverage/17.transaction.pb").to_vec(),
+        ).unwrap();
+        assert!(crate::process_transaction(tx.clone()).unwrap().swaps.iter().any(|swap|
+            swap.source_index == Some(9) && swap.output_amount == 411_317_077));
+        for mode in 0..8 {
+            let mut altered = tx.clone();
+            let meta = altered.meta.as_mut().unwrap();
+            let calls = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 3).unwrap().instructions;
+            let close = calls[9].accounts.clone();
+            match mode {
+                0 => calls[9].accounts[0] = close[1],
+                1 => calls[9].accounts[1] = close[0],
+                2 => calls[9].data[0] ^= 1,
+                3 => calls[10].accounts[0] = close[0],
+                4 => calls[10].data[16] ^= 1,
+                5 => calls[10].stack_height = Some(2),
+                6 => meta.pre_balances[close[1] as usize] += 1,
+                7 => meta.post_balances[close[1] as usize] = 1,
+                _ => unreachable!(),
+            }
+            assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter().all(|swap|
+                swap.source_index != Some(9))), "native volume refund mutation {mode}");
         }
     }
 

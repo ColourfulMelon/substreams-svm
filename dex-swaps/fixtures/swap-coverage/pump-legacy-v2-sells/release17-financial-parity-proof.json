@@ -1,0 +1,318 @@
+{
+  "results": {
+    "recognized": {
+      "priorFinancialRows": 149,
+      "unchangedFullFinancialRows": 149,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 149,
+      "oldAuditSha256": "7f4b813f5b2fae9656735fe289743df90ebebdc69461e651e0fd641591ab8a9c",
+      "newAuditSha256": "7f4b813f5b2fae9656735fe289743df90ebebdc69461e651e0fd641591ab8a9c"
+    },
+    "dlmm": {
+      "priorFinancialRows": 140,
+      "unchangedFullFinancialRows": 140,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 140,
+      "oldAuditSha256": "ee79ff5c9f429097c74cfa00a34e14ddda102494ab13a52d4884e3afb825c225",
+      "newAuditSha256": "ee79ff5c9f429097c74cfa00a34e14ddda102494ab13a52d4884e3afb825c225"
+    },
+    "defituna": {
+      "priorFinancialRows": 111,
+      "unchangedFullFinancialRows": 111,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 111,
+      "oldAuditSha256": "3868fc37513f9e2e452c040cbe343f7f74b0ce4f5d7a1e6ede0ce8a7808013c9",
+      "newAuditSha256": "3868fc37513f9e2e452c040cbe343f7f74b0ce4f5d7a1e6ede0ce8a7808013c9"
+    },
+    "twohop": {
+      "priorFinancialRows": 2,
+      "unchangedFullFinancialRows": 2,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 2,
+      "oldAuditSha256": "98bdd402d2d2283c931ccd2bda294abfb6ee92ae69ea259e599c23ad96c583dd",
+      "newAuditSha256": "98bdd402d2d2283c931ccd2bda294abfb6ee92ae69ea259e599c23ad96c583dd"
+    },
+    "jupiter4": {
+      "priorFinancialRows": 305,
+      "unchangedFullFinancialRows": 305,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 305,
+      "oldAuditSha256": "a1fb449a16a357895c47f3ea737c62059f8b828b4a5a06be445065766546912f",
+      "newAuditSha256": "a1fb449a16a357895c47f3ea737c62059f8b828b4a5a06be445065766546912f"
+    },
+    "bonk": {
+      "priorFinancialRows": 175,
+      "unchangedFullFinancialRows": 175,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 175,
+      "oldAuditSha256": "9efea5b7bf755c330f343923d7824f443887bb9fcd8bd7e99b30c9b0019a60df",
+      "newAuditSha256": "9efea5b7bf755c330f343923d7824f443887bb9fcd8bd7e99b30c9b0019a60df"
+    },
+    "spl": {
+      "priorFinancialRows": 243,
+      "unchangedFullFinancialRows": 243,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 243,
+      "oldAuditSha256": "517b6ed3f546d92ac3a409947513cf05c663aad36bc658af0b2b4f541c9d1590",
+      "newAuditSha256": "517b6ed3f546d92ac3a409947513cf05c663aad36bc658af0b2b4f541c9d1590"
+    },
+    "pump": {
+      "priorFinancialRows": 77,
+      "unchangedFullFinancialRows": 77,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 11,
+      "totalFinancialRows": 88,
+      "oldAuditSha256": "a93eac042586e0f35926847f570666e5659fb464f8176c49a4b86f3d6bdc4851",
+      "newAuditSha256": "54d45a5190848f8b06724f0031ea817310cd4afa20c29071dc54e211dcc3035d"
+    },
+    "legacy_native_sells": {
+      "priorFinancialRows": 1,
+      "unchangedFullFinancialRows": 1,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 14,
+      "totalFinancialRows": 15,
+      "oldAuditSha256": "625d4ddf513eda09be1a3aa92365c1f01ea43d12d5d88b2d84d769051f48e440",
+      "newAuditSha256": "9e26dbec1a07b6772e87f43e7876bbd56672698e83f51dc07c9e31097369185b"
+    },
+    "native_sol_sells": {
+      "priorFinancialRows": 28,
+      "unchangedFullFinancialRows": 28,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 28,
+      "oldAuditSha256": "9ad4ce2073b52286aebeaf3c26df183149206d69e25fc8b4322791a9c11670da",
+      "newAuditSha256": "9ad4ce2073b52286aebeaf3c26df183149206d69e25fc8b4322791a9c11670da"
+    },
+    "published_core": {
+      "priorFinancialRows": 1045,
+      "unchangedFullFinancialRows": 1042,
+      "modifiedPriorRows": 3,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 1045,
+      "oldAuditSha256": "20ad9991623296d1cef78a05aa287bfe3c385fb965cfc2926dbed9a2ff661fbe",
+      "newAuditSha256": "5bc7dbc1a4a4ff49f1cb48e63fdae74044f1e5bcc92c180efab5b46b75a9a0c9"
+    },
+    "recent_native_sol_sells": {
+      "priorFinancialRows": 96,
+      "unchangedFullFinancialRows": 96,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 96,
+      "oldAuditSha256": "4dde9aa2ea13aea5ea6a56058157012e162b76575c33ddf8e5def4698cc21760",
+      "newAuditSha256": "4dde9aa2ea13aea5ea6a56058157012e162b76575c33ddf8e5def4698cc21760"
+    },
+    "recent_recognized": {
+      "priorFinancialRows": 32,
+      "unchangedFullFinancialRows": 32,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 14,
+      "totalFinancialRows": 46,
+      "oldAuditSha256": "ce860387ea9f32cceb9a2bf469d9c4d170d614d5229ae6e408293f464881720e",
+      "newAuditSha256": "ca0d66a08d260b597a439e77e32c7b2b8393fd1652df20b40a05a7dfe7fda00f"
+    },
+    "one_dex_alias": {
+      "priorFinancialRows": 4,
+      "unchangedFullFinancialRows": 4,
+      "modifiedPriorRows": 0,
+      "missingPriorRows": 0,
+      "additionalFinancialRows": 0,
+      "totalFinancialRows": 4,
+      "oldAuditSha256": "3a8da71a347d35ec6087d851e17527e8471b69875b955705cad2ccb93b82705e",
+      "newAuditSha256": "3a8da71a347d35ec6087d851e17527e8471b69875b955705cad2ccb93b82705e"
+    }
+  },
+  "changed": [
+    {
+      "corpus": "published_core",
+      "key": [
+        "PAYLOAD",
+        "2StjkCXdCTeiAQ67p5234KedrynLiJkaBx2gnp1JXaksrJPhC1e35mERuuLkC1jM3J4pGZBeQmbrHQ7rgE29dwqH",
+        "9",
+        "13"
+      ],
+      "old": "PAYLOAD\t2StjkCXdCTeiAQ67p5234KedrynLiJkaBx2gnp1JXaksrJPhC1e35mERuuLkC1jM3J4pGZBeQmbrHQ7rgE29dwqH\t9\t13\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 3, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [214, 251, 165, 105, 177, 40, 53, 185, 19, 149, 222, 92, 96, 217, 32, 89, 16, 14, 153, 226, 217, 134, 220, 245, 95, 81, 212, 70, 158, 235, 20, 96], user: [115, 91, 55, 61, 48, 79, 92, 62, 61, 190, 176, 68, 67, 93, 76, 125, 1, 243, 72, 54, 127, 135, 211, 254, 147, 141, 84, 207, 153, 219, 220, 57], input_mint: [210, 57, 82, 5, 40, 92, 71, 168, 78, 72, 24, 123, 142, 123, 57, 139, 22, 80, 168, 107, 28, 118, 236, 135, 231, 181, 193, 80, 162, 182, 150, 207], input_amount: 5738703082663, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 416523623, source_index: Some(9), source_transfer_index: Some(13), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }",
+      "new": "PAYLOAD\t2StjkCXdCTeiAQ67p5234KedrynLiJkaBx2gnp1JXaksrJPhC1e35mERuuLkC1jM3J4pGZBeQmbrHQ7rgE29dwqH\t9\t13\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 3, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [214, 251, 165, 105, 177, 40, 53, 185, 19, 149, 222, 92, 96, 217, 32, 89, 16, 14, 153, 226, 217, 134, 220, 245, 95, 81, 212, 70, 158, 235, 20, 96], user: [115, 91, 55, 61, 48, 79, 92, 62, 61, 190, 176, 68, 67, 93, 76, 125, 1, 243, 72, 54, 127, 135, 211, 254, 147, 141, 84, 207, 153, 219, 220, 57], input_mint: [210, 57, 82, 5, 40, 92, 71, 168, 78, 72, 24, 123, 142, 123, 57, 139, 22, 80, 168, 107, 28, 118, 236, 135, 231, 181, 193, 80, 162, 182, 150, 207], input_amount: 5738703082663, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 411317077, source_index: Some(9), source_transfer_index: Some(13), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }"
+    },
+    {
+      "corpus": "published_core",
+      "key": [
+        "PAYLOAD",
+        "kGRTXxJuUSPGvf2Se3A9mqVgESTAcC8YkH1hWhTEQLuekRi7dFiiNP1XKc9JKfi9A4LN8PQdghroVC5a8uViqiQ",
+        "18",
+        "22"
+      ],
+      "old": "PAYLOAD\tkGRTXxJuUSPGvf2Se3A9mqVgESTAcC8YkH1hWhTEQLuekRi7dFiiNP1XKc9JKfi9A4LN8PQdghroVC5a8uViqiQ\t18\t22\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 4, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [69, 183, 186, 6, 8, 145, 91, 209, 167, 59, 61, 138, 83, 18, 139, 147, 75, 32, 141, 94, 189, 9, 15, 74, 41, 65, 47, 87, 27, 64, 187, 219], user: [168, 142, 83, 52, 162, 178, 116, 198, 85, 147, 51, 255, 202, 54, 113, 83, 79, 86, 25, 211, 25, 60, 23, 63, 108, 224, 58, 153, 191, 6, 78, 253], input_mint: [10, 195, 55, 63, 227, 243, 44, 243, 35, 37, 115, 196, 83, 199, 220, 55, 82, 2, 130, 96, 34, 221, 99, 149, 20, 51, 24, 145, 24, 120, 3, 105], input_amount: 1255757027383, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 154093086, source_index: Some(18), source_transfer_index: Some(22), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }",
+      "new": "PAYLOAD\tkGRTXxJuUSPGvf2Se3A9mqVgESTAcC8YkH1hWhTEQLuekRi7dFiiNP1XKc9JKfi9A4LN8PQdghroVC5a8uViqiQ\t18\t22\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 4, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [69, 183, 186, 6, 8, 145, 91, 209, 167, 59, 61, 138, 83, 18, 139, 147, 75, 32, 141, 94, 189, 9, 15, 74, 41, 65, 47, 87, 27, 64, 187, 219], user: [168, 142, 83, 52, 162, 178, 116, 198, 85, 147, 51, 255, 202, 54, 113, 83, 79, 86, 25, 211, 25, 60, 23, 63, 108, 224, 58, 153, 191, 6, 78, 253], input_mint: [10, 195, 55, 63, 227, 243, 44, 243, 35, 37, 115, 196, 83, 199, 220, 55, 82, 2, 130, 96, 34, 221, 99, 149, 20, 51, 24, 145, 24, 120, 3, 105], input_amount: 1255757027383, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 152166921, source_index: Some(18), source_transfer_index: Some(22), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }"
+    },
+    {
+      "corpus": "published_core",
+      "key": [
+        "PAYLOAD",
+        "45ziFd5srLwuGHW9cgUZHxLTgwXyqWQkH7YZPik4tNroQAd3v9PFC8x6xYPW6f83bBQ3hqoKNbhxHDVSucn5CvWe",
+        "4",
+        "6"
+      ],
+      "old": "PAYLOAD\t45ziFd5srLwuGHW9cgUZHxLTgwXyqWQkH7YZPik4tNroQAd3v9PFC8x6xYPW6f83bBQ3hqoKNbhxHDVSucn5CvWe\t4\t6\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 3, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [228, 110, 12, 195, 100, 28, 128, 241, 180, 107, 20, 222, 204, 198, 224, 213, 122, 120, 133, 238, 156, 106, 62, 6, 124, 128, 136, 168, 59, 254, 1, 222], user: [151, 30, 20, 192, 87, 161, 95, 187, 111, 5, 146, 177, 75, 29, 139, 194, 153, 135, 126, 246, 220, 58, 152, 208, 26, 157, 228, 105, 84, 169, 128, 158], input_mint: [227, 102, 24, 27, 10, 192, 216, 220, 68, 141, 119, 57, 229, 15, 153, 107, 117, 246, 18, 229, 73, 147, 211, 155, 2, 176, 235, 206, 217, 140, 214, 31], input_amount: 68509649912, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 19970987, source_index: Some(4), source_transfer_index: Some(6), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }",
+      "new": "PAYLOAD\t45ziFd5srLwuGHW9cgUZHxLTgwXyqWQkH7YZPik4tNroQAd3v9PFC8x6xYPW6f83bBQ3hqoKNbhxHDVSucn5CvWe\t4\t6\tSwap { protocol: Pumpfun, program_id: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], stack_height: 3, amm: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176], amm_pool: [228, 110, 12, 195, 100, 28, 128, 241, 180, 107, 20, 222, 204, 198, 224, 213, 122, 120, 133, 238, 156, 106, 62, 6, 124, 128, 136, 168, 59, 254, 1, 222], user: [151, 30, 20, 192, 87, 161, 95, 187, 111, 5, 146, 177, 75, 29, 139, 194, 153, 135, 126, 246, 220, 58, 152, 208, 26, 157, 228, 105, 84, 169, 128, 158], input_mint: [227, 102, 24, 27, 10, 192, 216, 220, 68, 141, 119, 57, 229, 15, 153, 107, 117, 246, 18, 229, 73, 147, 211, 155, 2, 176, 235, 206, 217, 140, 214, 31], input_amount: 68509649912, output_mint: [6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1], output_amount: 19721349, source_index: Some(4), source_transfer_index: Some(6), transfer_verified: true, verification_failure: \"\", orderbook_fill_verified: false, source_event_index: None, source_log_index: None }"
+    }
+  ],
+  "missing": [],
+  "scope": "Full Debug financial payload and physical identity comparison of the pre-version-bump .17 candidate against published .16 source. No financial field is excluded. Golden corrections independently match original RPC settlement. Overlapping corpora are explicitly deduplicated.",
+  "baselineSourceCommit": "f35aaf7",
+  "candidateQualitySourceSha256": "e222cc4e5791979deff8a0d78d71244117dd2f55ac0907c5f44ed4a83103238a",
+  "priorOccurrences": 2408,
+  "unchangedOccurrences": 2405,
+  "missingOccurrences": 0,
+  "onlyChangedField": "output_amount",
+  "uniqueAdditionalLegs": 25,
+  "additionalOccurrences": 39,
+  "additionalPhysicalIdentities": [
+    [
+      "1iYcP1ZebQhqvN2fa7rKyunjCxussLDqnTj1cayb1SDCDnzd4eHZePTCBMruXrBqt94d1VFBAoPw6WAQFgnYFA",
+      "0",
+      "3"
+    ],
+    [
+      "26Q6hJXhxRNXy9LmtkSQ8eX9p8CcjZxk4f82JxGGgxwCFJqtxEV6NcZd8cUmfdWrN188vKS4GvyhuTHGBpfNN2pd",
+      "3",
+      "6"
+    ],
+    [
+      "2wPxjtoPCoyQutK9wWBdjcdTdsGYgPhmkhFTdjNy9nf97ZpZSXxMXzt742DtLebQCtVaMrXMvXcVAhNPqJgQKKae",
+      "3",
+      "6"
+    ],
+    [
+      "35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN",
+      "10",
+      "12"
+    ],
+    [
+      "35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN",
+      "14",
+      "16"
+    ],
+    [
+      "35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN",
+      "2",
+      "4"
+    ],
+    [
+      "35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN",
+      "6",
+      "8"
+    ],
+    [
+      "38L1E2QWDhqbatMfWx9dUou3KNzRBJHsnLKXUkaGRa5vwKW6G4HRvQkMj22iGMxuWY8vsrM1dsNvFhE8512gpTqJ",
+      "3",
+      "6"
+    ],
+    [
+      "3mAJZQwLDEZpJzACW2jfHhbLzXvaB2j3bkGN1hTj9mbTj7QWVsRWfCNcsNUuqTLFZ4VV91RZo2uPK85kTnYw6zFP",
+      "3",
+      "6"
+    ],
+    [
+      "3xFXJ4jbLaEfwLACBU8EDV5amTtyLBqCRfPPM8weMbDc27U7wujQsUTefQsb1YoCqCRoWa5FqDdUQYPrwiUSHLPi",
+      "8",
+      "11"
+    ],
+    [
+      "4JofKx1AzNjqCUqctMGHUnVZK8dyJttqHhjs7rVjF39Qn8B8XM1MNdkVvi7srSar6tqS9YUJvrTQdgipCdM41Xxf",
+      "3",
+      "5"
+    ],
+    [
+      "4SPL7D8F9GqeBVhKsWFvdcxdaNshfUgAQcGZ4KcFPFhUvyX7L6DrLi43NqhBGQ1hQtxJHApcN6v5aS7tN5CcwgoU",
+      "3",
+      "6"
+    ],
+    [
+      "4VZJX7Fo1bs5rA5vzofnqRGvaroGNorFfHMxDBt8UnJAgWuzh3FbawPmiDjfXJu3tGqbyRFVGesZHCcGR6N1D8kB",
+      "3",
+      "6"
+    ],
+    [
+      "4XgcMhZAvSYqnS7tftNJm8b6ikL1fhU52DdhLzrutMjK1gE9S97nWatNMMvgFRLtvPL1MRJrSgPKWein8yssKmPk",
+      "3",
+      "6"
+    ],
+    [
+      "4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn",
+      "3",
+      "6"
+    ],
+    [
+      "4dH6TUc4NgzxAGG27zY6WmbfD2cKk1eeew5BL5BnoyDVLZP4QPi3ne2rw1ygycVGkzuYMTmAmw4xXuPnUTxbMo9Z",
+      "7",
+      "10"
+    ],
+    [
+      "5AVsjgf2xiAyeeoJmYjKkRvGBVDMXes5T3VpdKA3P2Y9mJQSvqXaoCr6cYSF22Qmn3wifnix7JAzHRkAMxJS4UX9",
+      "3",
+      "6"
+    ],
+    [
+      "5B6CRJGdojwkiyYeCNMKAqc9WbYATr7oxfnAD8spp6gzE98N5GzLd9Eb8bjUvssbmi3d8Kg5YKaWoVjFJzvWPY3P",
+      "3",
+      "6"
+    ],
+    [
+      "5Pz9g2q6UnNiY9V4fpr7TsJJtwxDB7sf1PfttcY5628Rzy42mpvgVFtopr8RpLdc2AJxUTAFSb42VcwkZycV3MQP",
+      "3",
+      "6"
+    ],
+    [
+      "5Sm659cZhTYxHpBGaUgAGpwimqQNSnrz86TsDJevtmevYyGyrwpqRrbfLW41pUe2VnuHiwNX2XTD9qTYMLvDXCYd",
+      "0",
+      "3"
+    ],
+    [
+      "5Xw7D7N2u5RxmdrYKvbntnhWKP3T6or8buRqQsZ7Yurni1S3M4SUWaCDeTJCWXBpLFfD9rQobf5XteiEFxXTKM6Z",
+      "3",
+      "6"
+    ],
+    [
+      "5iHZfCrUvrWtsXMSKiHfWFAxLo4FzgUUqbMhXA4jVPqh1eC4jZQmpVdRrWeajEWhCHM72nT95xjBfXUqx1qVkTsU",
+      "17",
+      "19"
+    ],
+    [
+      "5mqgtB9cN9ENK1EpYZXdBXwF3riraP9i3W6BiZDUsf5f6Ci3hz7wdhr95TyoRNQyuw7k3GFbXFBDwSYK4yjcLBSF",
+      "3",
+      "6"
+    ],
+    [
+      "j2kXvbebdUsek4vTvdWCU2o99RUALKWtEThL7FCHA2aiotMrsvPLfgRMpmNX6htdaG6eLGwo9e2burpc6dJ51r4",
+      "0",
+      "3"
+    ],
+    [
+      "xhGM1g22LveKMCtAaAD6cofXYca1hhnJwJmZoAp374vagRZJ76gqkxruhDSyYtfEYbcTgLD1XaaeE6aejzDT1MB",
+      "0",
+      "3"
+    ]
+  ],
+  "coreTests": 161,
+  "negativeLegacyAndRefundMutations": 41
+}
