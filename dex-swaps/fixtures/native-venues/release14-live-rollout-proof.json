@@ -1,0 +1,90 @@
+{
+  "observedAt": "2026-10-12T06:32:11.934921+00:00",
+  "scope": "Sequential read-only observations after the controlled single-writer handoff. Strict module-hash mode retained; exact opaque cursor copied without replaying financial history. The first actual .14 block is the old durable block plus one with matching parent hash. All observed new swaps are unique, nonzero and verified; parent chain and sealed coverage counts match. Pricing is still catching up at this observation; container health does not establish freshness.",
+  "release": "v0.5.2-pluto.14",
+  "sourceCommit": "4d24fb155681fa189d4f65e5bd12b915d5bb5048",
+  "pricingMerge": "a202e6c3c3e768d88c8b79d0d06c089252c9e2ce",
+  "deployment": "tszhjfcpm5i7ktx2if6ewzyn",
+  "deploymentFinishedAt": "2026-10-12T06:18:30Z",
+  "oldDbOutHash": "89753c04b00ecc396a2219f51bcd36940253c5b0",
+  "newDbOutHash": "8b636b3b1edd4429c84f4f2fffcb910d6991c6d4",
+  "productionApiHealthy": true,
+  "productionCustomOrdersEnabled": false,
+  "productionCustomExecutionEnabled": false,
+  "originalAutoDeploySettingsRestored": true,
+  "observations": {
+    "oldDurableBlock": 455944582,
+    "cursors": [
+      {
+        "id": "8b636b3b1edd4429c84f4f2fffcb910d6991c6d4",
+        "block_num": 455946583
+      }
+    ],
+    "firstActualBlock": [
+      {
+        "block_num": 455944583,
+        "parent_slot": 455944582,
+        "parent_hash": "D6a35JzxxQDoVhKzdBDXB1aoj3gJaC9YeFCr2Pt93q4V",
+        "block_hash": "BcUMRXgtqHWNf3HdBgiqDxDsY2jBHzod92MHCBSDfvqZ",
+        "timestamp": "2026-10-12 06:16:33"
+      }
+    ],
+    "boundaryMatches": true,
+    "continuity": [
+      {
+        "blocks": 2020,
+        "unique_blocks": 2020,
+        "broken_parents": 0
+      }
+    ],
+    "health": [
+      {
+        "saved_block": 455946583,
+        "lag_seconds": 366
+      }
+    ],
+    "swaps": [
+      {
+        "rows": 166965,
+        "unique_events": 166965,
+        "invalid": 0
+      }
+    ],
+    "venues": [
+      {
+        "protocol": "raydium_cpmm",
+        "rows": 2064,
+        "unique_events": 2064
+      },
+      {
+        "protocol": "manifest",
+        "rows": 1138,
+        "unique_events": 1138
+      },
+      {
+        "protocol": "openbook_v2",
+        "rows": 1,
+        "unique_events": 1
+      },
+      {
+        "protocol": "mercurial",
+        "rows": 17,
+        "unique_events": 17
+      },
+      {
+        "protocol": "oasis",
+        "rows": 1,
+        "unique_events": 1
+      }
+    ],
+    "cut": 455946483,
+    "coverage": [
+      {
+        "candidates": 9041,
+        "raw": 6800,
+        "expected_candidates": 9041,
+        "expected_raw": 6800
+      }
+    ]
+  }
+}

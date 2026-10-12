@@ -609,7 +609,7 @@ retained by the existing diagnostic sink for later repair, without publishing
 its intent as a price.
 
 
-## Native SOL multi-hop sells (candidate .14)
+## Native SOL multi-hop sells (deployed .14)
 
 Twenty-three retained original finalized transactions contain missing final curve
 legs on six pools. Their Token-2022 gross input debits and reserve receipts,
@@ -647,9 +647,19 @@ the decoder-version label), and adds one independently verified sell to reach
 4,577. Its exact input is 1,034,697,410,229 base atoms and net SOL output is
 35,057,362 lamports. Only the corresponding verified/diagnostic block counters
 change. Packaging passes. The frozen metadata binary and its seven module hashes
-remain pinned to .13's artifact; only the pricing binary changes. Controlled
-live deployment remains pending for .14. No live history is appended by this
-source change.
+remain pinned to .13's artifact; only the pricing binary changes.
+
+Release .14 is published and PR #18 is merged. The exact merged pricing image
+was deployed at 2026-10-12 06:18:30 UTC with strict hash checks retained. A
+graceful stop saved block 455944582; all four financial/diagnostic tables had
+no rows beyond it. The exact opaque cursor was copied under the new output hash.
+The first actual .14 block is 455944583 with that exact parent slot/hash.
+Observed new swaps are unique, nonzero and verified; actual parent links and
+sealed coverage counts match. Original auto-deploy settings are restored, and
+the production API remains healthy with custom orders disabled. Pricing is
+still catching up at this initial observation; freshness remains a separate
+check. No replayed financial history is appended. The live and recent-registry
+proofs are retained under `fixtures/native-venues/release14-*.json`.
 
 
 ## 1DEX aliased fee recipients (candidate .15)
