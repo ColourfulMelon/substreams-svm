@@ -112553,5 +112553,10 @@
         "sha256": "37b82726f7b4f79850486edec977b83dd4ccc96d1ae13fe704acaebe08e21bc6"
       }
     ]
+  },
+  "coreVerification": {
+    "all825HostFinancialTuplesMatchedExactlyOnce": true,
+    "hostAuditBinarySha256": "6c58ed9f61073b10ee54be8985ff80748ec533b3bcdfe84289b0b5f2454536fa",
+    "newRuntimeChangeRequired": false
   }
 }
