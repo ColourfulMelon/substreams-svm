@@ -1,0 +1,113 @@
+{
+  "release": "v0.5.2-pluto.26",
+  "runtimeSourceCommit": "ad8c57ae2d44183c3aa9984fa7232bd13af03f79",
+  "decoderTests": 204,
+  "mapperTests": 13,
+  "wasmBuildPassed": true,
+  "dbOutModuleHash": "92c88f20143b438dd39edabfc558a5d32f0fb475",
+  "allSevenMetadataModuleHashesUnchanged": true,
+  "metadataWasmSha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "packageSha256": "be3c49c672f855b70bda4786b51eb547920ffaa483c47a33c8e628b4cb3e86f4",
+  "packageReplaysPending": false,
+  "releaseBuildFeatures": "--no-default-features",
+  "finalizedBlocks": 5507,
+  "preservedPriorSwapIdentities": 760854,
+  "unchangedPriorFinancialRows": 760854,
+  "addedSwaps": 1161,
+  "correctedPriorSwaps": 0,
+  "lostPriorSwaps": 0,
+  "unexpectedModifiedPriorSwaps": 0,
+  "independentOriginalVariants": 1133,
+  "uniqueOriginalSignatures": 1114,
+  "independentFinalizedBlocks": 928,
+  "all25FinancialAndProvenanceFieldsMatched": true,
+  "allFourTableVersionsValidated": true,
+  "operationKeysAndOrdinalsUnique": true,
+  "parentChainsAndSealedCountersValid": true,
+  "originalRpcVerificationComplete": true,
+  "databaseWrites": false,
+  "globalCoverageProven": false,
+  "scope": "Two finite finalized windows plus a recent warmup; unobserved and unproven formats remain diagnostic. Existing historical financial tables are not replayed or rewritten.",
+  "replayProofs": [
+    {
+      "file": "pluto-combined26-packaged-replay-proof.json",
+      "sha256": "8973038a8e42c18ee9aa1c483aea96a23cc381d59527e4bd915b1c3b0ee109d3"
+    },
+    {
+      "file": "pluto-combined26-wide-packaged-replay-proof.json",
+      "sha256": "f2da1c137b2be29f01dbc1652c1d588d2b583c20b5aca519403c9cedbcf3c94d"
+    }
+  ],
+  "financialProof": {
+    "file": "combined26-financial-proof.json",
+    "sha256": "f34051352e263c3ccbedb02530b64c7c0382237c0528c4ec0e8fb98dd9f7ce36"
+  },
+  "metadataProofSha256": "4c6d75ffb8ec15be0c611973c1ba3a0f67ddf6488f5a9f5453c3344064706d04",
+  "actualPackageBytesVerified": true,
+  "verificationScripts": {
+    "verify-financial.py": "3dccd76a604a3945bb78cf12a740cf54fe202d5603f667ed74c1459c67792207",
+    "compare-replays.py": "d86f5da0620293c1bb10aed4af9c1309f4c965e282311e93d99f941671add8ef",
+    "original-metadata.cjs": "4f1648a094c384a81c37216975cde4f63640abbc3a83172be9abf126dd31d491",
+    "solana-type.proto": "7db83eefd58e7021570bf0d070ceae0ba76c65f9e669991225770e78ef14d9a6",
+    "protocol-ids.json": "d2f21f7d74ae2354303586946b0a137bf11a6a41e9077eff35742da03323bddb",
+    "extra-proof-families.json": "b34749eb87eda27aee266650a39bdee078ef40c5aeaf07dcec40f337def4be17"
+  },
+  "compressedEvidence": [
+    {
+      "file": "combined26-financial-proof.json.gz",
+      "sha256": "bf55bb02e3529a73718332cb5e0bb2577e0a56d90a53965d3f5754272e19b0d0",
+      "bytes": 544830
+    },
+    {
+      "file": "original-metadata.json.gz",
+      "sha256": "6c230e97ea111157c13161fd22ecd4ca88eaebf858ffb0fd0edfeabe7fbdafdf",
+      "bytes": 2464460
+    },
+    {
+      "file": "pluto-combined26-packaged-replay-proof.json.gz",
+      "sha256": "c329badb519a12608a577513442aff59d821b2195cf25d9103aceeb848acd621",
+      "bytes": 1083001
+    },
+    {
+      "file": "pluto-combined26-wide-packaged-replay-proof.json.gz",
+      "sha256": "64edd3cb188ced85f7791453f7274e21e81706d37606406f8f0de8c32f4ec0e5",
+      "bytes": 2890980
+    }
+  ],
+  "warmup": {
+    "label": "warm26",
+    "release": "v0.5.2-pluto.26",
+    "firstSlot": 456201800,
+    "lastSlot": 456201804,
+    "startedAt": "2026-10-12T22:46:59.022242+00:00",
+    "finishedAt": "2026-10-12T22:50:36.869440+00:00",
+    "exitCode": 0,
+    "packageSha256AtLaunch": "be3c49c672f855b70bda4786b51eb547920ffaa483c47a33c8e628b4cb3e86f4",
+    "packageSha256AfterReplay": "be3c49c672f855b70bda4786b51eb547920ffaa483c47a33c8e628b4cb3e86f4",
+    "databaseWrites": false,
+    "finalizedOnly": true,
+    "productionMode": false,
+    "outputBytes": 1540118
+  },
+  "metadataPin": {
+    "sourceCommit": "5db51e774846de14bd4100e0243603161a98fa04",
+    "rustVersion": "1.85.1",
+    "target": "wasm32-unknown-unknown",
+    "artifact": "dex_swaps_metadata.wasm",
+    "sha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+    "sizeBytes": 21163049,
+    "modules": {
+      "store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+      "store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+      "map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+      "store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+      "store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+      "store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075",
+      "store_token_fee_state": "9ea156073517933ea11355afd55e0029464dfb82"
+    },
+    "snapshotSeedCount": 238409,
+    "snapshotAnchor": 455821803,
+    "snapshotCompleteAt": 455893377
+  },
+  "evidenceOrder": "Immutable comparator pending markers are superseded by this completed independent financial attestation."
+}

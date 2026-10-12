@@ -1,31 +1,42 @@
 # Pluto DEX decoder release
 
-`v0.5.2-pluto.25` combines the independently verified missing native swap
-formats from the finalized coverage audit: Saber, Dooar and Dexlab SPL swap
-forks, Quantum/BinaryFi, Triangle, Archer, Riptide, Hadron and Quay; Jupiter
-Lend oracle-backed settlement; SolFi u64 direction forms; bounded Meteora
-swap2 and legacy suffixes; and uniquely proven repeated/native Pump sells.
-New protocol IDs 55–62 are appended without renumbering existing protocols.
-Pricing uses actual committed principal receipts, verified net token outputs
-and exact native payout allocation. Fee/referral payments remain separate.
+`v0.5.2-pluto.26` adds observed native swaps for Ghosty, Memefun, Gator,
+Jupiter Perps, Numeraire, Futarchy, Guacswap, Omnipair, Dr Fraudsworth,
+Sanctum Infinity, Peg, AnchorSwap, the Raydium CPMM fork, Janus, Exponent
+and CryptoQuest. Protocol IDs 63–78 append to the existing IDs. It also
+supports current Jupiter RFQ and proprietary venue layouts, Raydium/Meteora
+suffix variants, and additional native and repeated Pump settlement forms.
 
-Native bindings apply to routed candidates too. Unknown payloads, uncommitted
-ancestry, ambiguous repeated payouts and unsupported fee states remain
-rejected. Legacy classic Token Batch255 operations can contribute separately
-validated transaction ledgers; they never create synthetic swap principals.
-See the per-format validation notes linked in [the repository map](repo-navigation.md).
-All 189 core decoder/mapper tests pass. Two clean packaged replays cover 4,565
-finalized blocks, preserve all 633,846 prior swap identities, add 3,726 swaps
-and correct 825 existing Pump outputs from gross payouts to actual net user
-receipts. No prior identity disappears and no other old financial field changes.
-Every added/corrected row independently matches all 25 financial/provenance
-fields from original source transactions and finalized RPC metadata. Four table
-versions, sealed counters, parent chains and unique operation ordinals pass.
-The [final attestation](../dex-swaps/fixtures/swap-coverage/combined25/packaged-release-proof.json)
-links the immutable comparator manifests to the completed independent proof;
-compressed complete evidence and checksums accompany the release.
-Finite replay evidence does not establish universal support for all current,
-historical or future Solana swap programs.
+Numeraire identifies input and output by native account roles, including
+output-first settlement. Reverse AnchorSwap includes the separate input fee
+in the full user debit. Pump exact-quote input is a maximum budget: native
+committed events, actual principal receipts and primary fee rounding bind
+prices without requiring every budget atom to be spent. CryptoQuest market
+fills retain native log identity and have independently verified physical
+receipts; crafting and withdrawal calls do not become prices.
+
+Native source validation also applies to routed candidates. Exact committed
+principal receipts, verified net outputs, separate fee roles and complete
+vault ledgers determine prices. Unknown payloads, uncommitted ancestry,
+ambiguous payouts and unsupported fee states remain diagnostic. Liquidity,
+option issuance and redemption, lending/staking receipts, and fee claims
+are separately classified. Classic Token Batch255 operations contribute
+validated transaction ledgers without creating synthetic swap principals.
+Per-format original evidence and rerunnable oracles are linked in
+[the repository map](repo-navigation.md).
+
+All 217 core decoder/mapper tests and the WebAssembly release build pass.
+The exact packaged replay covers 5,507 finalized blocks, preserves all
+760,854 prior swap identities and financial tuples unchanged, and recovers
+1,161 additional swaps. Every added row matches all 25 financial and provenance
+fields against independent original evidence from 1,133 original encodings
+and 928 finalized containing blocks. All four table versions, operation keys,
+ordinals, parent chains and sealed counters pass. The recent registry warm-up
+completed without database writes; all seven metadata module hashes remain
+unchanged. See the [completed package attestation](../dex-swaps/fixtures/swap-coverage/combined26/packaged-release-proof.json)
+and [portable verification tools](../dex-swaps/fixtures/swap-coverage/combined26/README.md).
+Finite evidence does not establish universal support for every historical,
+current or future Solana swap program.
 
 IDL source is pinned to immutable revision
 `785533d59d0b258500cbbce60890fe58b8c14405`. Existing protocol IDs remain unchanged.
@@ -40,10 +51,10 @@ Build with Rust 1.85.1 and Substreams CLI 1.18.2, matching Pluto's SQL sink:
 ```sh
 cargo +1.85.1 test -p dex-swaps -p svm-dex --locked --no-default-features
 cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --no-default-features --target wasm32-unknown-unknown --release
-substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.25.spkg
-substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.25.spkg
+substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.26.spkg
+substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.26.spkg
 make -C svm-dex/clickhouse schema
-substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.25.spkg
+substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.26.spkg
 ```
 
 Stop the old writer gracefully before upgrading and preserve its exact durable
