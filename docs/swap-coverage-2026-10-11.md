@@ -910,8 +910,17 @@ and original financial evidence are unchanged. The exact .19 package exits
 cleanly over the same fifty finalized blocks, validates the expected version
 on every row and preserves all 4298 prior swaps while adding the same fourteen
 original-verified legs. All parent links, sealed counters and operation ordering
-agree. A coordinated rollout remains pending, and complete coverage of all swap
-types is still unproven.
+agree. The source/release is published and deployment PR #24 is merged.
+Deployment f06sqyxm071gwpplautiqgqr uses exact commit
+d920ff2b31895691ef5e5b1d345011f2c1f9ce44. The old writer exited at saved block
+456026634; all four tails were empty and the identical opaque cursor was backed
+up/adopted with strict hash mode. The first actual .19 block 456026635 has the
+exact saved parent hash. Live unique nonzero financial rows, linked blocks and
+sealed financial/diagnostic counters pass. Both original automatic deployment
+settings are restored, and production custom creation/execution remain disabled.
+The owned read-only primer verified 5700 blocks and 553794 swaps before deliberate
+termination/reaping. Wall-clock catch-up remains monitored. Complete coverage
+of all swap types is still unproven.
 
 
 ## Independently retained next native gaps

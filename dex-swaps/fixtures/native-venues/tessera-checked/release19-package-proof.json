@@ -21,11 +21,14 @@
   },
   "metadataPreserved": true,
   "finiteReplayPassed": true,
-  "published": false,
-  "deployed": false,
+  "published": true,
+  "deployed": true,
   "correctsWithdrawn18VersionLabel": true,
   "allRowVersionsValidated": true,
   "unchangedPriorSwaps": 4298,
   "addedOriginalVerifiedSwaps": 14,
-  "coreTestsPassed": 162
+  "coreTestsPassed": 162,
+  "allSixUploadedAssetDigestsVerified": true,
+  "packageSourceCommit": "85c9ac747ed3ab5b006fc6dfe3531c0f8db23508",
+  "deploymentCommit": "d920ff2b31895691ef5e5b1d345011f2c1f9ce44"
 }
