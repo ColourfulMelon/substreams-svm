@@ -1022,3 +1022,20 @@ one immediate mint. See `dex-swaps/fixtures/swap-coverage/jupiter-lend/` for the
 64 original pairs, owner reads and full financial parity proof. Package replay,
 all-seven frozen metadata hash checks, protocol-54 readiness/migration and a
 coordinated cursor transition are still required before deployment.
+
+### pluto.20 finalized package validation (deployment pending)
+
+All three manifests and the shared four-table row-version constant are .20.
+The package retains the frozen metadata artifact bytes and all seven module
+hashes. Its clean 301-block finalized replay (456009179–456009479) preserves
+all 26,809 prior financial rows/keys/execution positions exactly and adds thirty
+Jupiter Lend legs plus two HumidiFi48 legs. Each of the 32 added native tuples
+matches independent finalized RPC instructions, amounts, identities and current
+market-owner reads. Two resolved candidate rows and one associated raw row are
+removed; no other diagnostics change. All four actual table versions, parent
+links, sealed counts and unique contiguous per-block insertion ordinals pass.
+`corrected_events` remains unchanged: it counts replaced prior event amounts,
+rather than independently decoded new native legs. All 164 core tests and twelve
+pricing integration tests pass, as does the deployment guard regression across
+all eight enum columns for IDs 52, 53 and 54. Live upgrade/preparation and cursor
+boundary verification remain pending. No replay writes to financial tables.

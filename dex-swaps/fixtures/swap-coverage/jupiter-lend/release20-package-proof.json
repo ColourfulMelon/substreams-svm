@@ -1,0 +1,37 @@
+{
+  "release": "v0.5.2-pluto.20",
+  "dbOutHash": "9be0cadf1f790f814ff9bbde0ee673ab07cffd32",
+  "metadataModules": {
+    "store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075",
+    "store_token_fee_state": "9ea156073517933ea11355afd55e0029464dfb82"
+  },
+  "metadataBinarySha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "metadataPreserved": true,
+  "assetSha256": {
+    "dex-swaps-v0.5.2-pluto.20.spkg": "ef5cf533d0e772b5bd449840f8f82f48f78a709fbb7ba111e1d61240fce00fd3",
+    "svm-dex-v0.5.2-pluto.20.spkg": "7a0c8a0667e9354d21183178f51a580c50a01a702adc16347615941522780d44",
+    "svm-clickhouse-dex-v0.5.2-pluto.20.spkg": "94cc43243fcf076fbd8e6c0e26b227aa9c3ab44b0f75d0e08fc561b601ace803",
+    "dex_swaps_metadata.wasm": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+    "metadata-binary.json": "81297ff4f029893b96f4cc067306dd78018ce88de01cfbdbdbb6dd424f28b2c8"
+  },
+  "coreTests": 164,
+  "schemaGuardTestsPassed": true,
+  "finiteReplayPassed": true,
+  "published": false,
+  "deployed": false,
+  "decoderSourceCommit": "ed44d78250dd08737b6fd3af0fafcef395c350af",
+  "finiteReplay": {
+    "blocks": 301,
+    "unchangedPriorSwaps": 26809,
+    "newJupiterLendSwaps": 30,
+    "newHumidiFiSwaps": 2,
+    "allAddedOriginalVerified": true,
+    "allFourTableVersionsValidated": true
+  },
+  "pricingIntegrationTests": 12
+}

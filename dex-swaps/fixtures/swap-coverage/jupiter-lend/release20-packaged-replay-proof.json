@@ -1,0 +1,1280 @@
+{
+  "release": "v0.5.2-pluto.20",
+  "firstSlot": 456009179,
+  "lastSlot": 456009479,
+  "outputs": {
+    "baseline19": {
+      "cleanExit": true,
+      "sha256": "421548c350100766d0e72f1246adc8beb3266387c5b50fce523b49207e6bcbcd",
+      "blocks": 301,
+      "tables": {
+        "swaps": 26809,
+        "swap_coverage_transactions": 1048,
+        "swap_coverage": 1320,
+        "blocks": 301
+      }
+    },
+    "candidate": {
+      "cleanExit": true,
+      "sha256": "b6b55e3e7ed48bae7be38fa9368c533193f83b2b251b57194fdcfefae40db821",
+      "blocks": 301,
+      "tables": {
+        "swaps": 26841,
+        "swap_coverage_transactions": 1047,
+        "swap_coverage": 1318,
+        "blocks": 301
+      }
+    }
+  },
+  "unchangedPriorSwaps": 26809,
+  "missingPriorSwaps": 0,
+  "modifiedPriorSwaps": 0,
+  "added": [
+    {
+      "block_hash": "Fx5EyvxxV7qLDSNeUJoeU3YRJsvHuZ9iSsRvRzEjVXpA",
+      "instruction_index": "24",
+      "transaction_index": "365",
+      "signature": "op8ySWpzvxwDyCJv23E19S1nriXPte4d1uuquv14CnhduQYiAeA8waPbpcRGsZrMQX4gE5jyJh1yjSTEWrtcsEE",
+      "timestamp": "1791799891",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "stack_height": "2",
+      "source_instruction_index": "22",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "input_amount": "101473995",
+      "transfer_verified": "1",
+      "orderbook_fill_verified": "0",
+      "event_id": "op8ySWpzvxwDyCJv23E19S1nriXPte4d1uuquv14CnhduQYiAeA8waPbpcRGsZrMQX4gE5jyJh1yjSTEWrtcsEE:22:24",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,4MAxAbQ5bbKTJ1oBpunYwgBnh7crjdTDevwCkZeBPxMt",
+      "execution_position": "24",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "compute_units_consumed": "415693",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "user": "4MAxAbQ5bbKTJ1oBpunYwgBnh7crjdTDevwCkZeBPxMt",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_amount": "101376579",
+      "protocol": "jupiter_lend",
+      "block_num": "456009179",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee": "410000"
+    },
+    {
+      "block_hash": "Fx5EyvxxV7qLDSNeUJoeU3YRJsvHuZ9iSsRvRzEjVXpA",
+      "instruction_index": "5",
+      "transaction_index": "389",
+      "compute_units_consumed": "547018",
+      "transfer_verified": "1",
+      "user": "2BFgx6BPc6dmLbLtL4dr683gkzMcQwTo2udkGZ2v8kCP",
+      "stack_height": "2",
+      "protocol": "jupiter_lend",
+      "signers_raw": "2BFgx6BPc6dmLbLtL4dr683gkzMcQwTo2udkGZ2v8kCP",
+      "source_instruction_index": "3",
+      "event_id": "3dhNbvRGTyUmJdbZbxhgUs37CWkA5exGg3Ha3GqspD9zNaUstpddYtnMHqx3DcpM1tvQzeWLVsaGGFDym791Ji1T:3:5",
+      "execution_position": "5",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_amount": "2017780",
+      "orderbook_fill_verified": "0",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "block_num": "456009179",
+      "fee_payer": "2BFgx6BPc6dmLbLtL4dr683gkzMcQwTo2udkGZ2v8kCP",
+      "timestamp": "1791799891",
+      "output_amount": "2015842",
+      "fee": "5802",
+      "signature": "3dhNbvRGTyUmJdbZbxhgUs37CWkA5exGg3Ha3GqspD9zNaUstpddYtnMHqx3DcpM1tvQzeWLVsaGGFDym791Ji1T"
+    },
+    {
+      "block_hash": "CvWAUzJJnXfN3YsvnrdJAvxQQasDSB8N3H1osCtvWKYM",
+      "instruction_index": "26",
+      "transaction_index": "603",
+      "signers_raw": "3rA8M8VXnZkdYpCrordm6jmpq3nKrdXkUV1rc3mzzgD3",
+      "output_amount": "2832423",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_amount": "2835145",
+      "orderbook_fill_verified": "0",
+      "fee_payer": "3rA8M8VXnZkdYpCrordm6jmpq3nKrdXkUV1rc3mzzgD3",
+      "protocol": "jupiter_lend",
+      "transfer_verified": "1",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "compute_units_consumed": "425612",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "4DGgqiumjRygNJezpX8rH8x7Fmkz96aHSFdADwwv2TWYrwDZEoQa1LGM4YB5SekyXvPpGfrbDuvoaP4ECzywLpLC",
+      "fee": "318000",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "block_num": "456009184",
+      "event_id": "4DGgqiumjRygNJezpX8rH8x7Fmkz96aHSFdADwwv2TWYrwDZEoQa1LGM4YB5SekyXvPpGfrbDuvoaP4ECzywLpLC:24:26",
+      "stack_height": "2",
+      "execution_position": "26",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "timestamp": "1791799892",
+      "source_instruction_index": "24"
+    },
+    {
+      "block_hash": "BtS9wguBvSbTaC2Bzq5VXx6Dx9Bjwv6RxnUYrVGbykw4",
+      "instruction_index": "25",
+      "transaction_index": "1015",
+      "signers_raw": "FHpcNSe6tb2n15bAdq4BkeYWGyZKFD7yLYrH92ng7wCT,DVdji1NsdPJ1A8iZ5QTvafo5ffBEf3cPrYQKfdVpiiHi",
+      "fee_payer": "FHpcNSe6tb2n15bAdq4BkeYWGyZKFD7yLYrH92ng7wCT",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "stack_height": "3",
+      "orderbook_fill_verified": "0",
+      "timestamp": "1791799904",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "output_amount": "3769632",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "28ZtZkpYe7vh5TvstjpUehCoaTFMqABhek8rnZWbktLXWeWFhHKXhy4v9N2bujiquXcWsFbno3WD1SFAVrwTis5C",
+      "transfer_verified": "1",
+      "block_num": "456009238",
+      "fee": "34609",
+      "event_id": "28ZtZkpYe7vh5TvstjpUehCoaTFMqABhek8rnZWbktLXWeWFhHKXhy4v9N2bujiquXcWsFbno3WD1SFAVrwTis5C:23:25",
+      "compute_units_consumed": "409775",
+      "source_instruction_index": "23",
+      "execution_position": "25",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "input_amount": "3773255",
+      "protocol": "jupiter_lend"
+    },
+    {
+      "block_hash": "4BQJmZ9i7erCb9FaVW5wEsWL52oRtpk58oAz9YsbtqWn",
+      "instruction_index": "30",
+      "transaction_index": "131",
+      "signers_raw": "AmbLWALHgFW6brB9qdWp8pf4u3jx6pMn8fcwmDfv8oCZ",
+      "source_instruction_index": "28",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "event_id": "2ZqdJ5oZHbUtj9iKWqxDqx7VAQuwkDhrcBdCEYYm3CzSbp57dz4WxeS1RJiPmmgedWFXirgW3gEYg39km2CPYmee:28:30",
+      "transfer_verified": "1",
+      "protocol": "jupiter_lend",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input_amount": "704849",
+      "user": "AmbLWALHgFW6brB9qdWp8pf4u3jx6pMn8fcwmDfv8oCZ",
+      "output_amount": "704172",
+      "block_num": "456009253",
+      "signature": "2ZqdJ5oZHbUtj9iKWqxDqx7VAQuwkDhrcBdCEYYm3CzSbp57dz4WxeS1RJiPmmgedWFXirgW3gEYg39km2CPYmee",
+      "fee_payer": "AmbLWALHgFW6brB9qdWp8pf4u3jx6pMn8fcwmDfv8oCZ",
+      "fee": "32624",
+      "compute_units_consumed": "344322",
+      "orderbook_fill_verified": "0",
+      "timestamp": "1791799907",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "stack_height": "2",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "execution_position": "30"
+    },
+    {
+      "block_hash": "84QTqCzS7np59T5G7Jg5QPZqyPfMmy1g4MD8uMQ91haz",
+      "instruction_index": "20",
+      "transaction_index": "369",
+      "transfer_verified": "1",
+      "output_amount": "21683103",
+      "execution_position": "20",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "block_num": "456009264",
+      "fee": "410000",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "compute_units_consumed": "380863",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "stack_height": "2",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,9DGHUdAMfu81T6HHNRMkzVagAR4yHh352BZtJ6NbsWF6",
+      "source_instruction_index": "18",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "user": "9DGHUdAMfu81T6HHNRMkzVagAR4yHh352BZtJ6NbsWF6",
+      "input_amount": "21703941",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signature": "3tgi6CUBC9qBkYtVimwN2rCuJgra16JkJ6YmkU9WM7NK3M4W8EjNcYM4Tvg9BLMMfnEJgQbsEp72WkuiNpS8qGmZ",
+      "timestamp": "1791799909",
+      "orderbook_fill_verified": "0",
+      "protocol": "jupiter_lend",
+      "event_id": "3tgi6CUBC9qBkYtVimwN2rCuJgra16JkJ6YmkU9WM7NK3M4W8EjNcYM4Tvg9BLMMfnEJgQbsEp72WkuiNpS8qGmZ:18:20"
+    },
+    {
+      "block_hash": "HsP89HJWGqR8mSCMDCQmK4vn6Z1AvyowPd4Dap6KPF4E",
+      "instruction_index": "15",
+      "transaction_index": "453",
+      "stack_height": "2",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee": "410000",
+      "execution_position": "15",
+      "transfer_verified": "1",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "output_amount": "7144724",
+      "compute_units_consumed": "249249",
+      "source_instruction_index": "13",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "user": "7C7zaXuNUDDD4MwqzunayQykXT4i8kLffgpR7oDT5tMz",
+      "event_id": "3XTU1itWnGSkeBvAktsVsvUmrk5WqxSY2RGohqAHu72P8vT6iQY2W3e1MmpByCm4CW4h2R6KaEALgRBdHLqHY2nM:13:15",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "timestamp": "1791799909",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "orderbook_fill_verified": "0",
+      "signature": "3XTU1itWnGSkeBvAktsVsvUmrk5WqxSY2RGohqAHu72P8vT6iQY2W3e1MmpByCm4CW4h2R6KaEALgRBdHLqHY2nM",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,7C7zaXuNUDDD4MwqzunayQykXT4i8kLffgpR7oDT5tMz",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_amount": "7151591",
+      "block_num": "456009265",
+      "protocol": "jupiter_lend"
+    },
+    {
+      "block_hash": "AWnqvg5hct35tqUkwtf7RSdxkLipStQSvAYnQA3NzE2U",
+      "instruction_index": "5",
+      "transaction_index": "758",
+      "input_amount": "3541804748",
+      "source_instruction_index": "3",
+      "orderbook_fill_verified": "0",
+      "protocol": "jupiter_lend",
+      "output_amount": "3538398115",
+      "signature": "5A3Xpomzhycu4JMKPhazHAjx2WxToMxDb9A27U1CkzFcLMNsAVrRRRWcxD3zvXXajqpp4AH2orPg2D2STBr3J9qY",
+      "stack_height": "2",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee_payer": "5GH9XeyjHjakgDmr4BQAr3FJ3rXsBwG1DVa7tSDjYyh3",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "timestamp": "1791799910",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "signers_raw": "5GH9XeyjHjakgDmr4BQAr3FJ3rXsBwG1DVa7tSDjYyh3",
+      "compute_units_consumed": "271332",
+      "fee": "5800",
+      "transfer_verified": "1",
+      "execution_position": "5",
+      "block_num": "456009267",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "event_id": "5A3Xpomzhycu4JMKPhazHAjx2WxToMxDb9A27U1CkzFcLMNsAVrRRRWcxD3zvXXajqpp4AH2orPg2D2STBr3J9qY:3:5",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "user": "5GH9XeyjHjakgDmr4BQAr3FJ3rXsBwG1DVa7tSDjYyh3"
+    },
+    {
+      "block_hash": "EdeBVeA16JHHcmrcKp4YT6kdwMwGN8HQD9Pofov8MUp2",
+      "instruction_index": "6",
+      "transaction_index": "497",
+      "protocol": "jupiter_lend",
+      "compute_units_consumed": "190282",
+      "signature": "57sTQ4dqKHxNhmQh7JXr2p984AfvbF6FEc6hKjzFN8x62SBLzoX9BB4CK2eANgzhU9AbvSNWnWXaLU442VUTCULt",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "stack_height": "2",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "signers_raw": "4P33496q1rNUopie6FDhkJeH98U8Am31StGztvEXaW8G",
+      "fee": "5000",
+      "output_amount": "329316611",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "execution_position": "6",
+      "event_id": "57sTQ4dqKHxNhmQh7JXr2p984AfvbF6FEc6hKjzFN8x62SBLzoX9BB4CK2eANgzhU9AbvSNWnWXaLU442VUTCULt:4:6",
+      "block_num": "456009277",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "fee_payer": "4P33496q1rNUopie6FDhkJeH98U8Am31StGztvEXaW8G",
+      "transfer_verified": "1",
+      "timestamp": "1791799912",
+      "user": "4P33496q1rNUopie6FDhkJeH98U8Am31StGztvEXaW8G",
+      "input_amount": "329000000",
+      "source_instruction_index": "4",
+      "orderbook_fill_verified": "0"
+    },
+    {
+      "block_hash": "EdeBVeA16JHHcmrcKp4YT6kdwMwGN8HQD9Pofov8MUp2",
+      "instruction_index": "5",
+      "transaction_index": "637",
+      "execution_position": "5",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "signature": "2pqXti9VNQW8BzhcAUkXMxAfvfTMtWhEq64PqVnfi32A12kb4sWAKBq2gyofKenUjW2env395rxctLSboV6K4je6",
+      "stack_height": "2",
+      "signers_raw": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "protocol": "jupiter_lend",
+      "source_instruction_index": "3",
+      "fee": "5000",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "user": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "input_amount": "804822110",
+      "transfer_verified": "1",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output_amount": "805596175",
+      "fee_payer": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "block_num": "456009277",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "timestamp": "1791799912",
+      "compute_units_consumed": "154303",
+      "event_id": "2pqXti9VNQW8BzhcAUkXMxAfvfTMtWhEq64PqVnfi32A12kb4sWAKBq2gyofKenUjW2env395rxctLSboV6K4je6:3:5",
+      "orderbook_fill_verified": "0"
+    },
+    {
+      "block_hash": "6Z1K7nTzJaM6qUc5kzXtQZKG4MVPsw4oeXaMRgBAFVzC",
+      "instruction_index": "16",
+      "transaction_index": "725",
+      "orderbook_fill_verified": "0",
+      "fee": "8200",
+      "source_instruction_index": "14",
+      "compute_units_consumed": "243367",
+      "execution_position": "16",
+      "user": "4jjEXcFPXw7WVGXSTb227HW6wfLprjh2RtiHty4GbetE",
+      "protocol": "jupiter_lend",
+      "event_id": "2Mp7qzjp83exzrdd5e9AuZZh2dHK9fQ3M53kMr67DmXSdTF5EDKMSuJpSwgdjERk16Px4tkztAjttQCc9Gf2b2P3:14:16",
+      "transfer_verified": "1",
+      "fee_payer": "4jjEXcFPXw7WVGXSTb227HW6wfLprjh2RtiHty4GbetE",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "input_amount": "1768309650",
+      "output_amount": "1770008135",
+      "block_num": "456009278",
+      "signature": "2Mp7qzjp83exzrdd5e9AuZZh2dHK9fQ3M53kMr67DmXSdTF5EDKMSuJpSwgdjERk16Px4tkztAjttQCc9Gf2b2P3",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "timestamp": "1791799912",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "stack_height": "2",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "signers_raw": "4jjEXcFPXw7WVGXSTb227HW6wfLprjh2RtiHty4GbetE",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd"
+    },
+    {
+      "block_hash": "CzWkhbhYy1Gi7ALH3KtyZDZs7xZRu4D5Ker4teqMWJX8",
+      "instruction_index": "7",
+      "transaction_index": "769",
+      "block_num": "456009280",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "execution_position": "7",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "signature": "2LJGWyTvqNF7FvT2ottsQGJ7A1qZaczh86fgC5DtB4CinDAvnZght4cdkJKXKigrv3hhKRA3mX95k1is8ZLX9H2E",
+      "output_amount": "4262188583",
+      "signers_raw": "FamRs7QWQMTjJQW8ac1awRx1KqazCxjdaoZ9uiwM3zrp",
+      "input_amount": "4258111282",
+      "compute_units_consumed": "237022",
+      "timestamp": "1791799913",
+      "orderbook_fill_verified": "0",
+      "event_id": "2LJGWyTvqNF7FvT2ottsQGJ7A1qZaczh86fgC5DtB4CinDAvnZght4cdkJKXKigrv3hhKRA3mX95k1is8ZLX9H2E:5:7",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "fee_payer": "FamRs7QWQMTjJQW8ac1awRx1KqazCxjdaoZ9uiwM3zrp",
+      "source_instruction_index": "5",
+      "transfer_verified": "1",
+      "stack_height": "2",
+      "protocol": "jupiter_lend",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "fee": "16488",
+      "user": "FamRs7QWQMTjJQW8ac1awRx1KqazCxjdaoZ9uiwM3zrp"
+    },
+    {
+      "block_hash": "GoevwmEpSTKugCnkDxghUt2xh8E5zr5Xz9N7j3ZC4T6J",
+      "instruction_index": "3",
+      "transaction_index": "24",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "output_amount": "1901815",
+      "event_id": "3y56omAQuAihKVQkoLksFCiU1k8j82Q3RFiKpdwGKxwVGupjPA2VhYPXA7QDpwMtdhC9Lhw8EP4EcDgJHVVyEjv:1:3",
+      "fee": "410000",
+      "compute_units_consumed": "385006",
+      "execution_position": "3",
+      "signature": "3y56omAQuAihKVQkoLksFCiU1k8j82Q3RFiKpdwGKxwVGupjPA2VhYPXA7QDpwMtdhC9Lhw8EP4EcDgJHVVyEjv",
+      "protocol": "jupiter_lend",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "stack_height": "2",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "user": "C7hYXW6khTcjLup7baDUnURsmj8RWbWtphQoZs54QskN",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,C7hYXW6khTcjLup7baDUnURsmj8RWbWtphQoZs54QskN",
+      "transfer_verified": "1",
+      "orderbook_fill_verified": "0",
+      "input_amount": "1900000",
+      "block_num": "456009286",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "source_instruction_index": "1",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "timestamp": "1791799914"
+    },
+    {
+      "block_hash": "FaP73kHraj18x4s4UDRSrfcfa1vDiE4Ms2euVtu35k3d",
+      "instruction_index": "30",
+      "transaction_index": "970",
+      "output_amount": "4087943",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "protocol": "jupiter_lend",
+      "input_amount": "4091857",
+      "stack_height": "2",
+      "source_instruction_index": "28",
+      "transfer_verified": "1",
+      "event_id": "2YqG6hExSDzFcwPtuv4hAknXefaMhc1D6FGaTeE7hAaJA3TSzVouNrQAmYRCU23MARR4DxGu9oXjKrwRPu3ZAdQZ:28:30",
+      "timestamp": "1791799915",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "user": "8vjcehPEaTakk2x8vW8qAwmDpFbp2b9d236NiLycL3uB",
+      "compute_units_consumed": "421395",
+      "fee": "410000",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,8vjcehPEaTakk2x8vW8qAwmDpFbp2b9d236NiLycL3uB",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "orderbook_fill_verified": "0",
+      "execution_position": "30",
+      "block_num": "456009291",
+      "signature": "2YqG6hExSDzFcwPtuv4hAknXefaMhc1D6FGaTeE7hAaJA3TSzVouNrQAmYRCU23MARR4DxGu9oXjKrwRPu3ZAdQZ"
+    },
+    {
+      "block_hash": "GUQomPLZLrQ5QTBWqGscnYPUsbXL8DkAHhUNCnXQJxP",
+      "instruction_index": "10",
+      "transaction_index": "665",
+      "orderbook_fill_verified": "0",
+      "fee": "29674",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,7C7zaXuNUDDD4MwqzunayQykXT4i8kLffgpR7oDT5tMz",
+      "stack_height": "2",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "signature": "2MSWtqM3A3G5qqJqRy2qhgiCzB6WyGs5dshNrypvXtKkHxPMSaa4QsWyqqAFafC27BgrPqRCtdRqsHX88BKx8KfX",
+      "compute_units_consumed": "322445",
+      "event_id": "2MSWtqM3A3G5qqJqRy2qhgiCzB6WyGs5dshNrypvXtKkHxPMSaa4QsWyqqAFafC27BgrPqRCtdRqsHX88BKx8KfX:8:10",
+      "protocol": "jupiter_lend",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "block_num": "456009310",
+      "execution_position": "10",
+      "input_amount": "6094724",
+      "source_instruction_index": "8",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "transfer_verified": "1",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "user": "7C7zaXuNUDDD4MwqzunayQykXT4i8kLffgpR7oDT5tMz",
+      "output_amount": "6100547",
+      "timestamp": "1791799919"
+    },
+    {
+      "block_hash": "EWmdjpwVziZhfXGMFJ7dhB3dgPCicrqoHr7PR1iEDhgR",
+      "instruction_index": "12",
+      "transaction_index": "377",
+      "event_id": "4T3u77NbGaZ8xPwrn45ZMx2v6dNcDzfE2rWefeWba3cR6ffG3KTxeJwB9GarJ88WKQgik5x3pzmXVu187XrdFBch:10:12",
+      "fee": "1101471",
+      "user": "CjwaojMNPR2fueY4F7ikkKuJaYptwYLXXt61n2Ek9kJo",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,CjwaojMNPR2fueY4F7ikkKuJaYptwYLXXt61n2Ek9kJo",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "timestamp": "1791799920",
+      "transfer_verified": "1",
+      "input_amount": "8763644",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "signature": "4T3u77NbGaZ8xPwrn45ZMx2v6dNcDzfE2rWefeWba3cR6ffG3KTxeJwB9GarJ88WKQgik5x3pzmXVu187XrdFBch",
+      "stack_height": "2",
+      "orderbook_fill_verified": "0",
+      "output_amount": "8772017",
+      "block_num": "456009313",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "compute_units_consumed": "419038",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "protocol": "jupiter_lend",
+      "execution_position": "12",
+      "source_instruction_index": "10"
+    },
+    {
+      "block_hash": "FferDT25wE86k3WGCEc16mLZvPA8VYnqWcjs3nkBqgdk",
+      "instruction_index": "3",
+      "transaction_index": "1222",
+      "output_amount": "19618783",
+      "block_num": "456009316",
+      "protocol": "jupiter_lend",
+      "signature": "5yFmbU1tscE7LKdzo55GmJP4dRUEAwJ9WrsXERXyxfDgBqJZppub5UoMP4nRFSn5YFotQnNrKXSfMUc7y3oq6zzG",
+      "execution_position": "3",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "fee": "410000",
+      "input_amount": "19600057",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "orderbook_fill_verified": "0",
+      "source_instruction_index": "1",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,HQcUhc2XJtgoC1by4QQvP1XARMotPHuPvXoFWuHZUAo5",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "timestamp": "1791799920",
+      "stack_height": "2",
+      "user": "HQcUhc2XJtgoC1by4QQvP1XARMotPHuPvXoFWuHZUAo5",
+      "compute_units_consumed": "317128",
+      "event_id": "5yFmbU1tscE7LKdzo55GmJP4dRUEAwJ9WrsXERXyxfDgBqJZppub5UoMP4nRFSn5YFotQnNrKXSfMUc7y3oq6zzG:1:3",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "transfer_verified": "1",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    },
+    {
+      "block_hash": "F1D9bsy7gPscd888hZjTyD87cPqwEaDSuKPJ13Sx4owS",
+      "instruction_index": "8",
+      "transaction_index": "137",
+      "stack_height": "2",
+      "timestamp": "1791799920",
+      "transfer_verified": "1",
+      "orderbook_fill_verified": "0",
+      "input_amount": "19374630",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "protocol": "jupiter_lend",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "user": "BsGWUevBXfkVvxDPPKRbJ5E2bBTR4mK6EmNuDB8MKN4t",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output_amount": "19393140",
+      "signature": "2EGN8QycQKT6jSqnDUuFuEmeKzXLgcLdNpCpJVZWax4iGxdwveYV4vHeRDPDRNMcqfw9A4YL7joDJ8QqfCHMoq5q",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,BsGWUevBXfkVvxDPPKRbJ5E2bBTR4mK6EmNuDB8MKN4t",
+      "event_id": "2EGN8QycQKT6jSqnDUuFuEmeKzXLgcLdNpCpJVZWax4iGxdwveYV4vHeRDPDRNMcqfw9A4YL7joDJ8QqfCHMoq5q:6:8",
+      "fee": "410000",
+      "compute_units_consumed": "340716",
+      "block_num": "456009317",
+      "source_instruction_index": "6",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "execution_position": "8"
+    },
+    {
+      "block_hash": "F1D9bsy7gPscd888hZjTyD87cPqwEaDSuKPJ13Sx4owS",
+      "instruction_index": "9",
+      "transaction_index": "138",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,J6pZw5vDut2KmUbzTSrmUmNtkVgLU5UN2J4DaH2twi2d",
+      "execution_position": "9",
+      "compute_units_consumed": "346772",
+      "event_id": "rGDCRLn8cKBhW4WuT2Jh8qMvLX1Pu4JFeYDRQgFM9d18jEhFxxqHfKSxZYNEvAUytRLeuk5JUmvHNGhrPDjTvsG:7:9",
+      "stack_height": "2",
+      "source_instruction_index": "7",
+      "orderbook_fill_verified": "0",
+      "fee": "410000",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "user": "J6pZw5vDut2KmUbzTSrmUmNtkVgLU5UN2J4DaH2twi2d",
+      "transfer_verified": "1",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "block_num": "456009317",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_amount": "21717816",
+      "protocol": "jupiter_lend",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output_amount": "21738564",
+      "timestamp": "1791799920",
+      "signature": "rGDCRLn8cKBhW4WuT2Jh8qMvLX1Pu4JFeYDRQgFM9d18jEhFxxqHfKSxZYNEvAUytRLeuk5JUmvHNGhrPDjTvsG"
+    },
+    {
+      "block_hash": "F1D9bsy7gPscd888hZjTyD87cPqwEaDSuKPJ13Sx4owS",
+      "instruction_index": "8",
+      "transaction_index": "760",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,4WXE1AjQ712697NjSjD1wuyt8YjMpMGsuFTobLruJKBw",
+      "execution_position": "8",
+      "stack_height": "2",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "user": "4WXE1AjQ712697NjSjD1wuyt8YjMpMGsuFTobLruJKBw",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "transfer_verified": "1",
+      "output_amount": "3903725",
+      "block_num": "456009317",
+      "compute_units_consumed": "386424",
+      "source_instruction_index": "6",
+      "protocol": "jupiter_lend",
+      "timestamp": "1791799920",
+      "orderbook_fill_verified": "0",
+      "input_amount": "3900000",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "signature": "ThDusz1u56Up4nK9MYveP7yabJBQtMn4kwG6ppWLn45MQHeetWtzhvZQnZoiQwdHFPeESBBq6kcJP2ypZ1QkMt4",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "event_id": "ThDusz1u56Up4nK9MYveP7yabJBQtMn4kwG6ppWLn45MQHeetWtzhvZQnZoiQwdHFPeESBBq6kcJP2ypZ1QkMt4:6:8",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee": "410000"
+    },
+    {
+      "block_hash": "G6tVcaYhU5EeEFzmsxqiMhb5YwKimMpfx37BcQ97bWxQ",
+      "instruction_index": "18",
+      "transaction_index": "953",
+      "user": "92Dext4dHcqnUbQtMGxEGGamw2zjkKZds5QteRCA3n5u",
+      "timestamp": "1791799922",
+      "input_amount": "30429000",
+      "block_num": "456009322",
+      "orderbook_fill_verified": "0",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,92Dext4dHcqnUbQtMGxEGGamw2zjkKZds5QteRCA3n5u",
+      "signature": "2vSnFNYNM2UgTsmPft9axtq8m8mG18jn6am7miThGTvWoErXfc1NQHeExj1GqBivrXQcAeCXriVRMTLDTZ9is1MX",
+      "compute_units_consumed": "513481",
+      "event_id": "2vSnFNYNM2UgTsmPft9axtq8m8mG18jn6am7miThGTvWoErXfc1NQHeExj1GqBivrXQcAeCXriVRMTLDTZ9is1MX:16:18",
+      "stack_height": "2",
+      "execution_position": "18",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "transfer_verified": "1",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "fee": "1178485",
+      "source_instruction_index": "16",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "protocol": "jupiter_lend",
+      "output_amount": "30458070",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd"
+    },
+    {
+      "block_hash": "EfoJJuCrUpFXpRiDP7N8XNJBVJNhhkXK6zpviR9mvim",
+      "instruction_index": "8",
+      "transaction_index": "81",
+      "execution_position": "8",
+      "orderbook_fill_verified": "0",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee": "410000",
+      "user": "bLfT8xb9rYdV6yq5cKruGMdSG8hL5ZViLPB8dmbduVC",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "protocol": "jupiter_lend",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "stack_height": "2",
+      "event_id": "59a7nPnQFaJ5XcKNJF8FvsxcLAHuYqF6LzBc3bEyA6AL2idoUVGpieUcgrPKMa7PboDs3Au2XgMZNLcAqdLm89t:6:8",
+      "signature": "59a7nPnQFaJ5XcKNJF8FvsxcLAHuYqF6LzBc3bEyA6AL2idoUVGpieUcgrPKMa7PboDs3Au2XgMZNLcAqdLm89t",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_amount": "10121172",
+      "compute_units_consumed": "419396",
+      "timestamp": "1791799923",
+      "transfer_verified": "1",
+      "block_num": "456009328",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "source_instruction_index": "6",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,bLfT8xb9rYdV6yq5cKruGMdSG8hL5ZViLPB8dmbduVC",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "output_amount": "10130840"
+    },
+    {
+      "block_hash": "EfoJJuCrUpFXpRiDP7N8XNJBVJNhhkXK6zpviR9mvim",
+      "instruction_index": "3",
+      "transaction_index": "193",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "transfer_verified": "1",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,Dogv8z2nH1ncMAPaxpZqTHAghyrrnikMzguf7LSa9TeR",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "input_amount": "5880017",
+      "output_amount": "5885634",
+      "block_num": "456009328",
+      "protocol": "jupiter_lend",
+      "orderbook_fill_verified": "0",
+      "stack_height": "2",
+      "fee": "410000",
+      "execution_position": "3",
+      "compute_units_consumed": "321285",
+      "signature": "21ofBjjjmZ45ar7Q7k1M5EcGMjpmkN76WhAAdmDgymVewE7f3nwHX6HrmQYsW8Lswt1D8wwcT2cvWgiARXL5S97B",
+      "source_instruction_index": "1",
+      "user": "Dogv8z2nH1ncMAPaxpZqTHAghyrrnikMzguf7LSa9TeR",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "timestamp": "1791799923",
+      "event_id": "21ofBjjjmZ45ar7Q7k1M5EcGMjpmkN76WhAAdmDgymVewE7f3nwHX6HrmQYsW8Lswt1D8wwcT2cvWgiARXL5S97B:1:3"
+    },
+    {
+      "block_hash": "7tmdZLk5SUN5aXoKUNRzstauG4YzzRwzpf7S7xsHDGN9",
+      "instruction_index": "14",
+      "transaction_index": "709",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,DoW3L9j3uEQ7ePntBeBzLhjdLVeNSjaR137BUbU9SWyE",
+      "orderbook_fill_verified": "0",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "signature": "2Da2RpWr3D2arMMZFXQ5Ht9xaSXGTtZebipS4j3W9SqoNE8yJkPrdtAPz65ymfg9c2u5Dh628DGcN36wXWtap9dq",
+      "source_instruction_index": "12",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "compute_units_consumed": "455757",
+      "stack_height": "2",
+      "protocol": "jupiter_lend",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "execution_position": "14",
+      "output_amount": "8362813",
+      "fee": "414909",
+      "user": "DoW3L9j3uEQ7ePntBeBzLhjdLVeNSjaR137BUbU9SWyE",
+      "transfer_verified": "1",
+      "timestamp": "1791799925",
+      "event_id": "2Da2RpWr3D2arMMZFXQ5Ht9xaSXGTtZebipS4j3W9SqoNE8yJkPrdtAPz65ymfg9c2u5Dh628DGcN36wXWtap9dq:12:14",
+      "input_amount": "8354832",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "block_num": "456009335"
+    },
+    {
+      "block_hash": "Dez865zr69x89aAqHdy73k33UA3HSg27Rw6yyLmQAPYa",
+      "instruction_index": "3",
+      "transaction_index": "859",
+      "input_amount": "14700043",
+      "event_id": "467H5paJU3hDYiN1uc1eTGsKcLTuLyqWBv9h7pkPdBSBjv341WDBp6ajzUHShu967wiUeNQcT6VAiiGoRcA6JamN:1:3",
+      "execution_position": "3",
+      "orderbook_fill_verified": "0",
+      "signers_raw": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51,FsqHvEAHtSArbuNHcqYW7qzuVXcSSfboo6UsUghzHcTM",
+      "compute_units_consumed": "332605",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "signature": "467H5paJU3hDYiN1uc1eTGsKcLTuLyqWBv9h7pkPdBSBjv341WDBp6ajzUHShu967wiUeNQcT6VAiiGoRcA6JamN",
+      "user": "FsqHvEAHtSArbuNHcqYW7qzuVXcSSfboo6UsUghzHcTM",
+      "fee": "410000",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output_amount": "14714085",
+      "block_num": "456009336",
+      "protocol": "jupiter_lend",
+      "fee_payer": "AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "source_instruction_index": "1",
+      "timestamp": "1791799925",
+      "stack_height": "2",
+      "transfer_verified": "1",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy"
+    },
+    {
+      "block_hash": "7CrHi3vGQWynyPKLVq3QG8MrU9umR2nf4E4AGcuAh8jm",
+      "instruction_index": "8",
+      "transaction_index": "571",
+      "user": "29eV5LuZwwVaoufKr5ShBejYVP6N4JZ14U3M5rffXsjp",
+      "fee_payer": "29eV5LuZwwVaoufKr5ShBejYVP6N4JZ14U3M5rffXsjp",
+      "event_id": "4aoJHCSZ8GfkHFzWEYY2CFoG6d2NwTCWfSSn9Tyk5B4qC9A4keytiFD15VhYywrpXzNCewdxMA3SJ9dwnS83GAAb:6:8",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "signature": "4aoJHCSZ8GfkHFzWEYY2CFoG6d2NwTCWfSSn9Tyk5B4qC9A4keytiFD15VhYywrpXzNCewdxMA3SJ9dwnS83GAAb",
+      "signers_raw": "29eV5LuZwwVaoufKr5ShBejYVP6N4JZ14U3M5rffXsjp",
+      "execution_position": "8",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "input_amount": "1634797689",
+      "timestamp": "1791799938",
+      "fee": "5000",
+      "transfer_verified": "1",
+      "protocol": "jupiter_lend",
+      "output_amount": "1636358074",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "orderbook_fill_verified": "0",
+      "block_num": "456009394",
+      "stack_height": "2",
+      "compute_units_consumed": "308523",
+      "source_instruction_index": "6"
+    },
+    {
+      "block_hash": "9XVSG8qKzQYaEQx3Sus1YKRhJiw1Yje4MeY7wQeeRLaA",
+      "instruction_index": "22",
+      "transaction_index": "190",
+      "block_num": "456009438",
+      "signature": "4EDhS45H8w1gS5JbtyZ1xwnVKfy5xTtVw4nkxCCTbQjYEyXRYAozkTA69kNU7PaFU4fLn4rCfVTF85PZpKy6REzv",
+      "timestamp": "1791799947",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "signers_raw": "56yXC8VkbfqzGSyC8sLs5rUUnYePxc1nbUng21Z1SAP7",
+      "stack_height": "2",
+      "transfer_verified": "1",
+      "execution_position": "22",
+      "event_id": "4EDhS45H8w1gS5JbtyZ1xwnVKfy5xTtVw4nkxCCTbQjYEyXRYAozkTA69kNU7PaFU4fLn4rCfVTF85PZpKy6REzv:20:22",
+      "fee": "63197",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "source_instruction_index": "20",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+      "input_amount": "44209089",
+      "compute_units_consumed": "360784",
+      "fee_payer": "56yXC8VkbfqzGSyC8sLs5rUUnYePxc1nbUng21Z1SAP7",
+      "orderbook_fill_verified": "0",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "protocol": "jupiter_lend",
+      "output_amount": "44251249"
+    },
+    {
+      "block_hash": "BJC5p7fa1eTCVaRYyTUJDkMdh66DR34tWPhLDM3AsHxw",
+      "instruction_index": "20",
+      "transaction_index": "1064",
+      "protocol": "humidifi",
+      "transfer_verified": "1",
+      "amm": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+      "block_num": "456009448",
+      "user": "2XW7eg94aGK6LeMamsaPrPJWZsZQRtf2Ch9gguBknfBT",
+      "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+      "stack_height": "2",
+      "input_amount": "7157170",
+      "compute_units_consumed": "217278",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amm_pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+      "execution_position": "20",
+      "source_instruction_index": "19",
+      "fee": "29412",
+      "output_amount": "797493",
+      "signers_raw": "2XW7eg94aGK6LeMamsaPrPJWZsZQRtf2Ch9gguBknfBT",
+      "fee_payer": "2XW7eg94aGK6LeMamsaPrPJWZsZQRtf2Ch9gguBknfBT",
+      "orderbook_fill_verified": "0",
+      "input_mint": "So11111111111111111111111111111111111111112",
+      "signature": "46ZJgXk8gPmdcDmbm5gK4EmMjmStdZs6HdNJBV4fMCAD45RGaWNrvTw9y6QQYjrRMokgiVwetnPuBAUm6sSbnbx8",
+      "event_id": "46ZJgXk8gPmdcDmbm5gK4EmMjmStdZs6HdNJBV4fMCAD45RGaWNrvTw9y6QQYjrRMokgiVwetnPuBAUm6sSbnbx8:19:20",
+      "timestamp": "1791799949"
+    },
+    {
+      "block_hash": "AQj1BNbCp3RsL2XVwEL1YahjoCKagyjbTaxMpAPrQxGP",
+      "instruction_index": "5",
+      "transaction_index": "90",
+      "block_num": "456009464",
+      "signers_raw": "4DCq8z7UmzJfoFo7gwjLWoqVZgbkQYZi2K3pA7WzdJir",
+      "fee_payer": "4DCq8z7UmzJfoFo7gwjLWoqVZgbkQYZi2K3pA7WzdJir",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "event_id": "3b1ZJCNZ7nZw81T9si7HjuEQSUt4AujT4p6G9k4mxK6dSorAF2B55SbvN381SVKaQq8cTFbijLBeMZeQvQ1zgTVT:3:5",
+      "input_amount": "5351396",
+      "orderbook_fill_verified": "0",
+      "protocol": "jupiter_lend",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "timestamp": "1791799953",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "signature": "3b1ZJCNZ7nZw81T9si7HjuEQSUt4AujT4p6G9k4mxK6dSorAF2B55SbvN381SVKaQq8cTFbijLBeMZeQvQ1zgTVT",
+      "transfer_verified": "1",
+      "user": "9nnLbotNTcUhvbrsA6Mdkx45Sm82G35zo28AqUvjExn8",
+      "output_amount": "5356499",
+      "stack_height": "2",
+      "compute_units_consumed": "196261",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "execution_position": "5",
+      "fee": "5000",
+      "source_instruction_index": "3"
+    },
+    {
+      "block_hash": "6GaYt3DwAiPYJ3vzm2A9aEaRbEatntCHsmhtL1f63W9j",
+      "instruction_index": "23",
+      "transaction_index": "23",
+      "timestamp": "1791799953",
+      "orderbook_fill_verified": "0",
+      "user": "GG8c5QEc54u7YAUN5B1RxcEh6db9cNqSAadx44wrPgpz",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "output_amount": "5512037",
+      "block_num": "456009465",
+      "signers_raw": "GG8c5QEc54u7YAUN5B1RxcEh6db9cNqSAadx44wrPgpz",
+      "compute_units_consumed": "289377",
+      "signature": "4sPe5DxbJA9BzNgUq6SHizBUjdEXvMs95LX4pT286FyE6H57Tt1C516vv5eHSLF7WznW3Gs7Qk3cTswCiLN1JCz",
+      "fee": "55000",
+      "protocol": "jupiter_lend",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "execution_position": "23",
+      "transfer_verified": "1",
+      "event_id": "4sPe5DxbJA9BzNgUq6SHizBUjdEXvMs95LX4pT286FyE6H57Tt1C516vv5eHSLF7WznW3Gs7Qk3cTswCiLN1JCz:21:23",
+      "fee_payer": "GG8c5QEc54u7YAUN5B1RxcEh6db9cNqSAadx44wrPgpz",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "source_instruction_index": "21",
+      "input_amount": "5506786",
+      "stack_height": "2",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd"
+    },
+    {
+      "block_hash": "6GaYt3DwAiPYJ3vzm2A9aEaRbEatntCHsmhtL1f63W9j",
+      "instruction_index": "17",
+      "transaction_index": "85",
+      "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+      "orderbook_fill_verified": "0",
+      "input_mint": "So11111111111111111111111111111111111111112",
+      "stack_height": "2",
+      "amm": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+      "signers_raw": "6yRtt5H5GKKB282cPZkF8nEg6kvvsgCjTEAS4JJym32C",
+      "event_id": "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW:16:17",
+      "input_amount": "8974777",
+      "output_amount": "1000030",
+      "compute_units_consumed": "401345",
+      "transfer_verified": "1",
+      "block_num": "456009465",
+      "signature": "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW",
+      "user": "6yRtt5H5GKKB282cPZkF8nEg6kvvsgCjTEAS4JJym32C",
+      "output_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "fee_payer": "6yRtt5H5GKKB282cPZkF8nEg6kvvsgCjTEAS4JJym32C",
+      "source_instruction_index": "16",
+      "timestamp": "1791799953",
+      "amm_pool": "8sKQHfjNhvmAw94PhfvfMcytmqW6jmxvwieYyzXCCPu",
+      "fee": "80001",
+      "execution_position": "17",
+      "protocol": "humidifi"
+    },
+    {
+      "block_hash": "7mr6g47w9oR9VrbvtU7RwGGQDRRsvanovigaPNGw6sYd",
+      "instruction_index": "18",
+      "transaction_index": "908",
+      "protocol": "jupiter_lend",
+      "user": "2MFoS3MPtvyQ4Wh4M9pdfPjz6UhVoNbFbGJAskCPCj3h",
+      "input_amount": "11127297",
+      "compute_units_consumed": "424255",
+      "timestamp": "1791799957",
+      "signature": "4hgUiJfLZrR2kgoUPfnUZP3dTq29wADWKtwJqs8UCVeqV3CUvf3pAC47f3ST6b7dm3FL7yP9zaMbvVZ7hxMoHeAh",
+      "stack_height": "3",
+      "transfer_verified": "1",
+      "amm_pool": "FfEJYz4hLLFe4KyNyKYCjvfhMfbtpLH3CXpcPe8nhmfy",
+      "output_mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "execution_position": "18",
+      "block_num": "456009479",
+      "fee": "10076",
+      "orderbook_fill_verified": "0",
+      "input_mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amm": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "output_amount": "11137908",
+      "source_instruction_index": "16",
+      "signers_raw": "799z8iaFtCunz8Nqv5y4FLqasaudgoRLWEU98GSzrTak",
+      "event_id": "4hgUiJfLZrR2kgoUPfnUZP3dTq29wADWKtwJqs8UCVeqV3CUvf3pAC47f3ST6b7dm3FL7yP9zaMbvVZ7hxMoHeAh:16:18",
+      "program_id": "jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd",
+      "fee_payer": "799z8iaFtCunz8Nqv5y4FLqasaudgoRLWEU98GSzrTak"
+    }
+  ],
+  "diagnosticChanges": {
+    "swap_coverage": {
+      "removed": [
+        {
+          "block_hash": "BJC5p7fa1eTCVaRYyTUJDkMdh66DR34tWPhLDM3AsHxw",
+          "instruction_index": "19",
+          "transaction_index": "1064",
+          "block_num": "456009448",
+          "stack_height": "2",
+          "timestamp": "1791799949",
+          "signature": "46ZJgXk8gPmdcDmbm5gK4EmMjmStdZs6HdNJBV4fMCAD45RGaWNrvTw9y6QQYjrRMokgiVwetnPuBAUm6sSbnbx8",
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "mints_raw": "So11111111111111111111111111111111111111112,EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "transfer_count": "2",
+          "reason": "token_exchange_unclassified",
+          "instruction_tag": "bf68c1524ec45fc8"
+        },
+        {
+          "block_hash": "6GaYt3DwAiPYJ3vzm2A9aEaRbEatntCHsmhtL1f63W9j",
+          "instruction_index": "16",
+          "transaction_index": "85",
+          "signature": "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW",
+          "mints_raw": "So11111111111111111111111111111111111111112,EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "reason": "token_exchange_unclassified",
+          "program_id": "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
+          "transfer_count": "2",
+          "block_num": "456009465",
+          "instruction_tag": "279e0beb631f40e2",
+          "timestamp": "1791799953",
+          "stack_height": "2"
+        }
+      ],
+      "added": []
+    },
+    "swap_coverage_transactions": {
+      "removed": [
+        {
+          "block_hash": "BJC5p7fa1eTCVaRYyTUJDkMdh66DR34tWPhLDM3AsHxw",
+          "instruction_index": "0",
+          "transaction_index": "1064",
+          "timestamp": "1791799949",
+          "transaction_proto_hex": "0a930f0a409ad7d6f91f4eef62bb7d6250dc152459a454ee20adee787840b742ecf92d554f394775fdc5600fb0f89e7392e35d6ce51069728ea1fead8d79c1b966680b680d12ce0e0a0408011819122016ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162e12201c60375c4ea134259e883fa36775171808d1f51a5892744d57ffc1c30cfc784e12200026d3f8ea23c33f24d47579ad068210e5db2123869743ed98b7b892d387cb2f1220096d46a3246f1a4711f68c10a248e35d508e4d34f891c136cc28168698b6ddd212200203f5a6f9dd2e60319cf00a97d9d9cf415e32c007ab9e5f62db4818948a30741220ee05a3dece19493ce23679436f9cf97c25e65e011b1393d09a11837f97b7599812200250b4c5f953b15a7ce36022e1045fe6f390f89920400b6fb07284362831da501220d50a121bd7657c5529efcf842685917696658e2922e6fc4ae94abe0e98c70f8f122047991dc8ec659639dc69c6dc13ce67c897517516a8ca7e611a3a05f80dab5f0a122083f1f0780825f4e79cba02606562471ae5daedcf66ba8281b3fd54634aec9c89122092e3e9142f6b6bf4a24eda58781199c97689f7963bc54540e6265aa919946ec11220246d8e1debcc9f20928c4311135033d32227f75b3243b4146ae916f53c342ec012208d5055fd016f2df306e70453566293061cab9fe652ad5e784534f55003d4e21d12200807caff9a422fea2725f3063bf8ba0e834eb1e3e7b4528d93ee0705ae2ec83b12200a10b5e89f4c3866b3a946429c3bacd5d4c841926d1aec812664a3292bc78efb1220e8b75b6431161f7f3d34a8ff4e0cfb573dd10e924938dbe8b1fd63b80625de5f122079e20cd30a33279c7842db076b170ed15b348a4fe5f5b36da733e73b0e6b359e12208aefa811ea053c9a9fcda1744d5d0095011a6efedcec6dcc8eab639f86ed818012207d96bdd3c3e0b89ef71799c62f77c151976341939474cc2ab00e5751326b781d1220000000000000000000000000000000000000000000000000000000000000000012200af1c3432188ca3a635135a13a18951acebd29e6ac2dae67ffdb06d74000000012208c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f8591220069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001122006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a912205982becc8466901399379f0670857fb33dc298dd6d4ec68b8fd3c267974ae1301220b5e34a14e2bc7348690ee1f5af5deed6553840a36daab860b0506073bdc03c10122076433dfe7eeefd2a1d31fe0a1d44e54635083499829a59da2a15982813c6de78122006a7d517187bd16635dad40455fdc2c0c124c68f215675a5dbbacb5f08000000122006ddf6e1ee758fde18425dbce46ccddab61afc4d83b90d27febdf928d8a18bfc1220c6fa7af3bedbad3a3d65f36aabc97431b1bbe4c2d2f6e0e47ca60203452f5d6112207afd742b27f759e9c670703cd39d817aa0930ace3b52d26d54a054dd2387bbd3122006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000001220452c91ae36f05ce5146fa7880985a33379c33974f6ea7c7f408e7909c0bdb86c1220fcd13da041559013cf4aeba1a84ed7023ad4ff21a84747ff3b05ab30fa8207c31220c8ef4ed826b86d008b9269340778fa91a8d3a06b78805191cdf7650936d7998912205f32b32ac290a03c3b08ddceae671a0a0276f44eefb5690afe7706cbad58106e122054e0dc1a5faa0ea0b079ab2133acee5e66efda220b1fcc68df30ad5ce84230081220cfdf5b66a6a3827b3516d3fd87a4dcbe98c1bc00c7fec3f3ce985b5201767b86122006d3edc4e573adaff3e573898b545b1ee8d28d058ed94e88e0bcb332571bea0a122071ad26e64e97e9098dfbbdfef68bb1a5c7d0a716262b763f5d3088ff86810be012209700808a55d2346a5cef77dbbd8d44d84d0ce680c50766b1c53f237d2b18514a1220359b6388b82451826cbb83bb94217af9658608629f81634f0a2449de6b509c76122004e9e12fbc84e826c932cce9e2640cce15590c1c6273b0925708ba3b8520b0bc1220b270d67fa98c51cf0213051358962baf35742bed59c9d9445e9c0d0c85c7cd911a2092d3eb9fc1a65f6b511a7088498c1eb24bb0fb1e16c7a4fe81325d4466e73e8c2215081312030000141a0c020000000000000000000000220d081512060001001613171a0101220d081512060002001813171a010122140813120200011a0c02000000b2356d0000000000220808171201011a011122d20108191235171513001a19191b1c1919000103161d1b1e0405061f202122232425262707080928290a0b0c0d0302181d0e2a0017172b2a0f10111a9601f8c69e91e17587c8040000002589cd187d388d7730b131f5645f15800397352c19b5f8b602cb31ff6f2e9018490a81d3159340c3357836f088fe96d038c8073a275a39f04215958088e99ae90d7d272e1b000052b9ff02000031010000008ea8960600000000091f02000000038597eeadac7eb40b02b2356d00000000000104472b0c00000000000301e4673fca0000000032000000220a081712030100001a010922140813120200121a0c02000000fc1b000000000000280112b35710e4e5011a9901b8e58f1c000000b095b807bb9a84839e038d8c9901c1878c059bbed1d5e7ff0c96c9a40180b3b603c0ab9004f0bb7cf0bb7c80ac930b80998822c0b8ee18c0b8ee18c2d8dbe493080100a3c2e8cf0cf489e3d5f3358a88de6de09a59efb0ad06eaf64b009eb5be21ada68597ff0fd9aaed3080af4700d18cc1ce2680a2a40200000096f3b511a9e8a72480b09c0780e15bcab59a25ebb8ed02229b01eeeffd1700b8ec5a00b095b807ed85b9869e038d8c9901c1878c059bbed1d5e7ff0c96c9a40180b3b603c0ab9004f0bb7cf0bb7c80ac930b80998822c0b8ee18c0b8ee18be90dce493080100a3c2e8cf0cf489e3d5f3358a88de6de09a59efb0ad06eaf64b009eb5be21ada68597ff0fd9aaed3080af4700d18cc1ce2680a2a40200000096f3b511a9e8a72480b09c0780e15bcab59a25ebb8ed022a89010801120c08171201161a031507002002123e0813120200011a340000000038b6160000000000a50000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a92002120a08171201011a01162002122b0817120201161a211216ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162e20022a89010802120c08171201181a031507002002123e0813120200021a340000000038b6160000000000a50000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a92002120a08171201021a01162002122b0817120202181a211216ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162e20022ad5070805120f081512060003001d13171a01002002120c081712011d1a031507002003123e0813120200031a340000000038b6160000000000a50000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a92003120a08171201031a01162003122b08171202031d1a211216ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162e20031233081e12120004050601031f17171a161d2021222324251a19bf68c1524ec45fc889ca43ffe3baeac338ff2dffe0bae9c30920021214081712030603041a0903352b0c000000000020031214081712030105001a0903b2356d00000000002003128a01081912011a1a8001e445a52e51cb9a1d40c6cde8260871e27afd742b27f759e9c670703cd39d817aa0930ace3b52d26d54a054dd2387bbd3069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001b2356d0000000000c6fa7af3bedbad3a3d65f36aabc97431b1bbe4c2d2f6e0e47ca60203452f5d61352b0c000000000020021232082a12120a0b0c0d0302181d0e2a0017172b2a0f10111a18f8c69e91e17587c8352b0c000000000000000000000000002002121608171204031d0d001a0a0c352b0c00000000000620031216081712040c18020a1a0a0cfb3b3eca00000000092003129b01082a12012b1a9101e445a52e51cb9a1d516ce3becdd00ac492e3e9142f6b6bf4a24eda58781199c97689f7963bc54540e6265aa919946ec116ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162eb8fcffffb8fcffff352b0c0000000000fb3b3eca0000000000ca07000000000000c700000000000000a02526000000000000000000000000000000000000000000200312ad01082a12012b1aa301e445a52e51cb9a1d2e7452d7941b544d92e3e9142f6b6bf4a24eda58781199c97689f7963bc54540e6265aa919946ec116ac07ff0fefd4fbc3efd4008e308ada41b94632f9fe84fb73855cb6c438162eb8fcffffb8fcffff00a0252600000000000000000000000000352b0c00000000000000000000000000fb3b3eca000000000307000000000000c7000000000000000000000000000000000000000000000001002003128a01081912011a1a8001e445a52e51cb9a1d40c6cde8260871e204e9e12fbc84e826c932cce9e2640cce15590c1c6273b0925708ba3b8520b0bcc6fa7af3bedbad3a3d65f36aabc97431b1bbe4c2d2f6e0e47ca60203452f5d61352b0c00000000005982becc8466901399379f0670857fb33dc298dd6d4ec68b8fd3c267974ae130fb3b3eca000000002002120c081712030300001a01092002323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b315d323050726f6772616d2031313131313131313131313131313131313131313131313131313131313131312073756363657373323f50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20696e766f6b65205b315d321d50726f6772616d206c6f673a204372656174654964656d706f74656e74323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313739206f662034383132333720636f6d7075746520756e697473324850726f6772616d2072657475726e3a20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412070514141414141414141413d323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b325d323050726f6772616d2031313131313131313131313131313131313131313131313131313131313131312073756363657373323450726f6772616d206c6f673a20496e697469616c697a6520746865206173736f63696174656420746f6b656e206163636f756e74323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325750726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d6564203337206f662034373631343820636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420323239206f662034373336383720636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373325b50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20636f6e73756d6564203134393133206f662034383830383820636f6d7075746520756e697473323c50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c2073756363657373323f50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20696e766f6b65205b315d321d50726f6772616d206c6f673a204372656174654964656d706f74656e74323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313739206f662034363738323420636f6d7075746520756e697473324850726f6772616d2072657475726e3a20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412070514141414141414141413d323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b325d323050726f6772616d2031313131313131313131313131313131313131313131313131313131313131312073756363657373323450726f6772616d206c6f673a20496e697469616c697a6520746865206173736f63696174656420746f6b656e206163636f756e74323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325750726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d6564203337206f662034363237333520636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420323333206f662034363032373420636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373325b50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20636f6e73756d6564203133343137206f662034373331373520636f6d7075746520756e697473323c50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c2073756363657373323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b315d323050726f6772616d2031313131313131313131313131313131313131313131313131313131313131312073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b315d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420323031206f662034353936303820636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323f50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820696e766f6b65205b315d321e50726f6772616d206c6f673a20496e737472756374696f6e3a2053776170323f50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20696e766f6b65205b325d321350726f6772616d206c6f673a20437265617465323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313739206f662033393833393220636f6d7075746520756e697473324850726f6772616d2072657475726e3a20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412070514141414141414141413d323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b335d323050726f6772616d2031313131313131313131313131313131313131313131313131313131313131312073756363657373323450726f6772616d206c6f673a20496e697469616c697a6520746865206173736f63696174656420746f6b656e206163636f756e74323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325750726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d6564203337206f662033393333303320636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420323333206f662033393038343220636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373325b50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c20636f6e73756d6564203134393039206f662034303532333520636f6d7075746520756e697473323c50726f6772616d2041546f6b656e47507662644756787231623268765a62736971573578574832356566544e734c4a41386b6e4c2073756363657373321250726f6772616d20646174613a205a484977323f50726f6772616d20394836747561376a6b4c68646d33773842766770546e354c5a4e553767345a796e446d43694e4e337136527020696e766f6b65205b325d321150726f6772616d206c6f673a20f09fa690323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325750726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d6564203736206f662033333133343720636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325750726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d6564203833206f662033333031353820636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b5046584357754276663953733632335651354441207375636365737332e60250726f6772616d20646174613a206e567a536d494f346e68524a4877426e413266424e63684a6b565633716377552b33574b305574765838474e38795442635970676a373973494730656a7059677a4b376870343338307244754b35702f483931396d30554b703551366a4f2f5676355576445336654e393477537a756c564b4767432f7857334754436542794f675774524d483738783274396d4b634578302b48326c38303472755976482b36484641715a344e58526536416749485a4436594e566b4e377655523252664b705644774c71314962574f2b59384d5a6e6e31645a372f6e584d3169422b6145515951382f6d47616f6f424364384d4e6e6d6c646337357a77776d65625631337642524e337549315855752f6f5441673467316454377950466f6d655756314476706476435a35645855652b5469476a504835654c3933377a79476552563166766c50444c5a354a58564f2b55384d706e6b31645637773d3d322350726f6772616d20646174613a205a475a736233646663324e76636d553d2041413d3d325b50726f6772616d20394836747561376a6b4c68646d33773842766770546e354c5a4e553767345a796e446d43694e4e337136527020636f6e73756d6564203237333932206f662033353633313920636f6d7075746520756e697473323c50726f6772616d20394836747561376a6b4c68646d33773842766770546e354c5a4e553767345a796e446d43694e4e33713652702073756363657373323f50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820696e766f6b65205b325d325a50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820636f6e73756d65642032303237206f662033323438333420636f6d7075746520756e697473323c50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d7053454174785879315632375142482073756363657373323e50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20696e766f6b65205b325d321e50726f6772616d206c6f673a20496e737472756374696f6e3a2053776170323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313035206f662032393138383620636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b335d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313035206f662032383936313720636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323e50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20696e766f6b65205b335d325850726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20636f6e73756d656420373732206f662032383638313420636f6d7075746520756e697473323b50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f2073756363657373323e50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20696e766f6b65205b335d325850726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20636f6e73756d656420373732206f662032383334303620636f6d7075746520756e697473323b50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f2073756363657373325a50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f20636f6e73756d6564203333373839206f662033313532383420636f6d7075746520756e697473323b50726f6772616d204c42555a4b68527850463358557042436a7034597a544b674c63636a5a685453444d39597556615077786f2073756363657373323f50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820696e766f6b65205b325d325a50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820636f6e73756d65642032303237206f662032373830373320636f6d7075746520756e697473323c50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d7053454174785879315632375142482073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b325d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313230206f662032373430343520636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373325c50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d70534541747858793156323751424820636f6e73756d656420313838313739206f662034353934303720636f6d7075746520756e697473323c50726f6772616d204446316f7734747370664858394a77574a734162396570626b4138686d7053454174785879315632375142482073756363657373323e50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120696e766f6b65205b315d325850726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444120636f6e73756d656420313138206f662032373132323820636f6d7075746520756e697473323b50726f6772616d20546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544412073756363657373323350726f6772616d20313131313131313131313131313131313131313131313131313131313131313120696e766f6b65205b315d323050726f6772616d20313131313131313131313131313131313131313131313131313131313131313120737563636573733ab3010805122b536f31313131313131313131313131313131313131313131313131313131313131313131313131313131321a2809f80f590c2dc85b4010091a0c313131313237373439353236220d3131312e313237373439353236222b38734b5148666a4e68766d4177393450686676664d6379746d7157366a6d787677696559797a58434350752a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544413ab2010806122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a26094a9a3f260076f74010061a0b3936303936303039333338220c39363039362e303039333338222b38734b5148666a4e68766d4177393450686676664d6379746d7157366a6d787677696559797a58434350752a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544413ab7010808122b536f31313131313131313131313131313131313131313131313131313131313131313131313131313131321a2b09d2e9921402eaeb4010091a0e3537313638303635303131343630220e35373136382e3036353031313436222c38656b4379326a48485562573279654e474657594a5439486d3946573753765a635a4b363664535a434469462a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544413ab7010809122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a2a092a1f822f099f514110061a0d34363139333030373432333137220e343631393330302e373432333137222c38656b4379326a48485562573279654e474657594a5439486d3946573753765a635a4b363664535a434469462a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544413abb01080c122c373251764256777078716d68654550666143775753577145467355793372685774364a6851424d4e547744311a2e0959cbb6dc9a74174110091a0f33383432393437313535343130353522103338343239342e373135353431303535222c4174513641594e6e70796e67727934366e77664b32466662643178744e643476415433586b5a696f347833532a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544413ab201080d122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a2509bec117267995dc4010061a0b3239323639383932393530220b32393236392e3839323935222c4174513641594e6e70796e67727934366e77664b32466662643178744e643476415433586b5a696f347833532a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b1010802122c373251764256777078716d68654550666143775753577145467355793372685774364a6851424d4e547744311a2409ce850b2505250b4010091a0a33333933303736323139220b332e333933303736323139222c325857376567393461474b364c654d616d73615072504a575a735a5152746632436839676775426b6e6642542a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b3010805122b536f31313131313131313131313131313131313131313131313131313131313131313131313131313131321a280936d5b14fa2c85b4010091a0c313131313334393036363936220d3131312e313334393036363936222b38734b5148666a4e68766d4177393450686676664d6379746d7157366a6d787677696559797a58434350752a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b2010806122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a26092d95b763f375f74010061a0b3936303935323131383435220c39363039352e323131383435222b38734b5148666a4e68766d4177393450686676664d6379746d7157366a6d787677696559797a58434350752a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b7010808122b536f31313131313131313131313131313131313131313131313131313131313131313131313131313131321a2b09d2e9921402eaeb4010091a0e3537313638303635303131343630220e35373136382e3036353031313436222c38656b4379326a48485562573279654e474657594a5439486d3946573753765a635a4b363664535a434469462a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b7010809122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a2a092a1f822f099f514110061a0d34363139333030373432333137220e343631393330302e373432333137222c38656b4379326a48485562573279654e474657594a5439486d3946573753765a635a4b363664535a434469462a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142bb01080c122c373251764256777078716d68654550666143775753577145467355793372685774364a6851424d4e547744311a2e09d338344a8d74174110091a0f33383432393133323234363438333622103338343239312e333232343634383336222c4174513641594e6e70796e67727934366e77664b32466662643178744e643476415433586b5a696f347833532a2b546f6b656e6b65675166655a79694e77414a624e62474b504658435775427666395373363233565135444142b301080d122c45506a465764643541756671535371654d32714e31787a7962617043384734774547476b5a777954447431761a260930d63730ac95dc4010061a0b3239323730363930343433220c32393237302e363930343433222c4174513641594e6e70796e67727934366e77664b32466662643178744e643476415433586b5a696f347833532a2b546f6b656e6b65675166655a79694e77414a624e62474b50465843577542766639537336323356513544418001bea10d",
+          "signature": "46ZJgXk8gPmdcDmbm5gK4EmMjmStdZs6HdNJBV4fMCAD45RGaWNrvTw9y6QQYjrRMokgiVwetnPuBAUm6sSbnbx8",
+          "block_num": "456009448"
+        }
+      ],
+      "added": []
+    }
+  },
+  "sealedCounterChanges": [
+    {
+      "slot": "456009179",
+      "deltas": {
+        "verified_swaps": 2
+      }
+    },
+    {
+      "slot": "456009184",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009238",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009253",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009264",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009265",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009267",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009277",
+      "deltas": {
+        "verified_swaps": 2
+      }
+    },
+    {
+      "slot": "456009278",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009280",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009286",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009291",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009310",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009313",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009316",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009317",
+      "deltas": {
+        "verified_swaps": 3
+      }
+    },
+    {
+      "slot": "456009322",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009328",
+      "deltas": {
+        "verified_swaps": 2
+      }
+    },
+    {
+      "slot": "456009335",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009336",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009394",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009438",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009448",
+      "deltas": {
+        "verified_swaps": 1,
+        "coverage_transactions": -1,
+        "coverage_candidates": -1
+      }
+    },
+    {
+      "slot": "456009464",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    },
+    {
+      "slot": "456009465",
+      "deltas": {
+        "verified_swaps": 2,
+        "coverage_candidates": -1
+      }
+    },
+    {
+      "slot": "456009479",
+      "deltas": {
+        "verified_swaps": 1
+      }
+    }
+  ],
+  "parentChainsAndSealedCountersValid": true,
+  "allPerBlockDatabaseOperationOrdinalsUniqueAndContiguous": true,
+  "allFourTableVersionsValidated": true,
+  "financialKeysAmountsAndExecutionPositionsUnchanged": true,
+  "counterSemantics": "corrected_events counts replaced prior event amounts, not newly decoded independent native swaps; its value is unchanged in this replay.",
+  "originalRpcVerificationPending": false,
+  "databaseWrites": false,
+  "originalNativeFinancialIdentityAndTransferTuplesVerified": true,
+  "originals": [
+    {
+      "signature": "21ofBjjjmZ45ar7Q7k1M5EcGMjpmkN76WhAAdmDgymVewE7f3nwHX6HrmQYsW8Lswt1D8wwcT2cvWgiARXL5S97B",
+      "slot": 456009328,
+      "rpcSha256": "89a8f89ad1004ff72c632e3839627b57b50610db6106944178c45fd62a7e70b0"
+    },
+    {
+      "signature": "28ZtZkpYe7vh5TvstjpUehCoaTFMqABhek8rnZWbktLXWeWFhHKXhy4v9N2bujiquXcWsFbno3WD1SFAVrwTis5C",
+      "slot": 456009238,
+      "rpcSha256": "e85b0552da628c58697d8434bfd8862e7fbbfd9d18930254d37c1bf1cb498358"
+    },
+    {
+      "signature": "2Da2RpWr3D2arMMZFXQ5Ht9xaSXGTtZebipS4j3W9SqoNE8yJkPrdtAPz65ymfg9c2u5Dh628DGcN36wXWtap9dq",
+      "slot": 456009335,
+      "rpcSha256": "ea3439b221f39dc2dd33247dae09dbfb6c2dfd2451cecca4570587d071739643"
+    },
+    {
+      "signature": "2EGN8QycQKT6jSqnDUuFuEmeKzXLgcLdNpCpJVZWax4iGxdwveYV4vHeRDPDRNMcqfw9A4YL7joDJ8QqfCHMoq5q",
+      "slot": 456009317,
+      "rpcSha256": "4fda1b04ef7e7211e422833ee82e57210d04272de799b9bf1f221476536a046c"
+    },
+    {
+      "signature": "2LJGWyTvqNF7FvT2ottsQGJ7A1qZaczh86fgC5DtB4CinDAvnZght4cdkJKXKigrv3hhKRA3mX95k1is8ZLX9H2E",
+      "slot": 456009280,
+      "rpcSha256": "f46a48a7b1f195e80a9791d8f5035d63fcf251b82a1e0ee880bdb113b68d66f6"
+    },
+    {
+      "signature": "2Mp7qzjp83exzrdd5e9AuZZh2dHK9fQ3M53kMr67DmXSdTF5EDKMSuJpSwgdjERk16Px4tkztAjttQCc9Gf2b2P3",
+      "slot": 456009278,
+      "rpcSha256": "7e0523b3a18d6851302cbd73752d10eb6b5c3f1766b84c08e42c36302ae6dab6"
+    },
+    {
+      "signature": "2MSWtqM3A3G5qqJqRy2qhgiCzB6WyGs5dshNrypvXtKkHxPMSaa4QsWyqqAFafC27BgrPqRCtdRqsHX88BKx8KfX",
+      "slot": 456009310,
+      "rpcSha256": "5294909057cb80aec4e844452f6f9a527c804913dd2dd63692b7f0e21e759c79"
+    },
+    {
+      "signature": "2pqXti9VNQW8BzhcAUkXMxAfvfTMtWhEq64PqVnfi32A12kb4sWAKBq2gyofKenUjW2env395rxctLSboV6K4je6",
+      "slot": 456009277,
+      "rpcSha256": "bf409d4aa02a1977e8659f4f80136b707915b2de3f3009ebbd494c3394473a10"
+    },
+    {
+      "signature": "2vSnFNYNM2UgTsmPft9axtq8m8mG18jn6am7miThGTvWoErXfc1NQHeExj1GqBivrXQcAeCXriVRMTLDTZ9is1MX",
+      "slot": 456009322,
+      "rpcSha256": "2a9895980475cd10964eb4c51e140a39663bea6b285eec714bf3cd27845a7182"
+    },
+    {
+      "signature": "2YqG6hExSDzFcwPtuv4hAknXefaMhc1D6FGaTeE7hAaJA3TSzVouNrQAmYRCU23MARR4DxGu9oXjKrwRPu3ZAdQZ",
+      "slot": 456009291,
+      "rpcSha256": "cef4cdfeaa88cdd3b3b0818b4ec73e4678b0329c0900bf89c99c4a6990ef1c06"
+    },
+    {
+      "signature": "2ZqdJ5oZHbUtj9iKWqxDqx7VAQuwkDhrcBdCEYYm3CzSbp57dz4WxeS1RJiPmmgedWFXirgW3gEYg39km2CPYmee",
+      "slot": 456009253,
+      "rpcSha256": "890225b3d90e5db28323703b519cc424331d2704f719f5dbb34380bb4f496f98"
+    },
+    {
+      "signature": "3b1ZJCNZ7nZw81T9si7HjuEQSUt4AujT4p6G9k4mxK6dSorAF2B55SbvN381SVKaQq8cTFbijLBeMZeQvQ1zgTVT",
+      "slot": 456009464,
+      "rpcSha256": "7e95d48b0030f709a5805b97f885c3441ccaef772877d82eaf3695758df47543"
+    },
+    {
+      "signature": "3dhNbvRGTyUmJdbZbxhgUs37CWkA5exGg3Ha3GqspD9zNaUstpddYtnMHqx3DcpM1tvQzeWLVsaGGFDym791Ji1T",
+      "slot": 456009179,
+      "rpcSha256": "583dec1c8c8da306cb8ee106e4bb2ddb614a79c9bf70c7d254fc8128fb50b5e8"
+    },
+    {
+      "signature": "3tgi6CUBC9qBkYtVimwN2rCuJgra16JkJ6YmkU9WM7NK3M4W8EjNcYM4Tvg9BLMMfnEJgQbsEp72WkuiNpS8qGmZ",
+      "slot": 456009264,
+      "rpcSha256": "ee68c35e4ec0efdaa79829cb1d262baa245ddf80b40b9ff8478ee01f62fc28a6"
+    },
+    {
+      "signature": "3XTU1itWnGSkeBvAktsVsvUmrk5WqxSY2RGohqAHu72P8vT6iQY2W3e1MmpByCm4CW4h2R6KaEALgRBdHLqHY2nM",
+      "slot": 456009265,
+      "rpcSha256": "e6d4ff378c828cdcde08ab2ff807755c49d0e413518ab9cbd89496a3c45b7d11"
+    },
+    {
+      "signature": "3y56omAQuAihKVQkoLksFCiU1k8j82Q3RFiKpdwGKxwVGupjPA2VhYPXA7QDpwMtdhC9Lhw8EP4EcDgJHVVyEjv",
+      "slot": 456009286,
+      "rpcSha256": "5c736bfea00f16e01d0ac642613f9f12b225e52e44129d45de63f176bb8ffb20"
+    },
+    {
+      "signature": "467H5paJU3hDYiN1uc1eTGsKcLTuLyqWBv9h7pkPdBSBjv341WDBp6ajzUHShu967wiUeNQcT6VAiiGoRcA6JamN",
+      "slot": 456009336,
+      "rpcSha256": "4f2e668104a92d91bad72d13b4d6320333eba3dea9d6aeaf2e0e63e7268715e0"
+    },
+    {
+      "signature": "46ZJgXk8gPmdcDmbm5gK4EmMjmStdZs6HdNJBV4fMCAD45RGaWNrvTw9y6QQYjrRMokgiVwetnPuBAUm6sSbnbx8",
+      "slot": 456009448,
+      "rpcSha256": "ec888fd8e8e21b37ccd4ca2b1cf6f36d53c91c792d69bd981dc9b9d05d85d1bb"
+    },
+    {
+      "signature": "4aoJHCSZ8GfkHFzWEYY2CFoG6d2NwTCWfSSn9Tyk5B4qC9A4keytiFD15VhYywrpXzNCewdxMA3SJ9dwnS83GAAb",
+      "slot": 456009394,
+      "rpcSha256": "a40607702d296be507c9f5c46a867b43d77da0082958f786353cfc6c20c5d93f"
+    },
+    {
+      "signature": "4DGgqiumjRygNJezpX8rH8x7Fmkz96aHSFdADwwv2TWYrwDZEoQa1LGM4YB5SekyXvPpGfrbDuvoaP4ECzywLpLC",
+      "slot": 456009184,
+      "rpcSha256": "910e4a81671179dc8759904ecc03a1ba7b83b812a3b81c8a39e0f5c9c0aeb980"
+    },
+    {
+      "signature": "4EDhS45H8w1gS5JbtyZ1xwnVKfy5xTtVw4nkxCCTbQjYEyXRYAozkTA69kNU7PaFU4fLn4rCfVTF85PZpKy6REzv",
+      "slot": 456009438,
+      "rpcSha256": "3ba1cbed9be55c5a01a7c9b30d8c811028580bf0ff4f411ec36cf465c8b1ed4b"
+    },
+    {
+      "signature": "4hgUiJfLZrR2kgoUPfnUZP3dTq29wADWKtwJqs8UCVeqV3CUvf3pAC47f3ST6b7dm3FL7yP9zaMbvVZ7hxMoHeAh",
+      "slot": 456009479,
+      "rpcSha256": "b54053ad0ef39c40016934672cd3d0527e35fc5542ce2bdc4e242a5d664cb91b"
+    },
+    {
+      "signature": "4sPe5DxbJA9BzNgUq6SHizBUjdEXvMs95LX4pT286FyE6H57Tt1C516vv5eHSLF7WznW3Gs7Qk3cTswCiLN1JCz",
+      "slot": 456009465,
+      "rpcSha256": "5d62982e4777625824dc78c91d10ad63f61969448b222612021a9cc9892eae6b"
+    },
+    {
+      "signature": "4T3u77NbGaZ8xPwrn45ZMx2v6dNcDzfE2rWefeWba3cR6ffG3KTxeJwB9GarJ88WKQgik5x3pzmXVu187XrdFBch",
+      "slot": 456009313,
+      "rpcSha256": "5c6f5add90f5a1a154dc2abb3ce3ab88a0766f87193d837d4db65f4def6d6e68"
+    },
+    {
+      "signature": "57sTQ4dqKHxNhmQh7JXr2p984AfvbF6FEc6hKjzFN8x62SBLzoX9BB4CK2eANgzhU9AbvSNWnWXaLU442VUTCULt",
+      "slot": 456009277,
+      "rpcSha256": "9b3e6d95b72545fd9acb0275885d6bcdcef71eeb18d0ed59ae5893add2af2d08"
+    },
+    {
+      "signature": "59a7nPnQFaJ5XcKNJF8FvsxcLAHuYqF6LzBc3bEyA6AL2idoUVGpieUcgrPKMa7PboDs3Au2XgMZNLcAqdLm89t",
+      "slot": 456009328,
+      "rpcSha256": "1f8200dad10ffda340897beb74506df412de0045ac771ff4105410ccdfa4ee64"
+    },
+    {
+      "signature": "5A3Xpomzhycu4JMKPhazHAjx2WxToMxDb9A27U1CkzFcLMNsAVrRRRWcxD3zvXXajqpp4AH2orPg2D2STBr3J9qY",
+      "slot": 456009267,
+      "rpcSha256": "08bda3ec78fea46491a667750702a2674aab5e08befb8eb33eb0205044858868"
+    },
+    {
+      "signature": "5yFmbU1tscE7LKdzo55GmJP4dRUEAwJ9WrsXERXyxfDgBqJZppub5UoMP4nRFSn5YFotQnNrKXSfMUc7y3oq6zzG",
+      "slot": 456009316,
+      "rpcSha256": "2d39841a8b2b3ff32fd39f495019d8828fec2a0ac1a7237696897e7ca4130f73"
+    },
+    {
+      "signature": "op8ySWpzvxwDyCJv23E19S1nriXPte4d1uuquv14CnhduQYiAeA8waPbpcRGsZrMQX4gE5jyJh1yjSTEWrtcsEE",
+      "slot": 456009179,
+      "rpcSha256": "23436c166d4afffcb96dba21da02853d4c5625b0176dbb4f4da1ea06d34a50c6"
+    },
+    {
+      "signature": "rGDCRLn8cKBhW4WuT2Jh8qMvLX1Pu4JFeYDRQgFM9d18jEhFxxqHfKSxZYNEvAUytRLeuk5JUmvHNGhrPDjTvsG",
+      "slot": 456009317,
+      "rpcSha256": "8548e90cb1ffa6151004431228058dbeb5ea6a50996748ca4557dee6a08a44b2"
+    },
+    {
+      "signature": "ThDusz1u56Up4nK9MYveP7yabJBQtMn4kwG6ppWLn45MQHeetWtzhvZQnZoiQwdHFPeESBBq6kcJP2ypZ1QkMt4",
+      "slot": 456009317,
+      "rpcSha256": "98a722f76786412ffd08d68c78a338c8795fce3fc2e1e8cb6e2f1a62833d2565"
+    },
+    {
+      "signature": "vagVqTPiD2GmY8MXZ7EjP2QUK8gV6pUCcWNt7cv9iTXfJpryKNnuv79mWqso19bGzhgAT33nVtsGXQe6RRVMVfW",
+      "slot": 456009465,
+      "rpcSha256": "b212dd824f1a75db851a74cbbf50c8a4572b82d2f20d685fa22441330fdea897"
+    }
+  ],
+  "currentMarketOwnershipVerified": true,
+  "historicalReservesNotProven": true
+}
