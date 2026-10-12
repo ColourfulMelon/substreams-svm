@@ -1,0 +1,1083 @@
+{
+  "scope": "Original finalized successful RPC/PB/runtime and exact token-CPI parity; owned immutable curve roles; independently proven aggregate pool/reserve/buyback changes. Complex routed/closed source and user ledgers are explicitly marked incomplete. No decoder repair or universal coverage claim.",
+  "primaryLegacyRemainingRoleSource": "https://github.com/pump-fun/pump-public-docs/blob/main/docs/BREAKING_FEE_RECIPIENT.md",
+  "transactions": [
+    {
+      "signature": "4b5xRRH61QCrSiWCjKCjeXAtGmeja1e6MAi4CpFgLdrQSjM1Ro5RbfH1rdSVLkT2n1YiNX81SBWaS2oQ7PZpSCEn",
+      "slot": 455948165,
+      "originalRpcSha256": "5f63ffe21f4e689ab705cc87e91193a9d5f6798a37a972999dbc35b950d4486b",
+      "transactionPbSha256": "4ade7049f527353b9e20f51171f87dc5d748622d75262df881c88e458a0c177e",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell_v2",
+          "pool": "F2ocLJw8eScM8X29XHYVD7Le8aAbqRfmDFJr1bcmvXNF",
+          "user": "6eo4u85fHQ5WLDJs4AHNRFcc8vJhS8AEqYC2us7tgEg4",
+          "mint": "93c3eiQdYmNkUZa7t8F6kN34b7AQPviGjDRQG6oWfSMY",
+          "inputAtoms": "133963973296",
+          "netUserLamports": "3710455",
+          "grossQuoteLamports": "3757424",
+          "protocolFeeLamports": "35696",
+          "creatorFeeLamports": "11273",
+          "buybackLamports": "17848",
+          "holderRewards": "11273",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "9mrQ3fjVjGFeTScmz2R7y6qJbbdzKs5X5y6RRghry3qN",
+          "tokenCredit": "133963973296"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "12EBiTcDnWxLNzsnDS1mKuFbBAPgPBZzfcwvDaCLkP3i",
+          "debit": "133963973296",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "6eo4u85fHQ5WLDJs4AHNRFcc8vJhS8AEqYC2us7tgEg4",
+          "expected": "3615255",
+          "actual": "3615255",
+          "matches": true
+        },
+        {
+          "address": "F2ocLJw8eScM8X29XHYVD7Le8aAbqRfmDFJr1bcmvXNF",
+          "expected": "-3681224",
+          "actual": "-3681224",
+          "matches": true
+        },
+        {
+          "address": "9bnz4RShgq1hAnLnZbP8kbgBg1kEmcJBYQq3gQbmnSta",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+          "expected": "17848",
+          "actual": "17848",
+          "matches": true
+        },
+        {
+          "address": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "17848",
+          "actual": "17848",
+          "matches": true
+        },
+        {
+          "address": "3x3sQ8Q2KgK4osv5WG5azspbNBeHWe8YhG6q8Lq59J4k",
+          "expected": "11273",
+          "actual": "11273",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "5Xw7D7N2u5RxmdrYKvbntnhWKP3T6or8buRqQsZ7Yurni1S3M4SUWaCDeTJCWXBpLFfD9rQobf5XteiEFxXTKM6Z",
+      "slot": 455947892,
+      "originalRpcSha256": "1f42e587baa259a6eebee7a873773ce01226d3d9c67b82a0263055c581729a27",
+      "transactionPbSha256": "f3c4f7a441e29f3c6213c1cd6e9483f469473750c8214cbc51c53a2c6be6fcb9",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell_v2",
+          "pool": "eM2Ka5YZaEkN8hUz5bjmdWtGRHnT9JbQcuKNp6LwBFN",
+          "user": "9wnXYmkMgFmSLtJ8u6AueXRMD2HBb2LbjbS9Hd89uW2h",
+          "mint": "PdcivVhLKNSgChKowTaqXvXZdB3rgwmWQo78jbNpump",
+          "inputAtoms": "13062704252309",
+          "netUserLamports": "368099300",
+          "grossQuoteLamports": "372758786",
+          "protocolFeeLamports": "3541209",
+          "creatorFeeLamports": "1118277",
+          "buybackLamports": "1770604",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "BcqREnQTMTdzuQJCjUa6i3wvR9eiZAtiZPu4qKA61x9X",
+          "tokenCredit": "13062704252309"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "g4pQTo4DVhBPpw1tLg1NoxKNA9TvtfNY4uWyZ3MgFQf",
+          "debit": "13062704252309",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "9wnXYmkMgFmSLtJ8u6AueXRMD2HBb2LbjbS9Hd89uW2h",
+          "expected": "367953300",
+          "actual": "367953300",
+          "matches": true
+        },
+        {
+          "address": "eM2Ka5YZaEkN8hUz5bjmdWtGRHnT9JbQcuKNp6LwBFN",
+          "expected": "-372631786",
+          "actual": "-372631786",
+          "matches": true
+        },
+        {
+          "address": "ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+          "expected": "1770605",
+          "actual": "1770605",
+          "matches": true
+        },
+        {
+          "address": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+          "expected": "1770604",
+          "actual": "1770604",
+          "matches": true
+        },
+        {
+          "address": "FbtRNU6jY2rmgGRz6mnGZcxXh2GtztbFbLKWKDg36fEs",
+          "expected": "1118277",
+          "actual": "1118277",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "3mAJZQwLDEZpJzACW2jfHhbLzXvaB2j3bkGN1hTj9mbTj7QWVsRWfCNcsNUuqTLFZ4VV91RZo2uPK85kTnYw6zFP",
+      "slot": 455950514,
+      "originalRpcSha256": "751fb5cf5efdb53c420426ceb17e4f9a8e628b3822708e4369c74134e93c3fe6",
+      "transactionPbSha256": "6028f1747b5f6b4e10964b6237423a2df9a6ac5f7f375e2fb52e104b5951e6ee",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell",
+          "pool": "9TtRZKvzHRWz4euA4mGNpzRx56f8Rg4M4LrXN6QVv5fD",
+          "user": "AfcRoXjzAE2itj16VgccciY3BUNrhgq71hgVL88tiMUz",
+          "mint": "EEpdtcQsdFTvZac7ebzR9sbPBkH87Se9HzJqjNdgrb2J",
+          "inputAtoms": "1128916629009",
+          "netUserLamports": "31201657",
+          "grossQuoteLamports": "31596615",
+          "protocolFeeLamports": "300168",
+          "creatorFeeLamports": "94790",
+          "buybackLamports": "150084",
+          "holderRewards": "94790",
+          "priorCreatorFeeUnclaimed": "186389",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "5VusrsrygbBrqsKskbRYRgyQgKN9a2Wp77Rvhmh1p2bH",
+          "tokenCredit": "1128916629009"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "9QwMSsWgvYuizGxNbPLY3gdecmv2P9wmYMBQ27Eq8tfZ",
+          "debit": "1128916629009",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "AfcRoXjzAE2itj16VgccciY3BUNrhgq71hgVL88tiMUz",
+          "expected": "29701980",
+          "actual": "29701980",
+          "matches": true
+        },
+        {
+          "address": "9TtRZKvzHRWz4euA4mGNpzRx56f8Rg4M4LrXN6QVv5fD",
+          "expected": "-31520415",
+          "actual": "-31520415",
+          "matches": true
+        },
+        {
+          "address": "3t9EKmRiAUcQUYzTZpNojzeGP1KBAVEEbDNmy6wECQpK",
+          "expected": "311254",
+          "actual": "311254",
+          "matches": true
+        },
+        {
+          "address": "AsTRADtvb6tTmrsqULQ9Wji9PigDMjhfEMza6zkynEvV",
+          "expected": "1000000",
+          "actual": "1000000",
+          "matches": true
+        },
+        {
+          "address": "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+          "expected": "150084",
+          "actual": "150084",
+          "matches": true
+        },
+        {
+          "address": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "150084",
+          "actual": "150084",
+          "matches": true
+        },
+        {
+          "address": "7zrYyfphieGAxzoCm2dfLwjMHtPuLNCjqNgYeeZZY9yq",
+          "expected": "94790",
+          "actual": "94790",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "5Pz9g2q6UnNiY9V4fpr7TsJJtwxDB7sf1PfttcY5628Rzy42mpvgVFtopr8RpLdc2AJxUTAFSb42VcwkZycV3MQP",
+      "slot": 455950229,
+      "originalRpcSha256": "f0a97777909e83547f6ec5ab309e4edd42736643af6a544e3f82899fc8bacdf2",
+      "transactionPbSha256": "5799f239c0459d596867c7ee3910a23b083ebe8c9f7bc11ff39ea5c13d8e9bf2",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell",
+          "pool": "EpPDSiTnCV9riRJovPN5tjc5PSuH5swEjjJ7i7igpMLY",
+          "user": "3v83zLUKrYmArttWGAENRWU7rQNQ3xAyNbWfDq38jPKz",
+          "mint": "3AsRaQRgGEaNVAGtmEU9YD1HX5hV1AjWH2Mn4fKspump",
+          "inputAtoms": "358276105896",
+          "netUserLamports": "10238019",
+          "grossQuoteLamports": "10367615",
+          "protocolFeeLamports": "98493",
+          "creatorFeeLamports": "31103",
+          "buybackLamports": "49246",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "4k1LVz8xMJBuGwKxvN1pKRJ79jLfmtHGAj7XBDbyf62e",
+          "tokenCredit": "358276105896"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "CBqgiqjY6zk3neMfhYJZoehha7cY2AU3JGsQfCcG9UhW",
+          "debit": "358276105896",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "3v83zLUKrYmArttWGAENRWU7rQNQ3xAyNbWfDq38jPKz",
+          "expected": "10035201",
+          "actual": "10035201",
+          "matches": true
+        },
+        {
+          "address": "EpPDSiTnCV9riRJovPN5tjc5PSuH5swEjjJ7i7igpMLY",
+          "expected": "-10291415",
+          "actual": "-10291415",
+          "matches": true
+        },
+        {
+          "address": "3t9EKmRiAUcQUYzTZpNojzeGP1KBAVEEbDNmy6wECQpK",
+          "expected": "101618",
+          "actual": "101618",
+          "matches": true
+        },
+        {
+          "address": "gmgniQix2Fa9HX5giNoKPmNtxL4o2NTCavq5gZKjqN6",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "7VtfL8fvgNfhz17qKRMjzQEXgbdpnHHHQRh54R9jP2RJ",
+          "expected": "49247",
+          "actual": "49247",
+          "matches": true
+        },
+        {
+          "address": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "49246",
+          "actual": "49246",
+          "matches": true
+        },
+        {
+          "address": "51KXxdZzDDC8qKu85HCTpaGGhioYBnnCyuDYPkhxggtV",
+          "expected": "31103",
+          "actual": "31103",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "4JofKx1AzNjqCUqctMGHUnVZK8dyJttqHhjs7rVjF39Qn8B8XM1MNdkVvi7srSar6tqS9YUJvrTQdgipCdM41Xxf",
+      "slot": 455948320,
+      "originalRpcSha256": "0c73c4732d14ac4b894278a7182fac30db55446aaa2dffa3b4ea59bea1e9dfaf",
+      "transactionPbSha256": "9879f9f3188ae16b521a63b499ecb83fef38f4e294ab18f379cbcd1d711f1c07",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell",
+          "pool": "3WcSEFXb4VXgxJ8jA4FssAomn1YPgrx3e3TNp3MQTTrL",
+          "user": "DfNrxtRnuDtmqWBJJz6Q6GoaoKuGXKR4k9nSoLNfk5a3",
+          "mint": "Dzso1uNJgpfXwgfCFs76pkPSb1FHckoYeSryU5xgpump",
+          "inputAtoms": "195724127499",
+          "netUserLamports": "5404867",
+          "grossQuoteLamports": "5473284",
+          "protocolFeeLamports": "51997",
+          "creatorFeeLamports": "16420",
+          "buybackLamports": "25998",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 5,
+          "eventCpi": 6,
+          "buybackRecipient": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "BEZz5Q1o3ej3nngMDAGy3Ap1yVW2DMUc6P2NZiBh4NVG",
+          "tokenCredit": "195724127499"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "ARW6Bkm549Q7xoZT7kE4V69mKySSviLYFZCmddcRr4RY",
+          "debit": "195724127499",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [
+        {
+          "address": "3WcSEFXb4VXgxJ8jA4FssAomn1YPgrx3e3TNp3MQTTrL",
+          "index": 0,
+          "tag": "ea66c2cb96483ee5"
+        }
+      ],
+      "lamportLedger": [
+        {
+          "address": "DfNrxtRnuDtmqWBJJz6Q6GoaoKuGXKR4k9nSoLNfk5a3",
+          "expected": "5390178",
+          "actual": "5390178",
+          "matches": true
+        },
+        {
+          "address": "3WcSEFXb4VXgxJ8jA4FssAomn1YPgrx3e3TNp3MQTTrL",
+          "expected": "-5473284",
+          "actual": "-5473284",
+          "matches": true
+        },
+        {
+          "address": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "25999",
+          "actual": "25999",
+          "matches": true
+        },
+        {
+          "address": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "25998",
+          "actual": "25998",
+          "matches": true
+        },
+        {
+          "address": "C96aAuc3sm1gSjbAXtqv4sirZv13w3sHmLygqLnffbJ8",
+          "expected": "16420",
+          "actual": "16420",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "5iHZfCrUvrWtsXMSKiHfWFAxLo4FzgUUqbMhXA4jVPqh1eC4jZQmpVdRrWeajEWhCHM72nT95xjBfXUqx1qVkTsU",
+      "slot": 455946518,
+      "originalRpcSha256": "5084363684f5cd88753cac6797a5527b6eaaf4ee5db64982ffee2ebcaab22541",
+      "transactionPbSha256": "944bab7047b539021877a41e399dca67afd7d608ba5d100401b940ae984caffa",
+      "legs": [
+        {
+          "sourceIndex": 17,
+          "variant": "sell",
+          "pool": "3iuiZC5HArLn49j2neSSAGhph3DhSgggHLos7z7bf8H3",
+          "user": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "mint": "Fa3ooHPw9VebNmU7bns7G8BKYzdN4sGGPPCMGcD3pump",
+          "inputAtoms": "353134727201",
+          "netUserLamports": "9763296",
+          "grossQuoteLamports": "9886883",
+          "protocolFeeLamports": "93926",
+          "creatorFeeLamports": "29661",
+          "buybackLamports": "46963",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 19,
+          "eventCpi": 20,
+          "buybackRecipient": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "7LbSrQRr9MEXSmDfXo411MuSGSjnJAXk3tmCwZUiMFcR",
+          "tokenCredit": "353134727201"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "4P4fKZh76375s64AKv78T2RqRHemohMKXZRE2vbKoxHj",
+          "debit": "353134727201",
+          "originalDebitProof": "unproven_route",
+          "simpleOriginalDebitVerified": false
+        }
+      ],
+      "unprovenNativeTouches": [
+        {
+          "address": "3iuiZC5HArLn49j2neSSAGhph3DhSgggHLos7z7bf8H3",
+          "index": 14,
+          "tag": "ea66c2cb96483ee5"
+        }
+      ],
+      "lamportLedger": [
+        {
+          "address": "NGxKE8qiie7evFnhB5Q7gtUyh6eEKzzC4uHVTpESBec",
+          "expected": "7953467",
+          "actual": "7953467",
+          "matches": true
+        },
+        {
+          "address": "AKYPdBTfGjiNTisrnk9otRfDk4SETXBDd44JuW2SpfXp",
+          "expected": "1855569",
+          "actual": "0",
+          "matches": false
+        },
+        {
+          "address": "4P4fKZh76375s64AKv78T2RqRHemohMKXZRE2vbKoxHj",
+          "expected": "1513840",
+          "actual": "1513840",
+          "matches": true
+        },
+        {
+          "address": "3iuiZC5HArLn49j2neSSAGhph3DhSgggHLos7z7bf8H3",
+          "expected": "-9759883",
+          "actual": "-9759883",
+          "matches": true
+        },
+        {
+          "address": "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+          "expected": "-11618865",
+          "actual": "0",
+          "matches": false
+        },
+        {
+          "address": "DT2krA8vSP96D68nH86eAztZHVM18YB5i4gDXjLBDXm7",
+          "expected": "9763296",
+          "actual": "0",
+          "matches": false
+        },
+        {
+          "address": "9yj3zvLS3fDMqi1F8zhkaWfq8TZpZWHe6cz1Sgt7djXf",
+          "expected": "82988",
+          "actual": "82988",
+          "matches": true
+        },
+        {
+          "address": "4gQT88rvHr6ay8XvmUUriL5FTjsSuvkvH8ybz3etVLBb",
+          "expected": "6000",
+          "actual": "6000",
+          "matches": true
+        },
+        {
+          "address": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "46963",
+          "actual": "46963",
+          "matches": true
+        },
+        {
+          "address": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "46963",
+          "actual": "46963",
+          "matches": true
+        },
+        {
+          "address": "HXVHu7P4Xg3Um9cJ2Au9BGhdtiv6CfUg26bXYYwtj6F8",
+          "expected": "29661",
+          "actual": "29661",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": false,
+      "fullySimpleSourceDebits": false
+    },
+    {
+      "signature": "26Q6hJXhxRNXy9LmtkSQ8eX9p8CcjZxk4f82JxGGgxwCFJqtxEV6NcZd8cUmfdWrN188vKS4GvyhuTHGBpfNN2pd",
+      "slot": 455948537,
+      "originalRpcSha256": "d904acfd473045e06e67812b1d6c876af817d52b5b4dbf53f860bfe9455e8d27",
+      "transactionPbSha256": "2220f05f630dde82a285bd55bb75b321798ddf95fdcbd42801d5040edcd40a30",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell_v2",
+          "pool": "99gZrZsawp9vMksaMDG4MDZN6Et7KcA36N1hygc4VP59",
+          "user": "CiraHc7yfFR57HDWDksCTeGKUd4QQq42yYF3tYLHJWG2",
+          "mint": "HGSYs5LPtrqbVytqM4S9pratbKWtrAksye54kY6Apump",
+          "inputAtoms": "911379232096",
+          "netUserLamports": "25380819",
+          "grossQuoteLamports": "25624250",
+          "protocolFeeLamports": "243431",
+          "creatorFeeLamports": "0",
+          "buybackLamports": "121715",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "BVHdtDuXHk2yAkd2B5rnH6m5n7gqEb1rea4Saa7Me8fJ",
+          "tokenCredit": "911379232096"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "B5BUqmhAcU7V4PAg3QwDKcuKCe4cpUMeW9nksNnAoNJX",
+          "debit": "911379232096",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "CiraHc7yfFR57HDWDksCTeGKUd4QQq42yYF3tYLHJWG2",
+          "expected": "25100219",
+          "actual": "25100219",
+          "matches": true
+        },
+        {
+          "address": "99gZrZsawp9vMksaMDG4MDZN6Et7KcA36N1hygc4VP59",
+          "expected": "-25362650",
+          "actual": "-25362650",
+          "matches": true
+        },
+        {
+          "address": "3KCKozbAaF75qEU33jtzozcJ29yJuaLJTy2jFdzUY8bT",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "7hTckgnGnLQR6sdH7YkqFTAA7VwTfYFaZ6EhEsU3saCX",
+          "expected": "121716",
+          "actual": "121716",
+          "matches": true
+        },
+        {
+          "address": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+          "expected": "121715",
+          "actual": "121715",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "3xFXJ4jbLaEfwLACBU8EDV5amTtyLBqCRfPPM8weMbDc27U7wujQsUTefQsb1YoCqCRoWa5FqDdUQYPrwiUSHLPi",
+      "slot": 455948443,
+      "originalRpcSha256": "e678a4aced8d112e5163143b24f28081c482cb7a87d76efa1fd29bbafbcda46d",
+      "transactionPbSha256": "829d8bce8932c640a52aca7f2817d60f51eb01e455eb387bbf7600771474b384",
+      "legs": [
+        {
+          "sourceIndex": 8,
+          "variant": "sell_v2",
+          "pool": "8HUPfa4Ehegc1WkE1nSwhzfjbYQumDzL8LbZsFKzHLs",
+          "user": "dmrYHqSGukVxg6zVGo1dpsoGDzSfptdu6S7XK7mxybp",
+          "mint": "KMxqn3LHW8aVBK4rmphAqYcEnBVcYzLqzKJ8vyCpump",
+          "inputAtoms": "23958121557",
+          "netUserLamports": "662020",
+          "grossQuoteLamports": "670401",
+          "protocolFeeLamports": "6369",
+          "creatorFeeLamports": "2012",
+          "buybackLamports": "3184",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 11,
+          "eventCpi": 12,
+          "buybackRecipient": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "HCa665FzCDCLGhPBG3t2yzsyYpqwjevKgTQsjYLjeZo",
+          "tokenCredit": "23958121557"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "8viAMXUnG7tEL6H5A9nhsYLP6evKctCdLeV3BNVZGpH9",
+          "debit": "23958121557",
+          "originalDebitProof": "spent_and_closed",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "dmrYHqSGukVxg6zVGo1dpsoGDzSfptdu6S7XK7mxybp",
+          "expected": "567291",
+          "actual": "567291",
+          "matches": true
+        },
+        {
+          "address": "GDWJrihikhsZQVFbmoZsQVMCAAuZNYqC95oKiuLwQoJr",
+          "expected": "1488440",
+          "actual": "1488440",
+          "matches": true
+        },
+        {
+          "address": "8HUPfa4Ehegc1WkE1nSwhzfjbYQumDzL8LbZsFKzHLs",
+          "expected": "-594201",
+          "actual": "-594201",
+          "matches": true
+        },
+        {
+          "address": "69xpHRvBFzG5UooTszUEEcNvdEvKZeUdbxLE2wXUbLar",
+          "expected": "2929",
+          "actual": "2929",
+          "matches": true
+        },
+        {
+          "address": "8viAMXUnG7tEL6H5A9nhsYLP6evKctCdLeV3BNVZGpH9",
+          "expected": "-1513840",
+          "actual": "-1513840",
+          "matches": true
+        },
+        {
+          "address": "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
+          "expected": "3185",
+          "actual": "3185",
+          "matches": true
+        },
+        {
+          "address": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+          "expected": "3184",
+          "actual": "3184",
+          "matches": true
+        },
+        {
+          "address": "4aL33wRVVhs3VLLarcf3qf8rPcX8sNFiJLySCBgLdfkR",
+          "expected": "2012",
+          "actual": "2012",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "35qbhnWqhQ4e7eAJ4yzHhCLVvAcPsTQGdTXXEFjvZ32WnRjNZw96b4uDeBMBUEdYAfuVGWU6nAtMgVY3vkBgRVVN",
+      "slot": 455946204,
+      "originalRpcSha256": "d6f39d1c4b1aaf40052f806f81b4c10786f7a918567b5d630043aaf1a363c53a",
+      "transactionPbSha256": "194f9a1f6c49e002258e860730c68f827e5d161b624408a4f3671bff5b0f1c4a",
+      "legs": [
+        {
+          "sourceIndex": 2,
+          "variant": "sell",
+          "pool": "9mBaF5BBAH1BK1GvCeFiNs4XNcqn1cvLNkz4gwriDKQD",
+          "user": "Yo7WXis8Uz1jQH8nYLZ7CJVWfazLQDo7yB6qWkML6Fp",
+          "mint": "EsGoey8ZgnMEsHMHgDU58Et4GqdhoUxyANWeDxaR4YSU",
+          "inputAtoms": "103975629473576",
+          "netUserLamports": "4156222862",
+          "grossQuoteLamports": "4208833279",
+          "protocolFeeLamports": "39983917",
+          "creatorFeeLamports": "12626500",
+          "buybackLamports": "19991958",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "947845",
+          "baseCpi": 4,
+          "eventCpi": 5,
+          "buybackRecipient": "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+          "poolReadContext": 455972737
+        },
+        {
+          "sourceIndex": 6,
+          "variant": "sell",
+          "pool": "9mBaF5BBAH1BK1GvCeFiNs4XNcqn1cvLNkz4gwriDKQD",
+          "user": "FMnsbMPjACEFySV3xLWx2NJemW7X7FgwvonTZj6PFjTQ",
+          "mint": "EsGoey8ZgnMEsHMHgDU58Et4GqdhoUxyANWeDxaR4YSU",
+          "inputAtoms": "7127223838410",
+          "netUserLamports": "251661465",
+          "grossQuoteLamports": "254847055",
+          "protocolFeeLamports": "2421048",
+          "creatorFeeLamports": "764542",
+          "buybackLamports": "1210524",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "947845",
+          "baseCpi": 8,
+          "eventCpi": 9,
+          "buybackRecipient": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "poolReadContext": 455972737
+        },
+        {
+          "sourceIndex": 10,
+          "variant": "sell",
+          "pool": "9mBaF5BBAH1BK1GvCeFiNs4XNcqn1cvLNkz4gwriDKQD",
+          "user": "7BVZc5A6ZKeDBySiL3j7VxnKP9BsBzgEU54HxiAS2VS5",
+          "mint": "EsGoey8ZgnMEsHMHgDU58Et4GqdhoUxyANWeDxaR4YSU",
+          "inputAtoms": "7037325258482",
+          "netUserLamports": "244818582",
+          "grossQuoteLamports": "247917552",
+          "protocolFeeLamports": "2355217",
+          "creatorFeeLamports": "743753",
+          "buybackLamports": "1177608",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "947845",
+          "baseCpi": 12,
+          "eventCpi": 13,
+          "buybackRecipient": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "poolReadContext": 455972737
+        },
+        {
+          "sourceIndex": 14,
+          "variant": "sell",
+          "pool": "9mBaF5BBAH1BK1GvCeFiNs4XNcqn1cvLNkz4gwriDKQD",
+          "user": "35cUSMMe6iAA5xqScCkqnjSSC1bnzRV3aCZ9CVDN6mNA",
+          "mint": "EsGoey8ZgnMEsHMHgDU58Et4GqdhoUxyANWeDxaR4YSU",
+          "inputAtoms": "6826357804497",
+          "netUserLamports": "234071979",
+          "grossQuoteLamports": "237034916",
+          "protocolFeeLamports": "2251832",
+          "creatorFeeLamports": "711105",
+          "buybackLamports": "1125916",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "947845",
+          "baseCpi": 16,
+          "eventCpi": 17,
+          "buybackRecipient": "5cjcW9wExnJJiqgLjq7DEG75Pm6JBgE1hNv4B2vHXUW6",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "EBWh84t9mREETL6XgfiUDXmZ3amcJhHrTwS4uZQf4HiY",
+          "tokenCredit": "124966536374965"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "8iyfPeMtg4K3FXNWqMrk7fUMEuu7sfjcXLt39DQzme3D",
+          "debit": "103975629473576",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        },
+        {
+          "address": "FH4GZGsEreMDv6zfmdEcCzDYvqcT1bSvNvKxZGBEvPv2",
+          "debit": "7127223838410",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        },
+        {
+          "address": "7Fb7FRNZrqkazrGPf4GQZEMn1CtdHu49veK4P9sqprgv",
+          "debit": "7037325258482",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        },
+        {
+          "address": "3WCTkwHwSroaeQKaf4BP14962FUdU1gYmBcJPPccsbGR",
+          "debit": "6826357804497",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "Yo7WXis8Uz1jQH8nYLZ7CJVWfazLQDo7yB6qWkML6Fp",
+          "expected": "4155192861",
+          "actual": "4155192861",
+          "matches": true
+        },
+        {
+          "address": "D2L6yPZ2FmmmTKPgzaMKdhu6EWZcTpLy1Vhx8uvZe7NZ",
+          "expected": "1000000",
+          "actual": "1000000",
+          "matches": true
+        },
+        {
+          "address": "9mBaF5BBAH1BK1GvCeFiNs4XNcqn1cvLNkz4gwriDKQD",
+          "expected": "-4948632802",
+          "actual": "-4948632802",
+          "matches": true
+        },
+        {
+          "address": "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+          "expected": "23506008",
+          "actual": "23506008",
+          "matches": true
+        },
+        {
+          "address": "GXPFM2caqTtQYC2cJ5yJRi9VDkpsYZXzYdwYpGnLmtDL",
+          "expected": "19991958",
+          "actual": "19991958",
+          "matches": true
+        },
+        {
+          "address": "4HaZbuZrjUZpCyEB6ZtM8kLpqKisrmJoLPBxDJLpPGQ3",
+          "expected": "14845900",
+          "actual": "14845900",
+          "matches": true
+        },
+        {
+          "address": "FMnsbMPjACEFySV3xLWx2NJemW7X7FgwvonTZj6PFjTQ",
+          "expected": "251661465",
+          "actual": "251661465",
+          "matches": true
+        },
+        {
+          "address": "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
+          "expected": "2388132",
+          "actual": "2388132",
+          "matches": true
+        },
+        {
+          "address": "7BVZc5A6ZKeDBySiL3j7VxnKP9BsBzgEU54HxiAS2VS5",
+          "expected": "244818582",
+          "actual": "244818582",
+          "matches": true
+        },
+        {
+          "address": "35cUSMMe6iAA5xqScCkqnjSSC1bnzRV3aCZ9CVDN6mNA",
+          "expected": "234071979",
+          "actual": "234071979",
+          "matches": true
+        },
+        {
+          "address": "5cjcW9wExnJJiqgLjq7DEG75Pm6JBgE1hNv4B2vHXUW6",
+          "expected": "1125916",
+          "actual": "1125916",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "4dH6TUc4NgzxAGG27zY6WmbfD2cKk1eeew5BL5BnoyDVLZP4QPi3ne2rw1ygycVGkzuYMTmAmw4xXuPnUTxbMo9Z",
+      "slot": 455947773,
+      "originalRpcSha256": "394ee39274b7f4f37d6c01924c2dc5051f515fefa5a899aab4983518de287725",
+      "transactionPbSha256": "fd85e4963308d39e1da9360a90f8815e311e41fd038adfada854b11d0d62733d",
+      "legs": [
+        {
+          "sourceIndex": 7,
+          "variant": "sell_v2",
+          "pool": "FsFRaNzmRsCewZUwK2Po43tKkgq3tmbrVw9NmDGZZxnM",
+          "user": "FptjoY4h378TL4mtTxpohhbB3QxANiE3vAg1o8EykNtE",
+          "mint": "5mWtXPLPPXdwQzZQxByMZCfVJY9XpdZfH6GnuSNCpump",
+          "inputAtoms": "295281484069",
+          "netUserLamports": "8187298",
+          "grossQuoteLamports": "8290935",
+          "protocolFeeLamports": "78764",
+          "creatorFeeLamports": "24873",
+          "buybackLamports": "39382",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 10,
+          "eventCpi": 11,
+          "buybackRecipient": "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "4zyguhSZpwVW8HB9odJPWtBU6M2wE4cLzg5Ks4bPT1up",
+          "tokenCredit": "295281484069"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "4Xxsah8cWCqEDHLHwkcgvw6GU9oAt68FF8kPRx5Ri21a",
+          "debit": "295281484069",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "FptjoY4h378TL4mtTxpohhbB3QxANiE3vAg1o8EykNtE",
+          "expected": "-1488440",
+          "actual": "0",
+          "matches": false
+        },
+        {
+          "address": "3KVoCgiV84dh1d7aYov1TdN4nHwU53mEPhWQVe1js6Go",
+          "expected": "9467458",
+          "actual": "0",
+          "matches": false
+        },
+        {
+          "address": "FsFRaNzmRsCewZUwK2Po43tKkgq3tmbrVw9NmDGZZxnM",
+          "expected": "-8082655",
+          "actual": "-8082655",
+          "matches": true
+        },
+        {
+          "address": "FHpcNSe6tb2n15bAdq4BkeYWGyZKFD7yLYrH92ng7wCT",
+          "expected": "-25000",
+          "actual": "-25000",
+          "matches": true
+        },
+        {
+          "address": "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+          "expected": "10000",
+          "actual": "10000",
+          "matches": true
+        },
+        {
+          "address": "7hTckgnGnLQR6sdH7YkqFTAA7VwTfYFaZ6EhEsU3saCX",
+          "expected": "39382",
+          "actual": "39382",
+          "matches": true
+        },
+        {
+          "address": "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW",
+          "expected": "39382",
+          "actual": "39382",
+          "matches": true
+        },
+        {
+          "address": "9ghGiKDDRghrPm5aKTSHgzYimQjMVRHgJ4UHPhTeCLCr",
+          "expected": "24873",
+          "actual": "24873",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": false,
+      "fullySimpleSourceDebits": true
+    },
+    {
+      "signature": "5AVsjgf2xiAyeeoJmYjKkRvGBVDMXes5T3VpdKA3P2Y9mJQSvqXaoCr6cYSF22Qmn3wifnix7JAzHRkAMxJS4UX9",
+      "slot": 455947970,
+      "originalRpcSha256": "89e8b4734d894e2bf9d36ad343022075b8621262ce0707373cb08a6071a6f847",
+      "transactionPbSha256": "3f68f557b66ac5c98280d697715bc3bf2730dbbd94aa2a4d96ac0884214e994e",
+      "legs": [
+        {
+          "sourceIndex": 3,
+          "variant": "sell_v2",
+          "pool": "CrMn8hRVqGJXHJM5sb2FvKw3AdoE8siLHZ8Ht5WYuNGE",
+          "user": "JD46Vc6KbwXQABRByiSrNWXXoCySKWU5t6x1HPBTTh55",
+          "mint": "5QHkKF9anWboRP4PHnG4Mf2How7SRp3UvagHXzcHpump",
+          "inputAtoms": "2115327702796",
+          "netUserLamports": "10665",
+          "grossQuoteLamports": "10801",
+          "protocolFeeLamports": "103",
+          "creatorFeeLamports": "33",
+          "buybackLamports": "0",
+          "holderRewards": "0",
+          "priorCreatorFeeUnclaimed": "0",
+          "baseCpi": 6,
+          "eventCpi": 7,
+          "buybackRecipient": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+          "poolReadContext": 455972737
+        }
+      ],
+      "poolProofs": [
+        {
+          "address": "FoLQc8nXB7zxBAtPeegBmrca4CAQszxh7U1dR42CETh6",
+          "tokenCredit": "2115327702796"
+        }
+      ],
+      "sourceProofs": [
+        {
+          "address": "CpJqfjzMBPUn2yGgbRSRY9YmeWkRVTxCbuLJxNw7s2rM",
+          "debit": "2115327702796",
+          "originalDebitProof": "pre_and_post",
+          "simpleOriginalDebitVerified": true
+        }
+      ],
+      "unprovenNativeTouches": [],
+      "lamportLedger": [
+        {
+          "address": "JD46Vc6KbwXQABRByiSrNWXXoCySKWU5t6x1HPBTTh55",
+          "expected": "-2070535",
+          "actual": "-2070535",
+          "matches": true
+        },
+        {
+          "address": "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+          "expected": "1000000",
+          "actual": "1000000",
+          "matches": true
+        },
+        {
+          "address": "CrMn8hRVqGJXHJM5sb2FvKw3AdoE8siLHZ8Ht5WYuNGE",
+          "expected": "65399",
+          "actual": "65399",
+          "matches": true
+        },
+        {
+          "address": "8sNeir4QsLsJdYpc9RZacohhK1Y5FLU3nC5LXgYB4aa6",
+          "expected": "103",
+          "actual": "103",
+          "matches": true
+        },
+        {
+          "address": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+          "expected": "0",
+          "actual": "0",
+          "matches": true
+        },
+        {
+          "address": "67jbDnSLoGmoiVLZAnvoz8vCV4oASiEkrFVHBNy5Am6u",
+          "expected": "33",
+          "actual": "33",
+          "matches": true
+        }
+      ],
+      "simpleUserLedgerVerified": true,
+      "fullySimpleSourceDebits": true
+    }
+  ],
+  "observedDecoderVersion": "v0.5.2-pluto.16",
+  "observedNativeSellsVerified": 0,
+  "observedNativeSellsRejected": 14,
+  "ownedCurvesSha256": "392cc80ece4667a0b08ce7d8ff7daa559576a07d931a77935132b9dc63ccac4d"
+}
