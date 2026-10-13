@@ -1,0 +1,138 @@
+{
+  "release": "v0.5.2-pluto.31",
+  "sourceBaseCommit": "73880bbb454cfae360c9ad2077e1e0db00f51856",
+  "packageSha256": "ca310536ac4880a70b0234e1d237f464cb8ea5661dc10253934b8e970db274a1",
+  "dbOutModuleHash": "039ce0f14f39d9539643c6947f0790600fe3feb2",
+  "stageCount": 4,
+  "retainedMetadataHashes": {
+    "db:dex_swaps:store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "db:dex_swaps:store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "db:dex_swaps:map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "db:dex_swaps:store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "db:dex_swaps:store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "db:dex_swaps:store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075"
+  },
+  "frozenMetadataSha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "coreTests": {
+    "decoderPassed": 216,
+    "mapperPassed": 15
+  },
+  "ordinalCacheChecks": {
+    "futurePrevalidationCannotLeakIntoEarlierOrdinal": true,
+    "closedAndPendingStayUnknown": true,
+    "recreationUsesNewFee": true,
+    "unknownDoesNotDefaultToZero": true,
+    "ordinalRegressionHandled": true,
+    "unchangedHistoryCacheHits": 1,
+    "malformedHistoryPanics": true
+  },
+  "replays": [
+    {
+      "candidateStatus": {
+        "label": "stage31-fresh",
+        "module": "db_out",
+        "firstSlot": 456489000,
+        "lastSlot": 456489099,
+        "startedAt": "2026-10-13T15:32:13.097088+00:00",
+        "finishedAt": "2026-10-13T15:39:02.777589+00:00",
+        "exitCode": 0,
+        "packageSha256": "ca310536ac4880a70b0234e1d237f464cb8ea5661dc10253934b8e970db274a1",
+        "databaseWrites": false,
+        "finalizedOnly": true
+      },
+      "baselineStatus": {
+        "label": "baseline30-fresh",
+        "module": "db_out",
+        "firstSlot": 456489000,
+        "lastSlot": 456489099,
+        "startedAt": "2026-10-13T15:32:13.094918+00:00",
+        "finishedAt": "2026-10-13T15:39:11.211042+00:00",
+        "exitCode": 0,
+        "packageSha256": "1daaffc160e005c23a479687b0016193e2fbb8468c0ee7d16a94216ee83d96cf",
+        "databaseWrites": false,
+        "finalizedOnly": true
+      },
+      "financialParity": {
+        "actualSinkDecoderUsed": true,
+        "blockParentsAndFinancialCountersPreserved": true,
+        "decoderVersionOnlyRowChange": true,
+        "finalizedBlocks": 100,
+        "financialRowsChanged": 0,
+        "financialRowsLost": 0,
+        "financialRowsPreserved": 12949,
+        "gzipEnvelopeBytes": 4048270,
+        "productionDatabaseWrites": false,
+        "relativeFinancialInsertionOrderPreserved": true,
+        "release": "v0.5.2-pluto.31"
+      }
+    },
+    {
+      "candidateStatus": {
+        "label": "stage31-fee",
+        "module": "db_out",
+        "firstSlot": 456462850,
+        "lastSlot": 456462899,
+        "startedAt": "2026-10-13T15:41:27.453383+00:00",
+        "finishedAt": "2026-10-13T15:45:57.480330+00:00",
+        "exitCode": 0,
+        "packageSha256": "ca310536ac4880a70b0234e1d237f464cb8ea5661dc10253934b8e970db274a1",
+        "databaseWrites": false,
+        "finalizedOnly": true
+      },
+      "baselineStatus": {
+        "label": "baseline30-fee",
+        "module": "db_out",
+        "firstSlot": 456462850,
+        "lastSlot": 456462899,
+        "startedAt": "2026-10-13T15:41:27.457144+00:00",
+        "finishedAt": "2026-10-13T15:45:53.577896+00:00",
+        "exitCode": 0,
+        "packageSha256": "1daaffc160e005c23a479687b0016193e2fbb8468c0ee7d16a94216ee83d96cf",
+        "databaseWrites": false,
+        "finalizedOnly": true
+      },
+      "financialParity": {
+        "actualSinkDecoderUsed": true,
+        "blockParentsAndFinancialCountersPreserved": true,
+        "decoderVersionOnlyRowChange": true,
+        "finalizedBlocks": 46,
+        "financialRowsChanged": 0,
+        "financialRowsLost": 0,
+        "financialRowsPreserved": 5962,
+        "gzipEnvelopeBytes": 1820708,
+        "productionDatabaseWrites": false,
+        "relativeFinancialInsertionOrderPreserved": true,
+        "release": "v0.5.2-pluto.31"
+      }
+    }
+  ],
+  "nativeFeeMutations": {
+    "changesByOpcode": {
+      "4": 1722,
+      "3": 6,
+      "1": 2
+    },
+    "nativeFeeMutations": [
+      {
+        "slot": 456462854,
+        "ordinal": "3156800962572",
+        "mint": "LlJ9Ygy6+s0cm0nf8QocKT4F5tInn7AE2oK8kiyvPHM=",
+        "opcode": 1
+      },
+      {
+        "slot": 456462880,
+        "ordinal": "3633542332428",
+        "mint": "PNcfDhE4hK4Rkuy2VAWueKWnd3LBIwoCd3dLxj4rIXg=",
+        "opcode": 1
+      }
+    ]
+  },
+  "prototypeProcessingCounter": {
+    "fiveStages": 4174,
+    "fourStages": 3365,
+    "receivedFinalizedBlocks": 100,
+    "cacheAvailabilityControlled": false,
+    "totalBillOrLatencyGuarantee": false
+  },
+  "databaseWrites": false
+}

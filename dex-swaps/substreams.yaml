@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: dex_swaps
-  version: v0.5.2-pluto.30
+  version: v0.5.2-pluto.31
   url: https://github.com/ColourfulMelon/substreams-svm
   description: Normalized swap events across Solana DEX protocols.
   image: ../image.png
@@ -75,16 +75,6 @@ modules:
     valueType: int64
     inputs:
       - map: map_token_fee_updates
-  - name: store_token_fee_state
-    kind: store
-    binary: metadata
-    initialBlock: 455821803
-    updatePolicy: set
-    valueType: bytes
-    inputs:
-      - map: map_token_fee_updates
-      - store: store_token_fee_history
-        mode: get
   - name: map_events
     kind: map
     initialBlock: 455893378
@@ -94,10 +84,11 @@ modules:
         mode: get
       - store: store_openbook_markets
         mode: get
-      - store: store_token_fee_state
+      - store: store_token_fee_history
         mode: get
       - store: store_token_fee_seed_count
         mode: get
+      - map: map_token_fee_updates
     output:
       type: proto:dex.swaps.v1.Events
 

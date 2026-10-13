@@ -7,7 +7,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.30";
+const DECODER_VERSION: &str = "v0.5.2-pluto.31";
 
 #[derive(Clone, PartialEq, Message)]
 pub struct GzipDatabaseChanges {

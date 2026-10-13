@@ -1,5 +1,13 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.31` removes the derived token-fee state store and reconstructs
+fees from ordinal-specific retained history during swap decoding. Eager mutation
+validation, snapshot guards, all six remaining metadata hashes, gzip output,
+SQL schemas and protocol support are preserved. The graph now has four execution
+stages. See [four-stage validation](stage31-validation.md).
+
+## Previous release: pluto.30
+
 `v0.5.2-pluto.30` wraps complete per-block DatabaseChanges in a versioned gzip
 envelope. Deploy the paired Pluto sink-gzip-output patch. Exact finalized replay
 preserves 9,643 swaps and all financial/provenance values with 74.73% smaller
