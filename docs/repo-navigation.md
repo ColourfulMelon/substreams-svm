@@ -33,6 +33,7 @@ in `quality.rs`. Additional native
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
+The pluto.31 pricing graph removes the derived fee-state stage; see [four-stage validation](stage31-validation.md).
 The pluto.30 SQL output uses a versioned gzip envelope; see [gzip validation](gzip30-validation.md). Its paired sink decompresses before applying unchanged financial rows.
 The pluto.29 live output omits coverage diagnostics and duplicate composite-key fields; see [egress validation](egress29-validation.md) and `scripts/compare-egress-replays.py`. Offline audits retain diagnostics with `--features coverage-diagnostics`.
 The pluto.28 patch documents [live principal rounding and fresh/closed account evidence](live-principal28-validation.md).

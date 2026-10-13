@@ -165,7 +165,7 @@ fn store_token_fee_state(updates: pb::TokenFeeUpdates, history: StoreGetString, 
 }
 
 #[substreams::handlers::map]
-fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw, fee_states: StoreGetRaw, fee_seeds: StoreGetInt64) -> Result<pb::Events, Error> {
+fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw, fee_history: StoreGetString, fee_seeds: StoreGetInt64, fee_updates: pb::TokenFeeUpdates) -> Result<pb::Events, Error> {
     if markets.get_last("__phoenix_snapshot").as_deref() != Some(&phoenix_metadata::SNAPSHOT_SLOT.to_le_bytes()) {
         return Err(Error::msg("Phoenix registry snapshot missing or mismatched"));
     }
@@ -173,12 +173,22 @@ fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw,
         return Err(Error::msg("OpenBook registry snapshot missing or mismatched"));
     }
     if block.slot <= token_fee_snapshot::COMPLETE_AT
-        || fee_states.get_last("__token22_snapshot").as_deref() != Some(&token_fee_snapshot::COMPLETE_AT.to_le_bytes())
+        || fee_history.get_last("__token22_snapshot").as_deref() != Some(&format!("{};", token_fee_snapshot::COMPLETE_AT))
         || fee_seeds.get_last("__token22_seeds") != Some(token_fee_snapshot::COUNT)
     {
         return Err(Error::msg("Token-2022 registry snapshot missing, incomplete or mismatched"));
     }
     let slot = block.slot;
+    let mut fee_cache = std::collections::HashMap::<Vec<u8>, (String, token_fees::State)>::new();
+    // Keep the materializer's eager validation, even for updated mints that
+    // have no transfers in this block. The cache never bypasses get_at below.
+    for update in fee_updates.changes {
+        if update.mint.is_empty() { continue; }
+        let Some(records) = fee_history.get_at(update.ordinal, base58::encode(&update.mint)) else { continue };
+        if fee_cache.get(&update.mint).is_some_and(|(previous, _)| previous == &records) { continue; }
+        let state = token_fees::State::from_history(&records).expect("invalid native Token-2022 fee history");
+        fee_cache.insert(update.mint, (records, state));
+    }
     Ok(pb::Events {
         parent_slot: block.parent_slot,
         parent_hash: block.previous_blockhash,
@@ -213,12 +223,20 @@ fn map_events(block: Block, markets: StoreGetRaw, openbook_markets: StoreGetRaw,
                     },
                     |mint, instruction_index| {
                         let ordinal = phoenix_metadata::ordinal(index, instruction_index);
-                        match fee_states.get_at(ordinal, base58::encode(mint)) {
-                            Some(bytes) => token_fees::State::decode(&bytes)?.at(slot / 432_000),
-                            // Absence proves zero only after the complete owned
-                            // scan, its native changes and exact seed count.
-                            None => Some(token_fees::TransferFee { basis_points: 0, maximum_fee: 0 }),
+                        // Always fetch the ordinal-specific history. Cache reuse requires
+                        // identical history bytes, never merely the same mint or block.
+                        let Some(records) = fee_history.get_at(ordinal, base58::encode(mint)) else {
+                            return Some(token_fees::TransferFee { basis_points: 0, maximum_fee: 0 });
+                        };
+                        if let Some((previous, state)) = fee_cache.get(mint) {
+                            if previous == &records {
+                                return state.at(slot / 432_000);
+                            }
                         }
+                        let state = token_fees::State::from_history(&records)
+                            .expect("invalid native Token-2022 fee history");
+                        fee_cache.insert(mint.to_vec(), (records, state));
+                        state.at(slot / 432_000)
                     },
                 )?;
                 transaction.source_index = Some(index as u32);
