@@ -1,0 +1,120 @@
+{
+  "program": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+  "scope": "Exact bytewise Anchor swap discriminator dispatch, typed u64/u64/Side parse, side-bound constant-product core. Source-level SDK ABI and original physical receipts additionally prove exact observed account roles.",
+  "instructions": [
+    {
+      "pc": 12454,
+      "fileOffset": 99920,
+      "bytes": "15040100f8000000",
+      "disassembly": "12454 00018650 jump 0x15 r4, 248 -> 12456"
+    },
+    {
+      "pc": 12457,
+      "fileOffset": 99944,
+      "bytes": "55030a01c6000000",
+      "disassembly": "12457 00018668 jump 0x55 r3, 198 -> 12724"
+    },
+    {
+      "pc": 12459,
+      "fileOffset": 99960,
+      "bytes": "550708019e000000",
+      "disassembly": "12459 00018678 jump 0x55 r7, 158 -> 12724"
+    },
+    {
+      "pc": 12461,
+      "fileOffset": 99976,
+      "bytes": "5500060191000000",
+      "disassembly": "12461 00018688 jump 0x55 r0, 145 -> 12724"
+    },
+    {
+      "pc": 12463,
+      "fileOffset": 99992,
+      "bytes": "55090401e1000000",
+      "disassembly": "12463 00018698 jump 0x55 r9, 225 -> 12724"
+    },
+    {
+      "pc": 12465,
+      "fileOffset": 100008,
+      "bytes": "5508020175000000",
+      "disassembly": "12465 000186a8 jump 0x55 r8, 117 -> 12724"
+    },
+    {
+      "pc": 12467,
+      "fileOffset": 100024,
+      "bytes": "5502000187000000",
+      "disassembly": "12467 000186b8 jump 0x55 r2, 135 -> 12724"
+    },
+    {
+      "pc": 12469,
+      "fileOffset": 100040,
+      "bytes": "15020100c8000000",
+      "disassembly": "12469 000186c8 jump 0x15 r2, 200 -> 12471"
+    },
+    {
+      "pc": 12479,
+      "fileOffset": 100120,
+      "bytes": "85100000ed080000",
+      "disassembly": "12479 00018718 call 2285 target=14765"
+    },
+    {
+      "pc": 14777,
+      "fileOffset": 118504,
+      "bytes": "851000007c640000",
+      "disassembly": "14777 0001cee8 call 25724 target=40502"
+    },
+    {
+      "pc": 14808,
+      "fileOffset": 118752,
+      "bytes": "71a108fe00000000",
+      "disassembly": "14808 0001cfe0 r1=LOAD1 [r10+-504]"
+    },
+    {
+      "pc": 14810,
+      "fileOffset": 118768,
+      "bytes": "79a100fe00000000",
+      "disassembly": "14810 0001cff0 r1=LOAD8 [r10+-512]"
+    },
+    {
+      "pc": 14812,
+      "fileOffset": 118784,
+      "bytes": "79a1f8fd00000000",
+      "disassembly": "14812 0001d000 r1=LOAD8 [r10+-520]"
+    },
+    {
+      "pc": 14860,
+      "fileOffset": 119168,
+      "bytes": "79a5f8f900000000",
+      "disassembly": "14860 0001d180 r5=LOAD8 [r10+-1544]"
+    },
+    {
+      "pc": 14866,
+      "fileOffset": 119216,
+      "bytes": "79a3e8f900000000",
+      "disassembly": "14866 0001d1b0 r3=LOAD8 [r10+-1560]"
+    },
+    {
+      "pc": 14867,
+      "fileOffset": 119224,
+      "bytes": "79a4f0f900000000",
+      "disassembly": "14867 0001d1b8 r4=LOAD8 [r10+-1552]"
+    },
+    {
+      "pc": 14868,
+      "fileOffset": 119232,
+      "bytes": "8510000004120000",
+      "disassembly": "14868 0001d1c0 call 4612 target=19481"
+    },
+    {
+      "pc": 19486,
+      "fileOffset": 156176,
+      "bytes": "7981080000000000",
+      "disassembly": "19486 00026210 r1=LOAD8 [r8+8]"
+    },
+    {
+      "pc": 19490,
+      "fileOffset": 156208,
+      "bytes": "7981080000000000",
+      "disassembly": "19490 00026230 r1=LOAD8 [r8+8]"
+    }
+  ]
+}

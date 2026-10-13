@@ -1,0 +1,35 @@
+{
+  "aldrinSdk": {
+    "npm": "@aldrin_exchange/sdk",
+    "version": "0.4.51",
+    "repository": "https://github.com/aldrin-exchange/aldrin-sdk",
+    "archiveFile": "primary/aldrin-sdk-0.4.51.tgz",
+    "archiveFiles": {
+      "layout.js": "package/dist/cjs/pools/layout.js",
+      "pool.js": "package/dist/cjs/pools/pool.js",
+      "client.js": "package/dist/cjs/pools/client.js",
+      "constants.js": "package/dist/cjs/constants.js",
+      "package.json": "package/package.json"
+    }
+  },
+  "cropperInstructions": {
+    "repository": "https://github.com/CropperFinance/cropper_instructions",
+    "commit": "a6eeeb7a89c804b59c0b2d0f3453bc741e541324",
+    "retained": [
+      "primary/amm_instruction.rs",
+      "primary/amm_stats.rs"
+    ]
+  },
+  "canonicalCurve": {
+    "repository": "https://github.com/CropperFinance/solana-program-library",
+    "commit": "96b3b5691f05b6744f32ba0926f5e2b2bbf3534b",
+    "scope": "Primary constant-product arithmetic reference; not claimed to reproduce the deployed Cropper binary. Exact observed program identities and instruction roles are independently pinned by owned executable, pool state and native receipts.",
+    "retained": [
+      "primary/base.rs",
+      "primary/calculator.rs",
+      "primary/constant_product.rs",
+      "primary/fees.rs",
+      "primary/processor.rs"
+    ]
+  }
+}

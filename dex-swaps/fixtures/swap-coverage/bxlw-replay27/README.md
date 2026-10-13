@@ -1,0 +1,7 @@
+# Additional finalized Bxlw SellTokensV2
+
+This fixture extends the exact observed SellTokensV2 proof to the additional .27 wide replay source. The independent portable oracle derives the input from the actual committed Token2022 transfer and the output from the actual classic SOL receipt, binds all 17 native account roles and all five u64 argument fields, requires the source-scoped primary SellEvent gross-minus-fee to equal the actual net receipt, and proves the whole original native and token ledgers. It makes no claim about unobserved opaque trailer values or expiry semantics.
+
+Run `node oracle.cjs /path/to/backend/package.json /path/to/protobufjs/package.json`. All proof assets resolve relative to this fixture. It compares the complete retained original protobuf with the exact raw finalized RPC, successful complete invocation ancestry, all resolved balances, mints, owners, token program identities and transaction fees. It verifies the deployed primary executable loader/ProgramData/address/hash and a deployment predating the original. `primary-contract.md` documents the same pinned native SellTokensV2 handler used by the earlier live proof; Patch sections are background only and add no proof scope here.
+
+Result: one finalized source, one financial tuple, three modeled native ledgers and four token ledgers, zero failures. The containing block's exact finalized signature position/hash/time are checked by the separate combined verifier. No runtime change was required.

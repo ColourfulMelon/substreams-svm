@@ -1,0 +1,87 @@
+{
+  "release": "v0.5.2-pluto.27",
+  "runtimeSourceCommit": "14826d2ced83d367af4afb6e46fb0bf79316e024",
+  "decoderTests": 215,
+  "mapperTests": 14,
+  "wasmBuildPassed": true,
+  "dbOutModuleHash": "32bda0b6071c1f24f8ef3b416c53e6ab0eb701b6",
+  "allSevenMetadataModuleHashesUnchanged": true,
+  "metadataWasmSha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "packageSha256": "cdd2d7dbcb4ec3213682f98274832d3c44beb57b33839b62805eafb8bf236fc2",
+  "packageReplaysPending": false,
+  "releaseBuildFeatures": "--no-default-features",
+  "finalizedBlocks": 6429,
+  "preservedPriorSwapIdentities": 877648,
+  "unchangedPriorFinancialRows": 876427,
+  "addedSwaps": 750,
+  "correctedPriorSwaps": 1221,
+  "lostPriorSwaps": 0,
+  "unexpectedModifiedPriorSwaps": 0,
+  "independentOriginalVariants": 1969,
+  "uniqueOriginalSignatures": 1969,
+  "independentFinalizedBlocks": 1361,
+  "all27FinancialAndProvenanceFieldsMatched": true,
+  "allFourTableVersionsValidated": true,
+  "operationKeysAndOrdinalsUnique": true,
+  "parentChainsAndSealedCountersValid": true,
+  "originalRpcVerificationComplete": true,
+  "databaseWrites": false,
+  "globalCoverageProven": false,
+  "scope": "Three finite finalized windows; exact primary native formats and exhaustive finite residual classifications. Historical financial rows are not replayed or rewritten.",
+  "replayProofs": [
+    {
+      "file": "pluto-combined27-packaged-replay-proof.json",
+      "sha256": "478ffb59433e5fc649b6d54ffb25555b2e661bdc5bf087ba343aa9b197e5b678"
+    },
+    {
+      "file": "pluto-combined27-wide-packaged-replay-proof.json",
+      "sha256": "c3bbe10245064aa88ad2173f494b1f6d3976af8e7d6b2ea2e08c37a8c81ac04d"
+    },
+    {
+      "file": "pluto-combined27-live-packaged-replay-proof.json",
+      "sha256": "10565531968a2dbcd8f9429c1c4ed787ee9f4f646e8eacd149a0c19a209c622e"
+    }
+  ],
+  "financialProof": {
+    "file": "combined27-financial-proof.json",
+    "sha256": "75266c8c2674a44e09689cad649fe88928d0c9daeb3db87a6a4e5d4bcdcc258e"
+  },
+  "metadataProofSha256": "eba94f531743853115388df595da7aa5d5e66dcba82c8fcb4315d145e02da5df",
+  "actualPackageBytesVerified": true,
+  "verificationScripts": {
+    "verify-financial.py": "4cc198ba4812d398691e9bd307e1961da8a9fcd4dafc2943049add030c34dadd",
+    "compare-replays.py": "2e4576729ebf1626ac06911771d2f75ba1eb9c5a644a31956227a38237df0fa4",
+    "original-metadata.cjs": "4f1648a094c384a81c37216975cde4f63640abbc3a83172be9abf126dd31d491",
+    "solana-type.proto": "7db83eefd58e7021570bf0d070ceae0ba76c65f9e669991225770e78ef14d9a6",
+    "protocol-ids.json": "8b21d305a1bf58c986d95fd1ce168b88caf677f109855ae405767308b2d62c43",
+    "extra-proof-families.json": "bbc694f8317e2fa026665e8b9059d10583cad8c6723b68f5adda3f775d9cac68"
+  },
+  "compressedEvidence": [
+    {
+      "file": "combined27-financial-proof.json.gz",
+      "sha256": "2e7c8cbf2a8ed8bfb435e42549ba6fe836a882eb2a73efb42fa62c6c3eb0fd7c",
+      "bytes": 786849
+    },
+    {
+      "file": "original-metadata.json.gz",
+      "sha256": "a23ccb13ca076d29eea233e75954252877e56820c17da3ff5eb43853f36974db",
+      "bytes": 1759488
+    },
+    {
+      "file": "pluto-combined27-live-packaged-replay-proof.json.gz",
+      "sha256": "f45e13789396537f4f59fcebbd76cab2eae75465fbe9718d341c0e3ff02c629d",
+      "bytes": 343432
+    },
+    {
+      "file": "pluto-combined27-packaged-replay-proof.json.gz",
+      "sha256": "a1e93bc530b6f580445e2d318e6084f0d5b8793b6483c0c814ee534fb28d4cab",
+      "bytes": 252428
+    },
+    {
+      "file": "pluto-combined27-wide-packaged-replay-proof.json.gz",
+      "sha256": "496b84efc58060cbf467b41d67ad5f764c895d8c8df0a67008daf21d6fadfc41",
+      "bytes": 1471229
+    }
+  ],
+  "schemaUpgradeProofSha256": "8a4754ef5128e5654f43b9569efcd7c15108827574f52f7d4a2627502a4e7ead"
+}

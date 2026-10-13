@@ -1,0 +1,1173 @@
+{
+  "originals": [
+    {
+      "signature": "22xL61hSbVWADiF7ZaWCGKicBpLzr7tQYrsFK6aSDjbyvsebtTMdYY5MjNawYU53DdegPPTUMpMvcCudGYWZnrtr",
+      "block_num": 456082568,
+      "instruction_index": 13,
+      "protocol": "spl_token_swap",
+      "pool": "3SkEYge7DxgrSMevRsHCAMEPi69sJ9JDDq5ZqyWDZFxi",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+      "input": "60931694",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "8403544",
+      "sourceTransfer": 14,
+      "requestedInput": "60931696",
+      "unspentInput": "2",
+      "lpFeeMint": "EcJUr3qHpETUWpN8RaznGbkQJngHFgdXegFi9daSgoqX",
+      "lpFeeTransfers": [
+        {
+          "index": 15,
+          "recipient": "3NXCfaWA336dRA8iy53p9S4owirNg4Xt2EC1E6DPpRo2",
+          "amount": "9963"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "BDfL45sMjwrCheBrGuSbMQurXyXqTyDb8m4ieJQh8xwu",
+          "mint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+          "opening": "21729",
+          "closing": "21731",
+          "credit": "60931696",
+          "debit": "60931694",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DDSihoiPoKUnGZN1LwxzTKkdN2NEc2nZ8wHB5THpuRGQ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "69590",
+          "closing": "69590",
+          "credit": "8403544",
+          "debit": "8403544",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "EVXjgqPswmsGnarf8NLB2X3N5d5aMzoLpj3a9VPuRtn6",
+          "mint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+          "opening": "19791680249",
+          "closing": "19852611943",
+          "credit": "60931694",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3ocoVxgjNDe5RTBdTwQ4AD4Pih6Xo7D3jEgUGnuyjMsJ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "2746235118",
+          "closing": "2737831574",
+          "credit": "0",
+          "debit": "8403544",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3NXCfaWA336dRA8iy53p9S4owirNg4Xt2EC1E6DPpRo2",
+          "mint": "EcJUr3qHpETUWpN8RaznGbkQJngHFgdXegFi9daSgoqX",
+          "opening": "12263475520",
+          "closing": "12263485483",
+          "credit": "9963",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "ceb89ebf319bbde6db9800ff7e5897c457b9326b611234ca1eda273400f5f528",
+      "rpcSha256": "8c90f75f0fd5974ed79cc1331d1eeb791962738be4076a7cd69f1a63d862aa99",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "2GnhKAZrGarqsd8D2WtBMXUGJoYKMbu8iQria4oHD3UNfHFYi5VSGBEvRtWEos2WGD43y7BPcBGGVreBspKWGqr3",
+      "block_num": 456082571,
+      "instruction_index": 10,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "5503920",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "696130",
+      "sourceTransfer": 11,
+      "requestedInput": "5503926",
+      "unspentInput": "6",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 12,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "752"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "95V8wXp2ZcqSYHRM2FtXNXLQCt1L2LL1TMqpvPHy9UPz",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "2826974597",
+          "closing": "2826974603",
+          "credit": "11026032",
+          "debit": "11026026",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "6",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "85CHrf7oQ3R7JVYhXVbpFJ23yzQ79FSWKWfMqMgEYQM7",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "33392",
+          "closing": "33392",
+          "credit": "696130",
+          "debit": "696130",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45442389154",
+          "closing": "45447893074",
+          "credit": "5503920",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "5503920",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5765494640",
+          "closing": "5764798510",
+          "credit": "0",
+          "debit": "696130",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766070727",
+          "closing": "22766071479",
+          "credit": "752",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "b9379990259507f8a07a6ea123ac96f8a5fc988c19fe7e9bb2443eb819bfa89a",
+      "rpcSha256": "b7aee3f05319aa8e5d318e1ebf9289cdeb20bf6a76e65d8b49ebfa07d82967ca",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "pXxD9RP1XFH1PbeV1YXDwt4wrojqzjKK4YLTypirx5dmz62VzE9nvdmnUm8AmAiZs76SjN5JogmvyEQTPPvf2Za",
+      "block_num": 456082573,
+      "instruction_index": 10,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "64218368",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "8109861",
+      "sourceTransfer": 11,
+      "requestedInput": "64218373",
+      "unspentInput": "5",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 12,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "8753"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "95V8wXp2ZcqSYHRM2FtXNXLQCt1L2LL1TMqpvPHy9UPz",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "2826974603",
+          "closing": "2826974608",
+          "credit": "128595696",
+          "debit": "128595691",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "5",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "85CHrf7oQ3R7JVYhXVbpFJ23yzQ79FSWKWfMqMgEYQM7",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "33392",
+          "closing": "33392",
+          "credit": "8109861",
+          "debit": "8109861",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45447893074",
+          "closing": "45512111442",
+          "credit": "64218368",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "64218368",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5764798510",
+          "closing": "5756688649",
+          "credit": "0",
+          "debit": "8109861",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766071479",
+          "closing": "22766080232",
+          "credit": "8753",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "9faeadd6c00eb9cb37b4eededb85788808c4850b6551e4fdde67ef3a2622a09e",
+      "rpcSha256": "020ae97af2c14795bfb1751046dddb5190357920c44738fed528ca6900a88389",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "3mF2iAojtdJwg3DZrdTP4Sy1X2MpnGqEGQYuvHTnMSiWxHy8pt732hvx91bhiwrfgYAXfsXv8mYMMwTaV172ZWPj",
+      "block_num": 456082578,
+      "instruction_index": 3,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "19200000",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "2420246",
+      "sourceTransfer": 4,
+      "requestedInput": "19200001",
+      "unspentInput": "1",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 5,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "2616"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "HzVAAgykD1RJtP6DkByHHjF9u5ePpZqiUpubzbXMtQzh",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "40071701254",
+          "closing": "40071716837",
+          "credit": "19215583",
+          "debit": "19200000",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "15583",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "37JRzBHZZTmZLd5Z97TAEA66EDxVBneQGrXF6L99wK9a",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "357",
+          "closing": "357",
+          "credit": "2420246",
+          "debit": "2420246",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45512111442",
+          "closing": "45531311442",
+          "credit": "19200000",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "19200000",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5756688649",
+          "closing": "5754268403",
+          "credit": "0",
+          "debit": "2420246",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766080232",
+          "closing": "22766082848",
+          "credit": "2616",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "2b83230c588f3d98d4d8e826bae1118052b0032f1dfe2013c40dbd2a264774fe",
+      "rpcSha256": "90e8e75b73cc6adc09e55c852b9f135bc930086a51f52f9e0ae5046b075da71a",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "44QeQpDWsdifbz7zaGhZFV4nuEBBQ4yxw3VrvcPP6A3nXbKxdbQm61rhZAiEWnmRTg7YMPBX9FiCDQVrSSyERJnZ",
+      "block_num": 456082735,
+      "instruction_index": 8,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "HwifWi7UxBhwPwRGGQn2MRUv9aushiXwtkch5mUPLQNA",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "27723282",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "3491051",
+      "sourceTransfer": 9,
+      "requestedInput": "27723284",
+      "unspentInput": "2",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 10,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "3775"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "Au24r9sXRxvTuyMU29uA8Fhjkd9Koh7BfHVng7bQfn28",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "0",
+          "closing": "0",
+          "credit": "55469162",
+          "debit": "55469162",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "FYQ73fta8GH6PtZwof9vSThTRipXgQzYcDr6yap693Pq",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "0",
+          "closing": "0",
+          "credit": "3491051",
+          "debit": "3491051",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "1488440",
+          "created": true,
+          "closed": true
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45531311442",
+          "closing": "45559034724",
+          "credit": "27723282",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "27723282",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5754268403",
+          "closing": "5750777352",
+          "credit": "0",
+          "debit": "3491051",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766082848",
+          "closing": "22766086623",
+          "credit": "3775",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "3f72f466ed673d3a7c3a8c4fc0da22146be8a2220461ffe6341429ecb5f88f79",
+      "rpcSha256": "8295b75b39a4de694e137c5c9b4d5825dc578fde752403159158ea0ce9665ec7",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "47G1tR2xuK4Fxm8W4ZeVwghNF4NKbjpB7hd8zDgC6ztEnqQPgTKVagTqAdVferxWZkuHRdNQBsduuarUmp253ZaV",
+      "block_num": 456082738,
+      "instruction_index": 6,
+      "protocol": "spl_token_swap",
+      "pool": "2UL11LuTTAdSNpZDyampYxVCHu4hgfuVbemWTWEHfpTj",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "PRT88RkA4Kg5z7pKnezeNH4mafTvtQdfFgpQTGRjz44",
+      "input": "3497863691",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "139654",
+      "sourceTransfer": 7,
+      "requestedInput": "3497866427",
+      "unspentInput": "2736",
+      "lpFeeMint": "BPY5oGvks5bR6zQyyWopQmijj7eZYUM1r7YJPmTJ5FKx",
+      "lpFeeTransfers": [
+        {
+          "index": 8,
+          "recipient": "9GwFPyFBn7PnWc6CKL287eeBJ8CCnSoCYsx2EuJiqHy6",
+          "amount": "43879"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "DAJDZkhr9Ah4CGaBYPYVvJBkRgipnwLrpDL1Nr3iiB9w",
+          "mint": "PRT88RkA4Kg5z7pKnezeNH4mafTvtQdfFgpQTGRjz44",
+          "opening": "9811841",
+          "closing": "9814577",
+          "credit": "3497866427",
+          "debit": "3497863691",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DDSihoiPoKUnGZN1LwxzTKkdN2NEc2nZ8wHB5THpuRGQ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "69590",
+          "closing": "69590",
+          "credit": "139654",
+          "debit": "139654",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "53JNbEGstMif9TZ3NcvaK31x45QhM92bxBxEmLjPfNFX",
+          "mint": "PRT88RkA4Kg5z7pKnezeNH4mafTvtQdfFgpQTGRjz44",
+          "opening": "4923940177050",
+          "closing": "4927438040741",
+          "credit": "3497863691",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DLUXZpRACMJhQYBd39LKczjCkDptfuoq4DvBfAsVuqzL",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "197322036",
+          "closing": "197182382",
+          "credit": "0",
+          "debit": "139654",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9GwFPyFBn7PnWc6CKL287eeBJ8CCnSoCYsx2EuJiqHy6",
+          "mint": "BPY5oGvks5bR6zQyyWopQmijj7eZYUM1r7YJPmTJ5FKx",
+          "opening": "149886093300",
+          "closing": "149886137179",
+          "credit": "43879",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "f4556b73facaefd199b7bc9ecb14282a68c00ff7270004dd629454abe98adfb4",
+      "rpcSha256": "0cc135d6a8c2c9a0d1ca0ee58abb84e28278e66b6fdb22def074f9820715100a",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "4p7j4SdaLGUHEiAezWq6E21n3K3HWZCyESY2yV35w3DeurZZTFKfqQUhr2gi77nCp4mcvPZ77RTvwnvxe3azDpds",
+      "block_num": 456082868,
+      "instruction_index": 6,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "18387928",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "2313158",
+      "sourceTransfer": 7,
+      "requestedInput": "18387933",
+      "unspentInput": "5",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 8,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "2503"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "95V8wXp2ZcqSYHRM2FtXNXLQCt1L2LL1TMqpvPHy9UPz",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "2827025513",
+          "closing": "2827025518",
+          "credit": "18387933",
+          "debit": "18387928",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "5",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "85CHrf7oQ3R7JVYhXVbpFJ23yzQ79FSWKWfMqMgEYQM7",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "33392",
+          "closing": "33392",
+          "credit": "2313158",
+          "debit": "2313158",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45559034724",
+          "closing": "45577422652",
+          "credit": "18387928",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "18387928",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5750777352",
+          "closing": "5748464194",
+          "credit": "0",
+          "debit": "2313158",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766086623",
+          "closing": "22766089126",
+          "credit": "2503",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "34d9b3af5dbd9f9fa62f37f2ccb9ba3b44ce802ec07150bfc3d3dbeb77085ddb",
+      "rpcSha256": "c71bb8d41c43f701563ee8d4b101d7b626d529c0a49c09f3710fa797e2660cfb",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "3kGYzHUi94hezMm9TkLbiatgdTTATxsQ9nHWoG7FkyWZsJnYSKpe2SXDTxiBASpVvZ14UH8ixwBShnNuVivYCDs3",
+      "block_num": 456082872,
+      "instruction_index": 6,
+      "protocol": "spl_token_swap",
+      "pool": "VG7NmfRs1tbhM6CZQYWq7kkLdXn4A9JEiWzi9XrR39Y",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+      "input": "30805",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "896985",
+      "sourceTransfer": 7,
+      "requestedInput": "30805",
+      "unspentInput": "0",
+      "lpFeeMint": "AdaRxhhtHmLz8qgkEvVV6sb9BoGmQ2x2VxLQAedf1uDk",
+      "lpFeeTransfers": [
+        {
+          "index": 8,
+          "recipient": "CP2ZeGqg9z2qHfRn3szHuRc2DSrF3fRpxk6MDqUjntyr",
+          "amount": "2588"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "DitofgNnuYcPtFE8sBZTBUcm6fVkwgTGwVsrUte9kfvo",
+          "mint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+          "opening": "552339",
+          "closing": "552339",
+          "credit": "30805",
+          "debit": "30805",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DDSihoiPoKUnGZN1LwxzTKkdN2NEc2nZ8wHB5THpuRGQ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "69590",
+          "closing": "69590",
+          "credit": "896985",
+          "debit": "896985",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "D5AL1NBC8WXwe83i3C4V3kx3ZrCkJtucVZzNUCnVLiuD",
+          "mint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+          "opening": "26854976",
+          "closing": "26885781",
+          "credit": "30805",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DEgNJ4jKdAMsU3x391L4Nq6VD2N8dR85eyjQLDtqMTyX",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "785207465",
+          "closing": "784310480",
+          "credit": "0",
+          "debit": "896985",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "CP2ZeGqg9z2qHfRn3szHuRc2DSrF3fRpxk6MDqUjntyr",
+          "mint": "AdaRxhhtHmLz8qgkEvVV6sb9BoGmQ2x2VxLQAedf1uDk",
+          "opening": "8839091820",
+          "closing": "8839094408",
+          "credit": "2588",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "864c879bfacf9fa86eb17df8af7eab2c40314dc9e4e11436df2b59f4ed7674c8",
+      "rpcSha256": "370670ca6de0bffb93ee6e97331c15eff7b35577e40fce6fb2494a55b273163f",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "4Yfig4RvPF728hob1VW9QyRegiEK7P1rWugnN7QCjdFvi46KDrKj5Qp5MGBaG9pDyi6RyMtdRoKcgzauyok5KgKA",
+      "block_num": 456082891,
+      "instruction_index": 7,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "18401729",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "2313029",
+      "sourceTransfer": 8,
+      "requestedInput": "18401734",
+      "unspentInput": "5",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 9,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "2504"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "HzVAAgykD1RJtP6DkByHHjF9u5ePpZqiUpubzbXMtQzh",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "40073030332",
+          "closing": "40073030337",
+          "credit": "18401734",
+          "debit": "18401729",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "5",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "37JRzBHZZTmZLd5Z97TAEA66EDxVBneQGrXF6L99wK9a",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "357",
+          "closing": "357",
+          "credit": "2313029",
+          "debit": "2313029",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45577422652",
+          "closing": "45595824381",
+          "credit": "18401729",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "18401729",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5748464194",
+          "closing": "5746151165",
+          "credit": "0",
+          "debit": "2313029",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766089126",
+          "closing": "22766091630",
+          "credit": "2504",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "70b22af1aa2aecf1ecaf38c768b81d9c049669087a28573420661cc2e394f243",
+      "rpcSha256": "f0f6cc5364c457bda12047bb73b330d556fe37fdd584e9f2c092637f905ff70f",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "2urcfYD9LxXdjKB5c6ofQam2tA8WmEHvXX8K5XHuvqw5GG2H2eBYwxxCi7u8uqLB7ScTEpUQxBAFW7Jf7C6aMRjQ",
+      "block_num": 456084661,
+      "instruction_index": 10,
+      "protocol": "spl_token_swap",
+      "pool": "4sKqvtHPUBhjuE1Ksrhih8vUAVFHbmqHNdEtQC4oLk6M",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "input": "384407",
+      "outputMint": "PoRTjZMPXb9T7dyU7tpLEZRQj7e6ssfAE62j2oQuc6y",
+      "output": "135488717",
+      "sourceTransfer": 11,
+      "requestedInput": "384407",
+      "unspentInput": "0",
+      "lpFeeMint": "E8ey4neWU7GqGdzSVQUHn7x1CytGb4pSeeUPNZKVaZe",
+      "lpFeeTransfers": [
+        {
+          "index": 12,
+          "recipient": "dLX2ECKHgvoHsMFUXNAmG9yLNRPpqfZ8tc6S5HBiAzE",
+          "amount": "2337"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "DDSihoiPoKUnGZN1LwxzTKkdN2NEc2nZ8wHB5THpuRGQ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "69590",
+          "closing": "69590",
+          "credit": "384407",
+          "debit": "384407",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "9BTrbartgQUjyEyqk2uSTh5wDysDNbKM5jhr173a3HrL",
+          "mint": "PoRTjZMPXb9T7dyU7tpLEZRQj7e6ssfAE62j2oQuc6y",
+          "opening": "134003",
+          "closing": "134018",
+          "credit": "135488717",
+          "debit": "135488702",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "FSXSLN3RP7iEhcmQnTiioSv1nq9iE5gmXz1YRAGRonFe",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "2792907241",
+          "closing": "2793291648",
+          "credit": "384407",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "5y5XvY4dgE7eVZ6TWuwUh5Wu6AbVHwuZRobA1x991nYu",
+          "mint": "PoRTjZMPXb9T7dyU7tpLEZRQj7e6ssfAE62j2oQuc6y",
+          "opening": "987489621218",
+          "closing": "987354132501",
+          "credit": "0",
+          "debit": "135488717",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "dLX2ECKHgvoHsMFUXNAmG9yLNRPpqfZ8tc6S5HBiAzE",
+          "mint": "E8ey4neWU7GqGdzSVQUHn7x1CytGb4pSeeUPNZKVaZe",
+          "opening": "3949338178",
+          "closing": "3949340515",
+          "credit": "2337",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "65f26a948777886c626a26b67fe5a05fcf56c3bf6534f23dec28e56fdc17e2e4",
+      "rpcSha256": "75cb1403b6706163aed10986df4a0e169848582b2d1e61dc4f3f0e33818d8ea6",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "tmMb3mg3HTNET5M8Mo3qVT9j2zPyP3cB8UueX7cUorNLAr3JxRUrmQGXchSr93chFiPDSvYK5G66U2mAUrarY5i",
+      "block_num": 456084711,
+      "instruction_index": 3,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "19199998",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "2411382",
+      "sourceTransfer": 4,
+      "requestedInput": "19200001",
+      "unspentInput": "3",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 5,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "2612"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "HzVAAgykD1RJtP6DkByHHjF9u5ePpZqiUpubzbXMtQzh",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "40077395951",
+          "closing": "40077417104",
+          "credit": "19221151",
+          "debit": "19199998",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "21153",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "37JRzBHZZTmZLd5Z97TAEA66EDxVBneQGrXF6L99wK9a",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "357",
+          "closing": "357",
+          "credit": "2411382",
+          "debit": "2411382",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45595824381",
+          "closing": "45615024379",
+          "credit": "19199998",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "19199998",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5746151165",
+          "closing": "5743739783",
+          "credit": "0",
+          "debit": "2411382",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766091630",
+          "closing": "22766094242",
+          "credit": "2612",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "f2ac996e9df8d0f86fb0ab3fb913bb83e33b2d205e33d36ee62d93ea20fdf445",
+      "rpcSha256": "a1eef55ec838ca3be2e27f00e4a06ad82cb00554c626553b43d93f6192859a03",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "4wo6r2KW8hZpCWYfriFYmn1eJiFTnDRcJ8resteuXFivXsc3pkNNmzpVbfmEyrs4gdGvm5r9dp8cBJB4hrCY2EE7",
+      "block_num": 456084713,
+      "instruction_index": 10,
+      "protocol": "spl_token_swap",
+      "pool": "3SkEYge7DxgrSMevRsHCAMEPi69sJ9JDDq5ZqyWDZFxi",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+      "input": "12371945",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "1700014",
+      "sourceTransfer": 11,
+      "requestedInput": "12371946",
+      "unspentInput": "1",
+      "lpFeeMint": "EcJUr3qHpETUWpN8RaznGbkQJngHFgdXegFi9daSgoqX",
+      "lpFeeTransfers": [
+        {
+          "index": 12,
+          "recipient": "3NXCfaWA336dRA8iy53p9S4owirNg4Xt2EC1E6DPpRo2",
+          "amount": "2022"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "BDfL45sMjwrCheBrGuSbMQurXyXqTyDb8m4ieJQh8xwu",
+          "mint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+          "opening": "21731",
+          "closing": "21732",
+          "credit": "12371946",
+          "debit": "12371945",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "DDSihoiPoKUnGZN1LwxzTKkdN2NEc2nZ8wHB5THpuRGQ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "69590",
+          "closing": "69590",
+          "credit": "1700014",
+          "debit": "1700014",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "EVXjgqPswmsGnarf8NLB2X3N5d5aMzoLpj3a9VPuRtn6",
+          "mint": "BdZPG9xWrG3uFrx2KrUW1jT4tZ9VKPDWknYihzoPRJS3",
+          "opening": "19852611943",
+          "closing": "19864983888",
+          "credit": "12371945",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3ocoVxgjNDe5RTBdTwQ4AD4Pih6Xo7D3jEgUGnuyjMsJ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "2737831574",
+          "closing": "2736131560",
+          "credit": "0",
+          "debit": "1700014",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3NXCfaWA336dRA8iy53p9S4owirNg4Xt2EC1E6DPpRo2",
+          "mint": "EcJUr3qHpETUWpN8RaznGbkQJngHFgdXegFi9daSgoqX",
+          "opening": "12263485483",
+          "closing": "12263487505",
+          "credit": "2022",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "9d6c99ba6b2ab541f2e68d86a5cad760ab776928ae6a530d945707c0cd69d054",
+      "rpcSha256": "403ac5ce6826ba9a4e07bc8bcc78a5271a9dc77ece2ea2d90028c71bd0703a1d",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "4whLYk8V5ZxaJ8X7tV6gbPGfTTE8yMVuuaT95XVWYnydgghj1FF7ydxUAgBdzGwpj2FJAriFpuUGAxQrVDc1hw2S",
+      "block_num": 456085526,
+      "instruction_index": 3,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "moodt1QXNtbmiheUJr9EGfch7h5mTxcWqCLyzXxWNu6",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "19199999",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "2409356",
+      "sourceTransfer": 4,
+      "requestedInput": "19200001",
+      "unspentInput": "2",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 5,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "2610"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "HzVAAgykD1RJtP6DkByHHjF9u5ePpZqiUpubzbXMtQzh",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "40078837988",
+          "closing": "40078847949",
+          "credit": "19209960",
+          "debit": "19199999",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "9961",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "37JRzBHZZTmZLd5Z97TAEA66EDxVBneQGrXF6L99wK9a",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "357",
+          "closing": "357",
+          "credit": "2409356",
+          "debit": "2409356",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45615024379",
+          "closing": "45634224378",
+          "credit": "19199999",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "19199999",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5743739783",
+          "closing": "5741330427",
+          "credit": "0",
+          "debit": "2409356",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766094242",
+          "closing": "22766096852",
+          "credit": "2610",
+          "debit": "0",
+          "nativeCloseAtoms": "0",
+          "nativeDelta": "0",
+          "created": false,
+          "closed": false
+        }
+      ],
+      "pbSha256": "f14ae5c1fcaf04c86ca557bcd180f136017ad19409e49c3b60858aa9b2a8a6cb",
+      "rpcSha256": "e5f19ad785fb732486655aa7fb470052914ba5a8bafdfce750ffec9bb09e77c0",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    }
+  ],
+  "originalTransactions": 13,
+  "completeTokenLedgers": 65,
+  "globalCoverageClaim": false,
+  "historicalReserveClaim": false,
+  "primaryContract": "jup-ag/jupiter-core Penguin SPL Token Swap identification + retained Solana SPL Token Swap instruction/processor/curve",
+  "ownedDeployment": {
+    "program": "PSwapMdSai8tjrEXcxFeQth87xC4rRsa4VA5mhGhXkP",
+    "programData": "2MCSk2AkTAFK4YdaGNahxsiUiG5u7qf8vKqn4zZhYYQt",
+    "deployedSlot": "161376048",
+    "elfSha256": "93622e51c0582563f50e4e16e9912c3768026fc51c9f741ae2b791dbc33614f6",
+    "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+  }
+}
