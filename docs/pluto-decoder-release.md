@@ -1,74 +1,65 @@
 # Pluto DEX decoder release
 
-`v0.5.2-pluto.26` adds observed native swaps for Ghosty, Memefun, Gator,
-Jupiter Perps, Numeraire, Futarchy, Guacswap, Omnipair, Dr Fraudsworth,
-Sanctum Infinity, Peg, AnchorSwap, the Raydium CPMM fork, Janus, Exponent
-and CryptoQuest. Protocol IDs 63–78 append to the existing IDs. It also
-supports current Jupiter RFQ and proprietary venue layouts, Raydium/Meteora
-suffix variants, and additional native and repeated Pump settlement forms.
+`v0.5.2-pluto.27` adds verified native settlement formats for Aldrin V1,
+Cropper, Picon DLMM, M0 native orders, Patch buybacks and Bxlw. Protocol IDs
+79–85 append to existing IDs, including a dedicated PumpSwap buy-and-burn
+format whose output is destroyed rather than credited to a trader. Typed burn
+provenance is separate from transfer and orderbook verification.
 
-Numeraire identifies input and output by native account roles, including
-output-first settlement. Reverse AnchorSwap includes the separate input fee
-in the full user debit. Pump exact-quote input is a maximum budget: native
-committed events, actual principal receipts and primary fee rounding bind
-prices without requiring every budget atom to be spent. CryptoQuest market
-fills retain native log identity and have independently verified physical
-receipts; crafting and withdrawal calls do not become prices.
+The release also handles repeated and V2 Pump native settlement, Meteora DLMM
+host-fee account aliasing, Tessera flag 2, Penguin's SPL Token Swap fork,
+Sanctum legacy opcode 1 and Pancake's native classic-Token layout. Native
+Pancake attribution fixes are bounded to exact committed original ancestry;
+amounts, mint pairs, pools and physical receipt identities are preserved.
 
-Native source validation also applies to routed candidates. Exact committed
-principal receipts, verified net outputs, separate fee roles and complete
-vault ledgers determine prices. Unknown payloads, uncommitted ancestry,
-ambiguous payouts and unsupported fee states remain diagnostic. Liquidity,
-option issuance and redemption, lending/staking receipts, and fee claims
-are separately classified. Classic Token Batch255 operations contribute
-validated transaction ledgers without creating synthetic swap principals.
-Per-format original evidence and rerunnable oracles are linked in
-[the repository map](repo-navigation.md).
+All 229 core tests pass: 215 decoder and 14 mapper tests. The locked Rust
+1.85.1 WebAssembly release build uses `--no-default-features`. Exact package
+replay compares .26 and .27 across 6,429 finalized blocks in three finite
+windows. It preserves 876,427 existing rows unchanged, recovers 750 new legs
+and corrects 1,221 bounded Pancake provenance rows. No existing swaps are
+lost and no unexpected financial changes are accepted. All 1,971 recovered
+or corrected rows match 27 financial/provenance fields against independent
+original evidence from 1,969 transactions and 1,361 finalized containing
+blocks. All four table versions, keys, ordinals, parent chains and sealed
+counters pass. See the [package attestation](../dex-swaps/fixtures/swap-coverage/combined27/packaged-release-proof.json)
+and [portable tools](../dex-swaps/fixtures/swap-coverage/combined27/README.md).
 
-All 217 core decoder/mapper tests and the WebAssembly release build pass.
-The exact packaged replay covers 5,507 finalized blocks, preserves all
-760,854 prior swap identities and financial tuples unchanged, and recovers
-1,161 additional swaps. Every added row matches all 25 financial and provenance
-fields against independent original evidence from 1,133 original encodings
-and 928 finalized containing blocks. All four table versions, operation keys,
-ordinals, parent chains and sealed counters pass. The recent registry warm-up
-completed without database writes; all seven metadata module hashes remain
-unchanged. See the [completed package attestation](../dex-swaps/fixtures/swap-coverage/combined26/packaged-release-proof.json)
-and [portable verification tools](../dex-swaps/fixtures/swap-coverage/combined26/README.md).
-Finite evidence does not establish universal support for every historical,
-current or future Solana swap program.
+The retained live residual corpus additionally classifies 765 native sources
+across 50 programs, distinguishing actual swaps from liquidity, lending,
+fee claims, custody, game issuance and router calls whose child swaps already
+exist. See [native format evidence](native-swap-formats27-validation.md).
+These are finite observed scopes; unobserved or unproven formats remain
+explicit diagnostic candidates. No universal future coverage claim is made.
 
-IDL source is pinned to immutable revision
-`785533d59d0b258500cbbce60890fe58b8c14405`. Existing protocol IDs remain unchanged.
-The `.6` enum/projection migration is retained and extended; no history is
-materialized or rewritten by it. Additive coverage tables retain original
-candidate transactions and per-instruction identities for seven days. Candidate
-records include non-swaps and never feed price views. Block counters persist.
-Create all tables, columns and enum values before starting the new writer.
+IDL revision remains `785533d59d0b258500cbbce60890fe58b8c14405`. All seven
+metadata module hashes and frozen metadata WASM bytes remain unchanged.
+Before starting the writer, add the two raw burn columns and extend all eight
+protocol enum columns through ID 85. Historical rows default both burn fields
+to zero. Pricing accepts only verified transfer/orderbook rows or explicit
+verified protocol-79 burn rows. Applying startup schema twice preserves old
+financial rows and aggregate prices; malformed/unproven burn rows stay excluded.
 
-Build with Rust 1.85.1 and Substreams CLI 1.18.2, matching Pluto's SQL sink:
+Build with Rust 1.85.1 and Substreams CLI 1.18.2:
 
 ```sh
 cargo +1.85.1 test -p dex-swaps -p svm-dex --locked --no-default-features
 cargo +1.85.1 build -p dex-swaps -p svm-dex --locked --no-default-features --target wasm32-unknown-unknown --release
-substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.26.spkg
-substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.26.spkg
+substreams pack dex-swaps/substreams.yaml -o spkg/dex-swaps-v0.5.2-pluto.27.spkg
+substreams pack svm-dex/substreams.yaml -o spkg/svm-dex-v0.5.2-pluto.27.spkg
 make -C svm-dex/clickhouse schema
-substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.26.spkg
+substreams pack svm-dex/clickhouse/substreams.yaml -o spkg/svm-clickhouse-dex-v0.5.2-pluto.27.spkg
 ```
 
-Stop the old writer gracefully before upgrading and preserve its exact durable
-cursor. For this validated pricing-only upgrade with unchanged metadata bytes and hashes, copy that cursor row under the
-new output-module hash before starting the new writer. Keep strict module-hash
-checking enabled: the pinned sink selects an exact hash before considering any
-fallback. Check that the first actual new block links to the old saved block and block
-ID (the next finalized block may follow skipped Solana slots), then verify cursor advancement, swap quality and coverage-table writes.
-The adopted cursor row is a restart boundary, not evidence of newly processed
-blocks. Do not use this migration for an unvalidated stateful or historical
-replay change. Historical recovery needs
-a separate versioned canonical replay and full replacements: appending old
-swaps to live tables double-counts OHLC aggregates. The older history manifest
-remains pinned to its original decoder.
+Warm the exact package's unchanged metadata registry with a read-only replay
+near/before the intended restart boundary. Stop the old writer gracefully and
+wait for its final data/cursor flush. Preserve its exact durable row and copy
+that row under the verified new output-module hash before starting the new
+writer. Keep strict module-hash checking enabled and retain the old hash row.
+Check the first actual new block links to the saved old block and hash, then
+verify advancing cursors, versions, sealed counters, keys and financial quality.
+The adopted cursor is a restart boundary, not proof that the new decoder
+processed the old block. Historical recovery requires canonical replacement;
+appending old swaps or provenance corrections to live OHLC states double-counts.
 
 ## pluto.13 metadata and pricing binaries
 

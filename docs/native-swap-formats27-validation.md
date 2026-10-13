@@ -1,17 +1,53 @@
-# Combined native swap formats: .27
+# Native swap formats in pluto.27
 
-This release repairs actual missed spot exchanges identified in the retained finalized diagnostic corpus at slots 456213447–456214372. It adds observed Pump native sell/roundtrip settlements, Pump AMM quote buy-and-burn, Aldrin V1, Cropper, Picon DLMM, M0 full native orders, Patch buyback, Bxlw sells, Penguin SPL swaps, classic Pancakeswap swaps and Sanctum Infinity legacy exact-input swaps. It also admits the independently proved Tessera caller flag 2 and two DLMM host-fee aliases with exact net receipts.
+The runtime is pinned to source `14826d2ced83d367af4afb6e46fb0bf79316e024`.
+New native programs and settlement variants use source-bound immediate physical
+receipts, exact primary layouts, owned immutable pool/authority roles, requested
+input caps/minimum proceeds, committed ancestry and complete principal ledgers.
+Unknown native layouts remain diagnostic; generic router totals never replace
+native financial principals.
 
-Financial amounts come from committed source-owned transfers, native events, explicit fees, account closures and independently reconciled user/vault balances. Cropper includes its separate input fee in the user's gross debit. Protocol IDs 79–85 are additive; existing venue IDs and physical trade keys are unchanged.
+| Additional legs in the three final package replays | Count |
+|---|---:|
+| PumpSwap protocol-funded buy-and-burn | 613 |
+| Aldrin V1 | 37 |
+| Cropper | 19 |
+| Picon DLMM | 11 |
+| M0 native order | 5 |
+| Bxlw | 3 |
+| Patch buyback | 1 |
+| Pump native repeated/V2 settlement | 29 |
+| Penguin SPL Token Swap | 17 |
+| Sanctum Infinity legacy | 7 |
+| Pancake native legacy | 5 |
+| Meteora DLMM host-fee alias | 2 |
+| Tessera flag 2 | 1 |
 
-Pump AMM buy-and-burn is an actual quote-funded pool buy that destroys its base output. It carries `burn_output_verified` and `source_burn_index`, with `transfer_verified=false`: the base amount is never represented as a wallet credit. The mapper requires consecutive source/quote/Burn provenance, matching format and nonzero quantities. Price views accept only that explicit verified burn format in addition to existing transfer/fill proofs. Tiny principals retain existing price-eligibility thresholds.
+Buy-and-burn output has a separate verified Burn identity and never invents
+trader credit. Whole original quote/burn/event identities, PDAs and financial
+ledgers bind that protocol's price. Protocol IDs 79–85 are appended without
+reassigning existing IDs. Older rows have zero burn metadata.
 
-The existing core business tests include real finalized originals plus malformed native and routed candidates. The portable family verifiers under `dex-swaps/fixtures/swap-coverage/*27` retain raw originals, finalized RPC evidence, primary account/ABI contracts and exact financial tuples. Picon and Pancakeswap exact-output regression variants are ABI-derived from real exact-input originals; they are not claimed as separately observed real exact-output transactions. M0 currently accepts full Solana-chain native fills only; partial/foreign fills remain excluded.
+The [combined package proof](../dex-swaps/fixtures/swap-coverage/combined27/README.md)
+covers 6,429 finalized blocks: 876,427 unchanged rows, 750 added legs and 1,221
+bounded Pancake provenance corrections, with zero lost or unexpectedly modified
+rows. All 1,971 additions/corrections are independently matched across 27 fields,
+including transaction/block metadata. Family originals and oracles are retained
+under `dex-swaps/fixtures/swap-coverage/`; the combined family registry lists every
+non-overlapping live and broader-window proof.
 
-Independent classification finds no fills in the sampled Manifest order placements/cancellations; liquidity operations, zero-proceeds swaps, loan creation, receipt redemption and same-direction wallet payouts remain diagnostics. Diagnostic count is not a count of missing swaps. Those exclusions retain original evidence and primary contracts in the respective family fixtures.
+The remaining observed live native diagnostic groups are exhaustively classified
+in [owned instruction classification](../dex-swaps/fixtures/swap-coverage/owned-instruction-classification27/README.md),
+[Pump-related non-spot settlements](../dex-swaps/fixtures/swap-coverage/remaining-pump-null27/README.md)
+and [remaining native non-spot operations](../dex-swaps/fixtures/swap-coverage/remaining-native-null27/README.md).
+Their combined finite scope is 82 groups, 765 native sources and 50 programs.
+LP operations, fee claims, lending/staking, bridge/custody transfers, game issuance
+and child-swap router wrappers do not create spot prices. Explicit retained RPC
+runtime limitations are checked against full original PB runtime, rather than
+silently treated as complete RPC logs. Opaque primary ABIs are documented as such.
 
-The combined package replay tools under `fixtures/swap-coverage/combined27` require immutable .26/.27 packages and completed clean finalized streams. They check existing keys and all 25 prior fields, new burn provenance, operation ordinals, table versions, block parents and sealed counters. Added rows must match independent venue oracles and original PB/finalized-RPC/containing-block metadata. Preparation or incomplete streams cannot attest a release.
-
-The seven metadata module hashes and exact frozen metadata WASM remain unchanged. Release builds use `--no-default-features`. Historical recovery requires canonical replacement in an isolated replay workflow; normal deployment must preserve the exact durable cursor and never replay historical financial rows into existing aggregates.
-
-This is a finite observed-format validation. It does not establish universal coverage of unobserved or future native formats. Unproved instructions and fee configurations remain retained diagnostics rather than fabricated prices.
+All 229 decoder/mapper core tests pass. The schema integration runs actual startup
+SQL twice against isolated ClickHouse 26.7 and verifies historical row/price
+preservation, readiness of all eight enums and strict burn-pricing gates. The
+release does not replay old financial rows into live aggregates. Finite coverage
+cannot guarantee all unobserved current or future swap types.
