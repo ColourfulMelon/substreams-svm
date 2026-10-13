@@ -3,7 +3,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::orca;
 
-use crate::logs::{scoped_program_log, ProgramLog};
+use crate::logs::{scoped_program_log, ParsedLog, ProgramLog};
 use crate::token_mints::TokenMintLookup;
 
 pub(crate) struct State {
@@ -27,8 +27,8 @@ impl State {
         }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID, &mut self.is_invoked)? else {
             return None;
         };
 
@@ -290,12 +290,12 @@ mod tests {
             });
         }
         // The unparsed first hop must not consume either known pool.
-        assert!(state.handle_log(&traded_log([9; 32], true, 273_199_007, 53_097_662_110)).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&traded_log([9; 32], true, 273_199_007, 53_097_662_110))).is_none());
         assert_eq!(state.pending.len(), 2);
-        let second = state.handle_log(&traded_log([2; 32], false, 53_097_662_110, 2_214_641_291_345)).unwrap();
+        let second = state.handle_log(&ParsedLog::new(&traded_log([2; 32], false, 53_097_662_110, 2_214_641_291_345))).unwrap();
         assert_eq!(second.amm_pool, vec![2; 32]);
         assert_eq!(second.input_mint, vec![5; 32]);
-        let third = state.handle_log(&traded_log([3; 32], true, 2_170_348_465_518, 276_039_217)).unwrap();
+        let third = state.handle_log(&ParsedLog::new(&traded_log([3; 32], true, 2_170_348_465_518, 276_039_217))).unwrap();
         assert_eq!(third.amm_pool, vec![3; 32]);
         assert_eq!(third.output_amount, 276_039_217);
         assert!(state.pending.is_empty());
@@ -315,11 +315,11 @@ mod tests {
                 a_to_b,
             });
         }
-        let first = state.handle_log(&traded_log([2; 32], true, 100, 90)).unwrap();
+        let first = state.handle_log(&ParsedLog::new(&traded_log([2; 32], true, 100, 90))).unwrap();
         assert_eq!(first.input_mint, vec![3; 32]);
-        assert!(state.handle_log(&traded_log([2; 32], true, 100, 90)).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&traded_log([2; 32], true, 100, 90))).is_none());
         assert_eq!(state.pending.len(), 1);
-        let second = state.handle_log(&traded_log([2; 32], false, 80, 70)).unwrap();
+        let second = state.handle_log(&ParsedLog::new(&traded_log([2; 32], false, 80, 70))).unwrap();
         assert_eq!(second.input_mint, vec![4; 32]);
         assert!(state.pending.is_empty());
     }
@@ -338,8 +338,8 @@ mod tests {
                 a_to_b: true,
             });
         }
-        assert!(state.handle_log(&traded_log([2; 32], true, 100, 90)).is_none());
-        let swap = state.handle_log(&traded_log([3; 32], true, 80, 70)).unwrap();
+        assert!(state.handle_log(&ParsedLog::new(&traded_log([2; 32], true, 100, 90))).is_none());
+        let swap = state.handle_log(&ParsedLog::new(&traded_log([3; 32], true, 80, 70))).unwrap();
         assert_eq!(swap.amm_pool, vec![3; 32]);
         assert_eq!(swap.input_amount, 80);
     }

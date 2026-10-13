@@ -3,7 +3,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::raydium;
 
-use crate::logs::{scoped_program_log, ProgramLog};
+use crate::logs::{scoped_program_log, ParsedLog, ProgramLog};
 
 pub(crate) struct State {
     pending: Vec<InstructionSwap>,
@@ -24,9 +24,9 @@ impl State {
         }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
         let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &raydium::cpmm::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
+            scoped_program_log(log_message, &raydium::cpmm::PROGRAM_ID, &mut self.is_invoked)?
         else {
             return None;
         };
@@ -149,12 +149,12 @@ mod tests {
         event.serialize(&mut data).unwrap();
         let log = format!("Program data:{}", STANDARD.encode(data));
         let program = substreams_solana::base58::encode(&raydium::cpmm::PROGRAM_ID);
-        state.handle_log(&format!("Program {program} invoke [1]"));
-        let swap = state.handle_log(&log).unwrap();
+        state.handle_log(&ParsedLog::new(&format!("Program {program} invoke [1]")));
+        let swap = state.handle_log(&ParsedLog::new(&log)).unwrap();
         assert_eq!(swap.amm_pool, vec![2; 32]);
         assert_eq!(swap.input_mint, vec![12; 32]);
         assert_eq!((swap.input_amount, swap.output_amount), (123, 456));
-        assert!(state.handle_log(&log).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&log)).is_none());
         assert_eq!(state.pending.len(), 1);
         assert_eq!(state.pending[0].pool_state, vec![1; 32]);
     }

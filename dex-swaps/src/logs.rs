@@ -81,23 +81,43 @@ pub(crate) fn successful_invocations(tx: &substreams_solana::pb::sf::solana::r#t
     invocation_outcomes(tx).completed
 }
 
+#[derive(Debug, PartialEq)]
 pub(crate) enum ProgramLog<'a> {
     Enter { invoke_depth: Option<u32> },
     Data(&'a str),
     Exit,
 }
 
-pub(crate) fn scoped_program_log<'a>(log_message: &'a str, program_id: &[u8], is_invoked: &mut bool) -> Option<ProgramLog<'a>> {
-    let matches_program = parse_program_id(log_message).map_or(false, |id| id == program_id);
+/// Parse each transaction log once before sharing it with the protocol states.
+/// Keep the existing permissive header matching: scope changes, malformed
+/// depths and foreign-program data must have exactly the same meaning.
+pub(crate) struct ParsedLog<'a> {
+    pub(crate) message: &'a str,
+    pub(crate) program_id: Option<Vec<u8>>,
+    pub(crate) invoke: bool,
+    invoke_depth: Option<u32>,
+    exit: bool,
+}
 
-    if is_invoke(log_message) && matches_program {
+impl<'a> ParsedLog<'a> {
+    pub(crate) fn new(message: &'a str) -> Self {
+        let program_id = parse_program_id(message);
+        let invoke = program_id.is_some() && is_invoke(message);
+        let invoke_depth = if invoke { parse_invoke_depth(message) } else { None };
+        let exit = program_id.is_some() && !invoke && (is_success(message) || is_failed(message));
+        Self { message, program_id, invoke, invoke_depth, exit }
+    }
+}
+
+pub(crate) fn scoped_program_log<'a>(log: &ParsedLog<'a>, program_id: &[u8], is_invoked: &mut bool) -> Option<ProgramLog<'a>> {
+    let matches_program = log.program_id.as_deref() == Some(program_id);
+
+    if log.invoke && matches_program {
         *is_invoked = true;
-        return Some(ProgramLog::Enter {
-            invoke_depth: parse_invoke_depth(log_message),
-        });
+        return Some(ProgramLog::Enter { invoke_depth: log.invoke_depth });
     }
 
-    if matches_program && (is_success(log_message) || is_failed(log_message)) {
+    if matches_program && log.exit {
         *is_invoked = false;
         return Some(ProgramLog::Exit);
     }
@@ -106,13 +126,69 @@ pub(crate) fn scoped_program_log<'a>(log_message: &'a str, program_id: &[u8], is
         return None;
     }
 
-    Some(ProgramLog::Data(log_message))
+    Some(ProgramLog::Data(log.message))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+
+    #[test]
+    fn shared_log_headers_preserve_independent_protocol_scopes() {
+        let first = [0; 32];
+        let second = substreams_solana_idls::spl::token::PROGRAM_ID;
+        let first_id = base58::encode(first);
+        let second_id = base58::encode(second);
+        let mut first_active = false;
+        let mut second_active = false;
+        // Foreign headers remain data for an already active protocol. This
+        // deliberately preserves the existing handler semantics; commitment
+        // and rolled-back CPI filtering still belong to invocation_outcomes.
+        for (message, first_event, second_event) in [
+            ("Program data: outside".to_string(), None, None),
+            (format!("Program {first_id} invoke [1]"), Some(0), None),
+            (format!("Program {second_id} invoke [2]"), Some(1), Some(0)),
+            ("Program data: nested".to_string(), Some(1), Some(1)),
+            (format!("Program {second_id} failed: custom program error: 1"), Some(1), Some(2)),
+            ("Log truncated".to_string(), Some(1), None),
+            (format!("Program {first_id} success  "), Some(2), None),
+            ("Program data: outside".to_string(), None, None),
+        ] {
+            let log = ParsedLog::new(&message);
+            for (program, active, event, depth) in [
+                (first.as_slice(), &mut first_active, first_event, 1),
+                (second.as_slice(), &mut second_active, second_event, 2),
+            ] {
+                let expected = match event {
+                    Some(0) => Some(ProgramLog::Enter { invoke_depth: Some(depth) }),
+                    Some(1) => Some(ProgramLog::Data(message.as_str())),
+                    Some(2) => Some(ProgramLog::Exit),
+                    _ => None,
+                };
+                assert_eq!(scoped_program_log(&log, program, active), expected);
+            }
+        }
+        assert!(!first_active && !second_active);
+    }
+
+    #[test]
+    fn shared_log_headers_keep_malformed_depths_and_invalid_ids_compatible() {
+        let program = [0; 32];
+        let id = base58::encode(program);
+        for message in [format!("Program {id} invoke [bad]"), format!("Program {id} invoke [1")] {
+            let mut active = false;
+            assert_eq!(scoped_program_log(&ParsedLog::new(&message), &program, &mut active),
+                Some(ProgramLog::Enter { invoke_depth: None }));
+            assert!(active);
+        }
+        let mut active = true;
+        for message in ["Program invalid invoke [1]", "Program invalid success", "Program log: failed: custom error"] {
+            assert_eq!(scoped_program_log(&ParsedLog::new(message), &program, &mut active),
+                Some(ProgramLog::Data(message)));
+            assert!(active);
+        }
+    }
 
     #[test]
     fn runtime_truncation_keeps_completed_root_children_but_not_pending_inner_work() {

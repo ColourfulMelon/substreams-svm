@@ -5,7 +5,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::raydium;
 
-use crate::logs::{scoped_program_log, ProgramLog};
+use crate::logs::{scoped_program_log, ParsedLog, ProgramLog};
 use crate::token_mints::TokenMintLookup;
 
 pub(crate) struct State {
@@ -38,8 +38,8 @@ impl State {
         }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str, token_mints: &TokenMintLookup) -> Option<pb::Swap> {
-        match scoped_program_log(log_message, &raydium::clmm::v3::PROGRAM_ID.to_vec(), &mut self.is_invoked)? {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>, token_mints: &TokenMintLookup) -> Option<pb::Swap> {
+        match scoped_program_log(log_message, &raydium::clmm::v3::PROGRAM_ID, &mut self.is_invoked)? {
             ProgramLog::Data(data) => {
                 let log = parse_log_data(data)?;
                 let position = self.pending.iter().enumerate().find_map(|(index, pending)| {
@@ -375,14 +375,14 @@ mod tests {
             stack_height: 1, payer: vec![1;32], pool_state: vec![3;32],
             input_mint: Some(vec![4;32]), output_mint: Some(vec![5;32]),
         }));
-        state.handle_log(&make_invoke_log(), &mints);
+        state.handle_log(&ParsedLog::new(&make_invoke_log()), &mints);
         let missing = swap_event_log_line([9;32], [1;32], [4;32], [5;32], 10, 20, true);
-        assert!(state.handle_log(&missing, &mints).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&missing), &mints).is_none());
         let matching = swap_event_log_line([3;32], [1;32], [4;32], [5;32], 10, 20, true);
-        let swap = state.handle_log(&matching, &mints).unwrap();
+        let swap = state.handle_log(&ParsedLog::new(&matching), &mints).unwrap();
         assert_eq!(swap.amm_pool, vec![3;32]);
         assert_eq!(swap.input_amount, 10);
-        assert!(state.handle_log(&matching, &mints).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&matching), &mints).is_none());
     }
 
     #[test]
@@ -821,7 +821,7 @@ mod tests {
         let log_hop2 = swap_event_log_line(pool_hop2, payer, vault_out2, vault_in2, 998_500, 999_000, false);
 
         let logs = [make_invoke_log(), log_hop1, log_hop2, make_success_log()];
-        let swaps: Vec<pb::Swap> = logs.iter().filter_map(|l| state.handle_log(l, &mints)).collect();
+        let swaps: Vec<pb::Swap> = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l), &mints)).collect();
 
         assert_eq!(swaps.len(), 2, "one normalized swap row per hop");
 
@@ -870,7 +870,7 @@ mod tests {
         let tx = make_tx(SWAP_DISC, &[[0u8; 32]; 10], &[]);
         let meta = tx.meta.as_ref().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
-        assert!(state.handle_log(&exit_log, &mints).is_none());
+        assert!(state.handle_log(&ParsedLog::new(&exit_log), &mints).is_none());
         assert_eq!(state.next_index, 0, "current invariant: 0-event Router placeholder stays put on Exit");
     }
 }

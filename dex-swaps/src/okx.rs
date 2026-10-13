@@ -23,7 +23,7 @@
 
 use std::collections::VecDeque;
 
-use common::solana::{is_invoke, parse_program_id};
+use crate::logs::ParsedLog;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::okx;
@@ -90,7 +90,7 @@ impl State {
         });
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
         // Skip per-log parsing entirely when no OKX SwapV3 is in scope for
         // this tx. Avoids a `String` allocation per log line in the common
         // case where the tx contains zero OKX swaps.
@@ -102,12 +102,14 @@ impl State {
         // SwapV3 invocation. Drop any in-flight state from a prior invocation
         // that didn't reach its expected event count (e.g. internal program
         // logic shortcut a hop) so we never leak across instructions.
-        if is_okx_invoke(log_message) {
+        if log_message.invoke && log_message.program_id.as_deref() == Some(okx::v2::PROGRAM_ID.as_slice()) {
             self.current = None;
             self.pending_route_pool = None;
             self.previous_log = None;
             return None;
         }
+
+        let log_message = log_message.message;
 
         // Two-line route preamble: "Program log: Dex::X amount_in: ..., offset: ..."
         // followed by "Program log: <pool_pubkey>".
@@ -188,10 +190,6 @@ impl State {
     }
 }
 
-fn is_okx_invoke(log: &str) -> bool {
-    is_invoke(log) && parse_program_id(log).map_or(false, |id| id == okx::v2::PROGRAM_ID)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -256,7 +254,7 @@ mod tests {
             "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH success",
             "Program log: SwapEvent { dex: Tessera, amount_in: 22470948799, amount_out: 251803859108 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
 
         assert_eq!(swaps.len(), 1);
         let swap = &swaps[0];
@@ -297,7 +295,7 @@ mod tests {
             "Program ALPHAQmeA7bjrVuccPsYPiCvsi428SNwte66Srvs4pHA success",
             "Program log: SwapEvent { dex: AlphaQ, amount_in: 6884273882, amount_out: 8156649077 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
 
         assert_eq!(swaps.len(), 1, "multi-hop emits one summary row, not per-hop rows with empty mints");
         let swap = &swaps[0];
@@ -352,7 +350,7 @@ mod tests {
             "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH success",
             "Program log: SwapEvent { dex: Tessera, amount_in: 2000000, amount_out: 3000000 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
 
         assert_eq!(swaps.len(), 1, "tx1 partial dropped, only tx2 emits");
         let swap = &swaps[0];
@@ -400,7 +398,7 @@ mod tests {
             "Program log: FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
             "Program log: SwapEvent { dex: Tessera, amount_in: 2000000, amount_out: 3000000 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
 
         assert_eq!(swaps.len(), 2);
         assert_eq!(swaps[0].user, payer1.to_vec());
@@ -441,7 +439,7 @@ mod tests {
             "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH success",
             "Program log: SwapEvent { dex: Tessera, amount_in: 500, amount_out: 750 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
 
         assert_eq!(swaps.len(), 1);
         assert!(swaps[0].amm_pool.is_empty());
@@ -461,7 +459,7 @@ mod tests {
             "Program log: FLckHLGMJy5gEoXWwcE68Nprde1D4araK4TGLw4pQq2n",
             "Program log: SwapEvent { dex: Tessera, amount_in: 100, amount_out: 200 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
         assert!(swaps.is_empty());
         assert!(state.previous_log.is_none(), "fast-path must skip allocation when nothing is queued");
     }
@@ -489,7 +487,7 @@ mod tests {
             "Program log: SwapEvent { dex: Tessera, amount_in: 100, amount_out: 200 }",
             "Program log: SwapEvent { dex: Tessera, amount_in: 999, amount_out: 999 }",
         ];
-        let swaps = logs.iter().filter_map(|l| state.handle_log(l)).collect::<Vec<_>>();
+        let swaps = logs.iter().filter_map(|l| state.handle_log(&ParsedLog::new(l))).collect::<Vec<_>>();
         assert_eq!(swaps.len(), 1);
         assert_eq!(swaps[0].input_amount, 100);
         assert_eq!(swaps[0].output_amount, 200);

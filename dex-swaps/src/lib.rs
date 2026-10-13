@@ -341,41 +341,42 @@ pub fn process_transaction_with_metadata(
 
     swaps.extend(jupiter_v4::decode_logs(&tx));
     for log_message in tx_meta.log_messages.iter() {
-        if let Some(swap) = boop_state.handle_log(log_message) {
+        let log = logs::ParsedLog::new(log_message);
+        if let Some(swap) = boop_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = byreal_state.handle_log(log_message) {
+        if let Some(swap) = byreal_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = darklake_state.handle_log(log_message) {
+        if let Some(swap) = darklake_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = dumpfun_state.handle_log(log_message) {
+        if let Some(swap) = dumpfun_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = meteora_amm_state.handle_log(log_message) {
+        if let Some(swap) = meteora_amm_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = moonshot_state.handle_log(log_message) {
+        if let Some(swap) = moonshot_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = okx_state.handle_log(log_message) {
+        if let Some(swap) = okx_state.handle_log(&log) {
             log::info!("OKX Swap 🟢 {} {}", base58::encode(&swap.program_id), base58::encode(&swap.amm_pool));
             swaps.push(swap);
         }
-        if let Some(swap) = pancakeswap_state.handle_log(log_message) {
+        if let Some(swap) = pancakeswap_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = raydium_amm_v4_state.handle_log(log_message) {
+        if let Some(swap) = raydium_amm_v4_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = raydium_clmm_state.handle_log(log_message, &token_mints) {
+        if let Some(swap) = raydium_clmm_state.handle_log(&log, &token_mints) {
             swaps.push(swap);
         }
-        if let Some(swap) = raydium_cpmm_state.handle_log(log_message) {
+        if let Some(swap) = raydium_cpmm_state.handle_log(&log) {
             swaps.push(swap);
         }
-        if let Some(swap) = orca_whirlpool_state.handle_log(log_message) {
+        if let Some(swap) = orca_whirlpool_state.handle_log(&log) {
             swaps.push(swap);
         }
     }

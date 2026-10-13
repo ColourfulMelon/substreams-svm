@@ -4,7 +4,7 @@ use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::byreal;
 
 use crate::{
-    logs::{scoped_program_log, ProgramLog},
+    logs::{scoped_program_log, ParsedLog, ProgramLog},
     token_mints::TokenMintLookup,
 };
 
@@ -29,8 +29,8 @@ impl State {
         }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &byreal::clmm::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &byreal::clmm::PROGRAM_ID, &mut self.is_invoked)? else {
             return None;
         };
 

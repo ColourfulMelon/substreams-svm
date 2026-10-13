@@ -2,7 +2,7 @@ use common::solana::parse_program_data;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana_idls::darklake;
 
-use crate::logs::{scoped_program_log, ProgramLog};
+use crate::logs::{scoped_program_log, ParsedLog, ProgramLog};
 
 pub(crate) struct State {
     is_invoked: bool,
@@ -13,9 +13,9 @@ impl State {
         Self { is_invoked: false }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
         let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &darklake::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
+            scoped_program_log(log_message, &darklake::PROGRAM_ID, &mut self.is_invoked)?
         else {
             return None;
         };
@@ -69,9 +69,9 @@ mod tests {
     #[test]
     fn settle_event_emits_swap_with_realised_amounts() {
         let mut state = State::new();
-        assert!(state.handle_log(INVOKE_LOG).is_none(), "invoke is a header, not a swap");
+        assert!(state.handle_log(&ParsedLog::new(INVOKE_LOG)).is_none(), "invoke is a header, not a swap");
         let swap = state
-            .handle_log(SETTLE_LOG)
+            .handle_log(&ParsedLog::new(SETTLE_LOG))
             .expect("Settle event should decode into a swap");
 
         assert_eq!(swap.protocol, pb::Protocol::Darklake as i32);
@@ -96,8 +96,8 @@ mod tests {
         // only realised SettleEvents should produce swaps.
         let swap_event_log = "Program data: UWzjvs3QCsQLE/3EW00Z3UD/couPlpXnLjrnbc03ZEIcKMvzILA+OAFLE74XAAAAALqDAAAAAAAA3UEAAAAAAAAjZWYAAAAAAF0uDQAAAAAA3ehmAAAAAADI60EAAAAAAF0uDQAAAAAAlOqXAAAAAAAbZSEAAAAAANMIWgAAAAAALnITAAAAAAAzBz0AAAAAAF0uDQAAAAAA3ehmAAAAAAAAAAAAAAAAAI7aAAAAAAAAkMQAAAAAAADjBXni+/SMviQjZ16c3j/3bO0rtEbrozGeXFo12dr3SU55lnjhWzDrD1x9AiUrbwXOO8hFUaKgZYCIx+JuuPuHNJAPPbJjColiTw3TN8i+TYy3K/EcIbh3z6DzXqHNu9sGm4hX/quBhPtof2NGGMA12sQ53BrrO1WYoPAAAAAAAc4BDmCv7bInF71jGS9UFFo/llozu4LSxwKess4eIIJkAAAAAA==";
         let mut state = State::new();
-        assert!(state.handle_log(INVOKE_LOG).is_none());
-        assert!(state.handle_log(swap_event_log).is_none(),
+        assert!(state.handle_log(&ParsedLog::new(INVOKE_LOG)).is_none());
+        assert!(state.handle_log(&ParsedLog::new(swap_event_log)).is_none(),
                 "SwapEvent (intent) must not be matched");
     }
 }

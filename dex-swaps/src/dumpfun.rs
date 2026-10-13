@@ -3,7 +3,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana_idls::dumpfun;
 
 use crate::{
-    logs::{scoped_program_log, ProgramLog},
+    logs::{scoped_program_log, ParsedLog, ProgramLog},
     SOL_MINT,
 };
 
@@ -16,9 +16,9 @@ impl State {
         Self { is_invoked: false }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
         let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &dumpfun::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
+            scoped_program_log(log_message, &dumpfun::PROGRAM_ID, &mut self.is_invoked)?
         else {
             return None;
         };
