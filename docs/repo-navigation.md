@@ -34,6 +34,7 @@ market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
 The pluto.31 pricing graph removes the derived fee-state stage; see [four-stage validation](stage31-validation.md).
+The pluto.33 SQL mapper uses gzip level 6; see [compression validation](gzip6-validation.md) and [package proof](stage33-package-proof.json). Decoder and metadata hashes remain unchanged.
 The pluto.32 [package proof](stage32-package-proof.json) preserves the four-stage graph and metadata caches.
 Transaction log headers are shared across protocol handlers; see [shared log parsing validation](shared-log-parsing-validation.md) for compatibility and local timing evidence.
 The pluto.30 SQL output uses a versioned gzip envelope; see [gzip validation](gzip30-validation.md). Its paired sink decompresses before applying unchanged financial rows.

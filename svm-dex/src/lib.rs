@@ -7,7 +7,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.32";
+const DECODER_VERSION: &str = "v0.5.2-pluto.33";
 
 #[derive(Clone, PartialEq, Message)]
 pub struct GzipDatabaseChanges {
@@ -120,7 +120,7 @@ pub fn compress_database_changes(changes: DatabaseChanges) -> Result<GzipDatabas
     if bytes.len() > 64 * 1024 * 1024 {
         return Err(Error::msg("DatabaseChanges exceeds 64 MiB gzip limit"));
     }
-    let mut encoder = flate2::GzBuilder::new().mtime(0).write(Vec::new(), flate2::Compression::fast());
+    let mut encoder = flate2::GzBuilder::new().mtime(0).write(Vec::new(), flate2::Compression::new(6));
     encoder.write_all(&bytes).map_err(|error| Error::msg(format!("gzip DatabaseChanges: {error}")))?;
     Ok(GzipDatabaseChanges {
         version: 1,

@@ -1,0 +1,130 @@
+{
+  "runtime": "v24.16.0",
+  "engine": "local V8 WASM; full db_out mapper time, not Pinax CPU time",
+  "firstSlot": 456489100,
+  "lastSlot": 456489299,
+  "blocks": 200,
+  "swaps": 24436,
+  "rawBytes": 30737909,
+  "passes": 4,
+  "warmupPasses": 1,
+  "gzipDecodedDatabaseChangesBytesIdentical": false,
+  "sizeIncludesActualGzipProtobufEnvelope": true,
+  "databaseWrites": false,
+  "rows": [
+    {
+      "level": 1,
+      "bytes": 7576693,
+      "meanMapperMs": 2.7869570799999974,
+      "p95MapperMs": 4.724250000000211,
+      "additionalPayloadReductionPercent": 0,
+      "extraMapperMs": 0,
+      "mapperTimeRatio": 1
+    },
+    {
+      "level": 6,
+      "bytes": 5852788,
+      "meanMapperMs": 3.873158314999955,
+      "p95MapperMs": 6.611541000000216,
+      "additionalPayloadReductionPercent": 22.752736583097665,
+      "extraMapperMs": 1.0862012349999577,
+      "mapperTimeRatio": 1.389744514831193
+    }
+  ],
+  "results": {
+    "1": [
+      {
+        "pass": 0,
+        "level": 1,
+        "blocks": 200,
+        "totalMs": 574.9742949999998,
+        "meanMs": 2.8748714749999986,
+        "p95Ms": 5.049292000000037,
+        "rawBytes": 30737909,
+        "envelopeBytes": 7576693,
+        "swaps": 24436
+      },
+      {
+        "pass": 1,
+        "level": 1,
+        "blocks": 200,
+        "totalMs": 558.9280850000027,
+        "meanMs": 2.7946404250000136,
+        "p95Ms": 4.632416999999805,
+        "rawBytes": 30737909,
+        "envelopeBytes": 7576693
+      },
+      {
+        "pass": 2,
+        "level": 1,
+        "blocks": 200,
+        "totalMs": 555.5252529999998,
+        "meanMs": 2.777626264999999,
+        "p95Ms": 4.724250000000211,
+        "rawBytes": 30737909,
+        "envelopeBytes": 7576693
+      },
+      {
+        "pass": 3,
+        "level": 1,
+        "blocks": 200,
+        "totalMs": 557.3914159999995,
+        "meanMs": 2.7869570799999974,
+        "p95Ms": 4.808125000000473,
+        "rawBytes": 30737909,
+        "envelopeBytes": 7576693
+      }
+    ],
+    "6": [
+      {
+        "pass": 0,
+        "level": 6,
+        "blocks": 200,
+        "totalMs": 796.3658759999997,
+        "meanMs": 3.981829379999999,
+        "p95Ms": 6.961708999999928,
+        "rawBytes": 30737909,
+        "envelopeBytes": 5852788,
+        "swaps": 24436
+      },
+      {
+        "pass": 1,
+        "level": 6,
+        "blocks": 200,
+        "totalMs": 785.7966639999988,
+        "meanMs": 3.928983319999994,
+        "p95Ms": 6.952499999999873,
+        "rawBytes": 30737909,
+        "envelopeBytes": 5852788
+      },
+      {
+        "pass": 2,
+        "level": 6,
+        "blocks": 200,
+        "totalMs": 769.859200999997,
+        "meanMs": 3.849296004999985,
+        "p95Ms": 6.593083000000661,
+        "rawBytes": 30737909,
+        "envelopeBytes": 5852788
+      },
+      {
+        "pass": 3,
+        "level": 6,
+        "blocks": 200,
+        "totalMs": 774.631662999991,
+        "meanMs": 3.873158314999955,
+        "p95Ms": 6.611541000000216,
+        "rawBytes": 30737909,
+        "envelopeBytes": 5852788
+      }
+    ]
+  },
+  "wasmSha256": {
+    "1": "1c8b34a77978816dd1e436e424fabc0b697b5af9a12f36d3ba7f142086e93096",
+    "6": "52e56d89b3c73d19c2875ab6ea5ffc606eb5b2205e2ea1dcf46b2332ff15dd80"
+  },
+  "release": "v0.5.2-pluto.33",
+  "baseReleaseCommit": "b9e0e7d9df7e2fdc70683e90d7be02816a4c541c",
+  "decoderVersionOnlyRowChange": true,
+  "gzipDecodedDatabaseChangesBytesIdenticalExceptDecoderVersion": true
+}

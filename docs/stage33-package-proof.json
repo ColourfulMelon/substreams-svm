@@ -1,0 +1,78 @@
+{
+  "release": "v0.5.2-pluto.33",
+  "baseReleaseCommit": "b9e0e7d9df7e2fdc70683e90d7be02816a4c541c",
+  "gzipLevel": 6,
+  "packageSha256": "628b420d2fe5e80a6b0b771d48dd253c91f1ce6f0f910b33c944e9226a8d3d11",
+  "dbOutModuleHash": "c10d87426e5a0201e64c588e0034da21749c174f",
+  "stageCount": 4,
+  "retainedMetadataHashes": {
+    "db:dex_swaps:store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "db:dex_swaps:store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "db:dex_swaps:map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "db:dex_swaps:store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "db:dex_swaps:store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "db:dex_swaps:store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075"
+  },
+  "retainedMapEventsHash": "4b7b40f059c26e3fa8a5cee7701ddf58df22c204",
+  "frozenMetadataSha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "decoderWasmSha256": "42ad695be3578e67b0224147151d33cd477bfcc1f51dc5c525b8e9b21d83b9a1",
+  "mapperTestsPassed": 15,
+  "databaseWrites": false,
+  "localPackagedVersionReplay": {
+    "finalizedBlocks": 200,
+    "firstSlot": 456489100,
+    "lastSlot": 456489299,
+    "swapsPreserved": 24436,
+    "gzipDecodedProtobufIdenticalExceptDecoderVersion": true,
+    "baselineEnvelopeBytes": 7576693,
+    "candidateEnvelopeBytes": 5852788,
+    "additionalPayloadReductionPercent": 22.752736583097665,
+    "runtime": "Node v24.16.0 local V8 WASM",
+    "financialDatabaseWrites": false
+  },
+  "benchmarkProof": "gzip6-benchmark.json",
+  "containerConfigurationCheck": "pnpm nx run pluto-pricing-orchestrator:verify passed",
+  "patchedSinkSuites": {
+    "database": "passed",
+    "sinker": "passed"
+  },
+  "freshFinancialParity": {
+    "actualSinkDecoderUsed": true,
+    "blockParentsAndFinancialCountersPreserved": true,
+    "decoderVersionOnlyRowChange": true,
+    "finalizedBlocks": 100,
+    "financialRowsChanged": 0,
+    "financialRowsLost": 0,
+    "financialRowsPreserved": 11976,
+    "gzipEnvelopeBytes": 2984585,
+    "productionDatabaseWrites": false,
+    "relativeFinancialInsertionOrderPreserved": true,
+    "release": "v0.5.2-pluto.33"
+  },
+  "freshReplays": [
+    {
+      "label": "baseline32",
+      "module": "db_out",
+      "firstSlot": 456577700,
+      "lastSlot": 456577799,
+      "startedAt": "2026-10-13T20:44:09.808144+00:00",
+      "finishedAt": "2026-10-13T20:49:23.177357+00:00",
+      "exitCode": 0,
+      "packageSha256": "b717cc909a2e1dcd1a12ac0670a5dc6ad902d0b665c94abd7d4a78b32bbd9108",
+      "databaseWrites": false,
+      "finalizedOnly": true
+    },
+    {
+      "label": "candidate33",
+      "module": "db_out",
+      "firstSlot": 456577700,
+      "lastSlot": 456577799,
+      "startedAt": "2026-10-13T20:44:09.805911+00:00",
+      "finishedAt": "2026-10-13T20:49:45.847221+00:00",
+      "exitCode": 0,
+      "packageSha256": "628b420d2fe5e80a6b0b771d48dd253c91f1ce6f0f910b33c944e9226a8d3d11",
+      "databaseWrites": false,
+      "finalizedOnly": true
+    }
+  ]
+}
