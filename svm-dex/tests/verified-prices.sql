@@ -44,3 +44,25 @@ FROM verified_recent_pairs WHERE amm_pool = 'phoenix-market';
 SELECT 'ledger-only fill reaches candles', throwIf(count() != 1 OR any(close) != 1.5)
 FROM (SELECT argMaxMerge(close0) AS close FROM state_ohlc_prices
       WHERE amm_pool = 'phoenix-market' AND interval_min = 1);
+
+-- Buy-and-burn prices require the dedicated native receipt format. The burned
+-- output is not a wallet credit and cannot borrow another protocol's flag.
+INSERT INTO swaps (block_num, block_hash, timestamp, transaction_index, instruction_index,
+    event_id, protocol, transfer_verified, orderbook_fill_verified, burn_output_verified,
+    source_burn_index, amm_pool, input_mint, output_mint, input_amount, output_amount)
+VALUES
+    (454558266, 'block', now(), 1, 1, 'typed-burn', 'pumpfun_amm_buy_burn', 0, 0, 1, 4,
+     'burn-valid', 'BURN_TARGET', 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB', 1000000, 2000000),
+    (454558266, 'block', now(), 1, 2, 'wrong-burn', 'pumpfun_amm', 0, 0, 1, 4,
+     'burn-wrong-protocol', 'BAD_BURN', 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB', 1000000, 2000000),
+    (454558266, 'block', now(), 1, 3, 'unproved-burn', 'pumpfun_amm_buy_burn', 0, 0, 0, 0,
+     'burn-unproved', 'UNPROVED_BURN', 'USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB', 1000000, 2000000);
+SELECT 'typed burn receipt is price evidence', throwIf(count() != 1 OR any(raw_price) != 2)
+FROM verified_recent_pairs WHERE amm_pool = 'burn-valid';
+SELECT 'typed burn receipt reaches candles', throwIf(count() != 1 OR any(close) != 2)
+FROM (SELECT argMaxMerge(close0) AS close FROM state_ohlc_prices
+      WHERE amm_pool = 'burn-valid' AND interval_min = 1);
+SELECT 'unproved and wrong-protocol burns excluded', throwIf(count() != 0)
+FROM verified_recent_pairs WHERE amm_pool IN ('burn-wrong-protocol', 'burn-unproved');
+SELECT 'prior rows retain zero burn provenance', throwIf(count() != 0)
+FROM swaps WHERE block_num = 454558265 AND (burn_output_verified != 0 OR source_burn_index != 0);

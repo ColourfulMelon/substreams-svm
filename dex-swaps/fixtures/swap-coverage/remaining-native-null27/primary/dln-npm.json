@@ -1,0 +1,171 @@
+{
+  "name": "@debridge-finance/dln-client",
+  "version": "17.6.2",
+  "keywords": [
+    "deBridge",
+    "DLN",
+    "sdk",
+    "solana",
+    "ethereum"
+  ],
+  "author": {
+    "name": "deBridge"
+  },
+  "license": "GPL-3.0-only",
+  "_id": "@debridge-finance/dln-client@17.6.2",
+  "maintainers": [
+    {
+      "name": "scrobot.debridge",
+      "email": "alexscrobot@debridge.finance"
+    },
+    {
+      "name": "de_totoro",
+      "email": "cuzmenko.tosha@gmail.com"
+    },
+    {
+      "name": "alexsmirnov",
+      "email": "alekseissmirnov@gmail.com"
+    },
+    {
+      "name": "artyukh",
+      "email": "yaroslav@debridge.finance"
+    },
+    {
+      "name": "alexeychr",
+      "email": "alx.churkin@gmail.com"
+    }
+  ],
+  "homepage": "https://debridge.finance",
+  "bugs": {
+    "url": "https://github.com/debridge-finance/dln-ts-client/issues"
+  },
+  "dist": {
+    "shasum": "71ce2252f27675eb310ee3a967ad4331ccbb7897",
+    "tarball": "https://registry.npmjs.org/@debridge-finance/dln-client/-/dln-client-17.6.2.tgz",
+    "fileCount": 506,
+    "integrity": "sha512-r9Q8KYkJJR8VYtLVtvRw5eAsasWTW8zrJdmEzBzfToHQHCnP4MzTL3GtEset/Tgjev8SYVukLmbqg90artKCTA==",
+    "signatures": [
+      {
+        "sig": "MEQCIHzjVFkwsCbB13POtjfXdcsdArBkBoSqLRulN/BIOgQlAiAbh7JEym1r2SWRiOD2HBnIvH1t07rh4nz7AkmF9Iliug==",
+        "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA"
+      }
+    ],
+    "unpackedSize": 4416342
+  },
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "module": "./dist/esm/index.js",
+  "browser": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "gitHead": "2ed601ee0c04a9546ba5bc8aa860a82e015355cc",
+  "scripts": {
+    "lint": "eslint --config .eslintrc \"{src,tests}/**/*.{js,ts}\"",
+    "build": "rimraf dist && npm run build:esm && npm run build:node",
+    "test:ci": "mocha -r ts-node/register -b -t 20000 --jobs 3 --file ./tests/solana/client.test.ts ./tests/evm/client.test.ts ./tests/order.test.ts",
+    "lint:fix": "eslint --config .eslintrc \"{src,tests,examples}/**/*.{js,ts}\" --fix",
+    "test:evm": "mocha -r ts-node/register -b -t 20000000 ./tests/evm/evm.test.ts",
+    "test:sol": "mocha -r ts-node/register -b -t 20000000 ./tests/solana/client.test.ts",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "test:cost": "mocha -r ts-node/register -b -t 20000 ./tests/common/costs.test.ts",
+    "build:node": "tsc -p tsconfig.cjs.json",
+    "test:order": "mocha -r ts-node/register -b -t 20000000 ./tests/order.test.ts",
+    "test:patch": "mocha -r ts-node/register -b -t 2000000 ./tests/common/patch.test.ts",
+    "test:state": "mocha -r ts-node/register -b -t 20000000 ./tests/common/state.test.ts",
+    "test:utils": "mocha -r ts-node/register -b -t 20000000 ./tests/utils.test.ts",
+    "test:cancel": "mocha -r ts-node/register -b -t 20000000 ./tests/common/cancel.test.ts",
+    "test:common": "mocha -r ts-node/register -b -t 20000000 ./tests/common/new.client.test.ts",
+    "test:solDst": "mocha -r ts-node/register -b -t 20000000 ./tests/solana/dst.test.ts",
+    "test:solSrc": "mocha -r ts-node/register -b -t 20000000 ./tests/solana/src.test.ts",
+    "test:jupiter": "mocha -r ts-node/register -b -t 20000 ./tests/solana/jupiter.test.ts",
+    "build:browser": "rollup -c",
+    "test:evmSwaps": "mocha -r ts-node/register -b -t 20000000 ./tests/evm/swaps.test.ts",
+    "test:gaslimits": "mocha -r ts-node/register -b -t 20000 ./tests/evm/gaslimits.test.ts",
+    "test:evmEvmSend": "mocha -r ts-node/register -b -t 20000000 ./tests/common/send.from.evm.fulfill.in.evm.test.ts",
+    "test:evmSolSend": "mocha -r ts-node/register -b -t 20000000 ./tests/common/send.from.evm.fulfill.in.solana.test.ts",
+    "test:newPreswap": "mocha -r ts-node/register -b -t 20000000 ./tests/common/new.client.preswap.test.ts",
+    "test:solEvmSend": "mocha -r ts-node/register -b -t 20000000 ./tests/common/send.from.solana.fulfill.in.evm.test.ts",
+    "test:evmCalldata": "mocha -r ts-node/register -b -t 2000000 ./tests/calldata/evm.calldata.test.ts",
+    "test:evmSolBatch": "mocha -r ts-node/register -b -t 20000000 ./tests/common/send.from.evm.batchUnlock.in.solana.test.ts",
+    "test:solanaSwaps": "mocha -r ts-node/register -b -t 20000000 ./tests/solana/swaps.test.ts",
+    "test:createPreswap": "mocha -r ts-node/register -b -t 20000000 ./tests/common/create.preswap.test.ts",
+    "test:evmFulfillCost": "mocha -r ts-node/register -b -t 20000 ./tests/evm/fulfill.cost.test.ts",
+    "test:fulfillPreswap": "mocha -r ts-node/register -b -t 20000000 ./tests/common/fulfill.preswap.test.ts",
+    "test:solanaCalldata": "mocha -r ts-node/register -b -t 2000000 ./tests/calldata/solana.calldata.test.ts",
+    "test:calldataRewards": "mocha -r ts-node/register -b -t 2000000 ./tests/calldata/solana.calldata.rewards.test.ts"
+  },
+  "_npmUser": {
+    "name": "de_totoro",
+    "email": "cuzmenko.tosha@gmail.com"
+  },
+  "repository": {
+    "url": "git+https://github.com/debridge-finance/dln-ts-client.git",
+    "type": "git"
+  },
+  "_npmVersion": "8.19.4",
+  "description": "A client SDK that facilitates interaction deSwap Liquidity Network (DLN) contracts on Solana and EVM blockchains",
+  "directories": {},
+  "_nodeVersion": "16.20.2",
+  "dependencies": {
+    "viem": "^2.7.3",
+    "web3": "1.8.0",
+    "buffer": "6.0.3",
+    "js-sha3": "0.8.0",
+    "node-cache": "5.1.2",
+    "web3-utils": "1.8.0",
+    "bignumber.js": "9.1.2",
+    "@coral-xyz/anchor": "0.29.0",
+    "@debridge-finance/debridge-external-call": "1.0.7",
+    "@debridge-finance/solana-contracts-client": "4.1.3",
+    "@debridge-finance/solana-transaction-parser": "2.0.1"
+  },
+  "_hasShrinkwrap": false,
+  "devDependencies": {
+    "chai": "4.3.6",
+    "mocha": "10.1.0",
+    "assert": "2.0.0",
+    "dotenv": "16.0.3",
+    "eslint": "8.44.0",
+    "rimraf": "3.0.2",
+    "undici": "^5.24.0",
+    "ts-node": "10.9.1",
+    "typedoc": "0.24.8",
+    "prettier": "3.0.0",
+    "typescript": "5.1.3",
+    "@types/chai": "4.3.3",
+    "@types/node": "18.16.3",
+    "@types/bn.js": "5.1.1",
+    "@types/mocha": "9.1.1",
+    "mocha-profiler": "^1.0.0",
+    "chai-as-promised": "^7.1.2",
+    "@rollup/plugin-json": "4.1.0",
+    "eslint-plugin-import": "2.27.5",
+    "@rollup/plugin-replace": "4.0.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-prettier": "^5.0.0-alpha.2",
+    "@rollup/plugin-commonjs": "22.0.2",
+    "@types/chai-as-promised": "^7.1.8",
+    "typedoc-plugin-markdown": "3.15.3",
+    "@rollup/plugin-typescript": "8.5.0",
+    "@typescript-eslint/parser": "5.61.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "@rollup/plugin-node-resolve": "13.3.0",
+    "eslint-config-airbnb-typescript": "17.0.0",
+    "@typescript-eslint/eslint-plugin": "5.61.0"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.89.1",
+    "@solana/buffer-layout": "^4.0.0",
+    "@solana/buffer-layout-utils": "^0.2.0",
+    "@debridge-finance/solana-utils": "^5.0.0"
+  },
+  "_npmOperationalInternal": {
+    "tmp": "tmp/dln-client_17.6.2_1731589332070_0.5316422034690593",
+    "host": "s3://npm-registry-packages"
+  }
+}

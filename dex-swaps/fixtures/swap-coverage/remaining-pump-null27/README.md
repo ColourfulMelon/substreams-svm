@@ -1,0 +1,20 @@
+# Remaining primary-null calls in the .27 live corpus
+
+Scope: slots 456213447–456214372, exactly 244 diagnostic source instructions in 157 finalized transactions, 27 instruction groups across 17 programs. This is a finite source classification, not an exclusion of whole programs or every future instruction.
+
+Run `node oracle.cjs /path/to/backend/package.json /path/to/protobufjs/package.json`. The two package arguments locate dependencies only. Every proof input resolves relative to this fixture.
+
+The independent oracle passes all 244 sources and 1,242 complete selected token-account ledgers with no newly missing spot legs. It reads original retained protobufs and raw finalized RPC responses, compares all account keys, source instructions, native/token balances and fees, and verifies successful complete invocation ancestry. One finalized RPC has a terminal `Log truncated` marker; its entire retained prefix must exactly match the complete original PB logs, whose full ancestry is verified separately. The proof explicitly records truncation. No event output amount or decoder swap amount serves as the financial oracle.
+
+Classification is based on exact source ABI, typed principal account roles, actual committed transfer/mint/burn operations, and conservation over the full original transaction. Native balances have complete PB/RPC parity; this fixture does not claim a global native-flow oracle for unrelated custom programs in those transactions. Transient token principals require actual owned System creation, initialization, closure and zero pre/post native balances.
+
+* SatRush: 170 one-way program-authority settlement payouts and three round rotations/reward issuance. The common payout authority is program owned, independently retained in `satrush-payout-authority.json` with its original owned-account snapshot hash. No caller token debit funds a spot trade in these sources.
+* Incinerator: 18 calls destroy the complete owned token balance and close the emptied account; native transfers pay closure/service fees. There is no delivered output token.
+* Predictions: ten collateral splits issue equal YES and NO amounts, seven paired-outcome merges burn both sides and return equal backing, and one determined-outcome redemption burns an outcome for backing. These are primary conditional-token issuance/redemption contracts.
+* Ember: eight one-for-one underlying deposits mint receipts; seven exact one-for-one redemptions delegate/burn receipts and return underlying. `None` withdraw amounts are bound to the balance immediately before the source, including earlier committed transfers, rather than the transaction's initial balance.
+* Stake-pool: four native SOL deposits issue reserve receipts, and four WSOL bridge wrappers perform those exact nested deposits. A primary minted receipt is not a secondary-market swap.
+* Other sources: receipt unwrap, ORCA staking issuance, ORE staking/wrapper reserve transfers, RLP reserve deposit, same-authority custody withdrawal, existing wallet withdrawal/empty-account closure, two round rewards, and two Bento custody credits. In Bento the minted token account and native SOL destination belong to the same custody authority; the caller receives no opposing asset.
+
+All 17 deployed executables and loader/ProgramData accounts are retained. `owned-program-proof.json` binds each program ID, ProgramData address, deployment slot and exact ELF hash; deployments predate the originals. Primary strings and compressed disassemblies document deposit, redemption, staking, reward and custody contracts. `primary-selectors.json` retains exact discriminator comparisons; the oracle enforces the corresponding observed byte lengths and principal roles. No instruction name alone establishes the exclusion.
+
+No runtime decoder changed for this classification. Swap-bearing sibling sources in the same transactions remain outside these exclusions. `independent-proof.json` records every source and its exact physical receipts; `sha256.json` pins all retained assets.

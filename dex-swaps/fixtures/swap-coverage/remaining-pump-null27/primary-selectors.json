@@ -1,0 +1,206 @@
+[
+  {
+    "program": "DbhgW3bnK76Hr1nxQx5u1dykFyezWe7p8X7rwWec4YSH",
+    "tag": "7eafc60ed445322c",
+    "discriminatorComparisons": [
+      {
+        "instruction": 17787,
+        "window": [
+          " 17787 00022cf8 r6=LDDW 0x2c3245d40ec6af7e",
+          " 17788 00022d00 00 r0 r0 off=0 imm=741492180",
+          " 17789 00022d08 jump 0x1d r0, r6 -> 17933",
+          " 17790 00022d10 r6=LDDW 0x2f02a93e78c250d0",
+          " 17791 00022d18 00 r0 r0 off=0 imm=788703550",
+          " 17792 00022d20 jump 0x1d r0, r6 -> 17921"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "JrXLmS6aYJNJDVxdAfjNJE5wikT8ubf3TA9iL2JA9Av",
+    "tag": "f223c68952e1f2b6",
+    "discriminatorComparisons": [
+      {
+        "instruction": 82653,
+        "window": [
+          " 82653 000a1808 r7=LDDW 0xb6f2e15289c623f2",
+          " 82654 000a1810 00 r0 r0 off=0 imm=-1225596590",
+          " 82655 000a1818 jump 0x1d r5, r7 -> 82792",
+          " 82656 000a1820 r5=LOAD8 [r1+0]",
+          " 82657 000a1828 r7=LDDW 0xb10cc938cd7955fb",
+          " 82658 000a1830 00 r0 r0 off=0 imm=-1324562120"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "4CcPUa2UTfVSwrGBHqHAysxGS8xXQmJVh7M5iQrgk5DT",
+    "tag": "950e5158e6e2ea25",
+    "discriminatorComparisons": [
+      {
+        "instruction": 74711,
+        "window": [
+          " 74711 00091fd8 r7=LDDW 0x25eae2e658510e95",
+          " 74712 00091fe0 00 r0 r0 off=0 imm=636150502",
+          " 74713 00091fe8 jump 0x1d r5, r7 -> 74938",
+          " 74714 00091ff0 r7=LDDW 0x30e449d695bb1f24",
+          " 74715 00091ff8 00 r0 r0 off=0 imm=820267478",
+          " 74716 00092000 jump 0x5d r5, r7 -> 74796"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "EMBERpYNE6ehWmXymZZS2skiFmCa9V5dp14e1iduM5qy",
+    "tag": "b712469c946da122",
+    "discriminatorComparisons": [
+      {
+        "instruction": 184,
+        "window": [
+          "   184 000006e0 r2=LDDW 0x22a16d949c4612b7",
+          "   185 000006e8 00 r0 r0 off=0 imm=581004692",
+          "   186 000006f0 jump 0x1d r1, r2 -> 198",
+          "   187 000006f8 r2=LDDW 0x642ffa6ceccf3bdc",
+          "   188 00000700 00 r0 r0 off=0 imm=1680865900",
+          "   189 00000708 jump 0x1d r1, r2 -> 368"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "EMBERpYNE6ehWmXymZZS2skiFmCa9V5dp14e1iduM5qy",
+    "tag": "f223c68952e1f2b6",
+    "discriminatorComparisons": [
+      {
+        "instruction": 181,
+        "window": [
+          "   181 000006c8 r2=LDDW 0xb6f2e15289c623f2",
+          "   182 000006d0 00 r0 r0 off=0 imm=-1225596590",
+          "   183 000006d8 jump 0x1d r1, r2 -> 264",
+          "   184 000006e0 r2=LDDW 0x22a16d949c4612b7",
+          "   185 000006e8 00 r0 r0 off=0 imm=581004692",
+          "   186 000006f0 jump 0x1d r1, r2 -> 198"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "prediCtPZCttYMvm2W3PtxmMxLmT1dtN7riU6Cxh6tM",
+    "tag": "7cbd1b2bd8289342",
+    "discriminatorComparisons": [
+      {
+        "instruction": 64473,
+        "window": [
+          " 64473 0007dfe8 r4=LDDW 0x429328d82b1bbd7c",
+          " 64474 0007dff0 00 r0 r0 off=0 imm=1116940504",
+          " 64475 0007dff8 ALU 0xb r6, r8",
+          " 64476 0007e000 ALU 0xb r7, r0",
+          " 64477 0007e008 jump 0x1d r3, r4 -> 64649",
+          " 64478 0007e010 r3=LOAD8 [r1+0]"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "prediCtPZCttYMvm2W3PtxmMxLmT1dtN7riU6Cxh6tM",
+    "tag": "84e76d14c5acb420",
+    "discriminatorComparisons": [
+      {
+        "instruction": 64491,
+        "window": [
+          " 64491 0007e078 r4=LDDW 0x20b4acc5146de784",
+          " 64492 0007e080 00 r0 r0 off=0 imm=548711621",
+          " 64493 0007e088 jump 0x1d r3, r4 -> 64705",
+          " 64494 0007e090 r3=LOAD8 [r1+0]",
+          " 64495 0007e098 r4=LDDW 0x346b1ce962a71100",
+          " 64496 0007e0a0 00 r0 r0 off=0 imm=879434985"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "prediCtPZCttYMvm2W3PtxmMxLmT1dtN7riU6Cxh6tM",
+    "tag": "948dec2fae7e456f",
+    "discriminatorComparisons": [
+      {
+        "instruction": 64479,
+        "window": [
+          " 64479 0007e018 r4=LDDW 0x6f457eae2fec8d94",
+          " 64480 0007e020 00 r0 r0 off=0 imm=1866825390",
+          " 64481 0007e028 jump 0x1d r3, r4 -> 64663",
+          " 64482 0007e030 r3=LOAD8 [r1+0]",
+          " 64483 0007e038 r4=LDDW 0x526d953166167118",
+          " 64484 0007e040 00 r0 r0 off=0 imm=1382913329"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "satRushGBRY2vgapeTAkoxz26vL2cYqyPi6CnBj7Tco",
+    "tag": "03f5ca58a11d338d",
+    "discriminatorComparisons": [
+      {
+        "instruction": 212737,
+        "window": [
+          "212737 0019f928 r7=LDDW 0x8d331da158caf503",
+          "212738 0019f930 00 r0 r0 off=0 imm=-1926029919",
+          "212739 0019f938 jump 0x1d r5, r7 -> 213053",
+          "212740 0019f940 r5=LOAD8 [r1+0]",
+          "212741 0019f948 r7=LDDW 0xb9faa402622aa856",
+          "212742 0019f950 00 r0 r0 off=0 imm=-1174756350"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "satRushGBRY2vgapeTAkoxz26vL2cYqyPi6CnBj7Tco",
+    "tag": "f96f7a675d564cc6",
+    "discriminatorComparisons": [
+      {
+        "instruction": 212753,
+        "window": [
+          "212753 0019f9a8 r7=LDDW 0xc64c565d677a6ff9",
+          "212754 0019f9b0 00 r0 r0 off=0 imm=-968075683",
+          "212755 0019f9b8 jump 0x1d r5, r7 -> 213097",
+          "212756 0019f9c0 r5=LOAD8 [r1+0]",
+          "212757 0019f9c8 r7=LDDW 0x25eae2e658510e95",
+          "212758 0019f9d0 00 r0 r0 off=0 imm=636150502"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "BURNowgY7HVZsFrGo6u7ACfs3wxaThQQdCJhUY4eKtCW",
+    "tag": "5548b8bed8416380",
+    "discriminatorComparisons": [
+      {
+        "instruction": 3497,
+        "window": [
+          "  3497 00006e68 r7=LDDW 0x806341d8beb84855",
+          "  3498 00006e70 00 r0 r0 off=0 imm=-2140978728",
+          "  3499 00006e78 jump 0x1d r5, r7 -> 3549",
+          "  3500 00006e80 r5=LOAD8 [r1+0]",
+          "  3501 00006e88 r7=LDDW 0xe0ab142f0066bcb1",
+          "  3502 00006e90 00 r0 r0 off=0 imm=-525659089"
+        ]
+      }
+    ]
+  },
+  {
+    "program": "BURNowgY7HVZsFrGo6u7ACfs3wxaThQQdCJhUY4eKtCW",
+    "tag": "b1bc66002f14abe0",
+    "discriminatorComparisons": [
+      {
+        "instruction": 3501,
+        "window": [
+          "  3501 00006e88 r7=LDDW 0xe0ab142f0066bcb1",
+          "  3502 00006e90 00 r0 r0 off=0 imm=-525659089",
+          "  3503 00006e98 jump 0x1d r5, r7 -> 3560",
+          "  3504 00006ea0 r5=LOAD8 [r1+0]",
+          "  3505 00006ea8 r7=LDDW 0x1f26f3c211b70d77",
+          "  3506 00006eb0 00 r0 r0 off=0 imm=522646466"
+        ]
+      }
+    ]
+  }
+]
