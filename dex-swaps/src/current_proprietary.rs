@@ -52,7 +52,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         || a[users[0]].0 == a[users[1]].0 || a[vaults[0]].0 == a[vaults[1]].0
         || users.iter().any(|u| vaults.iter().any(|v| a[*u].0 == a[*v].0)) { return None; }
     Some(Layout { protocol, pool, authority, users, vaults, amount, minimum_output: minimum,
-        exact_input: true, input_limit: false, input_first: true, fixed_users: true })
+        exact_input: true, input_limit: protocol == Protocol::Deriverse, input_first: true, fixed_users: true })
 }
 
 pub(crate) fn settlement(source: u32, tx: &ConfirmedTransaction, ix: &InstructionView, calls: &[InstructionView], mints: &TokenMintLookup, successful: &HashSet<u32>) -> Option<(u64, u64)> {
@@ -91,7 +91,12 @@ pub(crate) fn settlement(source: u32, tx: &ConfirmedTransaction, ix: &Instructio
         principal[n] = u64::from_le_bytes(matches[0].data()[1..9].try_into().ok()?);
     }
     if l.vaults.iter().any(|position| !vault_ledger(tx, a[*position].0, mints, successful)) { return None; }
-    (principal[0] == l.amount && principal[1] > 0 && principal[1] >= l.minimum_output).then_some((principal[0], principal[1]))
+    // The compact Deriverse swap can settle one atom below its signed input
+    // request. Keep this observed rounding bound local to that native format;
+    // complete vault ledgers independently prove the actual debit and payout.
+    let input_matches = principal[0] == l.amount || l.protocol == Protocol::Deriverse
+        && principal[0] > 0 && l.amount.checked_sub(principal[0]) == Some(1);
+    (input_matches && principal[1] > 0 && principal[1] >= l.minimum_output).then_some((principal[0], principal[1]))
 }
 
 /// Persistent pool vaults independently bind receipts even when the user's
@@ -172,7 +177,13 @@ mod tests {
                 if mode < 6 || mode == 11 || mode == 12 {
                     let modify = |data: &mut Vec<u8>, accounts: &mut Vec<u8>| match mode {
                         0 => data[if parsed.protocol == Protocol::Humidifi { 24 } else { 0 }] ^= 128,
-                        1 => data[if parsed.protocol == Protocol::Humidifi { 8 } else if parsed.protocol == Protocol::Deriverse { 16 } else { 2 }] ^= 1,
+                        1 => {
+                            let offset = if parsed.protocol == Protocol::Humidifi { 8 } else if parsed.protocol == Protocol::Deriverse { 16 } else { 2 };
+                            if parsed.protocol == Protocol::Deriverse {
+                                let amount = u64::from_le_bytes(data[offset..offset+8].try_into().unwrap());
+                                data[offset..offset+8].copy_from_slice(&(amount+2).to_le_bytes());
+                            } else { data[offset] ^= 1; }
+                        },
                         2 => accounts.swap(parsed.users[0], parsed.vaults[0]),
                         3 => accounts.swap(parsed.pool, parsed.users[0]),
                         4 => data[if parsed.protocol == Protocol::Humidifi { 16 } else { 1 }] ^= 1,

@@ -1,0 +1,4714 @@
+{
+  "window": {
+    "first_slot": 456410496,
+    "last_slot": 456413279,
+    "first_time": "2026-10-13 10:33:02",
+    "last_time": "2026-10-13 10:43:01",
+    "blocks": 2784,
+    "verified_swaps": 261848,
+    "diagnostic_sources": 11198,
+    "diagnostic_transactions": 8549
+  },
+  "checkedAt": "2026-10-13T10:43:08.274127+00:00",
+  "sources": 45,
+  "transactions": 40,
+  "counts": {
+    "fewer_than_two_positive_exchange_mints": 41,
+    "needs_positive_flow_review": 4
+  },
+  "originals": [
+    {
+      "signature": "2UuH7yNs3oeZViFLp9EAJkiNNgztLGoKJoPPaTGS3secMsDkjBe7AKS3GFjdXsPZJUTNoce3fSQ562VmNSKozV6o",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+        "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+        "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+        "8G4A6ybnxg1LhtxH4GH1oUYfZpiwHMTnFTMeDTrVPfpD",
+        "GEkMKNYxtDD9DMeBpjes6Xno5EyUeA3FjLGNo7f6VCpe",
+        "9uT512zaxqeXz3Li7urvJMeYqqNknC8eAmNKQc9VxgTK",
+        "Hk9Xh5s2P2c9SshnnvaM7mDZ6fDSBsGDBR4rM752i1jT"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000d843f65a82bd3eb30000000000000000010000",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "amount": "0",
+          "accounts": [
+            "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+            "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+            "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 5,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "pre",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "post",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "1cdd42c6cb32f021e1afc5c6db6620058da0823312a7237ac0732299a2d2b431"
+    },
+    {
+      "signature": "5W1aCwujMJc1Hzszs24A3ANrSvVx6GPcvCyBG5zehghzBsYAnYRGShFr7LSvQMLfD2wi3Jv18ryUUG2qCa5NyKvo",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+        "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+        "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+        "5uFqCHQyiTpkcx86YZTHoTbW3qa6AaDhdytmnUk5JAiT",
+        "38AiwoYJq5VG4N3cnHLDch22nLQwj66bF46wogrjoAnC",
+        "6DaKEfJAkG5BHoxgqdRyZWQaGbia64WkpgCnCpHP3YGw",
+        "9YX9wqfc3uSxWsXgHH2JoeCzJS438tYHdVRXzu7T5QRL"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000c0c73424e753e7e31100000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "amount": "0",
+          "accounts": [
+            "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+            "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+            "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+            "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "c1e11d985f61d35ecab22ea79f3147e7062ebfe276ad366a1cdbffb2b0b8b66a"
+    },
+    {
+      "signature": "4tzTRrJS9jTvKeWACo9C8Rr7U2MjwXaPG7r4EJw6RRc2eSNAhq8qDXYASPQf8TPodqgDH8beXhJoRAoWviLUFCzH",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+        "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+        "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+        "9TRA6pbde2gAp1BrfGCheBZ36irxgZvyh1ki8vsivfCY",
+        "Hd7VDRjDc8qgDQ4WLu2pAYrevDLVbLX28YubZ8L9WokL",
+        "6jiED7Lbd1kuXyE8sHQPyW6EzKVjuQgWRHPhL8BPmn3N",
+        "4NJhFJd2u7dSBgWr4RpKmMoVs9GR58zH2RU8XFoPDXSg"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000007e07ebd2dfcf57690000000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "amount": "0",
+          "accounts": [
+            "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+            "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+            "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "f98a053ce84ea274995cc4e108ffdf6faeb84a2ff3ab56190fae16e397560501"
+    },
+    {
+      "signature": "dqNVqsQ4BVBvrz5J1GxbCVaQzjyCz8oCTUCqdhjNqs5N3LCV1iyPLpiE48mvxhrfx9tzyDbuoHNopqLAGY6koqC",
+      "source": 14,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "29XdKtgCUEoyQH8cDyHs77VEYfLpH17RqVv8i5nD2GEx",
+        "GgksjneRG3zEn3yp5JV3RHtXuK35GRVTmf7TmT1zKsVY",
+        "EsNHqgNrdq9sokaXCyyR5PsAVjpchJcbDPPm4rENjWPv",
+        "9XRh6QaTQoQE281TAY6kUDUdKqvvbvf3q1pMcXNzoz28",
+        "9v52iH5Kqt5CzPzCrBgM821Ca1Bbmmn6wPBnxphQKTPT",
+        "ADHXssQECXqF6zY5qdfGPu1hTzKMU1vKsEMiYvxC7YcW",
+        "jNs7niHnXKeoZx1B4Y9LiZmDHtpgfjQPCb25rKfKb5E",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d582559f85e00000000000000000000000",
+      "transfers": [
+        {
+          "index": 17,
+          "mint": "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+          "amount": "964314486146",
+          "accounts": [
+            "9v52iH5Kqt5CzPzCrBgM821Ca1Bbmmn6wPBnxphQKTPT",
+            "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+            "GgksjneRG3zEn3yp5JV3RHtXuK35GRVTmf7TmT1zKsVY",
+            "9XRh6QaTQoQE281TAY6kUDUdKqvvbvf3q1pMcXNzoz28"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "9v52iH5Kqt5CzPzCrBgM821Ca1Bbmmn6wPBnxphQKTPT",
+          "mint": "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+          "owner": "9XRh6QaTQoQE281TAY6kUDUdKqvvbvf3q1pMcXNzoz28",
+          "amount": "964314486146"
+        },
+        {
+          "stage": "pre",
+          "address": "GgksjneRG3zEn3yp5JV3RHtXuK35GRVTmf7TmT1zKsVY",
+          "mint": "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+          "owner": "29XdKtgCUEoyQH8cDyHs77VEYfLpH17RqVv8i5nD2GEx",
+          "amount": "999035685513854"
+        },
+        {
+          "stage": "post",
+          "address": "9v52iH5Kqt5CzPzCrBgM821Ca1Bbmmn6wPBnxphQKTPT",
+          "mint": "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+          "owner": "9XRh6QaTQoQE281TAY6kUDUdKqvvbvf3q1pMcXNzoz28",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "GgksjneRG3zEn3yp5JV3RHtXuK35GRVTmf7TmT1zKsVY",
+          "mint": "J4SHo93ToLYKbT1TRU2niowNaiQ4tWWg16WviXkPpump",
+          "owner": "29XdKtgCUEoyQH8cDyHs77VEYfLpH17RqVv8i5nD2GEx",
+          "amount": "1000000000000000"
+        }
+      ],
+      "original_sha256": "eeb27b05002a74950d46a1ac820027318b7c55e7f0b75e8fb2f538a9e3f5d376"
+    },
+    {
+      "signature": "3SjLUiikjMhovLhZaWzm2mdZs4Nj98T6X3TiW81GjnoB93DvoKBivaX87zVRQBi5VYhV62VYNSc7sfNLsom1C35e",
+      "source": 7,
+      "program": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+      "tag": "f8c69e91e17587c8",
+      "instruction_name": "Swap",
+      "native_accounts": [
+        "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+        "9df4Zy33zKmLVg2DwQmnCpBao3sUC7xmfGQqLK12yhxu",
+        "EqEfWn8sjdkT1ssTcVH6wBtpAwu7wjBh7rCWu46ziPTt",
+        "BJUE3a9DRTSPe4mZZC6RTxuLqE6paFFQFi5Gw73xuEoE",
+        "FqxQ6X3ge6vXpLmAn5JABeaq43ijzggzguDULSdLA7jZ",
+        "3f44VMQ6DCjPNFn11AmMLzrv81ozHccLT4c9tEyJiMUN",
+        "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+        "So11111111111111111111111111111111111111112",
+        "Q3EjX8CgeCy6kZbxd1acQ7x4cNTsGqhXKsobSvfKzmM",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG",
+        "3rmHSu74h1ZcmAisVcWerTCiRDQbUrBKmcwptYGjHfet",
+        "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+      ],
+      "native_data": "f8c69e91e17587c8799f8a08000000000000000000000000",
+      "transfers": [
+        {
+          "index": 8,
+          "mint": "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+          "amount": "143302521",
+          "accounts": [
+            "EqEfWn8sjdkT1ssTcVH6wBtpAwu7wjBh7rCWu46ziPTt",
+            "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+            "FqxQ6X3ge6vXpLmAn5JABeaq43ijzggzguDULSdLA7jZ",
+            "Q3EjX8CgeCy6kZbxd1acQ7x4cNTsGqhXKsobSvfKzmM"
+          ],
+          "committed": true
+        },
+        {
+          "index": 9,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "0",
+          "accounts": [
+            "3f44VMQ6DCjPNFn11AmMLzrv81ozHccLT4c9tEyJiMUN",
+            "So11111111111111111111111111111111111111112",
+            "BJUE3a9DRTSPe4mZZC6RTxuLqE6paFFQFi5Gw73xuEoE",
+            "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3f44VMQ6DCjPNFn11AmMLzrv81ozHccLT4c9tEyJiMUN",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+          "amount": "9060561"
+        },
+        {
+          "stage": "pre",
+          "address": "EqEfWn8sjdkT1ssTcVH6wBtpAwu7wjBh7rCWu46ziPTt",
+          "mint": "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+          "owner": "Q3EjX8CgeCy6kZbxd1acQ7x4cNTsGqhXKsobSvfKzmM",
+          "amount": "143302522"
+        },
+        {
+          "stage": "pre",
+          "address": "FqxQ6X3ge6vXpLmAn5JABeaq43ijzggzguDULSdLA7jZ",
+          "mint": "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+          "owner": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+          "amount": "390916213582039"
+        },
+        {
+          "stage": "post",
+          "address": "3f44VMQ6DCjPNFn11AmMLzrv81ozHccLT4c9tEyJiMUN",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+          "amount": "9060561"
+        },
+        {
+          "stage": "post",
+          "address": "EqEfWn8sjdkT1ssTcVH6wBtpAwu7wjBh7rCWu46ziPTt",
+          "mint": "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+          "owner": "Q3EjX8CgeCy6kZbxd1acQ7x4cNTsGqhXKsobSvfKzmM",
+          "amount": "1"
+        },
+        {
+          "stage": "post",
+          "address": "FqxQ6X3ge6vXpLmAn5JABeaq43ijzggzguDULSdLA7jZ",
+          "mint": "A588t5ibaeAEJ39JctYXFbVsetkRQqxG7NARzsXYfNCV",
+          "owner": "HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC",
+          "amount": "390916356884560"
+        }
+      ],
+      "original_sha256": "2703748f4525084d5b5a189ac17e598b7c3c79e8ea5f1e8bc843a99be189e4aa"
+    },
+    {
+      "signature": "2hcw3XpygRL6RjxWro76JqKNBvJfJSPGxQCNJnGuoZpSxXnv8vPaUcKW9SGGRRFaCoaoWc6nV3gBrdmT27KwcQS4",
+      "source": 19,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "5df6823ce7e940b2",
+      "instruction_name": "SellV2",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "4UQeTP1T39KZ9Sfxzo3WR5skgsaP6NZa87BAkuazLEKH",
+        "CoRuMWRuDAsjB5SDMmYEcDuyQyaH3L2vVFvwBy1FF8Kr",
+        "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+        "6rVkF4HSgy1jrnC3HogfRgPHrq4CtLg5f11URpsC4i9D",
+        "FFFXoBetMWHFDnhzTKGbkNRdjE7XkdQFpaZvfGATagdh",
+        "3pG3Ww9nkG2wSQKSZBC7r7adKcSozsF3aqMqYgCM5yuF",
+        "GALJ8iHYnyUbWgTHRNWm7rt6KYC49WJNs1Anqur23wGR",
+        "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "Em62bkmPoy5FnMdyrEYvPJvd4SUFcnhgCRaBfmcvJUDR",
+        "EW9diL91VgHY5i9qYScz53W3PihQPSnPoMtAKCo1Bs7J",
+        "HvvTVZPTATeqjv111Ke2Hx5YashNKaaXJookzBYdbDw9",
+        "2wbyXkd8HuvY6EaxsmmyV8WCHN9WjdBWfvFmRB1F5Se6",
+        "HhiqFXkpjwEyByUArugqtw4sLR2V7SgVAZt1SgjQzGZr",
+        "8dijiiwWvXLdFc27T48g4g5nAPGaTimwL3hLPpeFZkPv",
+        "EXG321AkwXTvbCxhnfym5BZENyB6EeBiMMavs1exTiXp",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "5df6823ce7e940b2e091cf3e290000000000000000000000",
+      "transfers": [
+        {
+          "index": 21,
+          "mint": "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+          "amount": "177147449824",
+          "accounts": [
+            "Em62bkmPoy5FnMdyrEYvPJvd4SUFcnhgCRaBfmcvJUDR",
+            "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+            "3pG3Ww9nkG2wSQKSZBC7r7adKcSozsF3aqMqYgCM5yuF",
+            "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3pG3Ww9nkG2wSQKSZBC7r7adKcSozsF3aqMqYgCM5yuF",
+          "mint": "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+          "owner": "FFFXoBetMWHFDnhzTKGbkNRdjE7XkdQFpaZvfGATagdh",
+          "amount": "876537580159517"
+        },
+        {
+          "stage": "post",
+          "address": "Em62bkmPoy5FnMdyrEYvPJvd4SUFcnhgCRaBfmcvJUDR",
+          "mint": "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+          "owner": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "3pG3Ww9nkG2wSQKSZBC7r7adKcSozsF3aqMqYgCM5yuF",
+          "mint": "E9SUvcjSX33qG3obdDsHFGCyRuTe91M6Ao6qCLkEpump",
+          "owner": "FFFXoBetMWHFDnhzTKGbkNRdjE7XkdQFpaZvfGATagdh",
+          "amount": "876714727609341"
+        }
+      ],
+      "original_sha256": "bd9f3dc64ff5fba52d8aff9c397f1d3d789d2fc52720d16dc7f2df26e4a80683"
+    },
+    {
+      "signature": "2W1dQvPzLKRuBKE8keMNFEc9PQhj77hWeYjYLjAESBCu2n5VNJxkjM3M8ZiCs3YyeUWRtdLrEmMmi34j8yYDJAVb",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+        "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+        "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+        "31ZpTbgYjhpsgue2cLatBFCtVYy1epCPVLjZWKw3wWVu",
+        "4kGu9iaAUjtwGJd591hH6JPq7ouV5VgwDMDbrjRwQxJx",
+        "AFo51ccYv6c2VoEwmBJEZxwfRHqUnLakDXXnRyBeZwDz",
+        "4vW5tPem9q7QNqHEyxee63bB1g1NjMH5bKDnB9RD7zGQ"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000005458cd2006604c920e00000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "amount": "0",
+          "accounts": [
+            "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+            "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+            "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+            "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "b3f2ef26e599e496a282fd33c9b18e2b2cd1bc7f64c3fc8739044a5f0d39fdb8"
+    },
+    {
+      "signature": "3cP9KiGzLxfD2134Fw5TZ2G1p9VNkHVQsLWeG4UYw7bbvs6HWEg1mXY5oJsDwXL1bnyqNbwDsDzz3ZAVmNqgYy3n",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "5BBDQJKwuxcq4eYwXUhW3YfpcAAcdQwfMZwKEqvqWMc6",
+        "GNpaf77RGk5mDadbgtfhMby6v88twLhZwmshYYQDEyqh",
+        "KX7iCQd2VLTY1QVPkMitGMX6VSE6PBss8oceTsWFYUq",
+        "9sWn9ccsfE4VVGSytNuHPU32zQ8biwnnpkwPWifthqWw",
+        "5koCDF9bKo8hqMLM9qAvzs8A8PbQ63hUm8yza7A4937o",
+        "CJLBaMvQv7FrtjkyJpcQL6Tm7RY16SZuuFK57JSWPo6W",
+        "GxPFLzrizqpUDGExSH1dZ1XTxYRv7ih5YVovfaWUubXR"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000008e13c4468e836dc30000000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "5BBDQJKwuxcq4eYwXUhW3YfpcAAcdQwfMZwKEqvqWMc6",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+          "amount": "0",
+          "accounts": [
+            "KX7iCQd2VLTY1QVPkMitGMX6VSE6PBss8oceTsWFYUq",
+            "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+            "GNpaf77RGk5mDadbgtfhMby6v88twLhZwmshYYQDEyqh",
+            "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "5BBDQJKwuxcq4eYwXUhW3YfpcAAcdQwfMZwKEqvqWMc6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "KX7iCQd2VLTY1QVPkMitGMX6VSE6PBss8oceTsWFYUq",
+          "mint": "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+          "owner": "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL",
+          "amount": "6076440999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "GNpaf77RGk5mDadbgtfhMby6v88twLhZwmshYYQDEyqh",
+          "mint": "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5BBDQJKwuxcq4eYwXUhW3YfpcAAcdQwfMZwKEqvqWMc6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "KX7iCQd2VLTY1QVPkMitGMX6VSE6PBss8oceTsWFYUq",
+          "mint": "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+          "owner": "BYotWKtMcVgtiXcHLFbA7SxfGDcuURrDxxJmJnXsenxL",
+          "amount": "6076440999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "GNpaf77RGk5mDadbgtfhMby6v88twLhZwmshYYQDEyqh",
+          "mint": "GXKoxJtQVDimMr4GqxY1WuAFQfWCEpg9N8g8xVjQkW2s",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "d841ec85b1df922f4f3f0ddc36b0f2629332bc9ba7ede8447243850675cffb8c"
+    },
+    {
+      "signature": "5wQfbPyJ99VbiCE5MzDm4BQJRy5U3mnmanjncYkTr1H6tRhtQr4gj5vaTD8zEx1Mkt4ZbKgRXWib1pqECNSfs7jT",
+      "source": 2,
+      "program": "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+      "tag": "1a00000000000000",
+      "instruction_name": null,
+      "native_accounts": [
+        "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+        "So11111111111111111111111111111111111111112",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+        "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+        "8Wk2L1yDovBJifCN1o86X7g7pDcqLau39m6tEsJ9Sheh",
+        "3vCToKSjuzX3dZ48hert2LsCTRyfDS6Cf7fXULfxsoPy",
+        "BaojxUEuwerwQHQRBtTpuuMUreboaxymjyySPsdoJkYc",
+        "5163SrbBvsKPQz86yfSGXLnPqu83X6bAQD1Gy7AA4n3",
+        "9zeBhQkMGmvko7CyPcYg3TUmfneES329dTYtMGs3wx6j",
+        "HfJ9RgUGSrcsx1ctERFUUkHaMeeNr4a6vB7QQDFBKFwJ",
+        "DNaRmgLgESuyUSUwBx9UeuU7dYnYYQjFeVzpCL4N5tTE",
+        "8Pnq2fK2Xj3U8WX4UqTKZR1awx1UQ8ojCaC6ZyQpRJWL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "native_data": "1a0000000000000000000000000000009e8df407000000000000000000000000",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "133467549",
+          "accounts": [
+            "DNaRmgLgESuyUSUwBx9UeuU7dYnYYQjFeVzpCL4N5tTE",
+            "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+            "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+            "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "14200195",
+          "accounts": [
+            "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+            "8Pnq2fK2Xj3U8WX4UqTKZR1awx1UQ8ojCaC6ZyQpRJWL",
+            "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+            "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "confirmed_positive_spot_flow_not_decoded",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "8Pnq2fK2Xj3U8WX4UqTKZR1awx1UQ8ojCaC6ZyQpRJWL",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+          "amount": "23055263815"
+        },
+        {
+          "stage": "pre",
+          "address": "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+          "amount": "1276425484045"
+        },
+        {
+          "stage": "pre",
+          "address": "DNaRmgLgESuyUSUwBx9UeuU7dYnYYQjFeVzpCL4N5tTE",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+          "amount": "37312789540"
+        },
+        {
+          "stage": "pre",
+          "address": "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+          "amount": "117227894705"
+        },
+        {
+          "stage": "post",
+          "address": "8Pnq2fK2Xj3U8WX4UqTKZR1awx1UQ8ojCaC6ZyQpRJWL",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+          "amount": "23055263815"
+        },
+        {
+          "stage": "post",
+          "address": "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "CJ1fhvsz9FwFM54JyXpNvAj6dvxtiRQjMhYmG1aQVVX8",
+          "amount": "1276558951594"
+        },
+        {
+          "stage": "post",
+          "address": "DNaRmgLgESuyUSUwBx9UeuU7dYnYYQjFeVzpCL4N5tTE",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "5vfCdYZ8Q4yrgGgXA9ZC25U5zqFMFbiPHugYtGQ8R2fY",
+          "amount": "37312792318"
+        },
+        {
+          "stage": "post",
+          "address": "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+          "amount": "117213694510"
+        }
+      ],
+      "original_sha256": "a0af019e7c6ed9e917877488a60ebde535adaac6596b340fa92bb580634eee72",
+      "protocol": "Deriverse"
+    },
+    {
+      "signature": "5QG9Cx6owRnh9htfUTnKB52PtVg7uUj15sggcPpURSp74rvka8bmwrVMCYyvem8CsNUbJyNHAMUyUZQEATEP5ZVA",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+        "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+        "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+        "8G4A6ybnxg1LhtxH4GH1oUYfZpiwHMTnFTMeDTrVPfpD",
+        "GEkMKNYxtDD9DMeBpjes6Xno5EyUeA3FjLGNo7f6VCpe",
+        "9uT512zaxqeXz3Li7urvJMeYqqNknC8eAmNKQc9VxgTK",
+        "Hk9Xh5s2P2c9SshnnvaM7mDZ6fDSBsGDBR4rM752i1jT"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000e30a23130793f4b20000000000000000010000",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "amount": "0",
+          "accounts": [
+            "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+            "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+            "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 5,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "pre",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "post",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "dc769e225d6ff50843d50b2d183d4fb7169b65356d83a7f1c7db92f324de37c5"
+    },
+    {
+      "signature": "5HQT5RZk9btUwsUsKTopxH3oZGvY7ATgAybhFjuW1VkjgBuPnbbLu2uUNiJk7E5piZdWepRLpBe3Z2b3hsDnrj3w",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+        "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+        "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+        "62DBPTugtKovVz3TR1Vur8bk5ieG353qHsAogSPALCan",
+        "4zKvKgx9c8Ae7Vw8amfQ968JUTL8pX5Q58YdDx2R3GMs",
+        "8tfTmr8gwQgnkGW9iVTskjheZmhXkGhsqfqpMMroTtKM",
+        "DutyoTPm5fj55AkN6MSZtrZoU49NotSraf7euMoE5jFF"
+      ],
+      "native_data": "2b04ed0b1ac91e620a0000000000000000000000000000007747776105db11050100000000000000010000",
+      "transfers": [
+        {
+          "index": 2,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "pre",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "pre",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "post",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "post",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        }
+      ],
+      "original_sha256": "c69ef976ae613eb8ddd1446d8e380e9a0ee5fdaf30f41b9b729836f261c105c6"
+    },
+    {
+      "signature": "4Pw5BENb8aawy1Ti2sM56uDTmBYgMtK739NtZHRGBWCEHoRm4uavBz68uEKCNA4LJZhxnwThioPGfsiBpb5tT6ex",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+        "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+        "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+        "FTm7PnLMq2RyWG1ut9o8ahWhv16rhLGKS4KnGQfehStF",
+        "2cii7Zt27NDXsnUyZatp1Nsemb2b9YKFGRAPg2yQd7Db",
+        "5RkjvyEfboiQywFZoz2QzHnkgGj7ib3PMhUuDKm7NrB9",
+        "FTa8Pv1sTYwchCzwEBwtQkjHuFNgRhDm4QjiZqrCwC7S"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000f44abdc027f38c0f0200000000000000010000",
+      "transfers": [
+        {
+          "index": 2,
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "amount": "0",
+          "accounts": [
+            "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+            "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+            "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "fb167d49357c7821eea1e700b96ef922b6bf69989a6b277e8b1c3b0f9113393e"
+    },
+    {
+      "signature": "4UsUtnfY1LhFh9EKxMUHfm6o4BmJX3qYSUpsTKg4fQzStsoePd721fovjLkrEJxSW2toMqd9fNbV5gh88UouRnMn",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh",
+        "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+        "EcGtBjAAihM9z3iEAC6X161YLEo98JB95HxuCakqfCQ4",
+        "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+        "8WEXxzyxz5MUzySkVurcsQdJhZaHzn9XEPjFAmpALugm",
+        "H1tRugAj76Dwcgga8GHdf6m7czR2vLCvJa6cwNuy18GT",
+        "44KBqRkYLhpULk7CroZzhkemt7wCazyXpwMi3tRHQJfE",
+        "BDGpzeBzA8ULUmCajZBftzXJz8mk9zxTNkzBJo8SHN2c",
+        "4mNebXNkpeZsNCKDa25fLnYgkrozyJFHa9mQ17RPZur9"
+      ],
+      "native_data": "2b04ed0b1ac91e620a0000000000000000000000000000000f104504077477750100000000000000010100",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "amount": "0",
+          "accounts": [
+            "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+            "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+            "EcGtBjAAihM9z3iEAC6X161YLEo98JB95HxuCakqfCQ4",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "8WEXxzyxz5MUzySkVurcsQdJhZaHzn9XEPjFAmpALugm",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+            "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "pre",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "pre",
+          "address": "8WEXxzyxz5MUzySkVurcsQdJhZaHzn9XEPjFAmpALugm",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh",
+          "amount": "782"
+        },
+        {
+          "stage": "pre",
+          "address": "EcGtBjAAihM9z3iEAC6X161YLEo98JB95HxuCakqfCQ4",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh",
+          "amount": "2"
+        },
+        {
+          "stage": "post",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "post",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "post",
+          "address": "8WEXxzyxz5MUzySkVurcsQdJhZaHzn9XEPjFAmpALugm",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh",
+          "amount": "782"
+        },
+        {
+          "stage": "post",
+          "address": "EcGtBjAAihM9z3iEAC6X161YLEo98JB95HxuCakqfCQ4",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "FmexrAzcg4ELaC6XCtvYfs5zMML5wJtYSbWH42rZZAfh",
+          "amount": "2"
+        }
+      ],
+      "original_sha256": "d21a688d2e1b2f38365f99b8c5e710bbe142052ec1502a6bc9c479dfd465fee6"
+    },
+    {
+      "signature": "3kDDv1GiNh8xKjJCgTNhNteBYatRYKo96SniCiobGpXTrRLjpHR6T6g2b9JNrs9mWeU4BRf9kXiPRyCWAH659Yy",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+        "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+        "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+        "6Zp26Pn4Vzo1mcaCvWfM18QkkAKijsy5Veda1cNG16mM",
+        "DpyCbUq8cP1ruTAgLL3bTwHPgv9JAJvzYJjTjf8dALYV",
+        "6MA6TkBS2N62GBQpCz8bUZweKnm7zQUWkpaRZfcmagBR",
+        "ErLrsuGpadSV4wz3Gi1ZhkNLvdxgVdFHc9y9GtGdAcma"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000ded8a5cc4a483a160300000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "amount": "0",
+          "accounts": [
+            "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+            "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+            "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "2db368838ab1e3d22433cd9554c0dd520ca2b577907a90f53f25eb82b4377bf7"
+    },
+    {
+      "signature": "2p62cBJfCrKwxDXtvDqbccJb197EigqgqMt2HiN55TqwMMziPNHyimSveBdry67JLPguC1bc8PTaoMkTbg4CmjNn",
+      "source": 7,
+      "program": "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE",
+      "tag": "f8c69e91e17587c8",
+      "instruction_name": "Swap",
+      "native_accounts": [
+        "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+        "Cy5um8MnWdGb8CbkNCPMDp12CKaiPwMamSF3srcSoxV2",
+        "2SMS1Y4EAyL2dQLpXD6VJCrNbQJ2eQ2pN3qYcX1vim3E",
+        "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+        "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+        "ALa2de5zqfNF7JmiMFYuvV6PzurDc2aXtSEXYf7zegSo",
+        "5LBqzueDfFgiiNjiGk8LjaWoE6sxbZR7DAm7es2K1kVR",
+        "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+        "So11111111111111111111111111111111111111112",
+        "EYZk7NoySExB5WcHAiHKeyMpsDAJWGhnK7SCmrE2AGDo",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "FWdP9yTogKbuXvEqQNNHYw2TYm38MbinAZ2iTHeZWX8H",
+        "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE"
+      ],
+      "native_data": "f8c69e91e17587c8941d2559000000000000000000000000",
+      "transfers": [
+        {
+          "index": 9,
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "amount": "1495604628",
+          "accounts": [
+            "ALa2de5zqfNF7JmiMFYuvV6PzurDc2aXtSEXYf7zegSo",
+            "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+            "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+            "EYZk7NoySExB5WcHAiHKeyMpsDAJWGhnK7SCmrE2AGDo"
+          ],
+          "committed": true
+        },
+        {
+          "index": 10,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "7401833",
+          "accounts": [
+            "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+            "So11111111111111111111111111111111111111112",
+            "5LBqzueDfFgiiNjiGk8LjaWoE6sxbZR7DAm7es2K1kVR",
+            "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "confirmed_positive_spot_flow_not_decoded",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "ALa2de5zqfNF7JmiMFYuvV6PzurDc2aXtSEXYf7zegSo",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "EYZk7NoySExB5WcHAiHKeyMpsDAJWGhnK7SCmrE2AGDo",
+          "amount": "9236694476"
+        },
+        {
+          "stage": "pre",
+          "address": "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "20486659534415"
+        },
+        {
+          "stage": "pre",
+          "address": "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "101751832679"
+        },
+        {
+          "stage": "post",
+          "address": "ALa2de5zqfNF7JmiMFYuvV6PzurDc2aXtSEXYf7zegSo",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "EYZk7NoySExB5WcHAiHKeyMpsDAJWGhnK7SCmrE2AGDo",
+          "amount": "7741089848"
+        },
+        {
+          "stage": "post",
+          "address": "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "20488155139043"
+        },
+        {
+          "stage": "post",
+          "address": "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "101744430846"
+        }
+      ],
+      "original_sha256": "12e1504d86bab54f1931851e7ef2d15ef6c9191567f46a5d9e2ff61d86eb7127",
+      "protocol": "Omnipair"
+    },
+    {
+      "signature": "5ndHq6dvUeDd57ufAhZ6getjDwVrHojViiZxaZMHs1dqw751kKzYkYcZBFduxHjJR5PpmXSS11rSPTL26d9me8Xq",
+      "source": 19,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "5df6823ce7e940b2",
+      "instruction_name": "SellV2",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "4UQeTP1T39KZ9Sfxzo3WR5skgsaP6NZa87BAkuazLEKH",
+        "CoRuMWRuDAsjB5SDMmYEcDuyQyaH3L2vVFvwBy1FF8Kr",
+        "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+        "6rVkF4HSgy1jrnC3HogfRgPHrq4CtLg5f11URpsC4i9D",
+        "2SsLtKx3ZDaoB3MwDNkxoRSBtXveUdq5Hn1Q4x4fe1DJ",
+        "2h9ufpVrA7mn8FVj2FnshecxGXiZRQ5dhypAT2mRzpZd",
+        "6Y6Sz4kjG1yvbfrXka3akuAcRc2tGqnR99HpE9HmTp8u",
+        "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "6zMYBBcRZpM7AahuDS9Ccc3Ta42zujjjhkuvfZBE2Sk4",
+        "EW9diL91VgHY5i9qYScz53W3PihQPSnPoMtAKCo1Bs7J",
+        "8ifmRc3avpaAUfqSmanWyXyQQLvCLZtWQZB5WxpmzoHQ",
+        "Aa9EwRx2VFquHAbSp97TXFDCDge9FMddjENc183eSJi3",
+        "3bKVPyn9qetdsL3N924FsqdakgsfKL4DqwnDXaUvX4H3",
+        "8dijiiwWvXLdFc27T48g4g5nAPGaTimwL3hLPpeFZkPv",
+        "EXG321AkwXTvbCxhnfym5BZENyB6EeBiMMavs1exTiXp",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "5df6823ce7e940b241d55010180000000000000000000000",
+      "transfers": [
+        {
+          "index": 21,
+          "mint": "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+          "amount": "103352948033",
+          "accounts": [
+            "6zMYBBcRZpM7AahuDS9Ccc3Ta42zujjjhkuvfZBE2Sk4",
+            "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+            "2h9ufpVrA7mn8FVj2FnshecxGXiZRQ5dhypAT2mRzpZd",
+            "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "2h9ufpVrA7mn8FVj2FnshecxGXiZRQ5dhypAT2mRzpZd",
+          "mint": "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+          "owner": "2SsLtKx3ZDaoB3MwDNkxoRSBtXveUdq5Hn1Q4x4fe1DJ",
+          "amount": "963558710996718"
+        },
+        {
+          "stage": "post",
+          "address": "6zMYBBcRZpM7AahuDS9Ccc3Ta42zujjjhkuvfZBE2Sk4",
+          "mint": "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+          "owner": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "2h9ufpVrA7mn8FVj2FnshecxGXiZRQ5dhypAT2mRzpZd",
+          "mint": "BzU312xVCd85rhvvdyrdQJe3jNC1znWyhWByGNVUpump",
+          "owner": "2SsLtKx3ZDaoB3MwDNkxoRSBtXveUdq5Hn1Q4x4fe1DJ",
+          "amount": "963662063944751"
+        }
+      ],
+      "original_sha256": "941a94d82006395008afe81add3f44571490636726b53f5a31e0ef21f1c39aa7"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 0,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "54aYF6ZJHDNTbM5WxWEoZYn62x5hXGM28XTknjWDQh1Z",
+        "5Pq5SaCLTeC1DV3rP2GsjDH6vCaXj8hnTmr1FB8DPSAg",
+        "HBhXDEajs7YNtSLgeWRs8RUaWxEGs3K41g2rUF2cyQJ",
+        "9t6xEMytL1MBigpnY9bfvbr4JGXQERoRjkpZBacrSw2u",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 1,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "5Pq5SaCLTeC1DV3rP2GsjDH6vCaXj8hnTmr1FB8DPSAg",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "54aYF6ZJHDNTbM5WxWEoZYn62x5hXGM28XTknjWDQh1Z"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "5Pq5SaCLTeC1DV3rP2GsjDH6vCaXj8hnTmr1FB8DPSAg",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "54aYF6ZJHDNTbM5WxWEoZYn62x5hXGM28XTknjWDQh1Z",
+          "amount": "100000000"
+        },
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "post",
+          "address": "5Pq5SaCLTeC1DV3rP2GsjDH6vCaXj8hnTmr1FB8DPSAg",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "54aYF6ZJHDNTbM5WxWEoZYn62x5hXGM28XTknjWDQh1Z",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 3,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "B698ScjVQFWph6NxS9BRNue3wM5X3qY4LNaGaMj4h62R",
+        "6ea1N1z9pbahR5zsZDiTSPZ5ZC1wKMumLDgiy1cDHvEy",
+        "FKebDd8cPqK1ekPmT5aPkPtq34dswRm5r16nN8YCNqp4",
+        "BXHqhYZ3Ze1yNswUEdmtA39yNPMnQoosBfTSsdNnCWRu",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 4,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "6ea1N1z9pbahR5zsZDiTSPZ5ZC1wKMumLDgiy1cDHvEy",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "B698ScjVQFWph6NxS9BRNue3wM5X3qY4LNaGaMj4h62R"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "6ea1N1z9pbahR5zsZDiTSPZ5ZC1wKMumLDgiy1cDHvEy",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "B698ScjVQFWph6NxS9BRNue3wM5X3qY4LNaGaMj4h62R",
+          "amount": "100000000"
+        },
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "post",
+          "address": "6ea1N1z9pbahR5zsZDiTSPZ5ZC1wKMumLDgiy1cDHvEy",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "B698ScjVQFWph6NxS9BRNue3wM5X3qY4LNaGaMj4h62R",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 6,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "6NWgcpp7CjmGT8MA19BB3S3kNN9hGAXZ6z1yy2yJhy45",
+        "CDePe51CHem6YAoySuHRPtGWXCFHSxc2aS339tSSpyYJ",
+        "Axs6LtQnYMj8CMjGpwQ4fA3p2Z6iK7Gk8ptJFLTGq1sG",
+        "B9NX5vhDbqSKbhzaw2wHqx6sUk341uX733wJpPrDa88f",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 7,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "CDePe51CHem6YAoySuHRPtGWXCFHSxc2aS339tSSpyYJ",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "6NWgcpp7CjmGT8MA19BB3S3kNN9hGAXZ6z1yy2yJhy45"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "pre",
+          "address": "CDePe51CHem6YAoySuHRPtGWXCFHSxc2aS339tSSpyYJ",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "6NWgcpp7CjmGT8MA19BB3S3kNN9hGAXZ6z1yy2yJhy45",
+          "amount": "100000000"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        },
+        {
+          "stage": "post",
+          "address": "CDePe51CHem6YAoySuHRPtGWXCFHSxc2aS339tSSpyYJ",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "6NWgcpp7CjmGT8MA19BB3S3kNN9hGAXZ6z1yy2yJhy45",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 9,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "Epr2vTgHCgzrZk5q63jkAcdS6iqeFAaLJFS7eLAraEzm",
+        "FvC167dRhgEivUWytGDd6LFF4eZMmjzLzKeGMSW4n7Hj",
+        "CD9QH6mbC6psqKbWi8jA7cvy2SCD3LQh275GZWAF88VU",
+        "3Hg5hhVXzcfiCtSwaTYUZHwktS8BopM4CeWtZqxqxezL",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 10,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "FvC167dRhgEivUWytGDd6LFF4eZMmjzLzKeGMSW4n7Hj",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "Epr2vTgHCgzrZk5q63jkAcdS6iqeFAaLJFS7eLAraEzm"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "pre",
+          "address": "FvC167dRhgEivUWytGDd6LFF4eZMmjzLzKeGMSW4n7Hj",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "Epr2vTgHCgzrZk5q63jkAcdS6iqeFAaLJFS7eLAraEzm",
+          "amount": "100000000"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        },
+        {
+          "stage": "post",
+          "address": "FvC167dRhgEivUWytGDd6LFF4eZMmjzLzKeGMSW4n7Hj",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "Epr2vTgHCgzrZk5q63jkAcdS6iqeFAaLJFS7eLAraEzm",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 12,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "CEXXVBa3NTU1d8yxLeUxwXTbnjaxktajfre1aUZwrmbh",
+        "ATiLAkvDm4jKT457L4zLyPsJTpcAxz6ykdduPa7EvGxX",
+        "Bt6nMiUY97UoYKU1GN477HUYuK1fRk2BGhL5MkY17Bjf",
+        "DxshRDTX9B3Ysj4DeSP4QDJai67Zy6hePeo2d9A8oPxk",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 13,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "ATiLAkvDm4jKT457L4zLyPsJTpcAxz6ykdduPa7EvGxX",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "CEXXVBa3NTU1d8yxLeUxwXTbnjaxktajfre1aUZwrmbh"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "ATiLAkvDm4jKT457L4zLyPsJTpcAxz6ykdduPa7EvGxX",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "CEXXVBa3NTU1d8yxLeUxwXTbnjaxktajfre1aUZwrmbh",
+          "amount": "100000000"
+        },
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "post",
+          "address": "ATiLAkvDm4jKT457L4zLyPsJTpcAxz6ykdduPa7EvGxX",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "CEXXVBa3NTU1d8yxLeUxwXTbnjaxktajfre1aUZwrmbh",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "PY6j6WvkSb98rCJXJbjfK3zwkvUirFbh3W4NJauegp641KTFY7E6btNrG9477WHnZM6dgF2RCtwgWqaQcSvXTGR",
+      "source": 15,
+      "program": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "tag": "1c92de7726c469d5",
+      "instruction_name": "SellV3",
+      "native_accounts": [
+        "4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf",
+        "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+        "So11111111111111111111111111111111111111112",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+        "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+        "H6Zy2xxpMP2HTjXsJm5eaGzWPL4ratVFf2SKSgYL1yYE",
+        "CvNq3oPK2z2C4SPeHLxJ7km7Pwm5q5GT7wLtFBJ4v7Sn",
+        "3JsM5WzKSSLrjwFV7L6oRk8d14kHfULZm7WPT3EAyeHa",
+        "7LHbJzg74tEBVURy2xydspgvggbXBCasT7CuwXHt783Q",
+        "5p4zoMDKkwp7YkHZR2pzxb66Syp9k1bZSgv5ymspnCtM",
+        "8Wf5TiAheLUqBrKXeYg2JtAFFMWtKdG2BSFgqUcPVwTt",
+        "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "11111111111111111111111111111111",
+        "Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1",
+        "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+      ],
+      "native_data": "1c92de7726c469d500e1f505000000000000000000000000",
+      "transfers": [
+        {
+          "index": 16,
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "amount": "100000000",
+          "accounts": [
+            "3JsM5WzKSSLrjwFV7L6oRk8d14kHfULZm7WPT3EAyeHa",
+            "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+            "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+            "CvNq3oPK2z2C4SPeHLxJ7km7Pwm5q5GT7wLtFBJ4v7Sn"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3JsM5WzKSSLrjwFV7L6oRk8d14kHfULZm7WPT3EAyeHa",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "CvNq3oPK2z2C4SPeHLxJ7km7Pwm5q5GT7wLtFBJ4v7Sn",
+          "amount": "100000000"
+        },
+        {
+          "stage": "pre",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "999999400000000"
+        },
+        {
+          "stage": "post",
+          "address": "3JsM5WzKSSLrjwFV7L6oRk8d14kHfULZm7WPT3EAyeHa",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "CvNq3oPK2z2C4SPeHLxJ7km7Pwm5q5GT7wLtFBJ4v7Sn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BMQvm7UWjsbBVrV9AczNKYxQKsCuEjDGGEJvVKL9gt6B",
+          "mint": "DfB6BesYF8ehEGQc9Rzxs72ef8uosqHdWhK3JkjfUrg6",
+          "owner": "2dRxKX7398HAK8fjXs6UdR2zxrnUHLNjnaoDseNB9Wj4",
+          "amount": "1000000000000000"
+        }
+      ],
+      "original_sha256": "281eb220b48ead546ea19300b7666a5173ee8b17edf6605b55dc9298721d4bdf"
+    },
+    {
+      "signature": "EnE1KLUL1woj656xtqUHkXaHiArGDAVadvPdpMcRKLaGAuh4NZRneJGZV5sPg5y8rgUZrgoSytkgCENaueiCkci",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+        "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+        "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+        "8G4A6ybnxg1LhtxH4GH1oUYfZpiwHMTnFTMeDTrVPfpD",
+        "Ee7n8733qmSZbSatPwx9d8sC3A2ytmWAguEGPTDw8FBu",
+        "8VkbfyjUBWjRwPQCRq6tuGni1pX4AfFuvaajVQyRoimL",
+        "Hk9Xh5s2P2c9SshnnvaM7mDZ6fDSBsGDBR4rM752i1jT"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000f688c53bb909a2b10000000000000000010100",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 5,
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "amount": "0",
+          "accounts": [
+            "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+            "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+            "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+            "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "pre",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "post",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "5358bcd7af1b886baf4af2d447bd698cb0e2c2fa51f0a616ec627456e33e9dea"
+    },
+    {
+      "signature": "ss41kMZm1EhdZJXqtgce9xg9VcXzfx7RY9fazT9KkmC1WfUi19zukgaiN7MGeVGSHxGzb47JWnqkPhQBRAMBPxH",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+        "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+        "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+        "AfeuBRHHF7UQN7M9YSXTWPwgPeQemq9rTz88yN2vUHUT",
+        "8w73P2DjCeLRiEhh4nYLPu1aRUcPFvC5vjX7oAytiTYQ",
+        "6CxtV8qUcB2JTERzxVEFpZop172DYj9gjC26EuHEGayb",
+        "83763apR6Q5WkBMAXu1kPFkftipBVJDEkmZxXhxxKfdn"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000000a54661d4d40ca4a0300000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "amount": "0",
+          "accounts": [
+            "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+            "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+            "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+            "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "109397220999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "109397220999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "28ad17fa16a5e9f62eb2135afe5a52ffee13a6476ca973c9a5c9677a52dc444e"
+    },
+    {
+      "signature": "2wURqWzfPB7HpDQoJKGMK8bq5JP9yeR1XJcioFoHu6T6iEhDCSYLqRsZkCUtAmCQCPSUF6xtwKdVAtbtvd4fBaqr",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+        "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+        "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+        "6Zp26Pn4Vzo1mcaCvWfM18QkkAKijsy5Veda1cNG16mM",
+        "8TzA5KKxSFCz7QMTK9FFb54L3ZbrZPJnNTMA959WJn7j",
+        "6JYxFoxdwGYbSysCzGRb2dhWgdfuazVjw8gd5ftsb2LT",
+        "ErLrsuGpadSV4wz3Gi1ZhkNLvdxgVdFHc9y9GtGdAcma"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000ded8a5cc4a483a160300000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "amount": "0",
+          "accounts": [
+            "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+            "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+            "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+            "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "08f03680fe804dcb32dac8cc117379d2f32366b3b741a63a8c8d2216f569be41"
+    },
+    {
+      "signature": "2e17K6ViwPtCLVqREUQhCH8S78kdMk3iFwjR5hoVcBYSYoUkUKQ5fKH2RrNEAAuoq8nJd66YQdcXfCVVckYWdxn6",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+        "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+        "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+        "9TRA6pbde2gAp1BrfGCheBZ36irxgZvyh1ki8vsivfCY",
+        "Hd7VDRjDc8qgDQ4WLu2pAYrevDLVbLX28YubZ8L9WokL",
+        "6jiED7Lbd1kuXyE8sHQPyW6EzKVjuQgWRHPhL8BPmn3N",
+        "4NJhFJd2u7dSBgWr4RpKmMoVs9GR58zH2RU8XFoPDXSg"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000009f6512d7593f42690000000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "amount": "0",
+          "accounts": [
+            "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+            "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+            "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "06d8e8f0d026b2083a898f1aacc8293de31a13dc171a37cb7c45a88b8aaceaa9"
+    },
+    {
+      "signature": "34S1U4AfN2AkDPErBspoJbTHbHdxuSgDCi1f66JQUsEWjj1S9B1Q2S6aV2AazfiHp8Mn26ApBKRkwufbBQXnnEg2",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+        "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+        "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+        "5uFqCHQyiTpkcx86YZTHoTbW3qa6AaDhdytmnUk5JAiT",
+        "AcA5xGn73gvk2tec4U5V5aZAoGGPq8mv3MK6B3WcCGWn",
+        "EXBhbvikMRrZYrr3QZtK2iaTcB9So9jG5hN6sAm5iM3H",
+        "9YX9wqfc3uSxWsXgHH2JoeCzJS438tYHdVRXzu7T5QRL"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000c0a034fbcf9e91e71100000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "amount": "0",
+          "accounts": [
+            "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+            "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+            "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "7ccd8b071ec0645884e9fee888032b9fbcd2a4a546d28ac4f4aa8c3e59e0da08"
+    },
+    {
+      "signature": "VCh3TfnvWn6Vh8Cq8U1CyCPMzbdX1ugq2RdgyDthTDFLL5syhWUH2Z9zmXtrQF2JdFny8FZDJ31ihUhtvsq3hcd",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+        "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+        "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+        "31ZpTbgYjhpsgue2cLatBFCtVYy1epCPVLjZWKw3wWVu",
+        "4kGu9iaAUjtwGJd591hH6JPq7ouV5VgwDMDbrjRwQxJx",
+        "AFo51ccYv6c2VoEwmBJEZxwfRHqUnLakDXXnRyBeZwDz",
+        "4vW5tPem9q7QNqHEyxee63bB1g1NjMH5bKDnB9RD7zGQ"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000ceb97590d85ede870e00000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "amount": "0",
+          "accounts": [
+            "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+            "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+            "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+            "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "ea1ed63119fb9e238f703df1a867c7d12c3cfe209e0a32856191df5a016d210c"
+    },
+    {
+      "signature": "2y4ZcG5aeSSsbTVUSccPT3YjNDFtoWd48D7QmnZRVyW9NZaSFcHr3YkPqBnAjjD5pqkfPMw4GQRq7qbxFKF2JLZY",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+        "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+        "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+        "9TRA6pbde2gAp1BrfGCheBZ36irxgZvyh1ki8vsivfCY",
+        "8t5NpZkopLnF8BJHZnv2hsGStv5sDwa9gLyw61LbSwS7",
+        "F38uHsBZdJLFhC9oVRXHhCRV2cJZVTXZuupQKrr6T2t2",
+        "4NJhFJd2u7dSBgWr4RpKmMoVs9GR58zH2RU8XFoPDXSg"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000009f6512d7593f42690000000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "amount": "0",
+          "accounts": [
+            "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+            "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+            "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+            "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FU11j19DT9Kd2awi2fDicYuwDuEDjJxHMWWsSit5SreW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "RbbdsQUkkqMbXPHJqZJ2E392ywBEhgmQq4cKCPVhjLK",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "36HqwhHyiLniz9YVHQQB5qCHs5ifLqfTo1yv46kjuGSY",
+          "amount": "1780308999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "3aQBc3naLyZTywkGCHukNYUqgUsfwBkAuijHeo8zrK8t",
+          "mint": "GjNphFgE2sADkjm4U2zM3UVk8pS7XZxLaXmQ6FAHNfR9",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "062c0537ae86f16a8c02aff91d4f6d007499cb8493b63c18c1eff2901db1405c"
+    },
+    {
+      "signature": "4bJ4twLcrtoNfFm6D2uPDenNj5eaLJiFjXJeafkZDbUKxxZnaE9cshMPg6GFu9seNXFSGRoyBrgxgcB1MFieBwsZ",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+        "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+        "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+        "AfeuBRHHF7UQN7M9YSXTWPwgPeQemq9rTz88yN2vUHUT",
+        "4akfri3B7AwnWJtTQ9VmPx1fPFpu65ze1vfczQB4B7Gd",
+        "2KZRp2csHRaK7Bt678EXkLiY3tiq5vo423Dgu5AD2kES",
+        "83763apR6Q5WkBMAXu1kPFkftipBVJDEkmZxXhxxKfdn"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000f6daa57f3dea764b0300000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "amount": "0",
+          "accounts": [
+            "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+            "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+            "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "109397220999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "4JdhPidTVKJ7Cka7fWJ56kdLzENFYXCQFpajMSeQu81F",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Hd1oyXYZSgWjthKuZvMekEtaz4cT2MAz6Hr18MRFUuHA",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "8NkKBa4WRo3VSC3h7p5rb2yMUM8y9h5J5GVyBTAMtmv1",
+          "amount": "109397220999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "8s9c1L6r7DzwSjLToE5LWhCxV4K2YHWrCkBzmXyWNGE2",
+          "mint": "EX34GWpuGPTP61Lj5zUAq451DcVhduS4EdJP3imgjByV",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "ede41b3415c8e5ab94d5059d3f0d7aacccc744cc4059a861e1af0bf5fbfb1125"
+    },
+    {
+      "signature": "iMAK8nNnXUyYTt91gKhtQtQD4Rpj3nZeBqoegouxC2vJVuByTXKXB5fwEZKiEePZJiGaaPtmD9STViBUnAwQ7py",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+        "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+        "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+        "FTm7PnLMq2RyWG1ut9o8ahWhv16rhLGKS4KnGQfehStF",
+        "2cii7Zt27NDXsnUyZatp1Nsemb2b9YKFGRAPg2yQd7Db",
+        "5RkjvyEfboiQywFZoz2QzHnkgGj7ib3PMhUuDKm7NrB9",
+        "FTa8Pv1sTYwchCzwEBwtQkjHuFNgRhDm4QjiZqrCwC7S"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000e53de44698d28d0f0200000000000000010000",
+      "transfers": [
+        {
+          "index": 2,
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "amount": "0",
+          "accounts": [
+            "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+            "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+            "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "07007595fdff602a22632b082e6f506316e386599f37697f52bfe6c5c98c9256"
+    },
+    {
+      "signature": "5Lp8i98yCpJ3WdfU4iXVA3kfy1TBJ62PsodaX3h7UW9Bm8rP5ygafvD95uM5Ym8MQh7yh6zd8nkAuG3mq5TEuqr1",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+        "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+        "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+        "62DBPTugtKovVz3TR1Vur8bk5ieG353qHsAogSPALCan",
+        "4zKvKgx9c8Ae7Vw8amfQ968JUTL8pX5Q58YdDx2R3GMs",
+        "8tfTmr8gwQgnkGW9iVTskjheZmhXkGhsqfqpMMroTtKM",
+        "DutyoTPm5fj55AkN6MSZtrZoU49NotSraf7euMoE5jFF"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000135a2b4a984912050100000000000000010000",
+      "transfers": [
+        {
+          "index": 2,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "pre",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "pre",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "post",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "post",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        }
+      ],
+      "original_sha256": "d1c430c7a543835314bf4e263e00b1016f81ab85dd6ad3a5355c9c33c5da4c7d"
+    },
+    {
+      "signature": "4Pf3VeyQ2ijwizmgLJt22uMVnzH52geJhnAX1AHwJGjr8XcDg4ggGGxQFpJASGHXqXapSSR6umEusEGzv1nfZpe8",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+        "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+        "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+        "3e1tw3jgafpqBqPkEwC1LdCCKdKyLk7LGioL9FZqRFM6",
+        "DSN8Ra8dUs1G5mjCmisDc77xtZBEHfhoC29qy31Utiah",
+        "GSyxHGTe9nG6fRfcbEme1FZV8EgGzBc5rFCzJyVc3AFv",
+        "BkxbqAB8rtvcrA5AxXJSjufMB1pBv9ySJ79kEnhQF2wK"
+      ],
+      "native_data": "2b04ed0b1ac91e62010000000000000000000000000000009a62afb5b41765801200000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "amount": "0",
+          "accounts": [
+            "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+            "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+            "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "3474031612999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "3474031612999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "a2950a7328e3cb54647a6a72f6392cc70000c3b444325594879299e804eb4c93"
+    },
+    {
+      "signature": "3NDd51GuaA6DuSPUBrQadeowJjieW32CiUG6fZG9daxXn2mJi1DypqdoEDDztkk58dhjptVkZf9LBiHxxxYJXdxU",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+        "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+        "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+        "31ZpTbgYjhpsgue2cLatBFCtVYy1epCPVLjZWKw3wWVu",
+        "4kGu9iaAUjtwGJd591hH6JPq7ouV5VgwDMDbrjRwQxJx",
+        "AFo51ccYv6c2VoEwmBJEZxwfRHqUnLakDXXnRyBeZwDz",
+        "4vW5tPem9q7QNqHEyxee63bB1g1NjMH5bKDnB9RD7zGQ"
+      ],
+      "native_data": "2b04ed0b1ac91e620100000000000000000000000000000034ced8b1052cd38d0e00000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "amount": "0",
+          "accounts": [
+            "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+            "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+            "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+            "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "55UsqJtLD7DjKUyVPymkaS1aaTqxtAwAfhTaeVibzMpa",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "73DpaNPpkFWwWWHhVjg1wMsQFowYb6SqvWEoA6Qptk54",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "BUKGskDsYLPAbSCDDxiQ5T8poSPeKi9HqYfCq3P1XP2d",
+          "amount": "2061345645999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "G5J2nQ7WfgeMsPNJox5YGeehkiCq8gjfgRpiM2sCPYEY",
+          "mint": "Hk7AF6u1pZQDQYLRMcJZoEvNuWsVuxzNoxMLVgkKq5Sv",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "4beb2d45c6126c40b2ed97961e4990ab7ab79705f6ce2ac4e49bd81ae68d1d1d"
+    },
+    {
+      "signature": "3VLAwSynRiBdnscVnfwqeAVdYMXCkUrmQtCcmRBeXLqmBC9yQGay6RtdGVCn17jWem3Gan3sNGeCxUwLjtCUyawS",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+        "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+        "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+        "8G4A6ybnxg1LhtxH4GH1oUYfZpiwHMTnFTMeDTrVPfpD",
+        "Ee7n8733qmSZbSatPwx9d8sC3A2ytmWAguEGPTDw8FBu",
+        "8VkbfyjUBWjRwPQCRq6tuGni1pX4AfFuvaajVQyRoimL",
+        "Hk9Xh5s2P2c9SshnnvaM7mDZ6fDSBsGDBR4rM752i1jT"
+      ],
+      "native_data": "2b04ed0b1ac91e620a00000000000000000000000000000034d96fc728c68db00000000000000000010100",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 5,
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "amount": "0",
+          "accounts": [
+            "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+            "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+            "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+            "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "pre",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "21XkBs9mqyekkzBe8yETSUHwwPaM1eG3ztbN8LD2oKjB",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "608"
+        },
+        {
+          "stage": "post",
+          "address": "Bxb9erpEJxEUSXD3PaMsEpsbdm3YCjNPh9hCk7rHGPWD",
+          "mint": "PreweJYECqtQwBtpxHL171nL2K6umo692gTm7Q3rpgF",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FN1xVmeiYsn6bvpJQAAkYvzSwWFCGGM6JLxKQNMao81s",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "7dN9tSDncajMFsVHjsEQ2EQiBWFcPz4qLC8uzYSFpfU7",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "85874289579827d52da4c2f4e0b3bbdabc397d1f7c31e7cca742a5a2cc30d852"
+    },
+    {
+      "signature": "4Uo4mknKC7XBr9iqLqQXTd422hUfrGRf575rKNGASPRK4E1PPKo9U8RfY1pvyTZzE11xe1jxcJWRJY4bK89Zdeir",
+      "source": 13,
+      "program": "ghosty4ZU1Qk1HN7Ymz4pZ15QfspzJZgSYFkdKN6ZLK",
+      "tag": "f8c69e91e17587c8",
+      "instruction_name": "Swap",
+      "native_accounts": [
+        "7EkaxkbEu5crmUaXQJLiKKheaNcnz6SUCw35yh7KuaV1",
+        "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M",
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "AKfiu7aytWbcHKzeS1VjDYU4Ukum7gUURP2rJJ8etgnW",
+        "AyFe42bzURTWM6FnaL523cDXqdJtASc9agZ7KWsNMsUw",
+        "5LJbxPCEbufGGrsVJDDvFXcWdH3aZKGD3eQFedbd93Vy",
+        "A2n9S1rFa3R3Bb4fGJTcze3d2ZYmaZR6mrjvMoEKDBP6",
+        "8Je3jS4miD9UXpxiSkBzUWTEZx7yeETaqsJgDnxD1ukC",
+        "5ccY6jn9M4Nr4bsrm7w6X15eXwcsghGoc8GxQhFuQMvS",
+        "rboheZpBuxdKqKncBXzr9f1z8BpW5c8DuUcscZkX1Wo",
+        "ghosty4ZU1Qk1HN7Ymz4pZ15QfspzJZgSYFkdKN6ZLK",
+        "11111111111111111111111111111111",
+        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "native_data": "f8c69e91e17587c82f010000000000000000000000000000",
+      "transfers": [
+        {
+          "index": 14,
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "amount": "303",
+          "accounts": [
+            "8Je3jS4miD9UXpxiSkBzUWTEZx7yeETaqsJgDnxD1ukC",
+            "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+            "5LJbxPCEbufGGrsVJDDvFXcWdH3aZKGD3eQFedbd93Vy",
+            "7EkaxkbEu5crmUaXQJLiKKheaNcnz6SUCw35yh7KuaV1"
+          ],
+          "committed": true
+        },
+        {
+          "index": 15,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "303",
+          "accounts": [
+            "A2n9S1rFa3R3Bb4fGJTcze3d2ZYmaZR6mrjvMoEKDBP6",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "5ccY6jn9M4Nr4bsrm7w6X15eXwcsghGoc8GxQhFuQMvS",
+            "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "confirmed_positive_spot_flow_not_decoded",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "5ccY6jn9M4Nr4bsrm7w6X15eXwcsghGoc8GxQhFuQMvS",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "7EkaxkbEu5crmUaXQJLiKKheaNcnz6SUCw35yh7KuaV1",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "5LJbxPCEbufGGrsVJDDvFXcWdH3aZKGD3eQFedbd93Vy",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M",
+          "amount": "93664874133"
+        },
+        {
+          "stage": "pre",
+          "address": "A2n9S1rFa3R3Bb4fGJTcze3d2ZYmaZR6mrjvMoEKDBP6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M",
+          "amount": "13560390908"
+        },
+        {
+          "stage": "post",
+          "address": "5ccY6jn9M4Nr4bsrm7w6X15eXwcsghGoc8GxQhFuQMvS",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "7EkaxkbEu5crmUaXQJLiKKheaNcnz6SUCw35yh7KuaV1",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5LJbxPCEbufGGrsVJDDvFXcWdH3aZKGD3eQFedbd93Vy",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M",
+          "amount": "93664874436"
+        },
+        {
+          "stage": "post",
+          "address": "A2n9S1rFa3R3Bb4fGJTcze3d2ZYmaZR6mrjvMoEKDBP6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "29rqYq5idSQWyJQTFFtFAWJChgsAhwLyv5L9atuiiw1M",
+          "amount": "13560390605"
+        }
+      ],
+      "original_sha256": "041ff7e83cac851737b8f071c663281bebbe24ae8159f8496ef685e34d4e79e3",
+      "protocol": "Ghosty"
+    },
+    {
+      "signature": "4ZnXdGR6CMLdGyDeNVyvLdtw5T8tNZtVFQe5c8XMkzm5rC3FbqiREiMUuBH2NyNDtC3TxRywEZZp1EJLbNmNubvD",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+        "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+        "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+        "FTm7PnLMq2RyWG1ut9o8ahWhv16rhLGKS4KnGQfehStF",
+        "5oiu7V4AzwznwFkw1sw9aZRqJnPsGjkBAa5TQ3pP5aN2",
+        "4fp6e3qf1ZVRDAAcHn7xFGGjh5sd8cqEbqZyQwgtFBs8",
+        "FTa8Pv1sTYwchCzwEBwtQkjHuFNgRhDm4QjiZqrCwC7S"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000bb73466a1650080a0200000000000000010100",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "amount": "0",
+          "accounts": [
+            "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+            "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+            "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+            "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "pre",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9fCuXajTeWeiEKzVqc4YxqhGUxvfqxcwXCJhDq3z8Y8a",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BjaRkxJtwMnGMypoCagkqmJz721mWCnn4tjz7L3R4qor",
+          "mint": "myrcAs6bpP2g5oGHZ3qpgrfZQAFkbo9KUHdqYDXMjGv",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "FX7yxcCD4SDYMBUa8ZKUn1EJ1YWM54PuJUUwj1HUXaiF",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "GWfzga5qywZaomLrAQoTTdPiYF4kdFGSdYqbfUDjMajJ",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "ac5aa11831fc9626e60b71505ac2f753471b5cf111119a054b68665f4770ac6c"
+    },
+    {
+      "signature": "2aMfuXrSW5q1TAHKbRTzGrS3cTSH1woSEA49XPpNkURrrUdqYsLDqMCMwinbgdePDXh2ukh4ThnLXw6GyHjM2Vid",
+      "source": 1,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+        "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+        "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+        "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+        "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+        "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+        "62DBPTugtKovVz3TR1Vur8bk5ieG353qHsAogSPALCan",
+        "Adr3MDZvgjoAtnXxRu5RZGuRBXmztEf5ndreHm9pUajv",
+        "7i9KBg5VxirFutkApBXwxJBN3ZnusmsFGX2durv4iVDn",
+        "DutyoTPm5fj55AkN6MSZtrZoU49NotSraf7euMoE5jFF"
+      ],
+      "native_data": "2b04ed0b1ac91e620a000000000000000000000000000000107a442822c856020100000000000000010100",
+      "transfers": [
+        {
+          "index": 3,
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "amount": "0",
+          "accounts": [
+            "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+            "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+            "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+            "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx"
+          ],
+          "committed": true
+        },
+        {
+          "index": 4,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+            "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "pre",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "pre",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "pre",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        },
+        {
+          "stage": "post",
+          "address": "3KWByJc5nKKHqjxM1niw4hKgMQWkg8e5fnZKRYGnpbK6",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1566"
+        },
+        {
+          "stage": "post",
+          "address": "6piYz1t8LL67j3fTLD8MdrdDEedVtJaFZPYz8GF36y3m",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "9409"
+        },
+        {
+          "stage": "post",
+          "address": "AZzEGhcK2mad9u8Y1AHsGimg1pXffbyzFQ5VfMGS1mPY",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "5caFRPLyVVy14bhDkX1eM3QH6uh1oxV7eVJ3iwi1fVvn",
+          "amount": "1243"
+        },
+        {
+          "stage": "post",
+          "address": "EP1qsCb9wkihmH1JxeVjMPLQF2HF9To8pWTHSW5Dvqyf",
+          "mint": "Pren1FvFX6J3E4kXhJuCiAD5aDmGEb7qJRncwA8Lkhw",
+          "owner": "346VJy434XkWxpnPBapmrNhiDXvGaAhfw2tkahZRjUgx",
+          "amount": "4192"
+        }
+      ],
+      "original_sha256": "86f3d0e8424c7f28c495e2b2e21c35891b1939891ed10d08eb7be2e94e0ab9a3"
+    },
+    {
+      "signature": "3CcwCyR1YVhAdGPjwYigNvPaNPaqw79JuJZDamv9DCenMpJjHfuQibLqKFYASQLij1aAjfcx7f4X6AW6RDRqoimY",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "6biZhm8vWcvALzPNBbUXXpviqkkMoRq1Yc93VpmKrKVA",
+        "EnquruRymfvrjGNZ1hFx1GGQe6wcwCs6PjsXHdftsyiu",
+        "6pwXjyE746fUyb8bguDBAYTcFwDi8Wf4kVCv1JxNbjsy",
+        "JCAv4Kn57vFWquE5QsDn5fNEtjE3XRpbbqgu5X6XD9p8",
+        "oZo3wZnfxmM7M9a1kxSnPbXZ7XdmN6xdhyzFRA4F9pj",
+        "9acg8ciLUvJYWetTXjARTD3ygntVWLNWWwwVdrKNzUpz",
+        "2tn6XFEb74uEcenPnxeDN5RzJSDewTXxdDwxPKrSkyQx"
+      ],
+      "native_data": "2b04ed0b1ac91e620100000000000000000000000000000011559292f74b790e0400000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+          "amount": "0",
+          "accounts": [
+            "EnquruRymfvrjGNZ1hFx1GGQe6wcwCs6PjsXHdftsyiu",
+            "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+            "6pwXjyE746fUyb8bguDBAYTcFwDi8Wf4kVCv1JxNbjsy",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "6biZhm8vWcvALzPNBbUXXpviqkkMoRq1Yc93VpmKrKVA",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "6biZhm8vWcvALzPNBbUXXpviqkkMoRq1Yc93VpmKrKVA",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "6pwXjyE746fUyb8bguDBAYTcFwDi8Wf4kVCv1JxNbjsy",
+          "mint": "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+          "owner": "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ",
+          "amount": "168705186999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "EnquruRymfvrjGNZ1hFx1GGQe6wcwCs6PjsXHdftsyiu",
+          "mint": "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "6biZhm8vWcvALzPNBbUXXpviqkkMoRq1Yc93VpmKrKVA",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "6pwXjyE746fUyb8bguDBAYTcFwDi8Wf4kVCv1JxNbjsy",
+          "mint": "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+          "owner": "8Ntif8Kr8Vr4sVc2zkHtDwf4wNSmhDbpLhNDKZR5G1ZQ",
+          "amount": "168705186999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "EnquruRymfvrjGNZ1hFx1GGQe6wcwCs6PjsXHdftsyiu",
+          "mint": "GaL5FyKiVogb4YkfLCGtRJZjCiWu9PMctwY495aUyE8f",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "1f5717e7c3c2b1f149fbdbc31dc7be5bd5f5e08a14075e715f76295e5f3aea89"
+    },
+    {
+      "signature": "2EENDQyQNYhWjsbsL2jxMDv8vtny3EJFsVieV2vrCMAwjEFiumvA1mSNbWoe6hJKUWBrDYGrjjRj7bkRQ6E11eJY",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+        "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+        "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+        "5uFqCHQyiTpkcx86YZTHoTbW3qa6AaDhdytmnUk5JAiT",
+        "AcA5xGn73gvk2tec4U5V5aZAoGGPq8mv3MK6B3WcCGWn",
+        "EXBhbvikMRrZYrr3QZtK2iaTcB9So9jG5hN6sAm5iM3H",
+        "9YX9wqfc3uSxWsXgHH2JoeCzJS438tYHdVRXzu7T5QRL"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000c0a034fbcf9e91e71100000000000000010000",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "amount": "0",
+          "accounts": [
+            "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+            "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+            "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FFSP7eC1uqpD7JrAufpXxne1XtA2ZwGkBGVG63sH3fyT",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "BeWX1eKQLBMvBrVp3HHijKgjSKpKHiVSjBqaMsVkZmvH",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "HEcsYT9pZDyYLTGdnLztYTpT7ndmM8SJXYHabBkPAsAv",
+          "amount": "3178639541999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5sbUSeBnPrTgMLqHJ9ReDK9jw3tiAceS7wdc8rxt79HE",
+          "mint": "EU967P9Q9kGDNKaF6rMHCMyhWZPkdeez2Hh3E62XfSgx",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "42482357efef8e8bbaa66f03c606fbff53cf9b5071514596ca5665e2e8b57cb4"
+    },
+    {
+      "signature": "2rx2a395dovNf8x1C94b6858CHsS8koBpUvsNYdZgavCrfdEdD91jqcPBaqXGdfnFGyavyWQ9AJzDuYkWHV6wgDQ",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "Ef1ZLu4PMPiepR6f78feKyB6gvBN7D3ERcM8HuEjnef2",
+        "3cYTfDiboQVKpmVmjdQDmNjTr9G92ckn8QiTjjHYt6Hd",
+        "DfHfrEKRn3LyMdeJBUgH6DqaUhFHU9HzNuWR8eMPe9LB",
+        "5QK8LdXmJ7uBMtAHTe6x3h1FaaubVRb8QfAtKMFHsp2T",
+        "4mySJEE9GNszfXpn6DbEWzXNqvaNzMxT39ckvpYwDmkp",
+        "EZVNjGJRnJKNZ4DA27NBaMY9VtXkmdcGkVf92PvQrATA",
+        "6iXc5kLuyjq6649zHaYviwMMMBVx51tLmEtRj2drbNTn"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000f3a5ea767c7612e21100000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "Ef1ZLu4PMPiepR6f78feKyB6gvBN7D3ERcM8HuEjnef2",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+          "amount": "0",
+          "accounts": [
+            "DfHfrEKRn3LyMdeJBUgH6DqaUhFHU9HzNuWR8eMPe9LB",
+            "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+            "3cYTfDiboQVKpmVmjdQDmNjTr9G92ckn8QiTjjHYt6Hd",
+            "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "Ef1ZLu4PMPiepR6f78feKyB6gvBN7D3ERcM8HuEjnef2",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "DfHfrEKRn3LyMdeJBUgH6DqaUhFHU9HzNuWR8eMPe9LB",
+          "mint": "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+          "owner": "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7",
+          "amount": "3163856106999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "3cYTfDiboQVKpmVmjdQDmNjTr9G92ckn8QiTjjHYt6Hd",
+          "mint": "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Ef1ZLu4PMPiepR6f78feKyB6gvBN7D3ERcM8HuEjnef2",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "DfHfrEKRn3LyMdeJBUgH6DqaUhFHU9HzNuWR8eMPe9LB",
+          "mint": "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+          "owner": "F2y4GTbMhwhhQUHRfLEwffDvwpbozQNy9DfnzAgZSWA7",
+          "amount": "3163856106999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "3cYTfDiboQVKpmVmjdQDmNjTr9G92ckn8QiTjjHYt6Hd",
+          "mint": "HGzguc1DpQxTTRgaXqpDV39AZX4mav3fCA5udDjLbZyy",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "44983accd0f0bd639fd4bde83778a572d84c05b8b11a73392b7740dc6f0c6cee"
+    },
+    {
+      "signature": "5Gusgt57CDJTYHYTsjz6SrZh6xDTPFizVnjBsjaSfNLKDx88gAbVKJsM9uYmdb6J4wYcth6ZSqSoY9zU8TkvXKRw",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+        "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+        "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+        "3e1tw3jgafpqBqPkEwC1LdCCKdKyLk7LGioL9FZqRFM6",
+        "FabY5uKrM52aBB42jjBL8KbtSFxp1PaJ2gq3qgmirBc9",
+        "13vsN8UFG3MBaHjGx55vPCgzczZHvVSNtps6mgqm7teR",
+        "BkxbqAB8rtvcrA5AxXJSjufMB1pBv9ySJ79kEnhQF2wK"
+      ],
+      "native_data": "2b04ed0b1ac91e620100000000000000000000000000000057563fe6e9839b7c1200000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "amount": "0",
+          "accounts": [
+            "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+            "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+            "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+            "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "3474031612999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "47wXjFHqzkiKGW8Av5pLg47mG3HJDReA3aBB54hRaRqB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "6xKDFUtxeYcuHQFffGC9v39zy9EYSeuUVpDaLu64R214",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "gHAtPAEAGk2RsL6UGwwmVjbPwVQi2aSa6qvjETNG9Nr",
+          "amount": "3474031612999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "FhyQwJqJk9pf57pekAwk7Rg6e2nGXrxpJEJ2m1QCiMrK",
+          "mint": "Eqcr6ppEW66uGdnVZuiRiUSDMNdevkqBwrQdsDqLmcvf",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "c03a63b3535c2fbd1c789660991613f53afcc2b0939bcf87965b38394f22e7da"
+    },
+    {
+      "signature": "5nncWtP4D7cbrMJVsKpMma5esqNAv1wvJeo6iAwcMW3ApAVP4zsR8J23D1CR7i4SargVn2VZc2cXA8nBhbpQSpFG",
+      "source": 11,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "2b04ed0b1ac91e62",
+      "instruction_name": "SwapV2",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+        "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+        "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+        "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+        "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+        "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+        "6Zp26Pn4Vzo1mcaCvWfM18QkkAKijsy5Veda1cNG16mM",
+        "8TzA5KKxSFCz7QMTK9FFb54L3ZbrZPJnNTMA959WJn7j",
+        "6JYxFoxdwGYbSysCzGRb2dhWgdfuazVjw8gd5ftsb2LT",
+        "ErLrsuGpadSV4wz3Gi1ZhkNLvdxgVdFHc9y9GtGdAcma"
+      ],
+      "native_data": "2b04ed0b1ac91e6201000000000000000000000000000000f8011bd63d8498150300000000000000010100",
+      "transfers": [
+        {
+          "index": 12,
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "amount": "0",
+          "accounts": [
+            "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+            "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn"
+          ],
+          "committed": true
+        },
+        {
+          "index": 13,
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "amount": "0",
+          "accounts": [
+            "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+            "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+            "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+            "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "pre",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "pre",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "Bg1HFGw9L2Qt4fR4YBBverLGR9xCmXvY8rAKWMZ2zQK5",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "AfU8AqHPjxwd89GdxMhzTmS3YLc4J24Nv4t3wGTnjJn9",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "Hpujm9o8inXWAjV5ccPUY1tiu831ea6uq57uVG3K95En",
+          "amount": "96079937999"
+        },
+        {
+          "stage": "post",
+          "address": "418854ESk2FtGkeEPiDM5TsHszwCL6X9NSQdF2BjRitr",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "9RsBGfofEGerPDzcqPMcxzte53hJKpb261URGNpQdjkE",
+          "mint": "EqhdbxpU4BXxCaDPaLKd1RSxnxNng1iFzWrfpXjT8QcB",
+          "owner": "uHsRXG8Hr8y9pwUeUzdKiiTZ8S6BVbPScijC9NyW8wn",
+          "amount": "0"
+        }
+      ],
+      "original_sha256": "5bfb736d1b5839b5e0345f4ce9fe97a8b883a4957f2c5663e476af35d5166feb"
+    },
+    {
+      "signature": "3Jw4HKp1uVHnXXZdSgAWaSkB5G2zsh4qq4ZsJXTrweBc1Xc3DEg7wHNJ94WWg7W7EtR1nrdFXVinrRHMEmUGvy3M",
+      "source": 8,
+      "program": "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE",
+      "tag": "f8c69e91e17587c8",
+      "instruction_name": "Swap",
+      "native_accounts": [
+        "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+        "Cy5um8MnWdGb8CbkNCPMDp12CKaiPwMamSF3srcSoxV2",
+        "2SMS1Y4EAyL2dQLpXD6VJCrNbQJ2eQ2pN3qYcX1vim3E",
+        "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+        "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+        "9oiwTSFNN2eF5MjYBCQHYgGh7H4YepmXT8kbHSoHAKuy",
+        "3HupQBuwemyrZSEv8qgdNZW9jspygAG5dvMMVEhc2NLG",
+        "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+        "So11111111111111111111111111111111111111112",
+        "4gKqoSSanUsFAVmpbcMQXspB1gbbFLiiQvisQ9BJm58V",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "FWdP9yTogKbuXvEqQNNHYw2TYm38MbinAZ2iTHeZWX8H",
+        "omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE"
+      ],
+      "native_data": "f8c69e91e17587c8d2ebb50b0a0000000000000000000000",
+      "transfers": [
+        {
+          "index": 10,
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "amount": "43146144722",
+          "accounts": [
+            "9oiwTSFNN2eF5MjYBCQHYgGh7H4YepmXT8kbHSoHAKuy",
+            "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+            "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+            "4gKqoSSanUsFAVmpbcMQXspB1gbbFLiiQvisQ9BJm58V"
+          ],
+          "committed": true
+        },
+        {
+          "index": 11,
+          "mint": "So11111111111111111111111111111111111111112",
+          "amount": "213068001",
+          "accounts": [
+            "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+            "So11111111111111111111111111111111111111112",
+            "3HupQBuwemyrZSEv8qgdNZW9jspygAG5dvMMVEhc2NLG",
+            "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "confirmed_positive_spot_flow_not_decoded",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "9oiwTSFNN2eF5MjYBCQHYgGh7H4YepmXT8kbHSoHAKuy",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "4gKqoSSanUsFAVmpbcMQXspB1gbbFLiiQvisQ9BJm58V",
+          "amount": "43146144722"
+        },
+        {
+          "stage": "pre",
+          "address": "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "20488156079906"
+        },
+        {
+          "stage": "pre",
+          "address": "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "101744426190"
+        },
+        {
+          "stage": "post",
+          "address": "9oiwTSFNN2eF5MjYBCQHYgGh7H4YepmXT8kbHSoHAKuy",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "4gKqoSSanUsFAVmpbcMQXspB1gbbFLiiQvisQ9BJm58V",
+          "amount": "0"
+        },
+        {
+          "stage": "post",
+          "address": "5b3gWrq4LN3iDNCqqFfjzRjdT8rpUYZhi8ka9MRRqYEe",
+          "mint": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "20531302224628"
+        },
+        {
+          "stage": "post",
+          "address": "A6KiWwhxvTry28byFgzuerVNdhTesEtqGPQqxcTE9SuZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "owner": "7LVhVHctPuVnxjYv57jG1sYDttEV9uDSRN14dUAE3qXM",
+          "amount": "101531358189"
+        }
+      ],
+      "original_sha256": "f6bc0d5942bcef5f80ee49c40464cfec82f4f0c60ee91340a9762b5c2b024a13",
+      "protocol": "Omnipair"
+    },
+    {
+      "signature": "4GZxTdG3dEjEZoJ91aPws55A1Vf2Ua4ZKE5BmgD4G8RG3jm5BeugTAjJLq1Lex6LrfqQaUjVqscgHBScHqojgT9R",
+      "source": 0,
+      "program": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "tag": "f8c69e91e17587c8",
+      "instruction_name": "Swap",
+      "native_accounts": [
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH",
+        "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9",
+        "HPnHNQHJPTdiKUwqFHadhxn91i59wpYyKcmCPF2V1pXs",
+        "CLRU5pCN7V9dhLQ4qLk7EV3t4cdYbFPf1yCgnaWA9H4k",
+        "HVvTsTdgFxDzF8PrRLzRKJsutPzeZEwAzmpyFBF9hdRK",
+        "4FGPhwrW1GybJ2RRYvds12Uh2terXoKh77mzPgj5bmeZ",
+        "Rn7cyJFXN7F6Tusu84oVRCWtdLXrQGjHVAtHPZsgMrN",
+        "6D3j5oBwW1zohLgLdkNfc3US3q6nazNwgDLdi55eN5Vp",
+        "6D3j5oBwW1zohLgLdkNfc3US3q6nazNwgDLdi55eN5Vp",
+        "2U4D6pQVSq3Wm7hV2upYoBKoLQYn4aSG7ucZVYynX8rY"
+      ],
+      "native_data": "f8c69e91e17587c86f571411000000000000000000000000503b01000100000000000000000000000101",
+      "transfers": [
+        {
+          "index": 1,
+          "mint": "awVH9tXCXVyv8MosWcfwZB9GtRCmNkSGfPBZgkoww2y",
+          "amount": "0",
+          "accounts": [
+            "HPnHNQHJPTdiKUwqFHadhxn91i59wpYyKcmCPF2V1pXs",
+            "CLRU5pCN7V9dhLQ4qLk7EV3t4cdYbFPf1yCgnaWA9H4k",
+            "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH"
+          ],
+          "committed": true
+        },
+        {
+          "index": 2,
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "amount": "0",
+          "accounts": [
+            "4FGPhwrW1GybJ2RRYvds12Uh2terXoKh77mzPgj5bmeZ",
+            "HVvTsTdgFxDzF8PrRLzRKJsutPzeZEwAzmpyFBF9hdRK",
+            "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9"
+          ],
+          "committed": true
+        }
+      ],
+      "nested_indexed_swaps": [],
+      "classification": "fewer_than_two_positive_exchange_mints",
+      "complete_logs": true,
+      "ledger": [
+        {
+          "stage": "pre",
+          "address": "HPnHNQHJPTdiKUwqFHadhxn91i59wpYyKcmCPF2V1pXs",
+          "mint": "awVH9tXCXVyv8MosWcfwZB9GtRCmNkSGfPBZgkoww2y",
+          "owner": "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH",
+          "amount": "90853658076"
+        },
+        {
+          "stage": "pre",
+          "address": "CLRU5pCN7V9dhLQ4qLk7EV3t4cdYbFPf1yCgnaWA9H4k",
+          "mint": "awVH9tXCXVyv8MosWcfwZB9GtRCmNkSGfPBZgkoww2y",
+          "owner": "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9",
+          "amount": "797094669"
+        },
+        {
+          "stage": "pre",
+          "address": "HVvTsTdgFxDzF8PrRLzRKJsutPzeZEwAzmpyFBF9hdRK",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH",
+          "amount": "248763"
+        },
+        {
+          "stage": "pre",
+          "address": "4FGPhwrW1GybJ2RRYvds12Uh2terXoKh77mzPgj5bmeZ",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9",
+          "amount": "3388909"
+        },
+        {
+          "stage": "post",
+          "address": "HPnHNQHJPTdiKUwqFHadhxn91i59wpYyKcmCPF2V1pXs",
+          "mint": "awVH9tXCXVyv8MosWcfwZB9GtRCmNkSGfPBZgkoww2y",
+          "owner": "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH",
+          "amount": "90853658076"
+        },
+        {
+          "stage": "post",
+          "address": "CLRU5pCN7V9dhLQ4qLk7EV3t4cdYbFPf1yCgnaWA9H4k",
+          "mint": "awVH9tXCXVyv8MosWcfwZB9GtRCmNkSGfPBZgkoww2y",
+          "owner": "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9",
+          "amount": "797094669"
+        },
+        {
+          "stage": "post",
+          "address": "HVvTsTdgFxDzF8PrRLzRKJsutPzeZEwAzmpyFBF9hdRK",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "ECSzqkwBmq7vMH4iR7DtPm6zpTekFsM6UDSVoudGyCeH",
+          "amount": "248763"
+        },
+        {
+          "stage": "post",
+          "address": "4FGPhwrW1GybJ2RRYvds12Uh2terXoKh77mzPgj5bmeZ",
+          "mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+          "owner": "BAyDSheGX18NEWpcRXjwfcezTVBtqMi7iokVpCTFf8i9",
+          "amount": "3388909"
+        }
+      ],
+      "original_sha256": "76a64201485e8108ec35bcb56bbe8cb6f2301f96fda709663fefb6e9f6d488de"
+    }
+  ],
+  "confirmedPositiveSpotFlowsNotDecoded": 4,
+  "confirmedProtocolCounts": {
+    "Deriverse": 1,
+    "Omnipair": 2,
+    "Ghosty": 1
+  },
+  "scope": "45 recognized native swap diagnostics in the specified ten-minute window; generic and orderbook diagnostics not exhaustively classified"
+}

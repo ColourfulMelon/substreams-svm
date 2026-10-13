@@ -475,6 +475,74 @@ pub(crate) fn verify_with_fees(
     // These Anchor venues require exact whole-account conservation in
     // addition to their two native principal CPIs. A missing balance cannot
     // turn a transfer label into a verified price.
+    // Fresh, closed Anchor user accounts have neither token snapshot. Prove
+    // their exact lifecycle and the complete transaction's native ledger,
+    // including rent funding/refunds and WSOL unwrapping, before using them.
+    let mut fresh_anchor_closes = HashSet::new();
+    if instructions.iter().any(|ix| crate::anchor_markets::layout(ix).is_some()
+        || crate::omnipair::layout(ix).is_some() || crate::fraudsworth::layout(ix).is_some())
+        && closes.iter().any(|(account,count)| *count==1 && initializations.get(account)==Some(&1) && !observed_balances.contains(account))
+    {
+        if let Some(meta) = tx.meta.as_ref() {
+            let keys = tx.resolved_accounts();
+            let mut native = HashMap::<Vec<u8>,i128>::new();
+            let mut valid = true;
+            for (position,call) in instructions.iter().enumerate() {
+                let a=call.accounts(); let d=call.data(); let p=call.program_id().0;
+                if p.iter().all(|v| *v==0) {
+                    let amount = if d.len()==52 && d[..4]==[0;4] && a.len()==2 {
+                        Some(u64::from_le_bytes(d[4..12].try_into().unwrap()))
+                    } else if d.len()==12 && d[..4]==[2,0,0,0] && a.len()==2 {
+                        Some(u64::from_le_bytes(d[4..12].try_into().unwrap()))
+                    } else { None };
+                    let Some(amount)=amount else { valid=false; break; };
+                    if !successful_invocations.contains(&(position as u32)) { valid=false; break; }
+                    *native.entry(a[0].0.clone()).or_default()-=i128::from(amount);
+                    *native.entry(a[1].0.clone()).or_default()+=i128::from(amount);
+                } else if [token::PROGRAM_ID.as_slice(),token_2022::PROGRAM_ID.as_slice()].contains(&p.as_slice()) {
+                    if let Some(t)=transfers.iter().find(|t|t.index==position as u32 && t.mint.as_slice()==crate::SOL_MINT) {
+                        if p.as_slice()!=token::PROGRAM_ID || !successful_invocations.contains(&t.index) { valid=false; break; }
+                        *native.entry(t.source.clone()).or_default()-=i128::from(t.amounts[0]);
+                        *native.entry(t.destination.clone()).or_default()+=i128::from(t.amounts[0]);
+                    } else if d.as_slice()==[9] {
+                        if a.len()!=3 || !successful_invocations.contains(&(position as u32)) { valid=false; break; }
+                        let Some(index)=keys.iter().position(|key|*key==a[0].0) else { valid=false; break; };
+                        let Some(before)=meta.pre_balances.get(index) else { valid=false; break; };
+                        let residual=i128::from(*before)+native.get(a[0].0).copied().unwrap_or(0);
+                        if residual<0 || meta.post_balances.get(index)!=Some(&0) { valid=false; break; }
+                        *native.entry(a[0].0.clone()).or_default()-=residual;
+                        *native.entry(a[1].0.clone()).or_default()+=residual;
+                    }
+                }
+            }
+            if let Some(payer)=keys.first() { *native.entry((*payer).clone()).or_default()-=i128::from(meta.fee); }
+            if valid && keys.iter().enumerate().all(|(index,key)| meta.post_balances.get(index).zip(meta.pre_balances.get(index))
+                .map(|(after,before)|i128::from(*after)-i128::from(*before))==Some(native.get(*key).copied().unwrap_or(0)))
+            {
+                for (account,count) in &closes {
+                    if *count!=1 || initializations.get(account)!=Some(&1) || observed_balances.contains(account) { continue; }
+                    let Some(index)=keys.iter().position(|key|*key==account) else { continue; };
+                    if meta.pre_balances.get(index)!=Some(&0) || meta.post_balances.get(index)!=Some(&0) { continue; }
+                    let Some((close_position,close))=instructions.iter().enumerate().find(|(n,c)| c.program_id().0.as_slice()==token::PROGRAM_ID
+                        && c.data().as_slice()==[9] && c.accounts().len()==3 && c.accounts()[0].0==account
+                        && successful_invocations.contains(&(*n as u32))) else { continue; };
+                    let Some((init_position,_))=instructions.iter().enumerate().find(|(n,c)| c.program_id().0.as_slice()==token::PROGRAM_ID
+                        && c.data().len()==33 && c.data()[0]==18 && c.accounts().len()==2 && c.accounts()[0].0==account
+                        && c.data()[1..]==*close.accounts()[2].0 && mints.mint_for(account).as_ref()==Some(c.accounts()[1].0)
+                        && successful_invocations.contains(&(*n as u32))) else { continue; };
+                    let creates:Vec<_>=instructions.iter().enumerate().filter(|(_,c)|c.program_id().0.iter().all(|v|*v==0)
+                        && c.accounts().get(1).is_some_and(|a|a.0==account)).collect();
+                    if creates.len()!=1 || creates[0].0>=init_position
+                        || creates[0].1.data().len()!=52 || creates[0].1.data()[..4]!=[0;4]
+                        || creates[0].1.data()[12..20]!=165u64.to_le_bytes()
+                        || creates[0].1.data()[20..52]!=token::PROGRAM_ID
+                        || !successful_invocations.contains(&(creates[0].0 as u32))
+                        || init_position>=close_position || instructions[close_position+1..].iter().any(|c|c.accounts().iter().any(|a|a.0==account)) { continue; }
+                    fresh_anchor_closes.insert(account.clone());
+                }
+            }
+        }
+    }
     let mut anchor_receipts = HashSet::new();
     for (index, ix) in instructions.iter().enumerate() {
         let Some(layout)=crate::native_venues::layout(ix).filter(|l|[pb::Protocol::Ghosty,pb::Protocol::Memefun,pb::Protocol::Omnipair,pb::Protocol::DrFraudsworth].contains(&l.protocol))else{continue;};
@@ -513,7 +581,7 @@ pub(crate) fn verify_with_fees(
                     });
             if other_token_operations.contains(address)&&!synchronized
                 || !observed_start.contains(address)&&initializations.get(address)!=Some(&1)
-                || !observed_end.contains(address)&&!proven_closed.contains(address){return true;}
+                || !observed_end.contains(address)&&!proven_closed.contains(address)&&!fresh_anchor_closes.contains(address){return true;}
             let incoming:Vec<_>=transfers.iter().filter(|t|t.destination==*address&&t.mint==mint).collect();
             if incoming.iter().any(|t|!t.net_verified
                 || instructions[t.index as usize].program_id().0.iter().all(|byte|*byte==0)
@@ -524,6 +592,7 @@ pub(crate) fn verify_with_fees(
             let received:i128=incoming.iter().map(|t|i128::from(*t.amounts.iter().min().unwrap())).sum();
             let spent=debits.get(&(address.clone(),mint.clone())).copied().unwrap_or(0);
             if deltas.get(address).copied()==Some(received-spent){return false;}
+            if mint.as_slice()==crate::SOL_MINT && fresh_anchor_closes.contains(address) && received>=spent {return false;}
             // Classic CloseAccount unwraps remaining WSOL, including a positive
             // pre-existing token balance. It is a lifecycle debit, never swap
             // proceeds. Bind its owner and prohibit later account accesses.
@@ -3691,6 +3760,101 @@ pub(crate) fn verify_with_fees(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn finalized_live_principal_cases_preserve_old_legs_and_reject_unproven_lifecycles() {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage/live-principal28");
+        let cases = std::fs::read_to_string(dir.join("cases.tsv")).unwrap();
+        let preserved = std::fs::read_to_string(dir.join("preserved.tsv")).unwrap();
+        let mut checked = HashSet::new();
+        for row in cases.lines() {
+            let f: Vec<_> = row.split('\t').collect();
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(dir.join(format!("{}.pb", f[0]))).unwrap()).unwrap();
+            let source: u32 = f[1].parse().unwrap();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let native: Vec<_> = decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();
+            if f[10]=="0" { assert!(native.is_empty(),"zero-output source {}:{}",f[0],source); }
+            else {
+                assert_eq!(native.len(),1,"missing or duplicate {}:{}",f[0],source);
+                let s=native[0];
+                assert_eq!((s.protocol,s.input_amount,s.output_amount,s.source_transfer_index),
+                    (f[2].parse().unwrap(),f[6].parse().unwrap(),f[8].parse().unwrap(),Some(f[9].parse().unwrap())));
+                for (value,expected) in [(&s.amm_pool,f[3]),(&s.user,f[4]),(&s.input_mint,f[5]),(&s.output_mint,f[7])] {
+                    assert_eq!(base58::encode(value),expected);
+                }
+                assert!(s.transfer_verified);
+                assert!(!decoded.coverage_candidates.iter().any(|c|c.source_index==source));
+                let walk:Vec<_>=tx.walk_instructions().collect();
+                let layout=crate::native_venues::layout(&walk[source as usize]).unwrap();
+                let input:usize=f[9].parse().unwrap();
+                let output=walk.iter().enumerate().skip(input+1).find(|(_,c)|c.program_id().0.as_slice()==token::PROGRAM_ID
+                    && c.accounts().first().is_some_and(|a|a.0==walk[source as usize].accounts()[layout.vaults[1]].0)).unwrap().0;
+                let closed_role=if layout.protocol==pb::Protocol::Ghosty {layout.users[0]} else {layout.users[1]};
+                let closed=walk[source as usize].accounts()[closed_role].0.clone();
+                for mode in 0..18 {
+                    let mut wrong=tx.clone();
+                    let keys=wrong.resolved_accounts();
+                    let account_index=keys.iter().position(|key|**key==closed).unwrap();
+                    let vault_index=keys.iter().position(|key|*key==walk[source as usize].accounts()[layout.vaults[1]].0).unwrap();
+                    let mut position=0usize;
+                    let message=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let meta=wrong.meta.as_mut().unwrap();
+                    for (root,ix) in message.instructions.iter_mut().enumerate() {
+                        for (data,a,n) in std::iter::once((&mut ix.data,&mut ix.accounts,position)).chain(
+                            meta.inner_instructions.iter_mut().find(|g|g.index==root as u32).into_iter().flat_map(|g|g.instructions.iter_mut())
+                                .enumerate().map(|(offset,c)|(&mut c.data,&mut c.accounts,position+offset+1))) {
+                            match mode {
+                                0 if n==source as usize => data[0]^=1,
+                                1 if n==source as usize => {let offset=if layout.protocol==pb::Protocol::Deriverse {16}else{8};
+                                    let amount=u64::from_le_bytes(data[offset..offset+8].try_into().unwrap());data[offset..offset+8].copy_from_slice(&(amount+2).to_le_bytes());},
+                                2 if n==source as usize => a.swap(layout.pool,layout.authority),
+                                3 if n==input => {let amount=u64::from_le_bytes(data[1..9].try_into().unwrap());data[1..9].copy_from_slice(&(amount+1).to_le_bytes());},
+                                4 if n==output => {let amount=u64::from_le_bytes(data[1..9].try_into().unwrap());data[1..9].copy_from_slice(&(amount+1).to_le_bytes());},
+                                5 if n==output => data[1..9].fill(0),
+                                6 if n==output => {let last=a.len()-1;a[last]=a[1];},
+                                7 if n==source as usize => {let offset=if layout.protocol==pb::Protocol::Deriverse {24}else{16};
+                                    data[offset..offset+8].copy_from_slice(&(s.output_amount+1).to_le_bytes());},
+                                8 if data.as_slice()==[9] && a.first()==Some(&(account_index as u8)) => data[0]=5,
+                                9 if data.as_slice()==[9] && a.first()==Some(&(account_index as u8)) => a[2]=a[1].wrapping_add(1),
+                                10 if data.len()==33 && data[0]==18 && a.first()==Some(&(account_index as u8)) => data[1]^=1,
+                                11 if data.len()==52 && data[..4]==[0;4] && a.get(1)==Some(&(account_index as u8)) => data[20]^=1,
+                                _=>{},
+                            }
+                        }
+                        position+=1+meta.inner_instructions.iter().find(|g|g.index==root as u32).map_or(0,|g|g.instructions.len());
+                    }
+                    match mode {
+                        12 => meta.pre_balances[account_index]+=1,
+                        13 => meta.post_balances[account_index]+=1,
+                        14 => meta.log_messages.clear(),
+                        15 => {let program=base58::encode(walk[source as usize].program_id().0);
+                            let log=meta.log_messages.iter_mut().find(|l|**l==format!("Program {program} success")).unwrap();
+                            *log=format!("Program {program} failed: custom program error: 0x1");},
+                        16 => {let b=meta.post_token_balances.iter_mut().find(|b|b.account_index as usize==vault_index).unwrap();
+                            let amount=b.ui_token_amount.as_mut().unwrap();amount.amount=(amount.amount.parse::<u64>().unwrap()+1).to_string();},
+                        17 => meta.fee+=1,
+                        _=>{},
+                    }
+                    // Lifecycle mutations apply to the fresh Anchor accounts;
+                    // Deriverse instead binds both persistent vault ledgers.
+                    if layout.protocol==pb::Protocol::Deriverse && matches!(mode,8..=13|17) {continue;}
+                    assert!(crate::process_transaction(wrong).map_or(true,|t|!t.swaps.iter().any(|s|s.source_index==Some(source))),
+                        "unproven swap {} mode={mode}",f[0]);
+                }
+            }
+            if checked.insert(f[0]) {
+                let expected=preserved.lines().filter(|r|r.split('\t').next()==Some(f[0])).count()
+                    +cases.lines().filter(|r|r.split('\t').next()==Some(f[0])&&r.ends_with("\t1")).count();
+                assert_eq!(decoded.swaps.len(),expected,"unexpected financial row {}",f[0]);
+                for old in preserved.lines().filter(|r|r.split('\t').next()==Some(f[0])) {
+                    let v:Vec<_>=old.split('\t').collect();let old_source:u32=v[1].parse().unwrap();
+                    let s=decoded.swaps.iter().find(|s|s.source_index==Some(old_source)).unwrap();
+                    assert_eq!((s.protocol,s.input_amount,s.output_amount),(v[2].parse().unwrap(),v[5].parse().unwrap(),v[7].parse().unwrap()));
+                    assert_eq!((base58::encode(&s.amm_pool),base58::encode(&s.input_mint),base58::encode(&s.output_mint)),(v[3].into(),v[4].into(),v[6].into()));
+                }
+            }
+        }
+        assert_eq!(checked.len(),40);
+    }
     #[test]
     fn committed_legacy_token_batch_supplies_only_bounded_conservation_entries() {
         let signature = "3NZVd5DcNKVvQbvCt923moutpM7vmmCuCvpMrW8XFTKqNFiB2YcuxnSBUW8cc2rQ44GZbtmc6v4WozzNFYMUVk8Q";
