@@ -1,5 +1,11 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.28` adds bounded compact Deriverse one-atom settlement rounding and verified fresh/closed classic Token user accounts for native Anchor swaps. It restores four confirmed live sources: two Omnipair, one Deriverse and one Ghosty. Both persistent pool-vault ledgers and the complete native lamport ledger remain mandatory for the new account lifecycle. Native request, principal receipt, authority, mint, minimum-output, commitment and deduplication checks remain intact. No schema or protocol IDs change, and frozen metadata bytes remain pinned. See [live principal evidence](live-principal28-validation.md).
+
+All 230 core tests pass, including 65 invalid-evidence mutations. An exact paired package replay across 1,564 finalized blocks restores those four legs while preserving all 142,127 existing financial rows unchanged. Each recovered row matches 27 independently verified financial/provenance fields. See the [package attestation](../dex-swaps/fixtures/swap-coverage/live-principal28/packaged-release-proof.json).
+
+## Previous release: pluto.27
+
 `v0.5.2-pluto.27` adds verified native settlement formats for Aldrin V1,
 Cropper, Picon DLMM, M0 native orders, Patch buybacks and Bxlw. Protocol IDs
 79–85 append to existing IDs, including a dedicated PumpSwap buy-and-burn

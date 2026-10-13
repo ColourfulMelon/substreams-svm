@@ -98,7 +98,22 @@ for row in (root/'cases.tsv').read_text().splitlines():
     for role in vaults:
         address=a[role];before=next(v for v in rmeta['preTokenBalances'] if keys[v['accountIndex']]==address);after=next(v for v in rmeta['postTokenBalances'] if keys[v['accountIndex']]==address)
         assert int(after['uiTokenAmount']['amount'])-int(before['uiTokenAmount']['amount'])==ledger[address]
-    proof.append(dict(signature=f[0],slot=rpc['slot'],protocol=protocol,source=source,input_mint=f[5],input_amount=int(f[6]),output_mint=f[7],output_amount=int(f[8]),pool=f[3],user=f[4],pb_sha256=hashlib.sha256(raw).hexdigest(),rpc_sha256=hashlib.sha256((root/(f[0]+'.rpc.json')).read_bytes()).hexdigest(),finalized_rpc_financial_metadata_parity=True,pb_optional_cost_units_missing=not bool(meta[17]),rpc_cost_units=rmeta.get('costUnits'),pb_v1_version_and_config_missing=rpc['version']==1 and not m[7] and not m[8],persistent_vault_ledgers_verified=True))
+    block_file=root/(str(rpc['slot'])+'.block.rpc.json');block_record=json.loads(block_file.read_text());block=block_record['response']['result']
+    assert block_record['request']['params'][1]['commitment']=='finalized' and block_record['request']['params'][0]==rpc['slot']
+    assert block['blockTime']==rpc['blockTime'] and block['signatures'].count(f[0])==1
+    expected_financial={
+        'signature':f[0], 'fee_payer':keys[0], 'signers_raw':','.join(rm['accountKeys'][:rm['header']['numRequiredSignatures']]),
+        'fee':str(rmeta['fee']), 'compute_units_consumed':str(rmeta['computeUnitsConsumed']),
+        'program_id':expected_program, 'stack_height':str(native['depth']), 'event_id':f'{f[0]}:{source}:{first[0]["index"]}',
+        'source_instruction_index':str(source), 'execution_position':str(first[0]['index']),
+        'transfer_verified':'1', 'orderbook_fill_verified':'0', 'burn_output_verified':'0', 'source_burn_index':'0',
+        'protocol':{32:'deriverse',63:'ghosty',70:'omnipair'}[protocol], 'amm':expected_program, 'amm_pool':f[3], 'user':f[4],
+        'input_mint':f[5], 'input_amount':f[6], 'output_mint':f[7], 'output_amount':f[8],
+        'instruction_index':str(first[0]['index']), 'block_num':str(rpc['slot']), 'timestamp':str(block['blockTime']),
+        'block_hash':block['blockhash'], 'transaction_index':str(block['signatures'].index(f[0])),
+    }
+    assert len(expected_financial)==27
+    proof.append(dict(signature=f[0],slot=rpc['slot'],protocol=protocol,source=source,input_mint=f[5],input_amount=int(f[6]),output_mint=f[7],output_amount=int(f[8]),pool=f[3],user=f[4],pb_sha256=hashlib.sha256(raw).hexdigest(),rpc_sha256=hashlib.sha256((root/(f[0]+'.rpc.json')).read_bytes()).hexdigest(),finalized_rpc_financial_metadata_parity=True,pb_optional_cost_units_missing=not bool(meta[17]),rpc_cost_units=rmeta.get('costUnits'),pb_v1_version_and_config_missing=rpc['version']==1 and not m[7] and not m[8],persistent_vault_ledgers_verified=True,block_rpc_sha256=hashlib.sha256(block_file.read_bytes()).hexdigest(),expected_financial=expected_financial))
 assert len(proof)==4
 result=dict(originals=proof,confirmed_swaps=4,remaining_zero_output_sources=41,scope='Four native positive sources, forty original transactions and forty-five recognized diagnostics in finalized slots 456410496..456413279; no global coverage claim')
 (root/'original-proof.json').write_text(json.dumps(result,indent=2));print(json.dumps({k:v for k,v in result.items() if k!='originals'}))

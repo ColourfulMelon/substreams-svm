@@ -1,0 +1,23 @@
+# Live principal validation for pluto.28
+
+The ten-minute finalized coverage window spans slots 456410496–456413279 (13 October 2026, 10:33:02–10:43:01 UTC). Of 45 recognized source diagnostics in 40 original transactions, four have confirmed positive committed spot flows: two Omnipair, one Deriverse and one Ghosty. The other 41 sources cannot supply a confirmed positive two-sided exchange. This is a finite diagnostic corpus, not an exhaustive Solana coverage claim.
+
+`dex-swaps/fixtures/swap-coverage/live-principal28` retains all 40 original Firehose protobuf transactions, the exact four finalized JSON RPC transactions, independently derived native identities and financial principals, and four previously indexed neighboring legs. The offline `verify-originals.py` matches original signatures, keys, headers, blockhashes, complete instruction walks, runtime logs, fee, compute units and token/native balance metadata with finalized RPC. Four finalized containing-block originals also bind exact block hashes, timestamps and transaction positions. It independently checks both complete persistent pool-vault token ledgers and the two native principal transfers for every recovered source. Run it with Python 3; no network or credentials are required.
+
+Firehose omits optional `cost_units` in all four originals and the version/config fields of the Deriverse v1 transaction. Those omissions are explicit in `original-proof.json`; the finalized RPC originals retain them. Actual fee and compute units, instruction bytes, physical principals and balances match. Missing descriptor fields are not guessed or used for prices.
+
+## Runtime fixes
+
+The compact, 14-account Deriverse opcode-26 instruction can settle exactly one atom below its signed input request. Accept equality or that single-atom underfill only, with positive output meeting the native minimum, exact account roles/sole duplicated authority, complete commitment and both persistent vault ledgers. Publish the actual physical debit, never the requested amount. Larger underfills and overspends remain excluded. Other proprietary/native variants retain their existing constraints.
+
+Omnipair's closed WSOL recipient and Ghosty's closed USDT input are created, initialized and closed within their transactions, so both token snapshots are absent. For these Anchor accounts require a single committed 165-byte classic-Token System creation, a matching committed InitializeAccount3 owner/mint, a later committed CloseAccount with that exact owner, zero native endpoint balances, no subsequent account accesses and full transaction native-balance conservation. That ledger includes all supported System creations/transfers, actual WSOL token movements, closure refunds and the actual transaction fee. Unknown native balance effects fail conservation. Non-native temporary tokens must also conserve their complete token movements; a positive closed WSOL residual is an unwrap lifecycle debit, never an extra swap output. Existing settlement events/receipts and pool-vault snapshot/ledger checks remain required.
+
+## Verification
+
+All 230 core tests pass (216 decoder and 14 mapper) with locked Rust 1.85.1 and no default features; the WebAssembly release build passes. All seven metadata hashes and the sink schema match pluto.27.
+
+The core regression consumes all 45 source cases across 40 originals. It restores the exact four native identities and physical principals, preserves the four old legs and emits no unexpected financial rows. It tests 65 invalid financial/lifecycle/runtime mutations: payloads, rounding beyond the supported bound, pool/user roles, physical amounts, authority, minimum proceeds, missing/incorrect closure, initialization/creation ownership, native endpoint balances, missing/failed runtime, pool snapshot disagreement and fee/lamport disagreement. Other existing core tests remain required.
+
+The exact packaged pluto.27/pluto.28 replay covers all 1,564 finalized blocks in slots 456410752–456412315. It preserves all 142,127 old financial rows, adds exactly the four independently proven legs, and matches all 27 financial/provenance fields of each new row to the retained finalized originals. No old rows are lost or modified. All four table versions, unique keys/ordinals, parent chains and sealed counters pass. See the [package attestation](../dex-swaps/fixtures/swap-coverage/live-principal28/packaged-release-proof.json).
+
+Historical recovery is separate from a release: these retained old swaps must not be appended to live OHLC states, which would double count aggregate states. Deploy the package through a coordinated single-writer cursor handoff as documented in `pluto-decoder-release.md`.

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 parser=argparse.ArgumentParser(description='Compare complete finalized baseline/final replays against pinned actual SPKG bytes; no database writes.')
-parser.add_argument('--replay-root',type=Path,required=True);parser.add_argument('--baseline-package',type=Path,required=True);parser.add_argument('--final-package',type=Path,required=True);parser.add_argument('--expected-baseline-package-sha256',required=True);parser.add_argument('--expected-final-package-sha256',required=True);parser.add_argument('--baseline-runtime-source-commit');parser.add_argument('--final-runtime-source-commit');args=parser.parse_args()
+parser.add_argument('--replay-root',type=Path,required=True);parser.add_argument('--baseline-package',type=Path,required=True);parser.add_argument('--final-package',type=Path,required=True);parser.add_argument('--expected-baseline-package-sha256',required=True);parser.add_argument('--expected-final-package-sha256',required=True);args=parser.parse_args()
 BASE=args.replay_root.resolve()
 package_paths={'27':args.baseline_package.resolve(),'28':args.final_package.resolve()};expected_package_hashes={'27':args.expected_baseline_package_sha256,'28':args.expected_final_package_sha256}
 def sha(p):
@@ -42,7 +42,6 @@ previous = {label: None for label in seen}
 added, removed_diagnostics, new_diagnostics, changes = [], [], [], []
 lost=[]
 unchanged = 0
-corrections = []
 block_count = 0
 sentinel = object()
 for old_block, new_block in itertools.zip_longest(blocks(old_label), blocks(new_label), fillvalue=sentinel):
@@ -82,12 +81,12 @@ for old_block, new_block in itertools.zip_longest(blocks(old_label), blocks(new_
         maps[label] = rows
     old, new = maps[old_label], maps[new_label]
     lost.extend(old['swaps'][k] for k in old['swaps'].keys()-new['swaps'].keys())
+    local_added = [row for key, row in new['swaps'].items() if key not in old['swaps']]
     for key, financial in old['swaps'].items():
         if key not in new['swaps']:continue
         candidate = new['swaps'][key]
-        assert financial == candidate, ('prior financial/provenance changed', key)
+        assert financial == candidate, ('prior financial/provenance changed',key)
         unchanged += 1
-    local_added = [row for key, row in new['swaps'].items() if key not in old['swaps']]
     added.extend(local_added)
     local_diag = {}
     for table in ['swap_coverage', 'swap_coverage_transactions']:
@@ -118,11 +117,7 @@ expected={(r['signature'],str(r['source'])):r for r in original['originals']}
 assert len(added)==len(expected)==4
 for row in added:
     r=expected.pop((row['signature'],row['source_instruction_index']))
-    for field in ('input_mint','output_mint','input_amount','output_amount','user'):
-        assert str(r[field])==row[field],(field,r,row)
-    assert str(r['slot'])==row['block_num'] and r['pool']==row['amm']
-    assert row['protocol']=={32:'deriverse',63:'ghosty',70:'omnipair'}[r['protocol']]
-    assert row['transfer_verified']=='1'
+    assert row==r['expected_financial'], ('independent original financial/provenance mismatch', row, r['expected_financial'])
 assert not expected
 
 hashes = {}
@@ -134,19 +129,17 @@ for label in seen:
     hashes[label] = h.hexdigest()
 proof = {'release': 'v0.5.2-pluto.28', 'firstSlot': first_slot, 'lastSlot': stop_slot - 1, 'blocks': block_count,
          'outputs': {label: {'sha256': hashes[label], 'tables': dict(totals[label]), 'cleanExit': True, 'packageSha256': json.loads((BASE / ('pluto-principal28-' + label + '-status.json')).read_text())['packageSha256AtLaunch']} for label in seen},
-         'unchangedPriorSwaps': unchanged, 'preservedPriorSwapIdentities': unchanged + len(corrections), 'missingPriorSwaps':len(lost),'lostPriorSwaps':lost, 'modifiedPriorSwaps': len(corrections), 'priorFinancialModificationVerificationPending':bool(corrections),'unexpectedModifiedPriorSwaps':0, 'correctedPriorSwapCount': len(corrections), 'correctedPriorSwaps': corrections,
+         'unchangedPriorSwaps': unchanged, 'preservedPriorSwapIdentities': unchanged, 'missingPriorSwaps':len(lost),'lostPriorSwaps':lost, 'modifiedPriorSwaps':0,
          'added': added, 'removedDiagnostics': removed_diagnostics, 'newDiagnostics': new_diagnostics,
          'sealedCounterChanges': changes, 'parentChainsAndSealedCountersValid': True,
          'allDatabaseOperationKeysAndOrdinalsUnique': True, 'allFourTableVersionsValidated': True,
          'originalRpcVerificationPending': False, 'databaseWrites': False,
-         'actualPackageBytesVerified':True,'packageArtifacts':{version:{'path':str(p),'sha256':expected_package_hashes[version]} for version,p in package_paths.items()},
-         'runtimeSourceCommitReferences':{'27':args.baseline_runtime_source_commit,'28':args.final_runtime_source_commit},
-         'sourceCommitReferenceLimitation':'Captured build-provenance references; source commits alone do not cryptographically prove WASM build correspondence.',
-         'statusArtifacts':{label:{'path':str(BASE/('pluto-principal28-'+label+'-status.json')),'sha256':status_hashes[label]} for label in seen},
-         'verificationScriptSha256':sha(Path(__file__))}
+         'actualPackageBytesVerified':True,'packageArtifacts':{version:{'file':p.name,'sha256':expected_package_hashes[version]} for version,p in package_paths.items()},
+         'statusArtifacts':{label:{'file':'pluto-principal28-'+label+'-status.json','sha256':status_hashes[label]} for label in seen},
+         'independentOriginalProofSha256':sha(original_path), 'verificationScriptSha256':sha(Path(__file__))}
 assert all(sha(p)==expected_package_hashes[v] for v,p in package_paths.items()),'SPKG changed during comparison'
 assert all(sha(BASE/('pluto-principal28-'+label+'-status.json'))==status_hashes[label] for label in seen),'status changed during comparison'
 (BASE / 'pluto-principal28-packaged-replay-proof.json').write_text(json.dumps(proof, indent=2) + '\n')
-print(json.dumps({'blocks': block_count, 'unchanged': unchanged, 'added': len(added), 'addedByProtocol': dict(collections.Counter(x['protocol'] for x in added)), 'missing':len(lost), 'modified': len(corrections), 'counterChanges': len(changes)}))
+print(json.dumps({'blocks': block_count, 'unchanged': unchanged, 'added': len(added), 'addedByProtocol': dict(collections.Counter(x['protocol'] for x in added)), 'missing':len(lost), 'modified':0, 'counterChanges': len(changes)}))
 
-assert not lost,'Prior swap identities lost; retained exact lost rows in comparator proof. Bounded Pancake attribution changes still require independent final financial verification.'
+assert not lost, 'prior swap identities lost'
