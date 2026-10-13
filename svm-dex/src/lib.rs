@@ -1,11 +1,23 @@
 mod backfill;
+use std::io::Write;
+use prost::Message;
 use common::db::common_key_v2;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.29";
+const DECODER_VERSION: &str = "v0.5.2-pluto.30";
+
+#[derive(Clone, PartialEq, Message)]
+pub struct GzipDatabaseChanges {
+    #[prost(uint32, tag = "1")]
+    pub version: u32,
+    #[prost(uint64, tag = "2")]
+    pub uncompressed_size: u64,
+    #[prost(bytes = "vec", tag = "3")]
+    pub gzip_data: Vec<u8>,
+}
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
@@ -99,8 +111,22 @@ fn protocol_slug(protocol: i32) -> &'static str {
 }
 
 #[substreams::handlers::map]
-pub fn db_out(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
-    write_swaps(clock, swaps)
+pub fn db_out(clock: Clock, swaps: pb::Events) -> Result<GzipDatabaseChanges, Error> {
+    compress_database_changes(write_swaps(clock, swaps)?)
+}
+
+pub fn compress_database_changes(changes: DatabaseChanges) -> Result<GzipDatabaseChanges, Error> {
+    let bytes = changes.encode_to_vec();
+    if bytes.len() > 64 * 1024 * 1024 {
+        return Err(Error::msg("DatabaseChanges exceeds 64 MiB gzip limit"));
+    }
+    let mut encoder = flate2::GzBuilder::new().mtime(0).write(Vec::new(), flate2::Compression::fast());
+    encoder.write_all(&bytes).map_err(|error| Error::msg(format!("gzip DatabaseChanges: {error}")))?;
+    Ok(GzipDatabaseChanges {
+        version: 1,
+        uncompressed_size: bytes.len() as u64,
+        gzip_data: encoder.finish().map_err(|error| Error::msg(format!("finish gzip DatabaseChanges: {error}")))?,
+    })
 }
 
 fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error> {
@@ -272,6 +298,33 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
 mod tests {
     use super::*;
     use substreams_database_change::pb::sf::substreams::sink::database::v1::table_change::PrimaryKey;
+
+    #[test]
+    fn gzip_output_round_trips_complete_block_and_financial_fields() {
+        use std::io::Read;
+        let clock = Clock { number: 100, id: "finalized-block".into(), timestamp: Some(Default::default()) };
+        let events = pb::Events { parent_slot: 99, parent_hash: "parent".into(), transactions: vec![pb::Transaction {
+            signature: vec![7; 64], fee: u64::MAX, compute_units_consumed: 90000,
+            source_index: Some(12), swaps: vec![pb::Swap {
+                source_index: Some(5), source_transfer_index: Some(6), transfer_verified: true,
+                input_amount: u64::MAX, output_amount: 1, ..Default::default()
+            }], ..Default::default()
+        }], ..Default::default() };
+        for events in [events, pb::Events::default()] {
+            let mut expected = write_swaps(clock.clone(), events.clone()).unwrap();
+            let compressed = compress_database_changes(write_swaps(clock.clone(), events).unwrap()).unwrap();
+            assert_eq!(compressed.version, 1);
+            let mut decoded = Vec::new();
+            flate2::read::GzDecoder::new(compressed.gzip_data.as_slice()).read_to_end(&mut decoded).unwrap();
+            assert_eq!(compressed.uncompressed_size, decoded.len() as u64);
+            let mut actual = DatabaseChanges::decode(decoded.as_slice()).unwrap();
+            for changes in [&mut expected, &mut actual] {
+                for row in &mut changes.table_changes { row.fields.sort_by(|a, b| a.name.cmp(&b.name)); }
+            }
+            assert_eq!(actual, expected);
+            assert_eq!(&compressed.gzip_data[4..8], &[0; 4]);
+        }
+    }
 
     #[test]
     fn buy_and_burn_preserves_destruction_provenance_and_rejects_mixed_receipts() {

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package pluto.sink.v1;
+option go_package = "github.com/streamingfast/substreams-sink-sql/pb/pluto/sink/v1;pbpluto";
+
+// Each block independently contains the complete original DatabaseChanges.
+// Version 1 is one gzip member, with no trailing data, and a 64 MiB raw limit.
+message GzipDatabaseChanges {
+  uint32 version = 1;
+  uint64 uncompressed_size = 2;
+  bytes gzip_data = 3;
+}

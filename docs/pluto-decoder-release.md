@@ -1,5 +1,13 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.30` wraps complete per-block DatabaseChanges in a versioned gzip
+envelope. Deploy the paired Pluto sink-gzip-output patch. Exact finalized replay
+preserves 9,643 swaps and all financial/provenance values with 74.73% smaller
+output, including the wrapper. Metadata hashes/stages and SQL schemas remain
+unchanged. See [gzip output validation](gzip30-validation.md).
+
+## Previous release: pluto.29
+
 `v0.5.2-pluto.29` removes live coverage diagnostics and duplicate SQL key fields.
 The pricing WASM build disables `coverage-diagnostics`; native audit builds
 can enable it to retain candidate classification and original transactions.
@@ -16,7 +24,7 @@ columns outside ClickHouse's sorting key, including `block_hash`.
 All 230 core Rust tests and the patched sink database/handler suites pass.
 A clean-exit finalized 100-block replay preserves all 9,643 .28 swap rows and
 relative insertion order. Uncompressed DatabaseChanges protobuf bytes fall
-from 19,874,903 to 11,577,318 (41.75%). This finite sample excludes RPC envelope
+from 20,392,093 to 12,061,668 (40.85%). This finite sample excludes RPC envelope
 overhead and is not a fixed daily saving. All seven frozen metadata module
 hashes and the metadata binary remain unchanged; all five execution stages
 remain required. See [egress validation](egress29-validation.md).

@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: svm_dex
-  version: v0.5.2-pluto.29
+  version: v0.5.2-pluto.30
   url: https://github.com/ColourfulMelon/substreams-svm
   description: Database-ready normalized DEX swaps for Solana.
   image: ../image.png
@@ -11,12 +11,18 @@ imports:
   database_changes: ../spkg/substreams-sink-database-changes-v4.0.0.spkg
   sql: ../spkg/substreams-sink-sql-protodefs-v1.0.7.spkg
 
-  dex_swaps: ../spkg/dex-swaps-v0.5.2-pluto.29.spkg
+  dex_swaps: ../spkg/dex-swaps-v0.5.2-pluto.30.spkg
 
 binaries:
   default:
     type: wasm/rust-v1
     file: ../target/wasm32-unknown-unknown/release/svm_dex.wasm
+
+protobuf:
+  files:
+    - v1/gzip-database.proto
+  importPaths:
+    - ../proto
 
 modules:
   - name: db_out
@@ -26,6 +32,6 @@ modules:
       - map: dex_swaps:map_events
 
     output:
-      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+      type: proto:pluto.sink.v1.GzipDatabaseChanges
 
 network: solana
