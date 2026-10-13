@@ -33,6 +33,7 @@ in `quality.rs`. Additional native
 market layouts do not need separate imported modules or SQL schema changes.
 See [`native-venue-validation.md`](native-venue-validation.md) for verified
 variants and fixture evidence.
+The pluto.29 live output omits coverage diagnostics and duplicate composite-key fields; see [egress validation](egress29-validation.md) and `scripts/compare-egress-replays.py`. Offline audits retain diagnostics with `--features coverage-diagnostics`.
 The pluto.28 patch documents [live principal rounding and fresh/closed account evidence](live-principal28-validation.md).
 The pluto.27 batch documents [additional native settlement and burn formats](native-swap-formats27-validation.md), the complete observed residual classifications and the [combined packaged replay tools](../dex-swaps/fixtures/swap-coverage/combined27/README.md).
 The pluto.26 batch additionally documents [current proprietary formats](current-proprietary-native-validation.md), [bounded anchor suffixes](anchor-swap-suffix-native-validation.md), [custody/Numeraire swaps](custody-numeraire-native-validation.md), [Futarchy/Guacswap](futarchy-guacswap-native-validation.md), [additional native exchanges](additional-native-exchange-validation.md), and [typed non-spot classifications](residual-nonspot-native-validation.md). Combined package replay and deployment proofs determine which candidate decoders are released and live.

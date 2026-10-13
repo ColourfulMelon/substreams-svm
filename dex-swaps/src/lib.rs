@@ -445,7 +445,10 @@ pub fn process_transaction_with_metadata(
         }
     }
     swaps.sort_by_key(|swap| (swap.source_index, swap.source_transfer_index.or(swap.source_event_index), swap.source_log_index));
+    #[cfg(any(test, feature = "coverage-diagnostics"))]
     let coverage_candidates = coverage::candidates(&tx, &token_mints, &swaps);
+    #[cfg(not(any(test, feature = "coverage-diagnostics")))]
+    let coverage_candidates = Vec::new();
     if swaps.is_empty() && rejected_swaps.is_empty() && coverage_candidates.is_empty() {
         return None;
     }

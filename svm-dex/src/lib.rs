@@ -1,11 +1,11 @@
 mod backfill;
-use common::db::{common_key_v2, set_clock};
+use common::db::common_key_v2;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.28";
+const DECODER_VERSION: &str = "v0.5.2-pluto.29";
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
@@ -114,37 +114,6 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         if transaction_index >= 65536 {
             return Err(Error::msg("transaction position exceeds order-key bounds"));
         }
-        if !transaction.coverage_candidates.is_empty() {
-            if transaction.coverage_transaction.is_empty() {
-                return Err(Error::msg("coverage candidates require original transaction bytes"));
-            }
-            use std::fmt::Write;
-            let mut raw = String::with_capacity(transaction.coverage_transaction.len() * 2);
-            for byte in &transaction.coverage_transaction {
-                write!(&mut raw, "{byte:02x}").unwrap();
-            }
-            let row = tables.create_row("swap_coverage_transactions", common_key_v2(&clock, transaction_index, 0));
-            row.set("signature", base58::encode(&transaction.signature))
-                .set("decoder_version", DECODER_VERSION)
-                .set("transaction_proto_hex", raw);
-            set_clock(&clock, row);
-        }
-        for candidate in &transaction.coverage_candidates {
-            if candidate.source_index >= 65536 {
-                return Err(Error::msg("coverage instruction position exceeds order-key bounds"));
-            }
-            let row = tables.create_row("swap_coverage", common_key_v2(&clock, transaction_index, candidate.source_index as usize));
-            let tag = candidate.instruction_tag.iter().map(|byte| format!("{byte:02x}")).collect::<String>();
-            row.set("signature", base58::encode(&transaction.signature))
-                .set("program_id", base58::encode(&candidate.program_id))
-                .set("stack_height", candidate.stack_height)
-                .set("instruction_tag", tag)
-                .set("mints_raw", candidate.mints.iter().map(base58::encode).collect::<Vec<_>>().join(","))
-                .set("transfer_count", candidate.transfer_count)
-                .set("reason", candidate.reason.clone())
-                .set("decoder_version", DECODER_VERSION);
-            set_clock(&clock, row);
-        }
         // Row identity positions live in two coordinate domains. For a
         // transaction containing runtime fills, rank all financial events by
         // their actual compiled invocation/transfer coordinate, then log order.
@@ -252,7 +221,10 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .set("output_mint", base58::encode(&swap.output_mint))
                 .set("output_amount", swap.output_amount);
 
-            set_clock(&clock, row);
+            // Pluto's patched ClickHouse sink restores block_hash from the
+            // composite key, including keys outside the SQL sorting key.
+            row.set("block_num", clock.number)
+                .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
         }
     }
 
@@ -268,14 +240,9 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             "verified_swaps",
             all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified || swap.burn_output_verified).count() as u32,
         )
-        .set(
-            "coverage_candidates",
-            swaps.transactions.iter().map(|tx| tx.coverage_candidates.len()).sum::<usize>() as u32,
-        )
-        .set(
-            "coverage_transactions",
-            swaps.transactions.iter().filter(|tx| !tx.coverage_candidates.is_empty()).count() as u32,
-        )
+        // Zero marks disabled live diagnostics, not an exhaustive coverage audit.
+        .set("coverage_candidates", 0u32)
+        .set("coverage_transactions", 0u32)
         .set(
             "quarantined_swaps",
             rejected
@@ -294,7 +261,9 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 .filter(|swap| swap.verification_failure == "event_amounts_replaced_by_exact_user_flows")
                 .count() as u32,
         );
-    set_clock(&clock, row);
+    // block_num is already present in the composite primary key.
+    row.set("block_hash", &clock.id)
+        .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
 
     Ok(tables.to_database_changes())
 }
@@ -531,68 +500,45 @@ mod tests {
     }
 
     #[test]
-    fn coverage_keeps_one_raw_transaction_and_each_candidate_out_of_price_rows() {
-        let clock = Clock {
-            number: 100,
-            id: "block".into(),
-            timestamp: Some(Default::default()),
-        };
+    fn live_mapper_ignores_diagnostics_and_preserves_financial_rows() {
+        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
         let mut tx = pb::Transaction {
-            source_index: Some(17),
-            signature: vec![7; 64],
-            coverage_transaction: vec![0, 255, 128],
-            coverage_candidates: [3, 9]
-                .into_iter()
-                .map(|source_index| pb::CoverageCandidate {
-                    source_index,
-                    program_id: vec![8; 32],
-                    reason: "token_exchange_unclassified".into(),
-                    instruction_tag: vec![0, 255],
-                    ..Default::default()
-                })
-                .collect(),
+            source_index: Some(17), signature: vec![7; 64],
+            swaps: vec![pb::Swap { input_amount: 100, output_amount: 200, ..Default::default() }],
             ..Default::default()
         };
-        let changes = write_swaps(
-            clock.clone(),
-            pb::Events {
-                transactions: vec![tx.clone()],
-                ..Default::default()
-            },
-        )
-        .unwrap();
-        let version = include_str!("../substreams.yaml").lines().find_map(|line| line.strip_prefix("  version: ")).unwrap();
-        assert!(changes.table_changes.iter().all(|row| row.fields.iter().any(|field| field.name == "decoder_version" && field.value == version)));
-        assert!(changes.table_changes.iter().all(|row| row.table != "swaps"));
-        assert_eq!(changes.table_changes.iter().filter(|row| row.table == "swap_coverage").count(), 2);
-        let raw: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swap_coverage_transactions").collect();
-        assert_eq!(raw.len(), 1);
-        assert!(raw[0]
-            .fields
-            .iter()
-            .any(|field| field.name == "transaction_proto_hex" && field.value == "00ff80"));
-        let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
-        assert!(block.fields.iter().any(|field| field.name == "coverage_candidates" && field.value == "2"));
-        assert!(block.fields.iter().any(|field| field.name == "coverage_transactions" && field.value == "1"));
+        let mut clean = write_swaps(clock.clone(), pb::Events { transactions: vec![tx.clone()], ..Default::default() }).unwrap();
+        // A stale upstream diagnostic must neither be streamed nor affect pricing.
+        tx.coverage_transaction = vec![0; 32_768];
+        tx.coverage_candidates = vec![pb::CoverageCandidate { source_index: 65536, ..Default::default() }];
+        let mut diagnostic = write_swaps(clock.clone(), pb::Events { transactions: vec![tx.clone()], ..Default::default() }).unwrap();
+        for row in clean.table_changes.iter_mut().chain(&mut diagnostic.table_changes) {
+            row.fields.sort_by(|a, b| a.name.cmp(&b.name));
+        }
+        assert_eq!(clean, diagnostic);
         tx.coverage_transaction.clear();
-        assert!(write_swaps(
-            clock.clone(),
-            pb::Events {
-                transactions: vec![tx.clone()],
-                ..Default::default()
+        let mut missing_original = write_swaps(clock, pb::Events { transactions: vec![tx], ..Default::default() }).unwrap();
+        for row in &mut missing_original.table_changes { row.fields.sort_by(|a, b| a.name.cmp(&b.name)); }
+        assert_eq!(clean, missing_original);
+        assert_eq!(clean.table_changes.len(), 2);
+        for row in &clean.table_changes {
+            let Some(PrimaryKey::CompositePk(key)) = &row.primary_key else { panic!("missing composite key") };
+            assert!(row.fields.iter().all(|field| !key.keys.contains_key(&field.name)));
+            let mut restored: std::collections::HashMap<_, _> = row.fields.iter().map(|f| (f.name.as_str(), f.value.as_str())).collect();
+            restored.extend(key.keys.iter().map(|(k, v)| (k.as_str(), v.as_str())));
+            assert_eq!(restored["block_hash"], "block");
+            assert_eq!(restored["block_num"], "100");
+            assert_eq!(restored["decoder_version"], DECODER_VERSION);
+            if row.table == "swaps" {
+                assert_eq!(restored["input_amount"], "100");
+                assert_eq!(restored["output_amount"], "200");
+                assert_eq!(restored["transaction_index"], "17");
+            } else {
+                assert_eq!(row.table, "blocks");
+                assert_eq!(restored["coverage_candidates"], "0");
+                assert_eq!(restored["coverage_transactions"], "0");
             }
-        )
-        .is_err());
-        tx.coverage_transaction = vec![1];
-        tx.coverage_candidates[0].source_index = 65536;
-        assert!(write_swaps(
-            clock,
-            pb::Events {
-                transactions: vec![tx],
-                ..Default::default()
-            }
-        )
-        .is_err());
+        }
     }
 
     #[test]

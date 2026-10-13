@@ -1,0 +1,46 @@
+{
+  "firstSlot": 456410752,
+  "lastSlot": 456410851,
+  "finalizedBlocks": 100,
+  "rows": {
+    "baseline": {
+      "swaps": 9643,
+      "swap_coverage_transactions": 330,
+      "swap_coverage": 427,
+      "blocks": 100
+    },
+    "candidate": {
+      "swaps": 9643,
+      "blocks": 100
+    }
+  },
+  "databaseChangesProtobufBytes": {
+    "baseline": {
+      "swaps": 12115666,
+      "swap_coverage_transactions": 7435825,
+      "swap_coverage": 281095,
+      "blocks": 42317
+    },
+    "candidate": {
+      "swaps": 11537411,
+      "blocks": 39907
+    }
+  },
+  "baselineBytes": 19874903,
+  "candidateBytes": 11577318,
+  "reductionPercent": 41.74905910232618,
+  "packageSha256": {
+    "baseline": "31c9041c5b1e05cc7fc67c850257c6bc05ecc3780b5aff85de8f7aa6cc750512",
+    "candidate": "f69215f76dbf852417c4e424acb8ab9a975ba378620c8d2437f7d1353937e8f3"
+  },
+  "replaySha256": {
+    "baseline": "8d47d258a8d2270e7ad811544b374676ef2ce8e1ecfaa16a3e608d89c60c8a0b",
+    "candidate": "233d95170829fb6265cf76a32e3f7ee543b353a80f5acfd494f2f49859b84377"
+  },
+  "financialRowsPreserved": 9643,
+  "financialRowsChanged": 0,
+  "financialRowsLost": 0,
+  "relativeFinancialInsertionOrderPreserved": true,
+  "blockParentsAndFinancialCountersPreserved": true,
+  "databaseWrites": false
+}

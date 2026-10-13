@@ -1,5 +1,28 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.29` removes live coverage diagnostics and duplicate SQL key fields.
+The pricing WASM build disables `coverage-diagnostics`; native audit builds
+can enable it to retain candidate classification and original transactions.
+The SQL mapper never emits `swap_coverage` or `swap_coverage_transactions`, even
+if an upstream diagnostic payload is supplied. Their block counters are zero
+and indicate disabled diagnostics, rather than exhaustive swap coverage.
+
+Swap columns, receipt identities, execution positions, financial counters and
+block parent links are preserved. The unchanged schema retains old diagnostic
+rows under their existing TTL. Pluto's SQL sink must apply the compact-key
+patch before consuming this package: it restores insertable composite-key
+columns outside ClickHouse's sorting key, including `block_hash`.
+
+All 230 core Rust tests and the patched sink database/handler suites pass.
+A clean-exit finalized 100-block replay preserves all 9,643 .28 swap rows and
+relative insertion order. Uncompressed DatabaseChanges protobuf bytes fall
+from 19,874,903 to 11,577,318 (41.75%). This finite sample excludes RPC envelope
+overhead and is not a fixed daily saving. All seven frozen metadata module
+hashes and the metadata binary remain unchanged; all five execution stages
+remain required. See [egress validation](egress29-validation.md).
+
+## Previous release: pluto.28
+
 `v0.5.2-pluto.28` adds bounded compact Deriverse one-atom settlement rounding and verified fresh/closed classic Token user accounts for native Anchor swaps. It restores four confirmed live sources: two Omnipair, one Deriverse and one Ghosty. Both persistent pool-vault ledgers and the complete native lamport ledger remain mandatory for the new account lifecycle. Native request, principal receipt, authority, mint, minimum-output, commitment and deduplication checks remain intact. No schema or protocol IDs change, and frozen metadata bytes remain pinned. See [live principal evidence](live-principal28-validation.md).
 
 All 230 core tests pass, including 65 invalid-evidence mutations. An exact paired package replay across 1,564 finalized blocks restores those four legs while preserving all 142,127 existing financial rows unchanged. Each recovered row matches 27 independently verified financial/provenance fields. See the [package attestation](../dex-swaps/fixtures/swap-coverage/live-principal28/packaged-release-proof.json).

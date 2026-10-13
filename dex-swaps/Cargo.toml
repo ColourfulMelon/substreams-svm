@@ -5,7 +5,9 @@ edition = { workspace = true }
 version = { workspace = true }
 
 [features]
-default = ["metadata-handlers"]
+default = ["metadata-handlers", "coverage-diagnostics"]
+# Native audits retain originals; pricing WASM builds use --no-default-features.
+coverage-diagnostics = []
 metadata-handlers = []
 
 [lib]
