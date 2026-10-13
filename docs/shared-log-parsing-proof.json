@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-13",
+  "source_base_commit": "c8c8f47a1fdd192e9de64bd03d955cd7db3f3aca",
+  "baseline_package": "svm-clickhouse-dex-v0.5.2-pluto.31.spkg",
+  "baseline_package_sha256": "ca310536ac4880a70b0234e1d237f464cb8ea5661dc10253934b8e970db274a1",
+  "wasm_sha256": {
+    "baseline": "9f5e23fd45f069ddad347f70ab55d8df9d7064c8f66820ac7cf9bb2d392a60ec",
+    "candidate": "42ad695be3578e67b0224147151d33cd477bfcc1f51dc5c525b8e9b21d83b9a1",
+    "mapper": "436d414a21c24af68c0572324fa1e70f65c8db92cdb8048f01540fa34485d2cb"
+  },
+  "candidate_build": "cargo build --locked --offline --release --target wasm32-unknown-unknown -p dex-swaps --no-default-features",
+  "tests": {
+    "cargo test -p dex-swaps --lib --locked --offline": 218,
+    "cargo test -p dex-swaps --lib --locked --offline --no-default-features": 218
+  },
+  "replay": {
+    "runtime": "v24.16.0",
+    "engine": "local V8 WebAssembly, not Pinax",
+    "first_slot": 456489100,
+    "last_slot": 456489299,
+    "unique_blocks": 200,
+    "passes_per_binary": 4,
+    "warmup_passes": 1,
+    "map_events_bytes_identical_to_production": true,
+    "gzip_envelope_bytes_identical_to_production": true,
+    "initial_store_entries": [
+      424,
+      284,
+      239495,
+      1
+    ],
+    "input_and_expected_output_digest_sha256": "6190a35d3558f42b0935f4f0e4ff79dffb8e7f2709db918e28a11aa3f4e6473d",
+    "digest_recipe": "SHA256 of ordered filename + NUL + SHA256(file) raw digest, for each ascending slot and suffix: profile_block.pb, db:dex_swaps:map_token_fee_updates.pb, db:dex_swaps:map_events.pb, profile_sink.pb",
+    "initial_snapshots_sha256": "d8e8321a061c6ea311f56de031f272c6808f25216b93bbb4383565ea2f91e978",
+    "instance_lifecycle": "fresh decoder and mapper instance per block",
+    "store_lookup_semantics": "initial snapshots plus ordinal-aware current-block deltas, advanced after each block",
+    "measurement": "time inside map_events including protobuf decoding and host lookups; excludes input allocation, filesystem reads and instance creation; same CPU sampling enabled for both binaries",
+    "aggregation": "median of three measured pass means; first pass discarded"
+  },
+  "timings": {
+    "baseline": {
+      "decoder_mean_ms_per_block_each_measured_pass": [
+        62.89561870499986,
+        59.21908086499987,
+        58.95881984000007
+      ],
+      "median_decoder_mean_ms_per_block": 59.21908086499987,
+      "mapper_mean_ms_per_block_each_measured_pass": [
+        3.201806255000083,
+        3.0750517000000945,
+        3.1554020950002815
+      ]
+    },
+    "candidate": {
+      "decoder_mean_ms_per_block_each_measured_pass": [
+        31.98869979000001,
+        32.48209710999992,
+        31.992279179999986
+      ],
+      "median_decoder_mean_ms_per_block": 31.992279179999986,
+      "mapper_mean_ms_per_block_each_measured_pass": [
+        3.135377704999937,
+        3.153144214999784,
+        3.0364568900001725
+      ]
+    }
+  },
+  "decoder_time_reduction_percent": 45.976400321153385,
+  "limits": [
+    "Captured inputs and replay harness are local investigation artifacts, not committed fixtures.",
+    "These timings do not establish production catch-up rate or Pinax infrastructure throughput.",
+    "No package version, module graph, frozen metadata WASM, sink or production configuration changed."
+  ]
+}

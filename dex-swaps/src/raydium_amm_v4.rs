@@ -3,7 +3,7 @@ use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::raydium;
 
-use crate::logs::{scoped_program_log, ProgramLog};
+use crate::logs::{scoped_program_log, ParsedLog, ProgramLog};
 use crate::token_mints::TokenMintLookup;
 
 pub(crate) struct State {
@@ -27,9 +27,9 @@ impl State {
         }
     }
 
-    pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
+    pub(crate) fn handle_log(&mut self, log_message: &ParsedLog<'_>) -> Option<pb::Swap> {
         let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &raydium::amm::v4::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
+            scoped_program_log(log_message, &raydium::amm::v4::PROGRAM_ID, &mut self.is_invoked)?
         else {
             return None;
         };
