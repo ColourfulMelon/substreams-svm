@@ -16,19 +16,19 @@
   },
   "databaseChangesProtobufBytes": {
     "baseline": {
-      "swaps": 12115666,
-      "swap_coverage_transactions": 7435825,
-      "swap_coverage": 281095,
-      "blocks": 42317
+      "swaps": 12617102,
+      "swap_coverage_transactions": 7439785,
+      "swap_coverage": 290489,
+      "blocks": 44717
     },
     "candidate": {
-      "swaps": 11537411,
-      "blocks": 39907
+      "swaps": 12019561,
+      "blocks": 42107
     }
   },
-  "baselineBytes": 19874903,
-  "candidateBytes": 11577318,
-  "reductionPercent": 41.74905910232618,
+  "baselineBytes": 20392093,
+  "candidateBytes": 12061668,
+  "reductionPercent": 40.8512505312721,
   "packageSha256": {
     "baseline": "31c9041c5b1e05cc7fc67c850257c6bc05ecc3780b5aff85de8f7aa6cc750512",
     "candidate": "f69215f76dbf852417c4e424acb8ab9a975ba378620c8d2437f7d1353937e8f3"

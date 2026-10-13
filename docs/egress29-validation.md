@@ -34,9 +34,9 @@ rows are removed. Ordinals remain unique and contiguous within each block.
 | Raw transaction diagnostics | 7,435,825 | 0 |
 | Candidate diagnostics | 281,095 | 0 |
 | Blocks | 42,317 | 39,907 |
-| Total | 19,874,903 | 11,577,318 |
+| Total | 20,392,093 | 12,061,668 |
 
-The 41.75% reduction is specific to this finite sample. It excludes RPC
+The 40.85% reduction is specific to this finite sample. It excludes RPC
 response-envelope overhead; wire compression and ClickHouse ZSTD storage are
 separate from billed uncompressed egress. The remaining five metadata/pricing
 execution stages are unchanged, so this change does not reduce stage billing.

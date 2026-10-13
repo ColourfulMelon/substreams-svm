@@ -35,7 +35,7 @@ def wire_size(row):
     n += nested_size(key)
     for f in row['fields']:
         assert f.get('updateOp', 'UPDATE_OP_SET') == 'UPDATE_OP_SET'
-        n += nested_size(string_size(f['name']) + string_size(f.get('value', '')))
+        n += nested_size(string_size(f['name']) + string_size(f.get('value', '')) + 2)  # update_op=4: SET=1
     return nested_size(n)  # DatabaseChanges.table_changes=1.
 
 def normalized(row):
