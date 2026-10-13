@@ -1,0 +1,75 @@
+{
+  "release": "v0.5.2-pluto.32",
+  "mergedOptimizationCommit": "4ecc63b089566586558ebedfa88f3cb417d513d4",
+  "packageSha256": "b717cc909a2e1dcd1a12ac0670a5dc6ad902d0b665c94abd7d4a78b32bbd9108",
+  "dbOutModuleHash": "984c96acffb43cc938889cdc2758b31c8b60b5f1",
+  "stageCount": 4,
+  "retainedMetadataHashes": {
+    "db:dex_swaps:store_phoenix_markets": "e8f1537445464dcfd08b78f086dc2c70612a6156",
+    "db:dex_swaps:store_openbook_markets": "35b27205de16e1cb36cd86b7b589e1cd06870f64",
+    "db:dex_swaps:map_token_fee_updates": "e34c724126e8542e3b4c5b42a7d63de4c8527165",
+    "db:dex_swaps:store_token_fee_mints": "335bfd27a25568d778ae3fde32bd21509aa70fc2",
+    "db:dex_swaps:store_token_fee_history": "23e5f11fab508695c989f7a457569c761b7b301c",
+    "db:dex_swaps:store_token_fee_seed_count": "04f1576844f14e8478ee85ca79f774dbb28ce075"
+  },
+  "frozenMetadataSha256": "aafb7776dbc9fcc9a2d48062cfcfc4ac5b0c680022d40ab8e07de75076d7fce8",
+  "coreTests": {
+    "decoderPassed": 218,
+    "mapperPassed": 15
+  },
+  "localOptimizationProof": "shared-log-parsing-proof.json",
+  "databaseWrites": false,
+  "localPackagedVersionReplay": {
+    "finalizedBlocks": 200,
+    "firstSlot": 456489100,
+    "lastSlot": 456489299,
+    "mapEventsBytesIdentical": true,
+    "gzipDecodedProtobufIdenticalExceptDecoderVersion": true,
+    "runtime": "Node v24.16.0 local V8 WASM",
+    "financialDatabaseWrites": false
+  },
+  "containerConfigurationCheck": "pnpm nx run pluto-pricing-orchestrator:verify passed",
+  "patchedSinkSuites": {
+    "database": "passed",
+    "sinker": "passed"
+  },
+  "freshFinancialParity": {
+    "actualSinkDecoderUsed": true,
+    "blockParentsAndFinancialCountersPreserved": true,
+    "decoderVersionOnlyRowChange": true,
+    "finalizedBlocks": 100,
+    "financialRowsChanged": 0,
+    "financialRowsLost": 0,
+    "financialRowsPreserved": 12780,
+    "gzipEnvelopeBytes": 3980196,
+    "productionDatabaseWrites": false,
+    "relativeFinancialInsertionOrderPreserved": true,
+    "release": "v0.5.2-pluto.32"
+  },
+  "freshReplays": [
+    {
+      "label": "baseline31",
+      "module": "db_out",
+      "firstSlot": 456556900,
+      "lastSlot": 456556999,
+      "startedAt": "2026-10-13T20:13:41.151937+00:00",
+      "finishedAt": "2026-10-13T20:18:05.291204+00:00",
+      "exitCode": 0,
+      "packageSha256": "ca310536ac4880a70b0234e1d237f464cb8ea5661dc10253934b8e970db274a1",
+      "databaseWrites": false,
+      "finalizedOnly": true
+    },
+    {
+      "label": "candidate32",
+      "module": "db_out",
+      "firstSlot": 456556900,
+      "lastSlot": 456556999,
+      "startedAt": "2026-10-13T20:13:41.154795+00:00",
+      "finishedAt": "2026-10-13T20:16:54.815862+00:00",
+      "exitCode": 0,
+      "packageSha256": "b717cc909a2e1dcd1a12ac0670a5dc6ad902d0b665c94abd7d4a78b32bbd9108",
+      "databaseWrites": false,
+      "finalizedOnly": true
+    }
+  ]
+}

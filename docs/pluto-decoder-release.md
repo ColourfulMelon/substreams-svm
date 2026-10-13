@@ -1,5 +1,13 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.32` parses each transaction log header once and shares it across
+protocol handlers. Financial decoding, gzip output, SQL schemas and the four-stage
+graph are preserved. Frozen metadata bytes and all six retained store hashes
+remain unchanged. All 233 core tests pass. See [shared log parsing validation](shared-log-parsing-validation.md)
+and the [release package proof](stage32-package-proof.json).
+
+## Previous release: pluto.31
+
 `v0.5.2-pluto.31` removes the derived token-fee state store and reconstructs
 fees from ordinal-specific retained history during swap decoding. Eager mutation
 validation, snapshot guards, all six remaining metadata hashes, gzip output,
