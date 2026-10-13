@@ -142,6 +142,11 @@ pub(crate) fn verify_with_fees(
                 || crate::suffixed_anchor_swaps::applies(ix)
                 || crate::current_proprietary::applies(ix)
                 || crate::hadron::layout(ix).is_some()
+                || crate::legacy_amm::layout(ix).is_some()
+                || crate::picon_dlmm::layout(ix).is_some()
+                || crate::m0_native_order::layout(ix).is_some()
+                || crate::patch_bxlw::layout(ix).is_some()
+                || crate::pancakeswap::legacy_layout(ix).is_some()
                 || ix.program_id().0 == &substreams_solana_idls::meteora::daam::PROGRAM_ID
                 || ix.program_id().0 == &substreams_solana_idls::meteora::dlmm::PROGRAM_ID
                 || ix.program_id().0 == &pumpfun::PROGRAM_ID && (ix.data().starts_with(&[225, 154, 117, 22, 215, 86, 246, 103])
@@ -1043,8 +1048,8 @@ pub(crate) fn verify_with_fees(
                 .map(|(end, _)| end as u32)
                 .unwrap_or(instructions.len() as u32);
             let accounts = ix.accounts();
-            if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice()].contains(&ix.program_id().0.as_slice())
-                && !crate::spl_swap_forks::settlement(index as u32, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
+            if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice(),crate::spl_swap_forks::PENGUIN.as_slice()].contains(&ix.program_id().0.as_slice())
+                && !crate::spl_swap_forks::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
             { continue; }
             if [crate::proprietary_swaps::QUANTUM.as_slice(), crate::proprietary_swaps::BINARYFI.as_slice()].contains(&ix.program_id().0.as_slice())
                 && !crate::proprietary_swaps::settlement(index as u32, ix, &instructions[index + 1..end as usize], mints, &successful_invocations)
@@ -1126,6 +1131,36 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 let (input, output) = (inputs[0], outputs[0]);
+                if layout.protocol == pb::Protocol::M0NativeOrder
+                    && (!input.net_verified || !output.net_verified
+                        || crate::m0_native_order::settlement(index as u32,tx,ix,
+                            &instructions[index+1..end as usize],mints,&successful_invocations)
+                            != Some((input.amounts[0],*output.amounts.iter().min().unwrap()))) { continue; }
+                if layout.protocol == pb::Protocol::PiconDlmm
+                    && (!input.net_verified || !output.net_verified
+                        || crate::picon_dlmm::settlement(index as u32,tx,ix,
+                            &instructions[index+1..end as usize],mints,&successful_invocations)
+                            != Some((input.amounts[0],*output.amounts.iter().min().unwrap()))) { continue; }
+                if layout.protocol==pb::Protocol::Pancakeswap && ix.data().starts_with(&crate::pancakeswap::LEGACY_SWAP)
+                    && (!input.net_verified || !output.net_verified
+                        || crate::pancakeswap::legacy_settlement(index as u32,tx,ix,
+                            &instructions[index+1..end as usize],mints,&successful_invocations)
+                            !=Some((input.amounts[0],*output.amounts.iter().min().unwrap()))) { continue; }
+                let patch_receipt = if [pb::Protocol::PatchBuyback,pb::Protocol::Bxlw].contains(&layout.protocol) {
+                    let Some(receipt) = crate::patch_bxlw::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if !input.net_verified || !output.net_verified
+                        || receipt != (input.amounts[0],*output.amounts.iter().min().unwrap()) { continue; }
+                    Some(receipt)
+                } else { None };
+                let legacy_input = if [pb::Protocol::AldrinV1,pb::Protocol::Cropper].contains(&layout.protocol) {
+                    let Some((gross,net)) = crate::legacy_amm::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if !input.net_verified || !output.net_verified || output.amounts[0] != net
+                        || input.index != index as u32 + 1 || input.amounts[0] > gross { continue; }
+                    Some(gross)
+                } else { None };
+
                 let receipt=match layout.protocol {
                     pb::Protocol::Gator=>Some(crate::gator::settlement(tx,index as u32,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
                     pb::Protocol::AnchorSwap=>Some(crate::anchor_swap::settlement(index as u32,tx,ix,&instructions[index+1..end as usize],mints,&successful_invocations)),
@@ -1227,7 +1262,8 @@ pub(crate) fn verify_with_fees(
                         continue;
                     }
                 }
-                let input_amount = if [pb::Protocol::Hadron,pb::Protocol::AnchorSwap].contains(&layout.protocol) {
+                let input_amount = if let Some(gross) = legacy_input { gross }
+                else if [pb::Protocol::Hadron,pb::Protocol::AnchorSwap].contains(&layout.protocol) {
                     // Typed direct fee plus the pool principal equals the full
                     // user's requested debit; the helper excludes quote fields.
                     layout.amount
@@ -1260,7 +1296,8 @@ pub(crate) fn verify_with_fees(
                     || (layout.protocol == pb::Protocol::Defituna
                         && (mints.mint_for(accounts[9].0).as_ref() != Some(accounts[5].0) || mints.mint_for(accounts[10].0).as_ref() != Some(accounts[6].0)))
                     || (layout.exact_input && !layout.input_limit && input_amount != layout.amount)
-                    || ((!layout.exact_input || layout.input_limit) && input_amount > layout.amount)
+                    || ((!layout.exact_input || layout.input_limit) && input_amount > layout.amount
+                        && !(layout.protocol == pb::Protocol::PatchBuyback && patch_receipt.is_some()))
                     || *output.amounts.iter().min().unwrap() < layout.minimum_output
                     || (output.fee_token && output.mint != crate::SOL_MINT && !output.net_verified)
                 {
@@ -1367,14 +1404,14 @@ pub(crate) fn verify_with_fees(
             if input.mint.as_slice() == mint.as_slice() {
                 continue;
             }
-            // A declared classic-token host payout may alias user_token_out.
+            // A declared host payout may alias user_token_out when both net receipts are proven.
             // Require the complete committed current event to distinguish it
             // from the primary receipt; never sum fees or pick by amount size.
             let (output, host_fee_index) = if outputs.len() == 1 {
                 (outputs[0], None)
             } else if outputs.len() == 2
                 && layout.host_fee_account.as_deref() == Some(layout.user_token_out.as_slice())
-                && outputs.iter().all(|t| !t.fee_token)
+                && outputs.iter().all(|t| t.net_verified)
             {
                 let events: Vec<_> = instructions.iter().enumerate()
                     .filter(|(position, child)| *position > outputs[1].index as usize && *position < end as usize
@@ -1941,7 +1978,8 @@ pub(crate) fn verify_with_fees(
             Ok(pumpfun::instructions::PumpFunInstruction::Sell(args)) if a.len() == 16 && a[7].0.iter().all(|b| *b == 0)
                 && a[11].0.as_slice() == pumpfun::PROGRAM_ID => ([3, 2, 6, 5, 4, 9, 10, 1, 15, 8], args.amount, args.min_sol_output),
             Ok(pumpfun::instructions::PumpFunInstruction::SellV2(args)) if matches!(a.len(), 26 | 27) && a[2].0.as_slice() == crate::SOL_MINT
-                && a[4].0.as_slice() == token::PROGRAM_ID && a[5].0 == &base58::decode("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL").unwrap() && a[23].0.iter().all(|b| *b == 0)
+                && (a[4].0.as_slice() == token::PROGRAM_ID || a[4].0.as_slice() == token_2022::PROGRAM_ID)
+                && a[5].0 == &base58::decode("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL").unwrap() && a[23].0.iter().all(|b| *b == 0)
                 && a[25].0.as_slice() == pumpfun::PROGRAM_ID => ([10, 1, 13, 14, 11, 3, 24, 6, 8, 16], args.amount, args.min_sol_output),
             _ => continue,
         };
@@ -1955,6 +1993,17 @@ pub(crate) fn verify_with_fees(
         let depth = if ix.is_root() { 1 } else { ix.stack_height() };
         let end = instructions.iter().enumerate().skip(index + 1).find(|(_, child)| child.is_root()
             || child.stack_height() > 0 && child.stack_height() <= depth).map(|(position, _)| position).unwrap_or(instructions.len());
+        if roles[0] == 10 && a[4].0.as_slice() == token_2022::PROGRAM_ID {
+            // Native SOL uses no quote-token CPI. This alternative interface
+            // program is admitted only in the exact fee/base/event subtree.
+            let children = &instructions[index + 1..end];
+            if children.len() != 3 || children.iter().any(|child| child.stack_height() != depth + 1)
+                || children[0].program_id().0.as_slice() != crate::pump_curve::FEE_PROGRAM
+                || children[0].data().len() != 57 || children[0].data()[..9] != [154,237,138,92,162,2,162,187,1]
+                || children[0].data()[25..].iter().any(|v| *v != 0)
+                || children[1].program_id().0 != a[token_program].0 || children[1].data().len() != 10 || children[1].data()[0] != 12
+                || children[2].program_id().0.as_slice() != pumpfun::PROGRAM_ID { continue; }
+        }
         if a.len() == 27 {
             // The finalized V2 suffix is inert: it aliases no canonical role,
             // has no token identity or child accesses, and no native movement.
@@ -2615,6 +2664,81 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
+                if ix.program_id().0.as_slice()==substreams_solana_idls::pancakeswap::PROGRAM_ID
+                    && crate::native_venues::layout(ix).is_none() { continue; }
+                if ix.program_id().0.as_slice()==substreams_solana_idls::pancakeswap::PROGRAM_ID && ix.data().starts_with(&crate::pancakeswap::LEGACY_SWAP) {
+                    let Some(layout)=crate::pancakeswap::legacy_layout(ix) else { continue };
+                    let Some((gross,net))=crate::pancakeswap::legacy_settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if scoped.len()!=2 { continue; }
+                    let (input,output)=(scoped[0],scoped[1]);let identity=(index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || (input.amounts[0],*output.amounts.iter().min().unwrap())!=(gross,net)
+                        || swap.amm_pool!=*accounts[layout.pool].0 || swap.user!=*accounts[layout.authority].0
+                        || swap.input_mint!=input.mint || swap.output_mint!=output.mint
+                        || (swap.input_amount,swap.output_amount)!=(gross,net)
+                        || expected_transfer.is_some_and(|position|position!=input.index)
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                }
+                if [crate::patch_bxlw::PATCH.as_slice(),crate::patch_bxlw::BXLW.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout) = crate::patch_bxlw::layout(ix) else { continue };
+                    let Some((gross,net)) = crate::patch_bxlw::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if scoped.len() != 2 { continue; }
+                    let (input,output) = (scoped[0],scoped[1]); let identity = (index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || (input.amounts[0],*output.amounts.iter().min().unwrap()) != (gross,net)
+                        || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || (swap.input_amount,swap.output_amount) != (gross,net)
+                        || expected_transfer.is_some_and(|position|position != input.index)
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                }
+                if ix.program_id().0.as_slice() == crate::m0_native_order::PROGRAM_ID {
+                    let Some(layout) = crate::m0_native_order::layout(ix) else { continue };
+                    let Some((gross,net)) = crate::m0_native_order::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if scoped.len() != 2 { continue; }
+                    let (input,output) = (scoped[0],scoped[1]); let identity = (index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || (input.amounts[0],output.amounts[0]) != (gross,net)
+                        || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || (swap.input_amount,swap.output_amount) != (gross,net)
+                        || expected_transfer.is_some_and(|position|position != input.index)
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                }
+                if ix.program_id().0.as_slice() == crate::picon_dlmm::PROGRAM_ID {
+                    let Some(layout) = crate::picon_dlmm::layout(ix) else { continue };
+                    let Some((gross,net)) = crate::picon_dlmm::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    if scoped.len() != 2 { continue; }
+                    let (input,output) = (scoped[0],scoped[1]);
+                    let identity = (index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || output.amounts[0] != net
+                        || input.amounts[0] != gross || swap.amm_pool != *accounts[layout.pool].0
+                        || swap.user != *accounts[layout.authority].0 || swap.input_mint != input.mint
+                        || swap.output_mint != output.mint || (swap.input_amount,swap.output_amount) != (gross,net)
+                        || expected_transfer.is_some_and(|position|position != input.index)
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                }
+                if [crate::legacy_amm::ALDRIN.as_slice(),crate::legacy_amm::CROPPER.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                    let Some(layout) = crate::legacy_amm::layout(ix) else { continue };
+                    let Some((gross,net)) = crate::legacy_amm::settlement(index as u32,tx,ix,
+                        &instructions[index+1..end as usize],mints,&successful_invocations) else { continue };
+                    let Some(input) = scoped.iter().find(|t|t.index == index as u32 + 1) else { continue };
+                    let Some(output) = scoped.iter().find(|t|t.index == end - 1) else { continue };
+                    let identity = (index as u32,input.index,output.index);
+                    if !input.net_verified || !output.net_verified || output.amounts[0] != net
+                        || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
+                        || swap.input_mint != input.mint || swap.output_mint != output.mint
+                        || (swap.input_amount,swap.output_amount) != (gross,net)
+                        || expected_transfer.is_some_and(|position| position != input.index)
+                        || native_evidence.contains(&identity) { continue; }
+                    swap.protocol = layout.protocol as i32;
+                    evidence = Some(identity); break 'candidate;
+                }
                 if ix.program_id().0.as_slice() == crate::hadron::PROGRAM_ID {
                     let Some(layout) = crate::hadron::layout(ix) else { continue };
                     let Some((input_position, output_position)) = crate::hadron::settlement(index as u32, ix,
@@ -2766,9 +2890,9 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
-                if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice()].contains(&ix.program_id().0.as_slice()) {
+                if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice(),crate::spl_swap_forks::PENGUIN.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout) = crate::spl_swap_forks::layout(ix) else { continue };
-                    if !crate::spl_swap_forks::settlement(index as u32, ix, &instructions[index + 1..end as usize], mints, &successful_invocations) {
+                    if !crate::spl_swap_forks::settlement(index as u32, tx, ix, &instructions[index + 1..end as usize], mints, &successful_invocations) {
                         continue;
                     }
                     let inputs: Vec<_> = scoped.iter().filter(|t| t.index == index as u32 + 1).collect();
@@ -2985,6 +3109,28 @@ pub(crate) fn verify_with_fees(
                             .as_ref()
                             .and_then(|meta| Some(i128::from(*meta.pre_balances.get(position)?) - i128::from(*meta.post_balances.get(position)?)))
                     });
+                    // A bounded same-curve buy/sell pair has independently
+                    // chained native reserves and complete wallet/rent ledgers.
+                    if let Some((net, input_index)) = crate::pumpfun::round_trip_native_sell(tx, &instructions, index, &successful_invocations) {
+                        if swap.amm_pool == *accounts[5].0 && swap.user == *accounts[8].0
+                            && swap.input_mint == *accounts[1].0 && swap.output_mint == crate::SOL_MINT
+                            && scoped.iter().any(|t| t.index == input_index && t.amounts[0] == swap.input_amount
+                                && t.mint == swap.input_mint && t.net_verified)
+                            && expected_transfer.is_none_or(|position| position == input_index)
+                        {
+                            let identity = (index as u32, input_index, input_index);
+                            if !native_evidence.contains(&identity) {
+                                if swap.output_amount != net {
+                                    let mut original = swap.clone();
+                                    original.verification_failure = "event_amounts_replaced_by_exact_user_flows".into();
+                                    rejected.push(original);
+                                }
+                                swap.output_amount = net;
+                                evidence = Some(identity);
+                                break 'candidate;
+                            }
+                        }
+                    }
                     // V3 retains protocol/creator fees in the curve and pays
                     // buyback fees to its declared recipient. Prove the net
                     // user proceeds against both exact lamport deltas; the
@@ -3134,7 +3280,7 @@ pub(crate) fn verify_with_fees(
                         (outputs[0], None)
                     } else if outputs.len() == 2
                         && layout.host_fee_account.as_deref() == Some(layout.user_token_out.as_slice())
-                        && outputs.iter().all(|t| !t.fee_token && t.net_verified)
+                        && outputs.iter().all(|t| t.net_verified)
                     {
                         let events: Vec<_> = instructions.iter().enumerate()
                             .filter(|(position, child)| *position > outputs[1].index as usize && *position < end as usize

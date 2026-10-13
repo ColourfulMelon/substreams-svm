@@ -7,6 +7,10 @@ mod numeraire;
 mod anchor_markets;
 mod quay;
 mod hadron;
+mod legacy_amm;
+mod picon_dlmm;
+mod m0_native_order;
+mod patch_bxlw;
 mod riptide;
 mod archer;
 mod triangle;
@@ -361,6 +365,16 @@ pub fn process_transaction_with_metadata(
     let rejected_swaps = quality::verify_with_fees(&tx, &token_mints, &mut swaps, true, fee_lookup);
     swaps.extend(manifest::decode_fills(&tx));
     swaps.extend(cryptoquest::decode_fills(&tx));
+    for burn in pumpfun_amm::decode_boost_burns(&tx) {
+        // The dedicated proof includes the committed quote debit and actual
+        // destruction of pool base inventory. Preserve its separate receipt.
+        if burn.swap.source_burn_index == Some(burn.burn_index)
+            && burn.swap.burn_output_verified && !burn.swap.transfer_verified
+            && !swaps.iter().any(|swap| swap.source_index == burn.swap.source_index)
+        {
+            swaps.push(burn.swap);
+        }
+    }
     for (index, ix) in instructions.iter().enumerate() {
         if ix.program_id().0.as_slice() != phoenix::PROGRAM_ID || !matches!(ix.data().first(), Some(0 | 1 | 2 | 3)) {
             continue;

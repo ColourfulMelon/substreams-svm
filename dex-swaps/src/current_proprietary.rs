@@ -30,7 +30,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
         let side = direction as usize;
         (Protocol::Humidifi, 1, 0, [4 + side, 5 - side], [2 + side, 3 - side], 8, 0)
     } else if ix.program_id().0.as_slice() == b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") {
-        if data.len() != 19 || data[0] != 17 || data[1] > 1 || ![0, 4].contains(&data[18]) || a.len() != 14
+        if data.len() != 19 || data[0] != 17 || data[1] > 1 || ![0, 2, 4].contains(&data[18]) || a.len() != 14
             || a[7].0 == a[8].0 || [9, 10].iter().any(|p| ![token::PROGRAM_ID.as_slice(), token_2022::PROGRAM_ID.as_slice()].contains(&a[*p].0.as_slice())) { return None; }
         let side = usize::from(data[1] == 0);
         (Protocol::Tesserav, 1, 2, [5 + side, 6 - side], [3 + side, 4 - side], 2, u64::from_le_bytes(data[10..18].try_into().ok()?))
@@ -140,9 +140,12 @@ mod tests {
         let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage/current-proprietary");
         let mut positives = 0;
         let mut invalid = 0;
-        for line in include_str!("../fixtures/swap-coverage/current-proprietary/cases.tsv").lines() {
+        for line in include_str!("../fixtures/swap-coverage/current-proprietary/cases.tsv").lines()
+            .chain(include_str!("../fixtures/swap-coverage/tessera-flag27/cases.tsv").lines()) {
             let f: Vec<_> = line.split('\t').collect();
-            let bytes = std::fs::read(root.join(format!("{}.pb", f[0]))).unwrap();
+            let original = if root.join(format!("{}.pb", f[0])).exists() { root.clone() }
+                else { root.with_file_name("tessera-flag27") };
+            let bytes = std::fs::read(original.join(format!("{}.pb", f[0]))).unwrap();
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
             let source: u32 = f[1].parse().unwrap();
             let source_ix = tx.walk_instructions().nth(source as usize).unwrap();
@@ -238,6 +241,20 @@ mod tests {
                 assert!(rows.is_empty(), "{} routed mutation {mode}", f[0]);
                 invalid += 2;
             }
+            if parsed.protocol == Protocol::Tesserav && source_data[18] == 2 {
+                for flag in [1,3,255] {
+                    let mut wrong = tx.clone();
+                    for group in &mut wrong.meta.as_mut().unwrap().inner_instructions {
+                        for child in &mut group.instructions { if child.data == source_data { child.data[18] = flag; } }
+                    }
+                    assert!(!crate::process_transaction(wrong.clone()).unwrap().swaps.iter().any(|s|s.source_index==Some(source)));
+                    let lookup = TokenMintLookup::new(&wrong,wrong.meta.as_ref().unwrap());
+                    let mut routed = native.clone(); routed.protocol=5;
+                    routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
+                    let mut rows=vec![routed]; crate::quality::verify_and_deduplicate(&wrong,&lookup,&mut rows,false);
+                    assert!(rows.is_empty()); invalid += 2;
+                }
+            }
             let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
             for mode in 0..3 {
                 let mut routed = native.clone(); routed.protocol = 5;
@@ -250,7 +267,7 @@ mod tests {
                 else { assert!(rows.is_empty()); invalid += 1; }
             }
         }
-        assert_eq!(positives, 86); assert_eq!(invalid, 2752);
+        assert_eq!(positives, 87); assert_eq!(invalid, 2790);
         eprintln!("Current proprietary finalized positives={positives}; invalid native/routed cases={invalid}");
     }
 }

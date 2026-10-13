@@ -4,15 +4,16 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const DOOAR: [u8; 32] = b58!("Dooar9JkhdZ7J3LHN3A7YCuoGRUggXhQaG4kijfLGU2j");
+pub(crate) const PENGUIN: [u8; 32] = b58!("PSwapMdSai8tjrEXcxFeQth87xC4rRsa4VA5mhGhXkP");
 pub(crate) const DEXLAB: [u8; 32] = b58!("DSwpgjMvXhtGn6BsbqmacdBZyfLj6jSWf3HJpdJtmg6N");
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     let extended = ix.program_id().0.as_slice() == DEXLAB;
-    if !extended && ix.program_id().0.as_slice() != DOOAR {
+    if !extended && ![DOOAR.as_slice(), PENGUIN.as_slice()].contains(&ix.program_id().0.as_slice()) {
         return None;
     }
     let a = ix.accounts();
@@ -59,7 +60,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     })
 }
 
-pub(crate) fn settlement(source_index: u32, ix: &InstructionView, calls: &[InstructionView], mints: &TokenMintLookup, successful: &HashSet<u32>) -> bool {
+pub(crate) fn settlement(source_index: u32, tx: &ConfirmedTransaction, ix: &InstructionView, calls: &[InstructionView], mints: &TokenMintLookup, successful: &HashSet<u32>) -> bool {
     let Some(layout) = layout(ix) else { return false };
     let a = ix.accounts();
     let extended = ix.program_id().0.as_slice() == DEXLAB;
@@ -120,7 +121,7 @@ pub(crate) fn settlement(source_index: u32, ix: &InstructionView, calls: &[Instr
     if fees.len() == 2 && a.len() != base_accounts + 1 {
         return false;
     }
-    fees.iter().enumerate().all(|(position, fee)| {
+    let fees_bound = fees.iter().enumerate().all(|(position, fee)| {
         let f = fee.accounts();
         let recipient = if fees.len() == 2 && position == 0 { base_accounts } else { 8 };
         fee.program_id().0 == a[if extended { 13 } else { 9 }].0
@@ -132,7 +133,51 @@ pub(crate) fn settlement(source_index: u32, ix: &InstructionView, calls: &[Instr
             && f[2].0 == a[1].0
             && mints.mint_for(f[1].0).as_deref() == Some(a[7].0.as_slice())
             && [3, 4, 5, 6].iter().all(|role| a[*role].0 != f[1].0)
-    })
+    });
+    if !fees_bound { return false; }
+    if ix.program_id().0.as_slice() != PENGUIN { return true; }
+    // SPL Token Swap binds its pool authority to [pool, stored bump]. Do not
+    // restrict valid pool bumps to the highest PDA bump used by most pools.
+    let program = solana_pubkey::Pubkey::new_from_array(PENGUIN);
+    if !(0u8..=255).rev().any(|bump| solana_pubkey::Pubkey::create_program_address(&[a[0].0, &[bump]], &program)
+        .is_ok_and(|authority| authority.as_ref() == a[1].0)) || output_amount < layout.minimum_output { return false; }
+    let Some(meta) = tx.meta.as_ref() else { return false };
+    let keys = tx.resolved_accounts();
+    let mut roles = vec![4usize, 5, 8];
+    if fees.len() == 2 { roles.push(base_accounts); }
+    for role in roles {
+        let address = a[role].0;
+        let Some(position) = keys.iter().position(|key| *key == address) else { return false };
+        let Some(before) = meta.pre_token_balances.iter().find(|b| b.account_index as usize == position) else { return false };
+        let Some(after) = meta.post_token_balances.iter().find(|b| b.account_index as usize == position) else { return false };
+        let mint = if role == 4 { input_mint.as_ref().unwrap().as_slice() } else if role == 5 { output_mint.as_ref().unwrap().as_slice() } else { a[7].0 };
+        if before.mint != substreams_solana::base58::encode(mint) || after.mint != before.mint || after.owner != before.owner
+            || before.program_id != substreams_solana::base58::encode(&token::PROGRAM_ID) || after.program_id != before.program_id
+            || role < 6 && before.owner != substreams_solana::base58::encode(a[1].0) { return false; }
+        let mut change = 0i128;
+        for (index, c) in tx.walk_instructions().enumerate() {
+            if ![token::PROGRAM_ID.as_slice(), token_2022::PROGRAM_ID.as_slice()].contains(&c.program_id().0.as_slice())
+                || !c.accounts().iter().any(|key| key.0 == address) { continue; }
+            if !successful.contains(&(index as u32)) { continue; }
+            if c.program_id().0.as_slice() != token::PROGRAM_ID { return false; }
+            let ca = c.accounts(); let d = c.data();
+            let amount = if d.len() >= 9 { i128::from(u64::from_le_bytes(d[1..9].try_into().unwrap())) } else { return false };
+            match (d[0], d.len(), ca.len()) {
+                (3, 9, 3) | (12, 10, 4) => {
+                    let from = ca[0].0; let to = ca[if d[0] == 3 { 1 } else { 2 }].0;
+                    if from != address && to != address || mints.mint_for(from).as_deref() != Some(mint)
+                        || mints.mint_for(to).as_deref() != Some(mint) || d[0] == 12 && ca[1].0.as_slice() != mint { return false; }
+                    if from == address { change -= amount; } if to == address { change += amount; }
+                }
+                (7, 9, 3) | (14, 10, 3) if role >= 8 && ca[0].0 == a[7].0 && ca[1].0 == address && ca[2].0 == a[1].0 => { change += amount; }
+                _ => return false,
+            }
+        }
+        let Some(opening) = before.ui_token_amount.as_ref().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
+        let Some(closing) = after.ui_token_amount.as_ref().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
+        if i128::from(closing) - i128::from(opening) != change { return false; }
+    }
+    true
 }
 
 #[cfg(test)]
@@ -236,7 +281,7 @@ mod tests {
                 .map_or(instructions.len(), |(end, _)| end);
             let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
             let success = crate::logs::successful_invocations(&tx);
-            assert!(settlement(source, original, &instructions[source as usize + 1..end], &mints, &success));
+            assert!(settlement(source, &tx, original, &instructions[source as usize + 1..end], &mints, &success));
             let native_data = original.data().clone();
             let program = original.program_id().0.clone();
             let a: Vec<_> = original.accounts().iter().map(|a| a.0.clone()).collect();
@@ -333,6 +378,7 @@ mod tests {
                 assert!(
                     !settlement(
                         source,
+                        &wrong,
                         bad,
                         &views[source as usize + 1..end],
                         &mints,
@@ -343,4 +389,55 @@ mod tests {
             }
         }
     }
+    #[test]
+    fn finalized_penguin_swaps_require_pool_pda_and_whole_vault_fee_ledgers() {
+        use substreams_solana::base58;
+        let mut count=0;
+        for line in include_str!("../fixtures/swap-coverage/penguin-native27/cases.tsv").lines() {
+            let f:Vec<_>=line.split('\t').collect();let source=f[1].parse::<u32>().unwrap();
+            let tx=substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(format!("{}/fixtures/swap-coverage/penguin-native27/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap()).unwrap();
+            let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)&&s.amm==PENGUIN).collect();
+            assert_eq!(rows.len(),1,"{}",f[0]);let row=rows[0];count+=1;
+            assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::SplTokenSwap as i32);assert_eq!(row.source_transfer_index,Some(source+1));
+            assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),
+                (f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
+            let verify_route=|transaction:&ConfirmedTransaction| {
+                let mut candidate=row.clone();candidate.protocol=Protocol::JupiterV4 as i32;let mut candidates=vec![candidate];
+                let mints=TokenMintLookup::new(transaction,transaction.meta.as_ref().unwrap());
+                crate::quality::verify_with_fees(transaction,&mints,&mut candidates,false,|_,_|None);candidates
+            };
+            assert_eq!(verify_route(&tx).len(),1);
+            let native=tx.walk_instructions().nth(source as usize).unwrap().data().clone();
+            for mode in 0..33 {
+                let mut wrong=tx.clone();
+                if mode<29 || mode==31 {
+                    let g=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|n|n.data==native)).unwrap();
+                    let p=g.instructions.iter().position(|n|n.data==native).unwrap();let a=g.instructions[p].accounts.clone();let n=&mut g.instructions;
+                    match mode {
+                        0=>n[p].data[0]=2,1=>n[p].data.push(0),2=>n[p].data[1..9].copy_from_slice(&(row.input_amount-1).to_le_bytes()),
+                        3=>n[p].data[9..17].copy_from_slice(&(row.output_amount+1).to_le_bytes()),4=>n[p].accounts[0]=a[2],5=>n[p].accounts[1]=a[2],
+                        6=>n[p].accounts[3]=a[4],7=>n[p].accounts[4]=a[5],8=>n[p].accounts[5]=a[4],9=>n[p].accounts[6]=a[3],
+                        10=>n[p].accounts[7]=a[0],11=>n[p].accounts[8]=a[6],12=>n[p].accounts[9]=a[0],
+                        13=>n[p+1].data[1..9].copy_from_slice(&(row.input_amount+1).to_le_bytes()),14=>n[p+1].data[1..9].fill(0),
+                        15=>n[p+1].accounts[0]=a[4],16=>n[p+1].accounts[1]=a[5],17=>n[p+1].accounts[2]=a[1],
+                        18=>n[p+2].data[1]^=1,19=>n[p+2].accounts[0]=a[0],20=>n[p+2].accounts[1]=a[6],21=>n[p+2].accounts[2]=a[2],22=>n[p+2].data[0]=3,
+                        23=>n[p+3].data[1..9].copy_from_slice(&(row.output_amount+1).to_le_bytes()),24=>n[p+3].data[1..9].fill(0),
+                        25=>n[p+3].accounts[0]=a[4],26=>n[p+3].accounts[1]=a[3],27=>n[p+3].accounts[2]=a[2],28=>n[p+3].stack_height=Some(99),
+                        _=>n[p+1].program_id_index=u32::from(a[0]),
+                    }
+                } else if mode<32 {
+                    let native_ix=tx.walk_instructions().nth(source as usize).unwrap();let roles=native_ix.accounts();let keys=tx.resolved_accounts();
+                    let account=keys.iter().position(|k|*k==roles[if mode==29{5}else{8}].0).unwrap();
+                    let b=wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index as usize==account).unwrap().ui_token_amount.as_mut().unwrap();
+                    b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();
+                } else {
+                    wrong.meta.as_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PENGUIN))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(PENGUIN)));
+                }
+                assert!(crate::process_transaction(wrong.clone()).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source)||s.amm!=PENGUIN)),"native Penguin mode{mode}");
+                assert!(verify_route(&wrong).is_empty(),"routed Penguin mode{mode}");
+            }
+        }
+        assert_eq!(count,4);
+    }
+
 }

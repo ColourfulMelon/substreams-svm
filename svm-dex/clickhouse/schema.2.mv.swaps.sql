@@ -66,6 +66,8 @@ ALTER TABLE swaps
     ADD COLUMN IF NOT EXISTS execution_position UInt32 DEFAULT instruction_index,
     ADD COLUMN IF NOT EXISTS transfer_verified UInt8 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS orderbook_fill_verified UInt8 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS burn_output_verified UInt8 DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS source_burn_index UInt32 DEFAULT 0,
     ADD COLUMN IF NOT EXISTS verification_failure LowCardinality(String) MATERIALIZED '',
 
     -- indexes --

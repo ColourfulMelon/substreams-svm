@@ -322,6 +322,87 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
 
     #[test]
+    fn finalized_token22_output_host_aliases_require_exact_receipts() {
+        let fixtures: &[(&[u8], u32, u64, u64)] = &[
+            (include_bytes!("../fixtures/swap-coverage/live-dlmm-host-fees27/3cvR9MgFTu2gah995ghP5iHWR17dc9hp2vSkYU83XX2F6G16p697w36mb2kQeXFwnRgWJ1Ayc6hvj62cR2jamXY.pb"), 12, 198654178, 569845),
+            (include_bytes!("../fixtures/swap-coverage/live-dlmm-host-fees27/25pwyqT7bBXQiKoVn9QUBF3SZShsBL5qH99vKSqpnWuTAoVxfz7u3awjYk4K4giAfm5zxAiYZbSG2tyhRaoRySUk.pb"), 9, 1039907088928, 35982),
+        ];
+        for &(bytes, source, input, output) in fixtures {
+            let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let native = tx.walk_instructions().nth(source as usize).unwrap();
+            let layout = decode_swap_instruction(&native).unwrap();
+            let current = tx.walk_instructions().nth(source as usize + 5).unwrap().data().clone();
+            let host = tx.walk_instructions().nth(source as usize + 3).unwrap().data().clone();
+            let principal = tx.walk_instructions().nth(source as usize + 4).unwrap().data().clone();
+            let decoded = crate::process_transaction(tx.clone()).unwrap();
+            let restored: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source)).collect();
+            assert_eq!(restored.len(), 1, "independent positive Token22 host alias source={source}");
+            let expected = restored[0];
+            assert_eq!((expected.input_amount, expected.output_amount, expected.source_transfer_index), (input, output, Some(source + 2)));
+            assert_eq!((expected.amm_pool.as_slice(), expected.user.as_slice(), expected.input_mint.as_slice(), expected.output_mint.as_slice()), (layout.lb_pair.as_slice(), layout.user.as_slice(), layout.token_x_mint.as_slice(), layout.token_y_mint.as_slice()));
+            assert!(expected.transfer_verified);
+            let verify_route = |transaction: &ConfirmedTransaction| {
+                let mut routed = expected.clone();
+                routed.protocol = pb::Protocol::JupiterV4 as i32;
+                let mut candidates = vec![routed];
+                let mints = crate::token_mints::TokenMintLookup::new(transaction, transaction.meta.as_ref().unwrap());
+                crate::quality::verify_with_fees(transaction, &mints, &mut candidates, false, |_, _| None);
+                candidates
+            };
+            assert_eq!(verify_route(&tx).len(), 1, "routed native alias");
+            for mode in 0..23 {
+                let mut changed = tx.clone();
+                let meta = changed.meta.as_mut().unwrap();
+                if mode == 20 {
+                    let balance = meta.post_token_balances.iter_mut().find(|b| b.mint == substreams_solana::base58::encode(&layout.token_y_mint) && b.owner == substreams_solana::base58::encode(&layout.user)).unwrap();
+                    let amount = balance.ui_token_amount.as_mut().unwrap();
+                    amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
+                } else if mode == 21 {
+                    for log in &mut meta.log_messages {
+                        if *log == format!("Program {} success", substreams_solana::base58::encode(dlmm::PROGRAM_ID)) {
+                            *log = format!("Program {} failed: custom program error: 0x1", substreams_solana::base58::encode(dlmm::PROGRAM_ID));
+                        }
+                    }
+                } else if mode == 22 {
+                    let n = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|n| n.data == native.data().clone()).unwrap();
+                    n.accounts[9] = n.accounts[15];
+                } else if mode < 14 {
+                    let event = &mut meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|n| n.data == current).unwrap().data;
+                    match mode {
+                        0 => event[16] ^= 1,
+                        1 => event[48] ^= 1,
+                        2 => event[88] ^= 1,
+                        3 => event[105] ^= 1,
+                        4 => event[113] = 1,
+                        5 => event[121] ^= 1,
+                        6 => event[153] ^= 1,
+                        7 => event[161] = 1,
+                        8 => event[162] ^= 1,
+                        9 => event[0] ^= 1,
+                        10 => { event.pop(); },
+                        11 => event.push(0),
+                        12 => event[153..161].fill(0),
+                        13 => event[121..129].fill(0),
+                        _ => unreachable!(),
+                    }
+                } else {
+                    let n = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|n| n.data == if mode == 14 { host.clone() } else { principal.clone() }).unwrap();
+                    match mode {
+                        14 | 15 => n.data[1] ^= 1,
+                        16 => n.accounts[0] = n.accounts[2],
+                        17 => n.accounts[1] = n.accounts[0],
+                        18 => n.accounts[2] = n.accounts[0],
+                        19 => n.accounts[3] = n.accounts[2],
+                        _ => unreachable!(),
+                    }
+                }
+                assert!(crate::process_transaction(changed.clone()).unwrap().swaps.iter().all(|s| s.source_index != Some(source)), "native invalid Token22 host alias mode={mode}");
+                assert!(verify_route(&changed).is_empty(), "routed invalid Token22 host alias mode={mode}");
+            }
+        }
+    }
+
+    #[test]
     fn finalized_output_host_fee_aliases_preserve_primary_receipts() {
         let fixtures: &[(&[u8], u32, u32, u64, u64)] = &[
             (include_bytes!("../fixtures/swap-coverage/dlmm-host-fee-alias/0.transaction.pb").as_slice(), 10, 12, 12334, 15043),

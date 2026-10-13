@@ -35,7 +35,7 @@ SELECT
     max(timestamp) AS max_timestamp,
     count() AS observations
 FROM swaps
-WHERE (transfer_verified = 1 OR orderbook_fill_verified = 1) AND event_id != '' AND amm_pool != ''
+WHERE (transfer_verified = 1 OR orderbook_fill_verified = 1 OR (burn_output_verified = 1 AND protocol = 'pumpfun_amm_buy_burn')) AND event_id != '' AND amm_pool != ''
   AND amount0 >= multiIf(mint0 IN stable_mints, 10000, mint0 = wsol, 100000, 1)
   AND amount1 >= multiIf(mint1 IN stable_mints, 10000, mint1 = wsol, 100000, 1)
 GROUP BY minute, amm_pool, mint0, mint1;

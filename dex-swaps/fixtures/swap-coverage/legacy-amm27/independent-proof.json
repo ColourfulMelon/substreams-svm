@@ -1,0 +1,925 @@
+{
+  "summary": {
+    "originals": 6,
+    "tokenLedgers": 30,
+    "nativeLedgers": 14,
+    "fullOriginalRpcPbParity": true,
+    "decoderDerivedAmounts": false,
+    "containingBlockMetadataClaim": false
+  },
+  "originals": [
+    {
+      "signature": "2eGC3esJHPAxugNkRvgtaAuBJQBZnnFrJvDSAG4PaVkLnsXD3n5uRU6rcRSi6z9kW7ycFHofpHipQrRNgWMXerdF",
+      "block_num": 456214149,
+      "instruction_index": 14,
+      "sourceTransfer": 15,
+      "program_id": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "protocol": "aldrin_v1",
+      "pool": "4GUniSDrCAZR3sKtLa1AWC8oyYubZeKJQ8KraQmy3Wt5",
+      "user": "DxTMzrcsgQCtgy2SDuWe8yCW8fEX9UVHyGJBTxvhCAR9",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "18425739",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1967063",
+      "inputCap": "18425743",
+      "minimumOutput": "0",
+      "poolInput": "18425739",
+      "directInputFee": "0",
+      "lpFeeReceipt": "27",
+      "ledger": [
+        {
+          "address": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "0",
+          "after": "0",
+          "delta": "0",
+          "flows": [
+            {
+              "index": 12,
+              "syncNativeCredit": "74567964"
+            },
+            {
+              "index": 15,
+              "from": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "18425739"
+            },
+            {
+              "index": 19,
+              "from": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+              "to": "5YMJwb6z56NJh4QxgXULJsoUZLb4mFHwpUMfNxJ5KhaZ",
+              "amount": "19678"
+            },
+            {
+              "index": 21,
+              "from": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+              "to": "HZeLxbZ9uHtSpwZC3LBr4Nubd14iHwz7bRSghRZf5VCG",
+              "amount": "39337293"
+            },
+            {
+              "index": 27,
+              "from": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+              "to": "WTxS1YuXCUkP4JgLYwKxaCdBiw5fWrccKArUN8vam3C",
+              "amount": "16785250"
+            },
+            {
+              "index": 30,
+              "nativeTokenClosure": "4"
+            }
+          ],
+          "nativeDelta": "0",
+          "nativeCreationFunding": "1488440",
+          "nativeClosure": "1488444"
+        },
+        {
+          "address": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "43403814",
+          "after": "51198961",
+          "delta": "7795147",
+          "flows": [
+            {
+              "index": 17,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+              "amount": "1967063"
+            },
+            {
+              "index": 24,
+              "from": "C2QoQ111jGHEy5918XkNXQro7gGwC9PKLXd1LqBiYNwA",
+              "to": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+              "amount": "4200786"
+            },
+            {
+              "index": 28,
+              "from": "7jQB1YjvQMn9pFCWwCZx3kPFRLAY3L9wz4atoAL2PWpZ",
+              "to": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+              "amount": "1791928"
+            },
+            {
+              "index": 32,
+              "from": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+              "to": "7xrjio4HMDaBCXCHdFoqBUvP3epvh7DKnECpmVBZ5ZW3",
+              "amount": "164630"
+            }
+          ]
+        },
+        {
+          "address": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "59077792162",
+          "after": "59096217901",
+          "delta": "18425739",
+          "flows": [
+            {
+              "index": 15,
+              "from": "6U9mCjn2wwnwcdYvDGJE6Cc8prThD1fpqSBEhH8jcVbw",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "18425739"
+            }
+          ],
+          "nativeDelta": "18425739",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "6327868766",
+          "after": "6325901703",
+          "delta": "-1967063",
+          "flows": [
+            {
+              "index": 17,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "HMm2LHmS3761A7vudVoYNRYbqYdd3kTiB8ws3MF1eD9b",
+              "amount": "1967063"
+            }
+          ]
+        },
+        {
+          "address": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+          "mint": "3sbMDzGtyHAzJqzxE7DPdLMhrsxQASYoKLkHMYJPuWkp",
+          "before": "707902",
+          "after": "707929",
+          "delta": "27",
+          "flows": [
+            {
+              "index": 16,
+              "mintTo": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+              "amount": "27"
+            }
+          ]
+        }
+      ],
+      "constantProduct": {
+        "X": "59077792162",
+        "Y": "6327868766",
+        "tradeFee": "36851",
+        "ownerFee": "18425",
+        "newY": "6325901703",
+        "effectiveDebit": "18370463"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "f0fca6c50c2fd6d8ebb2290b73f49225e21c3927b6a780ca9c86cc9af5054514",
+      "rpcSha256": "876dd7504bca5f8a11897ca6ff32cad31c39b2eccd9b6383c59c045def66c543",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    },
+    {
+      "signature": "2XeHYQizaZWj8x3CFbP1SVVixgBAdGcA4pzY7pyi69k6n5GnasH8oZrKugVNpkWUrySpnS28LDADXDeSnpZ88R4q",
+      "block_num": 456214151,
+      "instruction_index": 22,
+      "sourceTransfer": 23,
+      "program_id": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "protocol": "aldrin_v1",
+      "pool": "4GUniSDrCAZR3sKtLa1AWC8oyYubZeKJQ8KraQmy3Wt5",
+      "user": "2X4pbmKFVmHoNcG9mabtXi8mQSdpAZFrQngDLZ5Fbnu3",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "20982010",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "2238470",
+      "inputCap": "20982017",
+      "minimumOutput": "0",
+      "poolInput": "20982010",
+      "directInputFee": "0",
+      "lpFeeReceipt": "30",
+      "ledger": [
+        {
+          "address": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "0",
+          "after": "0",
+          "delta": "0",
+          "flows": [
+            {
+              "index": 12,
+              "syncNativeCredit": "94726941"
+            },
+            {
+              "index": 15,
+              "from": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+              "to": "5YMJwb6z56NJh4QxgXULJsoUZLb4mFHwpUMfNxJ5KhaZ",
+              "amount": "27300"
+            },
+            {
+              "index": 17,
+              "from": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+              "to": "HZeLxbZ9uHtSpwZC3LBr4Nubd14iHwz7bRSghRZf5VCG",
+              "amount": "54573308"
+            },
+            {
+              "index": 23,
+              "from": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "20982010"
+            },
+            {
+              "index": 27,
+              "from": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+              "to": "WTxS1YuXCUkP4JgLYwKxaCdBiw5fWrccKArUN8vam3C",
+              "amount": "19144316"
+            },
+            {
+              "index": 30,
+              "nativeTokenClosure": "7"
+            }
+          ],
+          "nativeDelta": "0",
+          "nativeCreationFunding": "1488440",
+          "nativeClosure": "1488447"
+        },
+        {
+          "address": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "27076308",
+          "after": "37018750",
+          "delta": "9942442",
+          "flows": [
+            {
+              "index": 20,
+              "from": "C2QoQ111jGHEy5918XkNXQro7gGwC9PKLXd1LqBiYNwA",
+              "to": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+              "amount": "5826220"
+            },
+            {
+              "index": 25,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+              "amount": "2238470"
+            },
+            {
+              "index": 28,
+              "from": "7jQB1YjvQMn9pFCWwCZx3kPFRLAY3L9wz4atoAL2PWpZ",
+              "to": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+              "amount": "2042423"
+            },
+            {
+              "index": 32,
+              "from": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+              "to": "7xrjio4HMDaBCXCHdFoqBUvP3epvh7DKnECpmVBZ5ZW3",
+              "amount": "164671"
+            }
+          ]
+        },
+        {
+          "address": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "59096217901",
+          "after": "59117199911",
+          "delta": "20982010",
+          "flows": [
+            {
+              "index": 23,
+              "from": "A9qRjchUqAHYk4xagTDtUkMbxDejxgeF3XM1nQGjkWLn",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "20982010"
+            }
+          ],
+          "nativeDelta": "20982010",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "6325901703",
+          "after": "6323663233",
+          "delta": "-2238470",
+          "flows": [
+            {
+              "index": 25,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "Ceh2VL6xdQyEs1og5QtQGjrvuh46Zudodh2ku6PBZLHP",
+              "amount": "2238470"
+            }
+          ]
+        },
+        {
+          "address": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+          "mint": "3sbMDzGtyHAzJqzxE7DPdLMhrsxQASYoKLkHMYJPuWkp",
+          "before": "707929",
+          "after": "707959",
+          "delta": "30",
+          "flows": [
+            {
+              "index": 24,
+              "mintTo": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+              "amount": "30"
+            }
+          ]
+        }
+      ],
+      "constantProduct": {
+        "X": "59096217901",
+        "Y": "6325901703",
+        "tradeFee": "41964",
+        "ownerFee": "20982",
+        "newY": "6323663233",
+        "effectiveDebit": "20919064"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "05b516ab2aec72ffa17629890e2de13cbf2b41b51dc4545e176c9aa81638fc53",
+      "rpcSha256": "bc1a1df83dde9c08fa4507f51945cb366b89de2c2dadeac019ad784ff3f12e46",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    },
+    {
+      "signature": "3NordjZmQMLannv8PbL7Czgoi84rUtE38d4ZgSQAGfcBTYkwVTyv3TNtyzgK5CSAQAR4uZdRNejk9EjzN7H7ErpT",
+      "block_num": 456214224,
+      "instruction_index": 14,
+      "sourceTransfer": 15,
+      "program_id": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "protocol": "aldrin_v1",
+      "pool": "4GUniSDrCAZR3sKtLa1AWC8oyYubZeKJQ8KraQmy3Wt5",
+      "user": "7YNm8vmWayWo93sY7Ag2VTkbCK9ceykriBc1UJiB9i2V",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "14624973",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "1559330",
+      "inputCap": "14624973",
+      "minimumOutput": "0",
+      "poolInput": "14624973",
+      "directInputFee": "0",
+      "lpFeeReceipt": "21",
+      "ledger": [
+        {
+          "address": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "0",
+          "after": "0",
+          "delta": "0",
+          "flows": [
+            {
+              "index": 12,
+              "syncNativeCredit": "136554377"
+            },
+            {
+              "index": 15,
+              "from": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "14624973"
+            },
+            {
+              "index": 19,
+              "from": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+              "to": "5YMJwb6z56NJh4QxgXULJsoUZLb4mFHwpUMfNxJ5KhaZ",
+              "amount": "19151"
+            },
+            {
+              "index": 21,
+              "from": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+              "to": "HZeLxbZ9uHtSpwZC3LBr4Nubd14iHwz7bRSghRZf5VCG",
+              "amount": "38284351"
+            },
+            {
+              "index": 27,
+              "from": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+              "to": "ATRsNGv2nDw7hSMfkUTBoVUDsFDwN7po7KbecyiGWNB4",
+              "amount": "83625902"
+            },
+            {
+              "index": 30,
+              "nativeTokenClosure": "0"
+            }
+          ],
+          "nativeDelta": "0",
+          "nativeCreationFunding": "1488440",
+          "nativeClosure": "1488440"
+        },
+        {
+          "address": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "49113251",
+          "after": "63503675",
+          "delta": "14390424",
+          "flows": [
+            {
+              "index": 17,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+              "amount": "1559330"
+            },
+            {
+              "index": 24,
+              "from": "C2QoQ111jGHEy5918XkNXQro7gGwC9PKLXd1LqBiYNwA",
+              "to": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+              "amount": "4083163"
+            },
+            {
+              "index": 28,
+              "from": "2Y7HATmn9aJBcxCskE5V2U2epmjvkZmB51zTJBbhj4cU",
+              "to": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+              "amount": "8913679"
+            },
+            {
+              "index": 31,
+              "from": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+              "to": "7xrjio4HMDaBCXCHdFoqBUvP3epvh7DKnECpmVBZ5ZW3",
+              "amount": "165748"
+            }
+          ]
+        },
+        {
+          "address": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "59117199911",
+          "after": "59131824884",
+          "delta": "14624973",
+          "flows": [
+            {
+              "index": 15,
+              "from": "2yEg9UksfAFsuCTWbUVfiWC2bhEFUSzMwggnpfwHbc4m",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "14624973"
+            }
+          ],
+          "nativeDelta": "14624973",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "6323663233",
+          "after": "6322103903",
+          "delta": "-1559330",
+          "flows": [
+            {
+              "index": 17,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "YmSDa3DU7cQMJTVh8ApmN8Z7JEMvC5z3xfP2ewRB7kc",
+              "amount": "1559330"
+            }
+          ]
+        },
+        {
+          "address": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+          "mint": "3sbMDzGtyHAzJqzxE7DPdLMhrsxQASYoKLkHMYJPuWkp",
+          "before": "707959",
+          "after": "707980",
+          "delta": "21",
+          "flows": [
+            {
+              "index": 16,
+              "mintTo": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+              "amount": "21"
+            }
+          ]
+        }
+      ],
+      "constantProduct": {
+        "X": "59117199911",
+        "Y": "6323663233",
+        "tradeFee": "29249",
+        "ownerFee": "14624",
+        "newY": "6322103903",
+        "effectiveDebit": "14581100"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "38c7b24f2618bb26d0504c72c2173653af36d9a8b1ec6f9185c9238135c6a2fe",
+      "rpcSha256": "95bf7af25d6ddb2f9cbf7b6a675a290eb0e761345fb3b1277972d8e59e5f1577",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    },
+    {
+      "signature": "3HPVmZh7Mjtcq4WZTFnsdW88XhF7E8fJQ46UforYQXACoqbyKnYLLxjdDPW5DtM99PSUh9ZAvZeRxAma5kTxT7HP",
+      "block_num": 456214227,
+      "instruction_index": 25,
+      "sourceTransfer": 26,
+      "program_id": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "protocol": "aldrin_v1",
+      "pool": "4GUniSDrCAZR3sKtLa1AWC8oyYubZeKJQ8KraQmy3Wt5",
+      "user": "BQ72nSv9f3PRyRKCBnHLVrerrv37CYTHm5h3s9VSGQDV",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "7913926",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "843470",
+      "inputCap": "7913930",
+      "minimumOutput": "0",
+      "poolInput": "7913926",
+      "directInputFee": "0",
+      "lpFeeReceipt": "12",
+      "ledger": [
+        {
+          "address": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "98",
+          "after": "110",
+          "delta": "12",
+          "flows": [
+            {
+              "index": 14,
+              "from": "BoEvqRqjKwZjcjxpMYs3cPpytC5fNS4TMcJUsEUebx2v",
+              "to": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+              "amount": "38736803"
+            },
+            {
+              "index": 16,
+              "from": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+              "to": "EJPN4HyyaTRTgWrg8KsSX7Px1e1LZ8g8NLyUfvwAgvCv",
+              "amount": "17826670"
+            },
+            {
+              "index": 20,
+              "from": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+              "to": "BBDQmitNga99M9QsBRnyos9uWPumNbWLC1mfbReJi45C",
+              "amount": "12996195"
+            },
+            {
+              "index": 26,
+              "from": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "7913926"
+            }
+          ],
+          "nativeDelta": "12",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "817263",
+          "after": "817263",
+          "delta": "0",
+          "flows": [
+            {
+              "index": 24,
+              "from": "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+              "to": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+              "amount": "3283876"
+            },
+            {
+              "index": 28,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+              "amount": "843470"
+            },
+            {
+              "index": 30,
+              "from": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+              "to": "D6PP6X5iDFWXiSh71KJCABeYzzNvEkcpTRY6XoEhLLj",
+              "amount": "4127346"
+            }
+          ]
+        },
+        {
+          "address": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "59131824884",
+          "after": "59139738810",
+          "delta": "7913926",
+          "flows": [
+            {
+              "index": 26,
+              "from": "8ctcHN52LY21FEipCjr1MVWtoZa1irJQTPyAaTj72h7S",
+              "to": "CLt1DtCioiByTizqLhxLAXweXr2g9D4ZEAStibACBg4L",
+              "amount": "7913926"
+            }
+          ],
+          "nativeDelta": "7913926",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "6322103903",
+          "after": "6321260433",
+          "delta": "-843470",
+          "flows": [
+            {
+              "index": 28,
+              "from": "2M1JTZsc71V6FhRNjCDSttcs17HewC4KNNNkkc81L3gB",
+              "to": "7u7cD7NxcZEuzRCBaYo8uVpotRdqZwez47vvuwzCov43",
+              "amount": "843470"
+            }
+          ]
+        },
+        {
+          "address": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+          "mint": "3sbMDzGtyHAzJqzxE7DPdLMhrsxQASYoKLkHMYJPuWkp",
+          "before": "707980",
+          "after": "707992",
+          "delta": "12",
+          "flows": [
+            {
+              "index": 27,
+              "mintTo": "DuoYmMoZBy2MyGP8xa3LiWyURjmpfbZbfwRmoPvYKmr6",
+              "amount": "12"
+            }
+          ]
+        }
+      ],
+      "constantProduct": {
+        "X": "59131824884",
+        "Y": "6322103903",
+        "tradeFee": "15827",
+        "ownerFee": "7913",
+        "newY": "6321260433",
+        "effectiveDebit": "7890186"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "16cc997b28a85f898a8265f57148a072b39dbc1f1cf3f98fd2a590bb78443642",
+      "rpcSha256": "aea08938dbb3b1ae5830f0cdf106098c38f5f9eb39e52b621343517d453ef6a1",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    },
+    {
+      "signature": "dVsCuvg9VttwiCBgRrweEAqmc5LGCig2b4UQDd7uetsYqCXk4pyrESmSBxieX5iy83F7kVat1ewE9J2gJi7oWzZ",
+      "block_num": 456214257,
+      "instruction_index": 6,
+      "sourceTransfer": 7,
+      "program_id": "CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh",
+      "protocol": "cropper",
+      "pool": "7NWyuTfpb8gfRpgm67yv5GkdX2EM3WkefGSwHZfNVzTW",
+      "user": "3nMNd89AxwHUa1AFvQGqohRkxFEQsTsgiEyEyqXFHyyH",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "117979455",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "12594319",
+      "inputCap": "117979462",
+      "minimumOutput": "1",
+      "poolInput": "117861476",
+      "directInputFee": "117979",
+      "lpFeeReceipt": "0",
+      "ledger": [
+        {
+          "address": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "40023128856",
+          "after": "40023128863",
+          "delta": "7",
+          "flows": [
+            {
+              "index": 5,
+              "from": "bHHnvxhkzBebvqxpnzVaXSdQ1GdFeZFg8yi9YKgL7zE",
+              "to": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+              "amount": "117979462"
+            },
+            {
+              "index": 7,
+              "from": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+              "to": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+              "amount": "117861476"
+            },
+            {
+              "index": 8,
+              "from": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+              "to": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+              "amount": "117979"
+            }
+          ],
+          "nativeDelta": "7",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "4187415928",
+          "after": "4187430056",
+          "delta": "14128",
+          "flows": [
+            {
+              "index": 4,
+              "from": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+              "to": "CRKZr6Y9t2hzVNWY4gJk5eig8uznyykB4RTuGSqJDw7n",
+              "amount": "12580191"
+            },
+            {
+              "index": 9,
+              "from": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+              "to": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+              "amount": "12594319"
+            }
+          ]
+        },
+        {
+          "address": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "223242394817",
+          "after": "223360256293",
+          "delta": "117861476",
+          "flows": [
+            {
+              "index": 7,
+              "from": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+              "to": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+              "amount": "117861476"
+            }
+          ],
+          "nativeDelta": "117861476",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "23915451395",
+          "after": "23902857076",
+          "delta": "-12594319",
+          "flows": [
+            {
+              "index": 9,
+              "from": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+              "to": "HNoyj2rSfaKyV8Aynzp81DdUrwMyMxLN5649Fz7Ty77D",
+              "amount": "12594319"
+            }
+          ]
+        },
+        {
+          "address": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "1438340926",
+          "after": "1438458905",
+          "delta": "117979",
+          "flows": [
+            {
+              "index": 8,
+              "from": "AthF4CEubMxyPVkw8PKbLsPgs9sj6uRHLskGLuBybMpS",
+              "to": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+              "amount": "117979"
+            }
+          ],
+          "nativeDelta": "117979",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        }
+      ],
+      "constantProduct": {
+        "X": "223242394817",
+        "Y": "23915451395",
+        "tradeFee": "235958",
+        "ownerFee": "117979",
+        "newY": "23902857076",
+        "effectiveDebit": "117625518"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "e66d233f0dd11b9c6e67471ee5cc482e6d76ea69c5c19dbeee459573d378ffdc",
+      "rpcSha256": "6a31b5292fc5dade078741618728ce23af0574f42340b1272a8e22c85dd44455",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    },
+    {
+      "signature": "3MFuk4LXqNkmtSbuBN6FuNxSdu6owPfGuVvq6koKSM4Egi9YyjvU7EVmQgzJgRiA8rA8gi2UkSDpLqHThbfC2aQR",
+      "block_num": 456214306,
+      "instruction_index": 6,
+      "sourceTransfer": 7,
+      "program_id": "CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh",
+      "protocol": "cropper",
+      "pool": "7NWyuTfpb8gfRpgm67yv5GkdX2EM3WkefGSwHZfNVzTW",
+      "user": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "117984916",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "12581630",
+      "inputCap": "117984917",
+      "minimumOutput": "1",
+      "poolInput": "117866932",
+      "directInputFee": "117984",
+      "lpFeeReceipt": "0",
+      "ledger": [
+        {
+          "address": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "10070533992",
+          "after": "10070533993",
+          "delta": "1",
+          "flows": [
+            {
+              "index": 5,
+              "from": "bHHnvxhkzBebvqxpnzVaXSdQ1GdFeZFg8yi9YKgL7zE",
+              "to": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+              "amount": "117984917"
+            },
+            {
+              "index": 7,
+              "from": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+              "to": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+              "amount": "117866932"
+            },
+            {
+              "index": 8,
+              "from": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+              "to": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+              "amount": "117984"
+            }
+          ],
+          "nativeDelta": "1",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "3fSWrnFaNYSoPHDVMqHmijdv3wqoqicJu2vfMSxZhhgg",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "1038163927",
+          "after": "1038165366",
+          "delta": "1439",
+          "flows": [
+            {
+              "index": 4,
+              "from": "3fSWrnFaNYSoPHDVMqHmijdv3wqoqicJu2vfMSxZhhgg",
+              "to": "CRKZr6Y9t2hzVNWY4gJk5eig8uznyykB4RTuGSqJDw7n",
+              "amount": "12580191"
+            },
+            {
+              "index": 9,
+              "from": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+              "to": "3fSWrnFaNYSoPHDVMqHmijdv3wqoqicJu2vfMSxZhhgg",
+              "amount": "12581630"
+            }
+          ]
+        },
+        {
+          "address": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "223360256293",
+          "after": "223478123225",
+          "delta": "117866932",
+          "flows": [
+            {
+              "index": 7,
+              "from": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+              "to": "5DuRdWMtLQ51Ld534PsjDbudPGVnYkCwiGKo5EKcoaaL",
+              "amount": "117866932"
+            }
+          ],
+          "nativeDelta": "117866932",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        },
+        {
+          "address": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "before": "23902857076",
+          "after": "23890275446",
+          "delta": "-12581630",
+          "flows": [
+            {
+              "index": 9,
+              "from": "4G9Hp77tNNfMuYgD2DfFxZAAaruXuJigfbU2FjBreSdn",
+              "to": "3fSWrnFaNYSoPHDVMqHmijdv3wqoqicJu2vfMSxZhhgg",
+              "amount": "12581630"
+            }
+          ]
+        },
+        {
+          "address": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+          "mint": "So11111111111111111111111111111111111111112",
+          "before": "1438458905",
+          "after": "1438576889",
+          "delta": "117984",
+          "flows": [
+            {
+              "index": 8,
+              "from": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+              "to": "7nK3EAFgAHAtdn6J1onuNEsiWJK4qXuUz5j5yxYE6GDu",
+              "amount": "117984"
+            }
+          ],
+          "nativeDelta": "117984",
+          "nativeCreationFunding": "0",
+          "nativeClosure": "0"
+        }
+      ],
+      "constantProduct": {
+        "X": "223360256293",
+        "Y": "23902857076",
+        "tradeFee": "235969",
+        "ownerFee": "117984",
+        "newY": "23890275446",
+        "effectiveDebit": "117630963"
+      },
+      "ownedFeeReadLimitation": "Owned fee state was read after originals; exact original vault/receipt arithmetic independently matches the retained 20/10 basis-point primary fee profile.",
+      "pbSha256": "cd04e5682a73984da274bc5a7c33f38b86ad3f06e4ec49b30fd68cae2a386266",
+      "rpcSha256": "369146a73e48f2ca855fff280b8dc3088cf2d763d55d9fa5b4f883f21b206e23",
+      "rpcLogsTruncated": false,
+      "retainedPBRuntimeComplete": true,
+      "fullInstructionAndBalanceParity": true
+    }
+  ],
+  "programs": [
+    {
+      "program": "AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6",
+      "programData": "JB8ZTsvtynsHA3swffp8omak2Z5RcnbpxqPaZ121gtzD",
+      "deployedSlot": "249613938",
+      "predatesOriginals": true,
+      "elfSha256": "9116c1d1c87543f57e03e2131ab349b0252203e6ba839d5852ac72ba91cef0ff"
+    },
+    {
+      "program": "CTMAxxk34HjKWxQ3QLZK1HpaLXmBveao3ESePXbiyfzh",
+      "programData": "A7s9K4gACMVHPAzTvz11JZjbSoZAUTd4QDQiQvguw8Wq",
+      "deployedSlot": "107514708",
+      "predatesOriginals": true,
+      "elfSha256": "77b3e95edc71726d8b1d9448c5d1d3f63c1553699e92c024c76b50c18a7e94b8"
+    }
+  ],
+  "primarySdkIntegrity": "sha512-0MCcrxKgJu03065SutL9tSzO+lZUEuduZLF+xnDwyRAqnbADTNHCM9/ylitrPJAasPV+aDSEDsnVwXsDUMzcDw=="
+}

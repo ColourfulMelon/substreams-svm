@@ -1,0 +1,57 @@
+{
+  "originals": [
+    {
+      "signature": "2RwPNAeJYJ16e75GgpxpZkBYP6jKgdxjgy27DoJeXj3ApHqPfcspyZuJHrgUL1aYJHD63sSA5WhuUDqnVEnjGW7y",
+      "slot": 456213780,
+      "program_id": "MzLoYnJ6sF6eeejs4vV95TNmXqS3W4cAtLGKkjT4ZrK",
+      "protocol": "m0_native_order",
+      "instruction_index": 0,
+      "sourceTransfer": 1,
+      "pool": "7HQEka4bqKR9egKZnd26nLPQPButjCGAPXDNomcJojya",
+      "user": "8mZpjtSkD1FnkvHcue21hb4HB7oGTwK3vD2ntP1D5Z95",
+      "inputMint": "dawn7ZUF7h7anFuEsDdAU1Y3HYwikwqNMAENZsQJdNL",
+      "input": "22400000",
+      "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "output": "22400000",
+      "minimumOutput": "22400000",
+      "ledger": [
+        {
+          "address": "7suEhArpczmk7DoZKPyJRAvM99VCPosV5VbKULRsrtX6",
+          "mint": "dawn7ZUF7h7anFuEsDdAU1Y3HYwikwqNMAENZsQJdNL",
+          "delta": "-22400000",
+          "credit": "0",
+          "debit": "22400000"
+        },
+        {
+          "address": "EyLnrVdeWBoESPu3fmPqw2fB2o4H9EHdxkTr66ycnnW7",
+          "mint": "dawn7ZUF7h7anFuEsDdAU1Y3HYwikwqNMAENZsQJdNL",
+          "delta": "22400000",
+          "credit": "22400000",
+          "debit": "0"
+        },
+        {
+          "address": "HSxJu1BBWJtQMA7maAb5eB7EFaXZ2fPDZULc6RL8yhkW",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "delta": "-22400000",
+          "credit": "0",
+          "debit": "22400000"
+        },
+        {
+          "address": "81Ma97d2KnEC7jQmEmPB8WHFRnr4rWz3eCBPMYVz9D8M",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "delta": "22400000",
+          "credit": "22400000",
+          "debit": "0"
+        }
+      ],
+      "pbSha256": "9ec74d2dd1c479af8137631d87e01e8d1df06c3d0d53fa7451a18c0e322ec45b",
+      "rpcSha256": "e9e0ccdd16348775b7a2e5161bed3b5d7d59225756f2f92f388f95069a48bf10",
+      "fullOriginalRpcPbParity": true,
+      "allCommitted": true
+    }
+  ],
+  "nonSpot": [],
+  "allFinalizedOriginalRpcPbParity": true,
+  "allFourPrincipalLedgers": true,
+  "globalCoverageClaim": false
+}

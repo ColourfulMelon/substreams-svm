@@ -100,6 +100,12 @@ pub struct Swap {
     /// Position in runtime log_messages; distinct from compiled instruction positions.
     #[prost(uint32, optional, tag="17")]
     pub source_log_index: ::core::option::Option<u32>,
+    /// Verified protocol-funded exchange followed by a vault burn. The base
+    /// amount is destroyed; it is not credited to a trader token account.
+    #[prost(uint32, optional, tag="18")]
+    pub source_burn_index: ::core::option::Option<u32>,
+    #[prost(bool, tag="19")]
+    pub burn_output_verified: bool,
 }
 /// Deterministic mint metadata, separate from financial swap events.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -200,6 +206,13 @@ pub enum Protocol {
     Janus = 76,
     Exponent = 77,
     Cryptoquest = 78,
+    PumpfunAmmBuyBurn = 79,
+    AldrinV1 = 80,
+    Cropper = 81,
+    PiconDlmm = 82,
+    M0NativeOrder = 83,
+    PatchBuyback = 84,
+    Bxlw = 85,
 }
 impl Protocol {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -287,6 +300,13 @@ impl Protocol {
             Protocol::Janus => "PROTOCOL_JANUS",
             Protocol::Exponent => "PROTOCOL_EXPONENT",
             Protocol::Cryptoquest => "PROTOCOL_CRYPTOQUEST",
+            Protocol::PumpfunAmmBuyBurn => "PROTOCOL_PUMPFUN_AMM_BUY_BURN",
+            Protocol::AldrinV1 => "PROTOCOL_ALDRIN_V1",
+            Protocol::Cropper => "PROTOCOL_CROPPER",
+            Protocol::PiconDlmm => "PROTOCOL_PICON_DLMM",
+            Protocol::M0NativeOrder => "PROTOCOL_M0_NATIVE_ORDER",
+            Protocol::PatchBuyback => "PROTOCOL_PATCH_BUYBACK",
+            Protocol::Bxlw => "PROTOCOL_BXLW",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -371,6 +391,13 @@ impl Protocol {
             "PROTOCOL_JANUS" => Some(Self::Janus),
             "PROTOCOL_EXPONENT" => Some(Self::Exponent),
             "PROTOCOL_CRYPTOQUEST" => Some(Self::Cryptoquest),
+            "PROTOCOL_PUMPFUN_AMM_BUY_BURN" => Some(Self::PumpfunAmmBuyBurn),
+            "PROTOCOL_ALDRIN_V1" => Some(Self::AldrinV1),
+            "PROTOCOL_CROPPER" => Some(Self::Cropper),
+            "PROTOCOL_PICON_DLMM" => Some(Self::PiconDlmm),
+            "PROTOCOL_M0_NATIVE_ORDER" => Some(Self::M0NativeOrder),
+            "PROTOCOL_PATCH_BUYBACK" => Some(Self::PatchBuyback),
+            "PROTOCOL_BXLW" => Some(Self::Bxlw),
             _ => None,
         }
     }

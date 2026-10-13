@@ -1,0 +1,2639 @@
+{
+  "address": "pDLMMk3KW3CUSxE1Wgjhx3jSmm2spe6Ry7Mq2HT26rC",
+  "metadata": {
+    "name": "picon_dlmm",
+    "version": "1.1.2",
+    "spec": "0.1.0",
+    "description": "Picon DLMM program"
+  },
+  "instructions": [
+    {
+      "name": "accept_admin_authority",
+      "discriminator": [
+        109,
+        115,
+        12,
+        245,
+        11,
+        10,
+        16,
+        209
+      ],
+      "accounts": [
+        {
+          "name": "pending_authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_fee",
+      "discriminator": [
+        169,
+        32,
+        79,
+        137,
+        136,
+        232,
+        70,
+        137
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "position_token_account"
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_owner_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_owner_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        },
+        {
+          "name": "lower_bin_array"
+        },
+        {
+          "name": "upper_bin_array",
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ClaimFeeParams"
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "RemainingAccountsScheme"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim_protocol_fee",
+      "discriminator": [
+        165,
+        228,
+        133,
+        48,
+        99,
+        249,
+        255,
+        33
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_admin_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_admin_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        }
+      ],
+      "args": [
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "RemainingAccountsScheme"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "close_position",
+      "discriminator": [
+        123,
+        134,
+        81,
+        0,
+        49,
+        68,
+        98,
+        98
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "position_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position_mint",
+          "writable": true
+        },
+        {
+          "name": "position_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_admin_config",
+      "discriminator": [
+        19,
+        140,
+        214,
+        88,
+        151,
+        236,
+        89,
+        5
+      ],
+      "accounts": [
+        {
+          "name": "deployer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program",
+          "address": "pDLMMk3KW3CUSxE1Wgjhx3jSmm2spe6Ry7Mq2HT26rC"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_bin_array",
+      "discriminator": [
+        107,
+        26,
+        23,
+        62,
+        137,
+        213,
+        131,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool"
+        },
+        {
+          "name": "bin_array",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  105,
+                  110,
+                  95,
+                  97,
+                  114,
+                  114,
+                  97,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "arg",
+                "path": "index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "index",
+          "type": "i32"
+        },
+        {
+          "name": "idempotent",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "create_pool",
+      "discriminator": [
+        233,
+        146,
+        209,
+        142,
+        207,
+        104,
+        64,
+        188
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program_x"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint_x"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program_y"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint_y"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "token_mint_x"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint_y"
+              },
+              {
+                "kind": "arg",
+                "path": "bin_step"
+              },
+              {
+                "kind": "arg",
+                "path": "fee_rate"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "bin_step",
+          "type": "u16"
+        },
+        {
+          "name": "fee_rate",
+          "type": "u32"
+        },
+        {
+          "name": "protocol_share",
+          "type": "u16"
+        },
+        {
+          "name": "active_bin_id",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "delete_bin_array",
+      "discriminator": [
+        158,
+        86,
+        142,
+        160,
+        52,
+        53,
+        194,
+        51
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "receiver",
+          "writable": true
+        },
+        {
+          "name": "bin_array",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  105,
+                  110,
+                  95,
+                  97,
+                  114,
+                  114,
+                  97,
+                  121
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "pool"
+              },
+              {
+                "kind": "arg",
+                "path": "index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "pool",
+          "type": "pubkey"
+        },
+        {
+          "name": "index",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "deposit_by_weight",
+      "discriminator": [
+        121,
+        187,
+        132,
+        201,
+        131,
+        190,
+        200,
+        124
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "position_token_account"
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_owner_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_owner_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        },
+        {
+          "name": "lower_bin_array",
+          "writable": true
+        },
+        {
+          "name": "upper_bin_array",
+          "writable": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "DepositByWeightParams"
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "RemainingAccountsScheme"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "open_position",
+      "discriminator": [
+        135,
+        128,
+        47,
+        77,
+        15,
+        152,
+        240,
+        49
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pool"
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "position_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position_mint",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "position_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "position_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "metadata_update_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "lower_bin_id",
+          "type": "i32"
+        },
+        {
+          "name": "upper_bin_id",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "reset_admin_authority",
+      "discriminator": [
+        161,
+        78,
+        56,
+        20,
+        177,
+        221,
+        206,
+        98
+      ],
+      "accounts": [
+        {
+          "name": "deployer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program",
+          "address": "pDLMMk3KW3CUSxE1Wgjhx3jSmm2spe6Ry7Mq2HT26rC"
+        },
+        {
+          "name": "program_data"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "set_metadata_update_authority",
+      "discriminator": [
+        82,
+        181,
+        7,
+        62,
+        133,
+        40,
+        2,
+        109
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "metadata_update_authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_pool_dynamic_fee_config",
+      "discriminator": [
+        44,
+        189,
+        119,
+        222,
+        246,
+        2,
+        137,
+        85
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "config",
+          "type": {
+            "defined": {
+              "name": "DynamicFeeConfig"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_pool_protocol_share",
+      "discriminator": [
+        16,
+        138,
+        62,
+        186,
+        255,
+        137,
+        75,
+        193
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "protocol_share",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "swap_exact_in",
+      "discriminator": [
+        104,
+        104,
+        131,
+        86,
+        161,
+        189,
+        180,
+        216
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_user_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_user_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "SwapExactInParams"
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "defined": {
+              "name": "RemainingAccountsScheme"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "swap_exact_out",
+      "discriminator": [
+        250,
+        73,
+        101,
+        33,
+        38,
+        207,
+        75,
+        184
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_user_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_user_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "SwapExactOutParams"
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "defined": {
+              "name": "RemainingAccountsScheme"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "sync_pool",
+      "discriminator": [
+        219,
+        251,
+        215,
+        251,
+        44,
+        37,
+        108,
+        102
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "desired_bin_id",
+          "type": "i32"
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "defined": {
+              "name": "RemainingAccountsScheme"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "transfer_admin_authority",
+      "discriminator": [
+        198,
+        11,
+        182,
+        207,
+        145,
+        11,
+        135,
+        215
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "admin_config"
+          ]
+        },
+        {
+          "name": "admin_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  100,
+                  109,
+                  105,
+                  110,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "discriminator": [
+        183,
+        18,
+        70,
+        156,
+        148,
+        109,
+        161,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "pool",
+          "relations": [
+            "position"
+          ]
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "position_token_account"
+        },
+        {
+          "name": "token_mint_x"
+        },
+        {
+          "name": "token_mint_y"
+        },
+        {
+          "name": "token_owner_account_x",
+          "writable": true
+        },
+        {
+          "name": "token_owner_account_y",
+          "writable": true
+        },
+        {
+          "name": "token_vault_x",
+          "writable": true
+        },
+        {
+          "name": "token_vault_y",
+          "writable": true
+        },
+        {
+          "name": "token_program_x"
+        },
+        {
+          "name": "token_program_y"
+        },
+        {
+          "name": "lower_bin_array",
+          "writable": true
+        },
+        {
+          "name": "upper_bin_array",
+          "writable": true,
+          "optional": true
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "WithdrawParams"
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_scheme",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "RemainingAccountsScheme"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AdminConfig",
+      "discriminator": [
+        156,
+        10,
+        79,
+        161,
+        71,
+        9,
+        62,
+        77
+      ]
+    },
+    {
+      "name": "BinArray",
+      "discriminator": [
+        92,
+        142,
+        92,
+        220,
+        5,
+        148,
+        70,
+        181
+      ]
+    },
+    {
+      "name": "Pool",
+      "discriminator": [
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
+      ]
+    },
+    {
+      "name": "Position",
+      "discriminator": [
+        170,
+        188,
+        143,
+        228,
+        122,
+        64,
+        247,
+        208
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "ClaimFeeEvent",
+      "discriminator": [
+        173,
+        80,
+        235,
+        15,
+        116,
+        19,
+        144,
+        33
+      ]
+    },
+    {
+      "name": "ClosePositionEvent",
+      "discriminator": [
+        198,
+        217,
+        115,
+        95,
+        191,
+        120,
+        142,
+        137
+      ]
+    },
+    {
+      "name": "CreatePoolEvent",
+      "discriminator": [
+        177,
+        49,
+        12,
+        210,
+        160,
+        118,
+        167,
+        116
+      ]
+    },
+    {
+      "name": "DepositEvent",
+      "discriminator": [
+        120,
+        248,
+        61,
+        83,
+        31,
+        142,
+        107,
+        144
+      ]
+    },
+    {
+      "name": "OpenPositionEvent",
+      "discriminator": [
+        83,
+        43,
+        164,
+        147,
+        169,
+        87,
+        81,
+        172
+      ]
+    },
+    {
+      "name": "SwapEvent",
+      "discriminator": [
+        64,
+        198,
+        205,
+        232,
+        38,
+        8,
+        113,
+        226
+      ]
+    },
+    {
+      "name": "WithdrawEvent",
+      "discriminator": [
+        22,
+        9,
+        133,
+        26,
+        160,
+        44,
+        71,
+        192
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "LiquidityError",
+      "msg": "Liquidity error"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidBinArray",
+      "msg": "Invalid bin array"
+    },
+    {
+      "code": 6002,
+      "name": "BinArrayNotEmpty",
+      "msg": "Bin array is not empty"
+    },
+    {
+      "code": 6003,
+      "name": "UnsupportedBinStep",
+      "msg": "Unsupported bin step"
+    },
+    {
+      "code": 6004,
+      "name": "UnsupportedFeeRate",
+      "msg": "Unsupported fee rate"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidProtocolShare",
+      "msg": "Invalid protocol share"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidActiveBin",
+      "msg": "Invalid active bin"
+    },
+    {
+      "code": 6007,
+      "name": "UnsupportedMintExtension",
+      "msg": "Unsupported mint extension"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidDynamicFeeConfig",
+      "msg": "Invalid dynamic fee config"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidBinRange",
+      "msg": "Invalid bin range"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidPositionOwner",
+      "msg": "Invalid position token owner"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidBinWeights",
+      "msg": "Invalid bin weights"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidBps",
+      "msg": "Invalid bps"
+    },
+    {
+      "code": 6013,
+      "name": "PositionNotEmpty",
+      "msg": "Position is not empty"
+    },
+    {
+      "code": 6014,
+      "name": "ExceededBinSlippageTolerance",
+      "msg": "Exceeded bin slippage tolerance"
+    },
+    {
+      "code": 6015,
+      "name": "ZeroSwapAmount",
+      "msg": "Swap amount is zero"
+    },
+    {
+      "code": 6016,
+      "name": "InsufficientLiquidity",
+      "msg": "Insufficient liquidity for swap"
+    },
+    {
+      "code": 6017,
+      "name": "ExceededSwapSlippageTolerance",
+      "msg": "Exceeded swap slippage tolerance"
+    },
+    {
+      "code": 6018,
+      "name": "InvalidPendingAuthority",
+      "msg": "Signer is not the pending authority"
+    },
+    {
+      "code": 6019,
+      "name": "UnexpectedRemainingAccountsKind",
+      "msg": "Unexpected remaining accounts kind for this instruction"
+    },
+    {
+      "code": 6020,
+      "name": "DuplicateRemainingAccountsKind",
+      "msg": "Duplicate remaining accounts kind"
+    },
+    {
+      "code": 6021,
+      "name": "InsufficientRemainingAccounts",
+      "msg": "Insufficient remaining accounts"
+    }
+  ],
+  "types": [
+    {
+      "name": "AccountGroup",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "kind",
+            "type": {
+              "defined": {
+                "name": "AccountKind"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AccountKind",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "BinArray"
+          },
+          {
+            "name": "TransferHookX"
+          },
+          {
+            "name": "TransferHookY"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "metadata_update_authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Bin",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount_x",
+            "type": "u64"
+          },
+          {
+            "name": "amount_y",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u128"
+          },
+          {
+            "name": "total_shares",
+            "type": "u128"
+          },
+          {
+            "name": "fee_per_share_x",
+            "type": "u128"
+          },
+          {
+            "name": "fee_per_share_y",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BinArray",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i32"
+          },
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "_padding",
+            "type": {
+              "array": [
+                "u8",
+                12
+              ]
+            }
+          },
+          {
+            "name": "bins",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Bin"
+                  }
+                },
+                100
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClaimFeeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "amount_x",
+            "type": "u64"
+          },
+          {
+            "name": "amount_y",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_x",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_y",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClaimFeeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClosePositionEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreatePoolEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "bin_step",
+            "type": "u16"
+          },
+          {
+            "name": "fee_rate",
+            "type": "u32"
+          },
+          {
+            "name": "token_mint_x",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint_y",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositByWeightParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount_x",
+            "type": "u64"
+          },
+          {
+            "name": "amount_y",
+            "type": "u64"
+          },
+          {
+            "name": "active_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "max_active_bin_slippage",
+            "type": "u32"
+          },
+          {
+            "name": "distribution_mode",
+            "type": {
+              "defined": {
+                "name": "DistributionMode"
+              }
+            }
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "bin_weights",
+            "type": {
+              "vec": "u16"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "amount_x",
+            "type": "u64"
+          },
+          {
+            "name": "amount_y",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_x",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_y",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DistributionMode",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Balanced"
+          },
+          {
+            "name": "Unbalanced"
+          },
+          {
+            "name": "UnbalancedX"
+          },
+          {
+            "name": "UnbalancedY"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DynamicFeeConfig",
+      "docs": [
+        "Per-`bin_step` dynamic-fee parameters, sourced from `utils::constraints` at pool",
+        "creation. Seeds the per-swap-mutated `DynamicFeeState` below."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "filter_period",
+            "docs": [
+              "Swaps arriving faster than this apart, in seconds, don't move the reference."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "decay_period",
+            "docs": [
+              "Window after which, absent activity, the reference decays instead of resetting."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "reduction_factor",
+            "docs": [
+              "Decay ratio applied to `volatility_accumulator`, over `bin_math::MAX_BASIS_POINTS`."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "dynamic_fee_control",
+            "docs": [
+              "Scales the squared volatility accumulator into a fee rate, over `DYNAMIC_FEE_DIVISOR`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "max_volatility_accumulator",
+            "docs": [
+              "Hard cap on `volatility_accumulator`."
+            ],
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DynamicFeeState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "config",
+            "type": {
+              "defined": {
+                "name": "DynamicFeeConfig"
+              }
+            }
+          },
+          {
+            "name": "reference_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "volatility_reference",
+            "type": "u32"
+          },
+          {
+            "name": "volatility_accumulator",
+            "type": "u32"
+          },
+          {
+            "name": "last_update_timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeeState",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "shares",
+            "type": "u128"
+          },
+          {
+            "name": "fee_per_share_checkpoint_x",
+            "type": "u128"
+          },
+          {
+            "name": "fee_per_share_checkpoint_y",
+            "type": "u128"
+          },
+          {
+            "name": "fee_owed_x",
+            "type": "u64"
+          },
+          {
+            "name": "fee_owed_y",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OpenPositionEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Pool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bin_step",
+            "type": "u16"
+          },
+          {
+            "name": "fee_rate",
+            "type": "u32"
+          },
+          {
+            "name": "protocol_share",
+            "type": "u16"
+          },
+          {
+            "name": "bump",
+            "type": {
+              "array": [
+                "u8",
+                1
+              ]
+            }
+          },
+          {
+            "name": "active_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "dynamic_fee_state",
+            "type": {
+              "defined": {
+                "name": "DynamicFeeState"
+              }
+            }
+          },
+          {
+            "name": "token_mint_x",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint_y",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_vault_x",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_vault_y",
+            "type": "pubkey"
+          },
+          {
+            "name": "protocol_fee_x",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_fee_y",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Position",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "_padding",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "fee_states",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "FeeState"
+                  }
+                },
+                100
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "RemainingAccountsScheme",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "groups",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "AccountGroup"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "x_to_y",
+            "type": "bool"
+          },
+          {
+            "name": "pre_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "post_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "amount_in",
+            "type": "u64"
+          },
+          {
+            "name": "amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "input_transfer_fee",
+            "type": "u64"
+          },
+          {
+            "name": "output_transfer_fee",
+            "type": "u64"
+          },
+          {
+            "name": "lp_fee",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapExactInParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount_in",
+            "type": "u64"
+          },
+          {
+            "name": "min_amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "x_to_y",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapExactOutParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "max_amount_in",
+            "type": "u64"
+          },
+          {
+            "name": "x_to_y",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "position",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "bps_removed",
+            "type": "u16"
+          },
+          {
+            "name": "amount_x",
+            "type": "u64"
+          },
+          {
+            "name": "amount_y",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_x",
+            "type": "u64"
+          },
+          {
+            "name": "transfer_fee_y",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lower_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "upper_bin_id",
+            "type": "i32"
+          },
+          {
+            "name": "bps_to_remove",
+            "type": "u16"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "BINS_PER_BIN_ARRAY",
+      "type": "i32",
+      "value": "100"
+    },
+    {
+      "name": "DYNAMIC_FEE_DIVISOR",
+      "docs": [
+        "Divisor for `dynamic_fee_control`."
+      ],
+      "type": "u128",
+      "value": "100000000000"
+    },
+    {
+      "name": "FEE_PRECISION",
+      "type": "u128",
+      "value": "1000000000"
+    },
+    {
+      "name": "MAX_BASIS_POINTS",
+      "type": "u32",
+      "value": "10000"
+    },
+    {
+      "name": "MAX_BIN_ARRAYS_PER_POSITION",
+      "type": "i32",
+      "value": "2"
+    },
+    {
+      "name": "MAX_BIN_ARRAYS_PER_TRAVERSAL",
+      "type": "i32",
+      "value": "6"
+    },
+    {
+      "name": "MAX_FEE_RATE",
+      "docs": [
+        "Hard ceiling on `base fee_rate + variable fee_rate` combined (10%). Must equal",
+        "`constraints.rs`' top `FEE_RATES` entry — enforced there via a compile-time assertion."
+      ],
+      "type": "u128",
+      "value": "100000000"
+    },
+    {
+      "name": "MAX_PROTOCOL_SHARE",
+      "docs": [
+        "Maximum protocol share of a swap fee, in basis points (25%)."
+      ],
+      "type": "u16",
+      "value": "2500"
+    },
+    {
+      "name": "ONE_BPS_FEE_RATE",
+      "type": "u32",
+      "value": "100000"
+    }
+  ]
+}

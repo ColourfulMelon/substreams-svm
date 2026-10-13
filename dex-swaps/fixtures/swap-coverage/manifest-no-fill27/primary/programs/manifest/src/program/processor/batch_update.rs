@@ -1,0 +1,445 @@
+use crate::validation::{io_to_program_error, AccountViewExt};
+use pinocchio::{
+    account::{AccountView, RefMut},
+    error::ProgramError,
+    ProgramResult,
+};
+
+use crate::{
+    program::get_trader_index_with_hint,
+    quantities::{BaseAtoms, PriceConversionError, QuoteAtomsPerBaseAtom, WrapperU64},
+    require,
+    state::{
+        utils::{get_now_slot, settle_global_gas_refunds, try_to_pay_all_global_gas_prepayment},
+        AddOrderToMarketArgs, AddOrderToMarketResult, MarketRefMut, OrderType, RestingOrder,
+        MARKET_BLOCK_SIZE,
+    },
+    validation::loaders::BatchUpdateContext,
+};
+use borsh::{BorshDeserialize, BorshSerialize};
+
+use hypertree::{get_helper, trace, DataIndex, RBNode};
+use solana_program::pubkey::Pubkey;
+
+use super::{expand_market_if_needed, shared::get_mut_dynamic_account};
+
+use crate::validation::loaders::GlobalTradeAccounts;
+#[cfg(feature = "certora")]
+use {
+    crate::certora::mocks_batch_update::{mock_cancel_order, mock_place_order},
+    early_panic::early_panic,
+    vectors::no_resizable_vec::NoResizableVec,
+};
+
+#[derive(Debug, BorshDeserialize, BorshSerialize, Clone)]
+pub struct CancelOrderParams {
+    order_sequence_number: u64,
+    order_index_hint: Option<DataIndex>,
+}
+
+impl CancelOrderParams {
+    pub fn new(order_sequence_number: u64) -> Self {
+        CancelOrderParams {
+            order_sequence_number,
+            order_index_hint: None,
+        }
+    }
+    pub fn new_with_hint(order_sequence_number: u64, order_index_hint: Option<DataIndex>) -> Self {
+        CancelOrderParams {
+            order_sequence_number,
+            order_index_hint,
+        }
+    }
+    pub fn order_sequence_number(&self) -> u64 {
+        self.order_sequence_number
+    }
+    pub fn order_index_hint(&self) -> Option<DataIndex> {
+        self.order_index_hint
+    }
+}
+
+#[derive(Debug, BorshDeserialize, BorshSerialize, Clone)]
+pub struct PlaceOrderParams {
+    base_atoms: u64,
+    price_mantissa: u32,
+    price_exponent: i8,
+    is_bid: bool,
+    last_valid_slot: u32,
+    order_type: OrderType,
+}
+
+impl PlaceOrderParams {
+    pub fn new(
+        base_atoms: u64,
+        price_mantissa: u32,
+        price_exponent: i8,
+        is_bid: bool,
+        order_type: OrderType,
+        last_valid_slot: u32,
+    ) -> Self {
+        PlaceOrderParams {
+            base_atoms,
+            price_mantissa,
+            price_exponent,
+            is_bid,
+            order_type,
+            last_valid_slot,
+        }
+    }
+    pub fn base_atoms(&self) -> u64 {
+        self.base_atoms
+    }
+
+    pub fn try_price(&self) -> Result<QuoteAtomsPerBaseAtom, PriceConversionError> {
+        if self.price_exponent > self.order_type().max_exponent() {
+            return Err(PriceConversionError(0x3));
+        }
+        QuoteAtomsPerBaseAtom::try_from_mantissa_and_exponent(
+            self.price_mantissa,
+            self.price_exponent,
+        )
+    }
+    pub fn is_bid(&self) -> bool {
+        self.is_bid
+    }
+    pub fn last_valid_slot(&self) -> u32 {
+        self.last_valid_slot
+    }
+    pub fn order_type(&self) -> OrderType {
+        self.order_type
+    }
+}
+
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct BatchUpdateParams {
+    /// Optional hint for what index the trader's ClaimedSeat is at.
+    pub trader_index_hint: Option<DataIndex>,
+    #[cfg(not(feature = "certora"))]
+    pub cancels: Vec<CancelOrderParams>,
+    #[cfg(feature = "certora")]
+    pub cancels: NoResizableVec<CancelOrderParams>,
+    #[cfg(not(feature = "certora"))]
+    pub orders: Vec<PlaceOrderParams>,
+    #[cfg(feature = "certora")]
+    pub orders: NoResizableVec<PlaceOrderParams>,
+}
+
+impl BatchUpdateParams {
+    pub fn new(
+        trader_index_hint: Option<DataIndex>,
+        #[cfg(not(feature = "certora"))] cancels: Vec<CancelOrderParams>,
+        #[cfg(feature = "certora")] cancels: NoResizableVec<CancelOrderParams>,
+        #[cfg(not(feature = "certora"))] orders: Vec<PlaceOrderParams>,
+        #[cfg(feature = "certora")] orders: NoResizableVec<PlaceOrderParams>,
+    ) -> Self {
+        BatchUpdateParams {
+            trader_index_hint,
+            cancels,
+            orders,
+        }
+    }
+}
+
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct BatchUpdateReturn {
+    /// Vector of tuples of (order_sequence_number, DataIndex)
+    pub orders: Vec<(u64, DataIndex)>,
+}
+
+#[repr(u8)]
+#[derive(Debug, Copy, Clone, PartialEq, Default)]
+pub enum MarketDataTreeNodeType {
+    // 0 is reserved because zeroed byte arrays should be empty.
+    Empty = 0,
+    #[default]
+    ClaimedSeat = 1,
+    RestingOrder = 2,
+}
+
+pub(crate) fn process_batch_update(
+    program_id: &Pubkey,
+    accounts: &[AccountView],
+    data: &[u8],
+) -> ProgramResult {
+    // Follow-up: a validated borrowed decoder can avoid the input Vecs and
+    // count global orders during validation. Deferred to keep this change small.
+    // On the pinned 4,158-transaction sBPF v3 benchmark (platform tools v1.57),
+    // the decoder plus its integration reduced total CU from 102,280,364 to
+    // 99,508,959: 2,771,405 CU (2.71%). Prototype and compatibility tests are
+    // in commit e8b6e022, batch_update_view.rs.
+    let params: BatchUpdateParams =
+        BatchUpdateParams::try_from_slice(data).map_err(io_to_program_error)?;
+    process_batch_update_core(program_id, accounts, params)
+}
+
+#[cfg(not(feature = "certora"))]
+fn batch_cancel_order(
+    dynamic_account: &mut MarketRefMut,
+    trader_index: DataIndex,
+    order_sequence_number: u64,
+    global_trade_accounts_opts: &[Option<GlobalTradeAccounts>; 2],
+) -> ProgramResult {
+    dynamic_account.cancel_order(
+        trader_index,
+        order_sequence_number,
+        &global_trade_accounts_opts,
+    )
+}
+
+#[cfg(feature = "certora")]
+fn batch_cancel_order(
+    dynamic_account: &mut MarketRefMut,
+    trader_index: DataIndex,
+    order_sequence_number: u64,
+    global_trade_accounts_opts: &[Option<GlobalTradeAccounts>; 2],
+) -> ProgramResult {
+    mock_cancel_order(
+        &dynamic_account,
+        trader_index,
+        order_sequence_number,
+        &global_trade_accounts_opts,
+    )
+}
+
+#[cfg(not(feature = "certora"))]
+fn batch_place_order(
+    dynamic_account: &mut MarketRefMut,
+    args: AddOrderToMarketArgs,
+) -> Result<AddOrderToMarketResult, ProgramError> {
+    dynamic_account.place_order(args)
+}
+
+#[cfg(feature = "certora")]
+fn batch_place_order(
+    dynamic_account: &mut MarketRefMut,
+    args: AddOrderToMarketArgs,
+) -> Result<AddOrderToMarketResult, ProgramError> {
+    mock_place_order(dynamic_account, args)
+}
+
+#[cfg_attr(all(feature = "certora", not(feature = "certora-test")), early_panic)]
+/// Note on logging: a batch update emits no event for the orders it places or
+/// cancels. Matching still logs what it needs to, a `FillLog` per fill and a
+/// `GlobalCleanupLog` when a global maker cannot cover its order; this is a
+/// statement about placement and cancellation events only.
+///
+/// Each event is a `sol_log_data` syscall the trader pays for, and it told the
+/// sender what it had just asked for. Measured on SBPF v2 against the build
+/// that still emitted them, dropping them is worth 450 CU on a batch update
+/// that places one order, 2,218 on one that places five, and 373 on one that
+/// cancels one, so roughly 440 CU per order.
+///
+/// What reports the orders that rested instead. They are in this instruction's
+/// return data, which the wrapper reads straight after the call, and the
+/// runtime also writes that return data into the transaction log as a
+/// `Program return:` line when this instruction exits. The structured
+/// `meta.returnData` is not the place to look for it, because the runtime
+/// clears that slot at the start of every invocation and a wrapper batch
+/// update ends with a fee transfer, but the log line is already written by
+/// then and stays. So an off chain consumer reads the `Program return:` line,
+/// subject to the same log truncation as everything else in the log, and
+/// `tests/cases/logs.rs` pins that. Fills, which a sender cannot predict, are
+/// still logged as events.
+///
+/// They also crowded out the fills. The transaction log is a fixed byte
+/// budget for the whole transaction and the runtime drops whatever does not
+/// fit, so every order event was displacing a fill that a client cannot
+/// reconstruct. See `tests/cases/logs.rs`, which pins both halves of this:
+/// that placing and cancelling log nothing, and that a trade filling enough
+/// orders still loses the tail of its own fills.
+///
+/// `PlaceOrderLog` and `CancelOrderLog` still exist in `logs.rs` for clients
+/// decoding historical transactions; nothing emits them.
+pub(crate) fn process_batch_update_core(
+    _program_id: &Pubkey,
+    accounts: &[AccountView],
+    params: BatchUpdateParams,
+) -> ProgramResult {
+    let batch_update_context: BatchUpdateContext = BatchUpdateContext::load(accounts)?;
+
+    let BatchUpdateContext {
+        market,
+        payer,
+        global_trade_accounts_opts,
+        ..
+    } = batch_update_context;
+
+    let BatchUpdateParams {
+        trader_index_hint,
+        cancels,
+        orders,
+    } = params;
+
+    // Only placements need the clock for expiration checks.
+    let current_slot: Option<u32> = if orders.is_empty() {
+        None
+    } else {
+        Some(get_now_slot())
+    };
+
+    trace!(
+        "batch_update trader_index_hint:{trader_index_hint:?} num_orders:{}",
+        orders.len()
+    );
+
+    let mut market_data: RefMut<[u8]> = market.try_borrow_mut()?;
+
+    let mut dynamic_account: MarketRefMut = get_mut_dynamic_account(&mut market_data);
+    let trader_index: DataIndex =
+        get_trader_index_with_hint(trader_index_hint, &dynamic_account, &payer)?;
+
+    for cancel_order_params in cancels {
+        // Hinted is preferred because that is O(1) to find and O(log n) to
+        // remove. Without the hint, we lookup by order_sequence_number and
+        // that is O(n) lookup and O(log n) delete.
+        match cancel_order_params.order_index_hint() {
+            None => {
+                // Cancels must succeed otherwise we fail the tx.
+                batch_cancel_order(
+                    &mut dynamic_account,
+                    trader_index,
+                    cancel_order_params.order_sequence_number(),
+                    &global_trade_accounts_opts,
+                )?;
+            }
+            Some(hinted_cancel_index) => {
+                // Simple sanity check on the hint given. Make sure that it
+                // aligns with block boundaries. We do a check that it is an
+                // order owned by the payer inside the handler.
+                require!(
+                    hinted_cancel_index % (MARKET_BLOCK_SIZE as DataIndex) == 0,
+                    crate::program::ManifestError::WrongIndexHintParams,
+                    "Invalid cancel hint index {}",
+                    hinted_cancel_index,
+                )?;
+                require!(
+                    get_helper::<RBNode<RestingOrder>>(
+                        &dynamic_account.dynamic,
+                        hinted_cancel_index,
+                    )
+                    .get_payload_type()
+                        == MarketDataTreeNodeType::RestingOrder as u8,
+                    crate::program::ManifestError::WrongIndexHintParams,
+                    "Invalid cancel hint index {}",
+                    hinted_cancel_index,
+                )?;
+                let order: &RestingOrder = dynamic_account.get_order_by_index(hinted_cancel_index);
+                require!(
+                    trader_index == order.get_trader_index(),
+                    crate::program::ManifestError::WrongIndexHintParams,
+                    "Invalid cancel hint index {}",
+                    hinted_cancel_index,
+                )?;
+                require!(
+                    cancel_order_params.order_sequence_number() == order.get_sequence_number(),
+                    crate::program::ManifestError::WrongIndexHintParams,
+                    "Invalid cancel hint sequence number index {}",
+                    hinted_cancel_index,
+                )?;
+                dynamic_account
+                    .cancel_order_by_index(hinted_cancel_index, &global_trade_accounts_opts)?;
+            }
+        };
+    }
+
+    if orders.is_empty() {
+        drop(market_data);
+        // Cancellations have already run and there can be no later CPI.
+        // Settle global refunds and return the Borsh encoding of an empty vec.
+        settle_global_gas_refunds(&global_trade_accounts_opts)?;
+        #[cfg(not(feature = "certora"))]
+        solana_program::program::set_return_data(&0u32.to_le_bytes());
+        return Ok(());
+    }
+
+    if orders
+        .iter()
+        .any(|order| order.order_type() == OrderType::Global)
+    {
+        // A global prepayment can invoke another program. Local batches keep
+        // the market borrow and the fixed/dynamic split across both loops.
+        drop(market_data);
+        try_to_pay_all_global_gas_prepayment(&orders, &global_trade_accounts_opts)?;
+        market_data = market.try_borrow_mut()?;
+        dynamic_account = get_mut_dynamic_account(&mut market_data);
+    }
+
+    // Encode the Borsh vector directly: a u32 count followed by (u64, u32)
+    // pairs. This avoids a second allocation and serialization pass over
+    // the placement results while preserving BatchUpdateReturn's wire format.
+    #[cfg(not(feature = "certora"))]
+    let mut result = vec![0u8; 4 + orders.len() * 12];
+    // The input vector has a Borsh u32 length and is never extended here.
+    #[cfg(not(feature = "certora"))]
+    result[..4].copy_from_slice(&(orders.len() as u32).to_le_bytes());
+    // One fixed-size region per result avoids checking Vec capacity for
+    // every sequence/index write. The return format stays Borsh-compatible.
+    #[cfg(not(feature = "certora"))]
+    let mut result_records = result[4..].chunks_exact_mut(12);
+    #[cfg(feature = "certora")]
+    let mut result = NoResizableVec::<(u64, DataIndex)>::new(10);
+    let market_pubkey: Pubkey = *market.pubkey();
+    for place_order_params in orders {
+        let need_expand: bool = {
+            let base_atoms: BaseAtoms = BaseAtoms::new(place_order_params.base_atoms());
+            let price: QuoteAtomsPerBaseAtom = place_order_params.try_price()?;
+            let order_type: OrderType = place_order_params.order_type();
+            require!(
+                order_type.is_valid(),
+                ProgramError::InvalidInstructionData,
+                "Invalid order type {}",
+                order_type.as_u8(),
+            )?;
+            let last_valid_slot: u32 = place_order_params.last_valid_slot();
+
+            let add_order_to_market_result: AddOrderToMarketResult = batch_place_order(
+                &mut dynamic_account,
+                AddOrderToMarketArgs {
+                    market: &market_pubkey,
+                    trader_index,
+                    num_base_atoms: base_atoms,
+                    price,
+                    is_bid: place_order_params.is_bid(),
+                    last_valid_slot,
+                    order_type,
+                    global_trade_accounts_opts: &global_trade_accounts_opts,
+                    current_slot,
+                },
+            )?;
+
+            let AddOrderToMarketResult {
+                order_index,
+                order_sequence_number,
+                ..
+            } = add_order_to_market_result;
+
+            #[cfg(not(feature = "certora"))]
+            {
+                let record = result_records.next().unwrap();
+                record[..8].copy_from_slice(&order_sequence_number.to_le_bytes());
+                record[8..].copy_from_slice(&order_index.to_le_bytes());
+            }
+            #[cfg(feature = "certora")]
+            result.push((order_sequence_number, order_index));
+            !dynamic_account.fixed.has_free_block()
+        };
+        if need_expand {
+            drop(market_data);
+            expand_market_if_needed(&payer, &market)?;
+            market_data = market.try_borrow_mut()?;
+            dynamic_account = get_mut_dynamic_account(&mut market_data);
+        }
+    }
+    drop(market_data);
+
+    // Pay out gas prepayment refunds for cancelled global orders. This must
+    // happen after the last CPI of this instruction (gas prepayments and
+    // market expansions above) because it moves lamports directly.
+    settle_global_gas_refunds(&global_trade_accounts_opts)?;
+
+    // Formal verification does not cover return values.
+    #[cfg(not(feature = "certora"))]
+    solana_program::program::set_return_data(&result);
+
+    Ok(())
+}

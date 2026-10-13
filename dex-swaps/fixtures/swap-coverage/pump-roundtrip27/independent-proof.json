@@ -1,0 +1,1879 @@
+[
+  {
+    "signature": "4M5YBwkxwD3myzsmsC5XsDPuQBHCBoiwXcWgxMN8knCDCmyLb6sjSyAiKKGNb7N3zbBJCBDkip2GjS7Db4KYMV5d",
+    "slot": 456214126,
+    "rawPbSha256": "7ba8f7c2a30f4b834102d93843dc12e67b85ab380f658770a4b3458ab773bc08",
+    "rpcGzipSha256": "55d8cc24afd80dcbadb8ac158dc852634029e53475b4a00d8a7cdab5b3ecafa3",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 56,
+    "originalRuntimeLogCount": 56,
+    "legs": [
+      {
+        "signature": "4M5YBwkxwD3myzsmsC5XsDPuQBHCBoiwXcWgxMN8knCDCmyLb6sjSyAiKKGNb7N3zbBJCBDkip2GjS7Db4KYMV5d",
+        "slot": 456214126,
+        "protocol": 9,
+        "source_index": 10,
+        "first_transfer_index": 11,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "462316118690",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 6,
+          "preSol": "39781520726",
+          "preTokens": "809169670365018",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-740545",
+        "actual": "-740545"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "expected": "1513840",
+        "actual": "1513840"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "-1346200",
+        "actual": "-1346200"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "5HN6MeHbzkTH73717eRGbFvHGyrs4T9sK9WM4j8dEYWf1newUouJD2SHYgSmdbEDVpTJeLs2tgEvpRVrNyJoW8oL",
+    "slot": 456214136,
+    "rawPbSha256": "55b85c1657f1ca5ea84e8786c997c1c92ed17824014abca41f0c058d16fd9d49",
+    "rpcGzipSha256": "0fa1e1710c6e4bd51c25f23f4575d5e365fe03cd4b9fdba0bc12d04fd5e4d0de",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 42,
+    "originalRuntimeLogCount": 42,
+    "legs": [
+      {
+        "signature": "5HN6MeHbzkTH73717eRGbFvHGyrs4T9sK9WM4j8dEYWf1newUouJD2SHYgSmdbEDVpTJeLs2tgEvpRVrNyJoW8oL",
+        "slot": 456214136,
+        "protocol": 9,
+        "source_index": 7,
+        "first_transfer_index": 8,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "518549594817",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 2,
+          "preSol": "37563242653",
+          "preTokens": "856954771258438",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "2cBtAZdanp8D8s9nVq3SqfNCHUXMBErfEFFtcyiVuiksu838g8AEbG3evr1xrZF5HhGLnxG2WKi7k8CqTqyShDxJ",
+    "slot": 456214143,
+    "rawPbSha256": "cce7212e3e6ee75c1ec1c8ecbe927c5c91eb227b2921fcc2001a06484cd67d23",
+    "rpcGzipSha256": "c3c009f754da1acd7bc1427286af6d002a5ce7cdb17465a5452a2ea5b4cf6013",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 42,
+    "originalRuntimeLogCount": 42,
+    "legs": [
+      {
+        "signature": "2cBtAZdanp8D8s9nVq3SqfNCHUXMBErfEFFtcyiVuiksu838g8AEbG3evr1xrZF5HhGLnxG2WKi7k8CqTqyShDxJ",
+        "slot": 456214143,
+        "protocol": 9,
+        "source_index": 7,
+        "first_transfer_index": 8,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "474157405465",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22554010",
+        "independentCP": {
+          "precedingBuySource": 2,
+          "preSol": "39388415835",
+          "preTokens": "817245358503182",
+          "gross": "22839505",
+          "protocol": "216976",
+          "creator": "68519",
+          "buyback": "108488"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-575991",
+        "actual": "-575991"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "354015",
+        "actual": "354015"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "216976",
+        "actual": "216976"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "NNuiNwRjTUK81N4S9mgrmsRfKdSJmPLUx7s2nCgQFedHLhvyoZ3hYyYy5oaKhpJPKhTKVNtWrsyH9c8FBJV5WLm",
+    "slot": 456214153,
+    "rawPbSha256": "bfcc04d0012f040f00545be1169a640a8becc7f6fc8a1874ac6659016f4b29b4",
+    "rpcGzipSha256": "87ab006500042a23f4e07c71add2902835182e6d102580229196364a7d16494a",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 42,
+    "originalRuntimeLogCount": 42,
+    "legs": [
+      {
+        "signature": "NNuiNwRjTUK81N4S9mgrmsRfKdSJmPLUx7s2nCgQFedHLhvyoZ3hYyYy5oaKhpJPKhTKVNtWrsyH9c8FBJV5WLm",
+        "slot": 456214153,
+        "protocol": 9,
+        "source_index": 7,
+        "first_transfer_index": 8,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "432842142450",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22124386",
+        "independentCP": {
+          "precedingBuySource": 2,
+          "preSol": "40830245073",
+          "preTokens": "788386157621588",
+          "gross": "22404443",
+          "protocol": "212843",
+          "creator": "67214",
+          "buyback": "106421"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-565115",
+        "actual": "-565115"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "347273",
+        "actual": "347273"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "212842",
+        "actual": "212842"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "xmKieYA73vSkLCzGvZvUgPcPK7GnoReidBXUgawy5BkseN4rW3sDRtLh6w8BwEsxTQuXtkHcWqH7gtHUr2chfyt",
+    "slot": 456214162,
+    "rawPbSha256": "cf3021f4a1702dc937ff9ec8d2c592a9cc76fb21477438ed07cc899ee36f6d3e",
+    "rpcGzipSha256": "a6865e11ef65c1c65251083018eefa08bece0f8a9fcb7049e5a54768cb58c3b3",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "xmKieYA73vSkLCzGvZvUgPcPK7GnoReidBXUgawy5BkseN4rW3sDRtLh6w8BwEsxTQuXtkHcWqH7gtHUr2chfyt",
+        "slot": 456214162,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "424262012927",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "41526813784",
+          "preTokens": "775161807449741",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "4UqMkqyo3wAT8bVCNFVQr3beLLaKhwMGKxRTDhoZTgY8pssy9j6wQKNPLgY3wjXxGBDyxw97wW7KS6qjkbDSovwN",
+    "slot": 456214172,
+    "rawPbSha256": "d7bc80a492a2de36f2b196305db4bcdbb93eefe07803512708d4ea4fbe5abc18",
+    "rpcGzipSha256": "8a5c74dc5dd4e25fff7905db01a0c5a751dc4152919b9f5d1ca6a4a0d3b755bf",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "4UqMkqyo3wAT8bVCNFVQr3beLLaKhwMGKxRTDhoZTgY8pssy9j6wQKNPLgY3wjXxGBDyxw97wW7KS6qjkbDSovwN",
+        "slot": 456214172,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "486251683628",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "38790333181",
+          "preTokens": "829845927931755",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "4Bm75f51EZzFJ5PpXV94KNd815UEUfotgaymR5HLufFKhKgEHqVYhFLsWXyWzH65mCnhTgNipgRnGGFzBHK3kNP4",
+    "slot": 456214190,
+    "rawPbSha256": "270f95d29088b7137c42e894b5e4534a19343bf2eafbd71b342c8a89d5df8312",
+    "rpcGzipSha256": "6a2c97fa7a6aea9117cb035cca74a52926665458f4ff6b637178870bd5e55823",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "4Bm75f51EZzFJ5PpXV94KNd815UEUfotgaymR5HLufFKhKgEHqVYhFLsWXyWzH65mCnhTgNipgRnGGFzBHK3kNP4",
+        "slot": 456214190,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "373602890468",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22177453",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44000086179",
+          "preTokens": "731589477321328",
+          "gross": "22458181",
+          "protocol": "213353",
+          "creator": "67375",
+          "buyback": "106676"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-566457",
+        "actual": "-566457"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "348105",
+        "actual": "348105"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "213352",
+        "actual": "213352"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "3cajBHAHrYCVu47thL9y7srBTpE9fvL3fs8Ub14Dk4MT29vQkYJHn7ZEfHppL9oL85Rb5tWJE8jcncBVcniCHi8a",
+    "slot": 456214214,
+    "rawPbSha256": "d36e064d8e4ef224066090ceb9cbc37dbde0072dab49773ef8d95a9589ef4d7e",
+    "rpcGzipSha256": "c58e35fd69c180f08fd46ba62521e4659d132365a2cda1e3e0e9c27b64575be7",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "3cajBHAHrYCVu47thL9y7srBTpE9fvL3fs8Ub14Dk4MT29vQkYJHn7ZEfHppL9oL85Rb5tWJE8jcncBVcniCHi8a",
+        "slot": 456214214,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "361358156505",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22772932",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "45335976879",
+          "preTokens": "710032126209577",
+          "gross": "23061198",
+          "protocol": "219082",
+          "creator": "69184",
+          "buyback": "109541"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-581533",
+        "actual": "-581533"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "357451",
+        "actual": "357451"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "219082",
+        "actual": "219082"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "388LfMVZGDvodvMeYykv3o9c88AdvU96CnVGAspfCS4tmJbJFfTf7rcYEbhj9QDJNCtuF3PSuBiVtQzumRbXDJCn",
+    "slot": 456214215,
+    "rawPbSha256": "3563c99839aabb8a123593d6bf3030fc260064da445188370a7441d1acb5a486",
+    "rpcGzipSha256": "eb77b1e68e297e1346faf88bcd235ab1137b22b2ad5846e4c725f17f90801fd8",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "388LfMVZGDvodvMeYykv3o9c88AdvU96CnVGAspfCS4tmJbJFfTf7rcYEbhj9QDJNCtuF3PSuBiVtQzumRbXDJCn",
+        "slot": 456214215,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "363773101689",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22925200",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "45336131076",
+          "preTokens": "710029711264393",
+          "gross": "23215394",
+          "protocol": "220547",
+          "creator": "69647",
+          "buyback": "110273"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-585389",
+        "actual": "-585389"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "359843",
+        "actual": "359843"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "220546",
+        "actual": "220546"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "4wD3mGLWdgKiSEWRVpjyBtbtaABidFwHvhYWtV7FZjsx8fMGg9juU6RFfnkkDGayzSa6v2yRTVryKWqZXDSQnuRm",
+    "slot": 456214224,
+    "rawPbSha256": "0c70673afc96a19d428d55886342acdf8e20d8e4b5ae3101b49255391c867b7a",
+    "rpcGzipSha256": "9dda070ca4918764d0bf63b610b52d4668182cc27321cff8f148392ea406455a",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 36,
+    "originalRuntimeLogCount": 36,
+    "legs": [
+      {
+        "signature": "4wD3mGLWdgKiSEWRVpjyBtbtaABidFwHvhYWtV7FZjsx8fMGg9juU6RFfnkkDGayzSa6v2yRTVryKWqZXDSQnuRm",
+        "slot": 456214224,
+        "protocol": 9,
+        "source_index": 5,
+        "first_transfer_index": 6,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "389827924043",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "23535313",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44374362214",
+          "preTokens": "725418878307896",
+          "gross": "23833229",
+          "protocol": "226416",
+          "creator": "71500",
+          "buyback": "113208"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "745367",
+        "actual": "745367"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "369417",
+        "actual": "369417"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "226416",
+        "actual": "226416"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "-1346200",
+        "actual": "-1346200"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "2oqft3HCX1wcP8ZaRFbDCKsWVuBxySpNEerYyAbWxXhBf4Anv1V9WyvDvbvShFAWZ1isgzJfKkJ13xN7wfxJPSva",
+    "slot": 456214234,
+    "rawPbSha256": "2e888893eca0db4fa4650015c5b07a658dbc261a3601f17bcf677d2205c08f34",
+    "rpcGzipSha256": "b07681ceeaaa9d60f769a3b68784f3d2f6f86cb6aae5d323ce8c3c67b8505145",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "2oqft3HCX1wcP8ZaRFbDCKsWVuBxySpNEerYyAbWxXhBf4Anv1V9WyvDvbvShFAWZ1isgzJfKkJ13xN7wfxJPSva",
+        "slot": 456214234,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "321972628928",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22270954",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "47495779569",
+          "preTokens": "677744430373186",
+          "gross": "22552866",
+          "protocol": "214253",
+          "creator": "67659",
+          "buyback": "107126"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-568825",
+        "actual": "-568825"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "349573",
+        "actual": "349573"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "214252",
+        "actual": "214252"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "5pCH7WBYGo15yi4pvwE8LT2NSL6eMqBjTR4AYQUHp3Pd16EUqmgaAyFiTxNEHuRQmi4ES3aN985zUSPr8ZiPFEGY",
+    "slot": 456214245,
+    "rawPbSha256": "0cd49cd1c983b315c10d40ff602d3b4869c00b1b3f4cfe0ac96637c490993043",
+    "rpcGzipSha256": "29503ef2fe9c5bea248050a5ef3efbf7dd263210a97cb0b395fc2547f808280f",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "5pCH7WBYGo15yi4pvwE8LT2NSL6eMqBjTR4AYQUHp3Pd16EUqmgaAyFiTxNEHuRQmi4ES3aN985zUSPr8ZiPFEGY",
+        "slot": 456214245,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "329080713620",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "23393206",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "48149575653",
+          "preTokens": "668541718912562",
+          "gross": "23689323",
+          "protocol": "225049",
+          "creator": "71068",
+          "buyback": "112524"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-597235",
+        "actual": "-597235"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "367187",
+        "actual": "367187"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "225048",
+        "actual": "225048"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "2wuhBqiJy5mfs261iFshLoyDsW9Vj2h3BkFbiYf6RhiQyop9ns35sp49Yd9in8idNusC4uzNwX4KXs2kKKT6MP4D",
+    "slot": 456214254,
+    "rawPbSha256": "7160042cf4017ef9e1547e7a1013dbb1cdf808229572cdfdb000a6b7235393f5",
+    "rpcGzipSha256": "e3fe24ba2546f8865bf547e255314f57dd90534609974ad9897559ba553e94ca",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "2wuhBqiJy5mfs261iFshLoyDsW9Vj2h3BkFbiYf6RhiQyop9ns35sp49Yd9in8idNusC4uzNwX4KXs2kKKT6MP4D",
+        "slot": 456214254,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "331621149206",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "46968944919",
+          "preTokens": "685346458802627",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "52eadmyc8acXU4vWBWfiJQ3ATKZtipWeYyFFoJtS6GA842CNyqncRaqfBWnbrds1BLE2J3zHQ4z2MdnSuGhn9Mwk",
+    "slot": 456214263,
+    "rawPbSha256": "454736aa5832d61741a8e9c0da6901a13024cc6eb8cb9746619faf4b03a1cb5e",
+    "rpcGzipSha256": "e1c563b97dd73ea3d65067fb948a4ee77cf96e6338abf9df850d6da81a8d1359",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "52eadmyc8acXU4vWBWfiJQ3ATKZtipWeYyFFoJtS6GA842CNyqncRaqfBWnbrds1BLE2J3zHQ4z2MdnSuGhn9Mwk",
+        "slot": 456214263,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "347945675518",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "45854160573",
+          "preTokens": "702008273077194",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "cqthh8cvUNDLLh7otBsRUjV2Bpea6fpTRoX9udHZZwKvoQPcgYWCWnNEkeoGzCDiSeM1BYqForbuoYGidw7JiE7",
+    "slot": 456214274,
+    "rawPbSha256": "e5622de7effbf4a6ce0143416d45b1a1860eb4e4c8a56d7c4682108f594a9683",
+    "rpcGzipSha256": "ae56fd170d08d0c8f9d900442feba396c0836037b5b2b8a6261007e43a9fa720",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "cqthh8cvUNDLLh7otBsRUjV2Bpea6fpTRoX9udHZZwKvoQPcgYWCWnNEkeoGzCDiSeM1BYqForbuoYGidw7JiE7",
+        "slot": 456214274,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "338933932629",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "21010461",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44962970200",
+          "preTokens": "715922456571905",
+          "gross": "21276417",
+          "protocol": "202126",
+          "creator": "63830",
+          "buyback": "101063"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-536913",
+        "actual": "-536913"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "329787",
+        "actual": "329787"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "202126",
+        "actual": "202126"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "34tvjhM8iY4hpzpHgHtJFMTB19NeqWNjjh3Gc4TKgtrvYuUoF7byk68hgvoZvApiEPPsXry7fEd9WF9LE8SJ4EHi",
+    "slot": 456214274,
+    "rawPbSha256": "480ecd9c827d99969a3bef301b7378aecde6c5f929fe68279113d9e8a1df9d31",
+    "rpcGzipSha256": "c8e53ffe7f559c595ca6aa4931af1bc5b872626017f2973b7c6987ebffc42509",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "34tvjhM8iY4hpzpHgHtJFMTB19NeqWNjjh3Gc4TKgtrvYuUoF7byk68hgvoZvApiEPPsXry7fEd9WF9LE8SJ4EHi",
+        "slot": 456214274,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "365012632221",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22627900",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44964608114",
+          "preTokens": "715896377872313",
+          "gross": "22914330",
+          "protocol": "217687",
+          "creator": "68743",
+          "buyback": "108843"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-577861",
+        "actual": "-577861"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "355175",
+        "actual": "355175"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "217686",
+        "actual": "217686"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "3MGGUaiLrSpdWpZYuX6jNGPFQwu85aQjApJPnnXHzEr4AybUUx8u2qQ2BDWB2rmmBz8ZxF87Xfj6MQvrD6f64tA3",
+    "slot": 456214282,
+    "rawPbSha256": "be1fd6759472ec4af2388c0b5611e2892072bfabc84a9946c593698b6369a4b0",
+    "rpcGzipSha256": "bc60ce0e223935f7d5719d06c0f04b4f4f5cafdc48cce313e99fb5b14413f374",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 36,
+    "originalRuntimeLogCount": 36,
+    "legs": [
+      {
+        "signature": "3MGGUaiLrSpdWpZYuX6jNGPFQwu85aQjApJPnnXHzEr4AybUUx8u2qQ2BDWB2rmmBz8ZxF87Xfj6MQvrD6f64tA3",
+        "slot": 456214282,
+        "protocol": 9,
+        "source_index": 5,
+        "first_transfer_index": 6,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "359940844024",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22920721",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "45572321595",
+          "preTokens": "706349796462529",
+          "gross": "23210858",
+          "protocol": "220504",
+          "creator": "69633",
+          "buyback": "110252"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "760925",
+        "actual": "760925"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "359771",
+        "actual": "359771"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "220504",
+        "actual": "220504"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "-1346200",
+        "actual": "-1346200"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "2nEfhNa93teart9xNkV1B3aYzN1F9ubDi8jjL6wDZ9VNDAFHwhc7zisfptwanUsdzcZ3Xcv4uiBx98a6JxK7X839",
+    "slot": 456214292,
+    "rawPbSha256": "592c5a41a393608b2bd3dca234203808f5bd6c2de1a99d745b70255b76feac8c",
+    "rpcGzipSha256": "a35ac915ed706162521e7058804a7e0b3d511902dbad4869871ab75ffb337d3a",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "2nEfhNa93teart9xNkV1B3aYzN1F9ubDi8jjL6wDZ9VNDAFHwhc7zisfptwanUsdzcZ3Xcv4uiBx98a6JxK7X839",
+        "slot": 456214292,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "360308123686",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22451633",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "45080470280",
+          "preTokens": "714056439209461",
+          "gross": "22735832",
+          "protocol": "215991",
+          "creator": "68208",
+          "buyback": "107995"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-573399",
+        "actual": "-573399"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352409",
+        "actual": "352409"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215990",
+        "actual": "215990"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "kPaH3T13p4FPLtxd8imS9XZUeMXevQpmkFx2XjpZv2ppGGiSH6f2CavKTvH4owEure7Kx2qbV3TbXo45W2cRSfR",
+    "slot": 456214301,
+    "rawPbSha256": "42233d9ae00487371b83e5d24e857e5853f0af988649b8542d2ad46323d1c634",
+    "rpcGzipSha256": "40cd025b0823626c6a169a59eae785d33519f071a9249555b9f4c970eb1c3aab",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 36,
+    "originalRuntimeLogCount": 36,
+    "legs": [
+      {
+        "signature": "kPaH3T13p4FPLtxd8imS9XZUeMXevQpmkFx2XjpZv2ppGGiSH6f2CavKTvH4owEure7Kx2qbV3TbXo45W2cRSfR",
+        "slot": 456214301,
+        "protocol": 9,
+        "source_index": 5,
+        "first_transfer_index": 6,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "378654306416",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "21510501",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "43043312634",
+          "preTokens": "747851364594801",
+          "gross": "21782787",
+          "protocol": "206937",
+          "creator": "65349",
+          "buyback": "103468"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "796627",
+        "actual": "796627"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "337637",
+        "actual": "337637"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "206936",
+        "actual": "206936"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "-1346200",
+        "actual": "-1346200"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "4XpN7kZYW4EKnwNqikMgEALUfpzR4L1NXpQ6ZNaUsAp6zBNbPqX6FopbMmd7s6b1ke7JAFCr2teHEmy1YkuJoPTJ",
+    "slot": 456214310,
+    "rawPbSha256": "91738962e85d397f6ec5d7778342e2a4f47a56c8630c8d4f0b7715c03dc11baf",
+    "rpcGzipSha256": "956f4bdd04fc0c8b9aa945d0a4416fdb2ff796527d8e6809f3902614396e304d",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "4XpN7kZYW4EKnwNqikMgEALUfpzR4L1NXpQ6ZNaUsAp6zBNbPqX6FopbMmd7s6b1ke7JAFCr2teHEmy1YkuJoPTJ",
+        "slot": 456214310,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "391404089885",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22973733",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "43753273467",
+          "preTokens": "735716382802824",
+          "gross": "23264541",
+          "protocol": "221014",
+          "creator": "69794",
+          "buyback": "110507"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-586617",
+        "actual": "-586617"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "360603",
+        "actual": "360603"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "221014",
+        "actual": "221014"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "4ApJbiWXTexV74NojNqSURyerKmETh8qE224HPXLXb1tV5EY2pVffXrnidXhtgLxdva6WBoxPehU2E2PLjzSSZsb",
+    "slot": 456214320,
+    "rawPbSha256": "cf8705031786479f877382dd21820538b6e9a0649bbc67fda478841384a2cc41",
+    "rpcGzipSha256": "49ba5a08eb631fb13bdbec4b808db1bfb669cc52de7e04d24b9705db7f7e3246",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "4ApJbiWXTexV74NojNqSURyerKmETh8qE224HPXLXb1tV5EY2pVffXrnidXhtgLxdva6WBoxPehU2E2PLjzSSZsb",
+        "slot": 456214320,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "370189708776",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432145",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44455568418",
+          "preTokens": "724093769080374",
+          "gross": "22716097",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "65ym15E5Q2UPTmLaVDrxhj2WFT6UsWQM1P6veeN4FpawrrAF52NPn7R1g7iwkn1ugt7TuYeXUCMtPQC3374eJEDh",
+    "slot": 456214328,
+    "rawPbSha256": "0e05fcfd81d73ffbc1d12fbe505f4391b790223f4aab799b828769d81ced56c0",
+    "rpcGzipSha256": "b56cf8baa42215859c45599498a2862be3d21bc89570d22b3749a949c36b3646",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "65ym15E5Q2UPTmLaVDrxhj2WFT6UsWQM1P6veeN4FpawrrAF52NPn7R1g7iwkn1ugt7TuYeXUCMtPQC3374eJEDh",
+        "slot": 456214328,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "373361722138",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22248287",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44084543542",
+          "preTokens": "730187895980261",
+          "gross": "22529912",
+          "protocol": "214035",
+          "creator": "67590",
+          "buyback": "107017"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-568251",
+        "actual": "-568251"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "349217",
+        "actual": "349217"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "214034",
+        "actual": "214034"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "3ZT8Zh58JQbevj4XfQ1SdV9q42FSvsyNB6TtmABKzsoAuTKdLeoFvZTN7f2zgQ88A7hrnnhGpAM3iH5YDfnHkaA2",
+    "slot": 456214338,
+    "rawPbSha256": "74adc58b76d880f153cf3ef36ee2a4c0cb6c6354e01f753d622d49924b0ff183",
+    "rpcGzipSha256": "d8c6840bed8e4e13963de01c23c52f0d4514163a640de78df9bfb5e8de903046",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "3ZT8Zh58JQbevj4XfQ1SdV9q42FSvsyNB6TtmABKzsoAuTKdLeoFvZTN7f2zgQ88A7hrnnhGpAM3iH5YDfnHkaA2",
+        "slot": 456214338,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "412531559632",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432148",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "42112977791",
+          "preTokens": "764372452095171",
+          "gross": "22716100",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "29c6bU4iUCAiGBiKAREykizNwZVucMVxCygyqmDr8SxMyan6ci7pCpkVNSsTJgA44eNB5yUbRnSB2KeKN4BZcMUZ",
+    "slot": 456214347,
+    "rawPbSha256": "cf1080c79dd294a16fccc529d8db09be10f5436bb9743afac30d4694c412b2ca",
+    "rpcGzipSha256": "a10dd6a792a232857249c82b62228c1f32d4defa6988d1e3b69845672ec149aa",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "29c6bU4iUCAiGBiKAREykizNwZVucMVxCygyqmDr8SxMyan6ci7pCpkVNSsTJgA44eNB5yUbRnSB2KeKN4BZcMUZ",
+        "slot": 456214347,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "408492838824",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "42320543084",
+          "preTokens": "760623511759914",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "57tM35XHexa4M5SYX6RAxNqEykjnCMTrBqRrJ3665oBjJE89e64MPf8bfeyg33vBdEXyxY6GXo6BiRK8tPEWdtrx",
+    "slot": 456214356,
+    "rawPbSha256": "e61b5252f3304f00266dc6124914a4660f11398d88d5447605b9c2fe54ce99e4",
+    "rpcGzipSha256": "52927358e514fec19cbc45472f2d1de23f194a25d5b3ffabdbb65a8520591363",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "57tM35XHexa4M5SYX6RAxNqEykjnCMTrBqRrJ3665oBjJE89e64MPf8bfeyg33vBdEXyxY6GXo6BiRK8tPEWdtrx",
+        "slot": 456214356,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "395523857717",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "43008594257",
+          "preTokens": "748455062494099",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "3g64mmUMt16Ed7w96mr9oQ2iizyJvSGqVjiVWgCSHKvmbeKt6FXMwezDiy4UWWYxnTssQMcqmzDMEA2HYicNoics",
+    "slot": 456214365,
+    "rawPbSha256": "7e33835b077b85a23181fc7068cac85f436a38302e8bb47abefb0ca1496ada68",
+    "rpcGzipSha256": "cca178f42f2a333d7106012c88e17d8e4e2194fadf5623fa8e43bb15d76da502",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 38,
+    "originalRuntimeLogCount": 38,
+    "legs": [
+      {
+        "signature": "3g64mmUMt16Ed7w96mr9oQ2iizyJvSGqVjiVWgCSHKvmbeKt6FXMwezDiy4UWWYxnTssQMcqmzDMEA2HYicNoics",
+        "slot": 456214365,
+        "protocol": 9,
+        "source_index": 6,
+        "first_transfer_index": 7,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "user": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "input_mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "input_amount": "376747909671",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "22432094",
+        "independentCP": {
+          "precedingBuySource": 1,
+          "preSol": "44066992182",
+          "preTokens": "730478721356975",
+          "gross": "22716046",
+          "protocol": "215803",
+          "creator": "68149",
+          "buyback": "107901"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "EA4cNBgPuPLxknwWFUthXyaVqQG55MbdQ14H268XxQw3",
+        "expected": "-572905",
+        "actual": "-572905"
+      },
+      {
+        "account": "EXmamj1MifPzgENwfY6oowfJzKFAS4YRujzmviTZGxyN",
+        "expected": "352103",
+        "actual": "352103"
+      },
+      {
+        "account": "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
+        "expected": "215802",
+        "actual": "215802"
+      },
+      {
+        "account": "CnQAEQr5T7W7qHgCsz2rvGhFi3faKMCmUtnodp3xU471",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "6VJjkxaKRaxxHdnj76BphAQ6kjrzq4zbVumvFRKHViMM",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "5aVdMLxS6GkrZRS3cv8oysyFss1cQ1EmZUHDTDxQPQ1v",
+        "mint": "4vrkAj5K81qBnG4EHCm4DixmZGF1MT1mWk9iEYWBpump",
+        "expected": "0",
+        "actual": "0"
+      }
+    ],
+    "implicitSettlements": []
+  }
+]

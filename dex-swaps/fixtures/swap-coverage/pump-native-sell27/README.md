@@ -1,0 +1,13 @@
+# Pump native V2 interface and Titanium preparation
+
+3 finalized native sell legs. One native-SOL call carries the otherwise unused quote-token interface as Token-2022; exact direct fee/base/event children guard that case. Two Titanium wrappers have the exact 8000 argument suffix, with zero or two canonical quote ATA preparations. Exact native/Atlas/WSOL receipts, committed fee return, source-bound native reserves, all user/vault token balances and complete native ledgers prove proceeds.
+
+Scope: slots 456213447–456214372 from decoder .26 diagnostic originals. Original protobuf wire bytes and gzip-compressed raw finalized JSON-RPC responses are retained; gzip decompression recovers the exact response bytes. Requests used `getTransaction` with `commitment: finalized`, `encoding: json`, and `maxSupportedTransactionVersion: 0`. No operational settings are exported. Each oracle verifies original PB/RPC keys, complete walk/depth/data/account identities, signature, slot, all native and token balances, fee, complete runtime invocation ancestry and logs before deriving amounts. Explicit RPC truncation flags are derived from retained response logs; none in this scope were truncated.
+
+Run with installed `bs58`, `@solana/web3.js`, and `protobufjs`, or supply package manifests:
+
+```sh
+node oracle.cjs /path/to/backend/package.json /path/to/protobufjs/package.json
+```
+
+`independent-proof.json` contains financial legs and whole ledger witnesses. `swap-candidates.json` pins exact source identities. `primary-pump-idl.json` is the primary Pump/PumpSwap ABI used by that oracle. Core tests use the original numbered PB fixtures and mutate native arguments, roles, amounts, runtime ancestry, events and final balances. New roundtrip/burn/v2 coverage is finite; no universal swap support claim.

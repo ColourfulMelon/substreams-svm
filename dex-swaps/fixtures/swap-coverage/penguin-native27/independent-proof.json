@@ -1,0 +1,312 @@
+{
+  "originals": [
+    {
+      "signature": "vLtgkB4UNd1nXKWtNqhJg8epPN33jofMWNSRVbBriWGm2EwYNx51Xhe7SasmoszoJYnkbq9XZh3fCtXBGZLZw35",
+      "block_num": 456214188,
+      "instruction_index": 12,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "5620885",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "706829",
+      "sourceTransfer": 13,
+      "requestedInput": "5620885",
+      "unspentInput": "0",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 14,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "765"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "95V8wXp2ZcqSYHRM2FtXNXLQCt1L2LL1TMqpvPHy9UPz",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "2834436737",
+          "closing": "2834436737",
+          "credit": "11248925",
+          "debit": "11248925",
+          "owner": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ"
+        },
+        {
+          "address": "85CHrf7oQ3R7JVYhXVbpFJ23yzQ79FSWKWfMqMgEYQM7",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "33425",
+          "closing": "33425",
+          "credit": "706829",
+          "debit": "706829",
+          "owner": "5ZGprBDnP2pWaYcbiAfN87UrZH3VihZo1aKSXXWskrZZ"
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45575640041",
+          "closing": "45581260926",
+          "credit": "5620885",
+          "debit": "0",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5749110144",
+          "closing": "5748403315",
+          "credit": "0",
+          "debit": "706829",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766240608",
+          "closing": "22766241373",
+          "credit": "765",
+          "debit": "0",
+          "owner": "3M1gJoNCxuw6GBMRatHzCvxwbQMiUZ6VoG22UCjubQZq"
+        }
+      ],
+      "pbSha256": "4693c0fba97a81db170fd6e6764a1564c8f88710d8a1b0ee55962bc6d394fc7a",
+      "rpcSha256": "69bfb27df290fe7b0511e98892cfc64ef15d3eebf1c057e6a8c95177890234ad",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "47PgAEXoiTEDi75dKD6xu1wKpWzX96W7WWZapP5gYASvkCjika1p8TrKPjb8Q74MztA65hmkGtcvmK2RpGCB61GY",
+      "block_num": 456214190,
+      "instruction_index": 13,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "DcQNaByvstRZCERvb9UJHgHiQe8YX2FMdPptM86psQyz",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "5620862",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "706652",
+      "sourceTransfer": 14,
+      "requestedInput": "5620866",
+      "unspentInput": "4",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 15,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "765"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "3BNqdmWXAB8xTnaqZomZ6E99UNkMR8SPK1BRFTZTVFDp",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "40028272135",
+          "closing": "40028272139",
+          "credit": "11247386",
+          "debit": "11247382",
+          "owner": "DcQNaByvstRZCERvb9UJHgHiQe8YX2FMdPptM86psQyz"
+        },
+        {
+          "address": "GuwyJLyTABL5qu7XRzXVbzg7LtNrAmCZYYoZZ9ApDTEK",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "1960",
+          "closing": "1960",
+          "credit": "706652",
+          "debit": "706652",
+          "owner": "DcQNaByvstRZCERvb9UJHgHiQe8YX2FMdPptM86psQyz"
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45581260926",
+          "closing": "45586881788",
+          "credit": "5620862",
+          "debit": "0",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5748403315",
+          "closing": "5747696663",
+          "credit": "0",
+          "debit": "706652",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766241373",
+          "closing": "22766242138",
+          "credit": "765",
+          "debit": "0",
+          "owner": "3M1gJoNCxuw6GBMRatHzCvxwbQMiUZ6VoG22UCjubQZq"
+        }
+      ],
+      "pbSha256": "0f0c5794be31867fdaea0517cfaa290e78aed109788a5a96e569192a1cc3e706",
+      "rpcSha256": "6113a68e0548728337209c4d0d2635c19cc454606fb6b46faab07a341b57c4cf",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "5fs291HMprx4qxBTJH4RQrsDNXdJkY29JGzv4dmWPHudBLduuVUzc7948YrC7tdRjmY5Lq4GmZJAwo7nN5BzfGtP",
+      "block_num": 456214208,
+      "instruction_index": 13,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "7nwPXZNhBj88jcC22VNBQUYLohTsQWh5VGxWqnAAcvMf",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "5623065",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "706755",
+      "sourceTransfer": 14,
+      "requestedInput": "5623069",
+      "unspentInput": "4",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 15,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "766"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "HPHb2bFkveMJfe7PRPxgJMRXtXThAeYB7HCfne3k43DF",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "10034137748",
+          "closing": "10034137752",
+          "credit": "11252526",
+          "debit": "11252522",
+          "owner": "7nwPXZNhBj88jcC22VNBQUYLohTsQWh5VGxWqnAAcvMf"
+        },
+        {
+          "address": "3xjQXRZWwG35riyjkLsDenyRXGJzq9E9dXN2dzHyN156",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "639",
+          "closing": "639",
+          "credit": "706755",
+          "debit": "706755",
+          "owner": "7nwPXZNhBj88jcC22VNBQUYLohTsQWh5VGxWqnAAcvMf"
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45586881788",
+          "closing": "45592504853",
+          "credit": "5623065",
+          "debit": "0",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5747696663",
+          "closing": "5746989908",
+          "credit": "0",
+          "debit": "706755",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766242138",
+          "closing": "22766242904",
+          "credit": "766",
+          "debit": "0",
+          "owner": "3M1gJoNCxuw6GBMRatHzCvxwbQMiUZ6VoG22UCjubQZq"
+        }
+      ],
+      "pbSha256": "ef7159e3ec74301b23ece9b8d8ad70d1c6f1a3833944652028681fd5209774ce",
+      "rpcSha256": "dcf108a9d786c28d15528e0947eab75f99dc18ea546f108c937a2247a18d83ef",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    },
+    {
+      "signature": "2X4293KCoJismvGbt7vWH4BEJQLJBcFZHquBEe8PscVBRADJmPtGHRNimErTNfTXBfUrh7oDtQ87bxH16icwceni",
+      "block_num": 456214217,
+      "instruction_index": 13,
+      "protocol": "spl_token_swap",
+      "pool": "GfgZJgNycWxsc5K8xB6F75KDHKsR71gQXCtkhx7PPfQ5",
+      "user": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4",
+      "inputMint": "So11111111111111111111111111111111111111112",
+      "input": "5622931",
+      "outputMint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+      "output": "706564",
+      "sourceTransfer": 14,
+      "requestedInput": "5622934",
+      "unspentInput": "3",
+      "lpFeeMint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+      "lpFeeTransfers": [
+        {
+          "index": 15,
+          "recipient": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "amount": "765"
+        }
+      ],
+      "ledger": [
+        {
+          "address": "9z9ryCzUfrq7a7iFQVNEdaZU4bfin916viH1yTfiSKkZ",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "10070533989",
+          "closing": "10070533992",
+          "credit": "11250662",
+          "debit": "11250659",
+          "owner": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4"
+        },
+        {
+          "address": "B7mYbRKMvVqk9hduuzyHTrxqqagXN5hHFBB3WrgV1AKY",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "387",
+          "closing": "387",
+          "credit": "706564",
+          "debit": "706564",
+          "owner": "DmQSnFzRoENh3weu6EtBBhHTpQBQSsvjpMX8iYKRygQ4"
+        },
+        {
+          "address": "GwrPHFdL2gbYTDM6RESdvrBebB2cpRYyUppmQ45ggkWL",
+          "mint": "So11111111111111111111111111111111111111112",
+          "opening": "45592504853",
+          "closing": "45598127784",
+          "credit": "5622931",
+          "debit": "0",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "J1KE5GBjVMgPtZvJ58RmkWDiCR7Uxr4djRRKwDbhxCkZ",
+          "mint": "Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS",
+          "opening": "5746989908",
+          "closing": "5746283344",
+          "credit": "0",
+          "debit": "706564",
+          "owner": "5j1qbY7JAXgXvy8iLJMDVv7TFbXDCFUA9NQpawQ1jDqT"
+        },
+        {
+          "address": "3H6qXKd3TeKLMGFXqZoh8Gn8aPjHMKQ8ZX5VL33VuENs",
+          "mint": "Fq7XL97MWnbneVk4Tzr61BkL8LtEqRCZWruwhyswtnDw",
+          "opening": "22766242904",
+          "closing": "22766243669",
+          "credit": "765",
+          "debit": "0",
+          "owner": "3M1gJoNCxuw6GBMRatHzCvxwbQMiUZ6VoG22UCjubQZq"
+        }
+      ],
+      "pbSha256": "9c850423443d857ba38bf8ca7d397d75def8868a247325d4ab0c79cbf4165546",
+      "rpcSha256": "5848a7f975c55351eb63e54e71464feaf154791b4e4fdec7baaebaaccd94c963",
+      "originalNativeCommitted": true,
+      "rpcRuntimeTruncated": false
+    }
+  ],
+  "originalTransactions": 4,
+  "completeTokenLedgers": 20,
+  "globalCoverageClaim": false,
+  "historicalReserveClaim": false,
+  "primaryContract": "jup-ag/jupiter-core Penguin SPL Token Swap identification + retained Solana SPL Token Swap instruction/processor/curve",
+  "ownedDeployment": {
+    "program": "PSwapMdSai8tjrEXcxFeQth87xC4rRsa4VA5mhGhXkP",
+    "programData": "2MCSk2AkTAFK4YdaGNahxsiUiG5u7qf8vKqn4zZhYYQt",
+    "deployedSlot": "161376048",
+    "elfSha256": "93622e51c0582563f50e4e16e9912c3768026fc51c9f741ae2b791dbc33614f6",
+    "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+  }
+}

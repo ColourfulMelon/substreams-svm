@@ -5,7 +5,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.26";
+const DECODER_VERSION: &str = "v0.5.2-pluto.27";
 
 fn protocol_slug(protocol: i32) -> &'static str {
     match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
@@ -74,6 +74,13 @@ fn protocol_slug(protocol: i32) -> &'static str {
         pb::Protocol::Janus => "janus",
         pb::Protocol::Exponent => "exponent",
         pb::Protocol::Cryptoquest => "cryptoquest",
+        pb::Protocol::PumpfunAmmBuyBurn => "pumpfun_amm_buy_burn",
+        pb::Protocol::AldrinV1 => "aldrin_v1",
+        pb::Protocol::Cropper => "cropper",
+        pb::Protocol::PiconDlmm => "picon_dlmm",
+        pb::Protocol::M0NativeOrder => "m0_native_order",
+        pb::Protocol::PatchBuyback => "patch_buyback",
+        pb::Protocol::Bxlw => "bxlw",
         pb::Protocol::Scorch => "scorch",
         pb::Protocol::Obsidian => "obsidian",
         pb::Protocol::Tesserav => "tesserav",
@@ -165,6 +172,19 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             None
         };
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
+            let burn_format = swap.protocol == pb::Protocol::PumpfunAmmBuyBurn as i32;
+            if burn_format != swap.burn_output_verified
+                || burn_format != swap.source_burn_index.is_some()
+                || burn_format && (swap.transfer_verified || swap.orderbook_fill_verified
+                    || swap.source_index.is_none() || swap.source_transfer_index.is_none()
+                    || swap.source_event_index.is_some() || swap.source_log_index.is_some()
+                    || swap.source_burn_index.is_some_and(|burn| burn >= 32768
+                        || swap.source_transfer_index.unwrap().checked_add(1) != Some(burn))
+                    || swap.source_index.unwrap().checked_add(1) != swap.source_transfer_index
+                    || swap.input_amount == 0 || swap.output_amount == 0)
+            {
+                return Err(Error::msg("invalid buy-and-burn evidence"));
+            }
             // Runtime log positions and compiled instruction positions are
             // different coordinate systems. Reserve the upper half of the
             // existing UInt16 key for logs; legacy transfer/event IDs stay exact.
@@ -220,6 +240,8 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
                 )
                 .set("transfer_verified", u32::from(swap.transfer_verified))
                 .set("orderbook_fill_verified", u32::from(swap.orderbook_fill_verified))
+                .set("burn_output_verified", u32::from(swap.burn_output_verified))
+                .set("source_burn_index", swap.source_burn_index.unwrap_or_default())
                 // Swap
                 .set("protocol", protocol_slug(swap.protocol))
                 .set("amm", base58::encode(&swap.amm))
@@ -244,7 +266,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         .set("decoder_version", DECODER_VERSION)
         .set(
             "verified_swaps",
-            all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified).count() as u32,
+            all_swaps.filter(|swap| swap.transfer_verified || swap.orderbook_fill_verified || swap.burn_output_verified).count() as u32,
         )
         .set(
             "coverage_candidates",
@@ -281,6 +303,47 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
 mod tests {
     use super::*;
     use substreams_database_change::pb::sf::substreams::sink::database::v1::table_change::PrimaryKey;
+
+    #[test]
+    fn buy_and_burn_preserves_destruction_provenance_and_rejects_mixed_receipts() {
+        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
+        let swap = pb::Swap {
+            protocol: pb::Protocol::PumpfunAmmBuyBurn as i32, source_index: Some(30),
+            source_transfer_index: Some(31), source_burn_index: Some(32), burn_output_verified: true,
+            input_amount: 100, output_amount: 200, ..Default::default()
+        };
+        let events = pb::Events { transactions: vec![pb::Transaction {
+            signature: vec![7;64], swaps: vec![swap], ..Default::default()
+        }], ..Default::default() };
+        let changes = write_swaps(clock.clone(), events.clone()).unwrap();
+        let row = changes.table_changes.iter().find(|row| row.table == "swaps").unwrap();
+        for (name,value) in [("protocol","pumpfun_amm_buy_burn"),("transfer_verified","0"),
+            ("burn_output_verified","1"),("source_burn_index","32")] {
+            assert!(row.fields.iter().any(|field| field.name == name && field.value == value));
+        }
+        let block = changes.table_changes.iter().find(|row| row.table == "blocks").unwrap();
+        assert!(block.fields.iter().any(|field| field.name == "verified_swaps" && field.value == "1"));
+        for mode in 0..14 {
+            let mut wrong = events.clone(); let swap = &mut wrong.transactions[0].swaps[0];
+            match mode {
+                0 => swap.burn_output_verified = false,
+                1 => swap.source_burn_index = None,
+                2 => swap.source_burn_index = Some(33),
+                3 => swap.protocol = pb::Protocol::PumpfunAmm as i32,
+                4 => swap.transfer_verified = true,
+                5 => swap.orderbook_fill_verified = true,
+                6 => swap.source_index = None,
+                7 => swap.source_transfer_index = None,
+                8 => swap.source_event_index = Some(34),
+                9 => swap.source_log_index = Some(34),
+                10 => swap.input_amount = 0,
+                11 => swap.output_amount = 0,
+                12 => swap.source_transfer_index = Some(u32::MAX),
+                _ => swap.source_index = Some(u32::MAX),
+            }
+            assert!(write_swaps(clock.clone(), wrong).is_err(), "invalid burn receipt {mode}");
+        }
+    }
 
     #[test]
     fn rejected_rows_are_not_streamed_and_source_positions_survive() {

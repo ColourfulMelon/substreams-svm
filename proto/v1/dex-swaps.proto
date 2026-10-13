@@ -82,6 +82,13 @@ enum Protocol {
     PROTOCOL_JANUS = 76;
     PROTOCOL_EXPONENT = 77;
   PROTOCOL_CRYPTOQUEST = 78;
+  PROTOCOL_PUMPFUN_AMM_BUY_BURN = 79;
+  PROTOCOL_ALDRIN_V1 = 80;
+  PROTOCOL_CROPPER = 81;
+  PROTOCOL_PICON_DLMM = 82;
+  PROTOCOL_M0_NATIVE_ORDER = 83;
+  PROTOCOL_PATCH_BUYBACK = 84;
+  PROTOCOL_BXLW = 85;
 }
 
 message Events {
@@ -142,6 +149,10 @@ message Swap {
   optional uint32 source_event_index = 16;
   // Position in runtime log_messages; distinct from compiled instruction positions.
   optional uint32 source_log_index = 17;
+  // Verified protocol-funded exchange followed by a vault burn. The base
+  // amount is destroyed; it is not credited to a trader token account.
+  optional uint32 source_burn_index = 18;
+  bool burn_output_verified = 19;
 }
 
 // Deterministic mint metadata, separate from financial swap events.

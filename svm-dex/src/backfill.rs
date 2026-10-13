@@ -44,6 +44,8 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.orderbook_fill_verified = false;
             identity.source_event_index = None;
             identity.source_log_index = None;
+            identity.source_burn_index = None;
+            identity.burn_output_verified = false;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
@@ -78,6 +80,8 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.orderbook_fill_verified = false;
             identity.source_event_index = None;
             identity.source_log_index = None;
+            identity.source_burn_index = None;
+            identity.burn_output_verified = false;
             identity.verification_failure.clear();
             if matches!(identity.protocol, 4 | 5) {
                 identity.amm_pool.clear();
@@ -145,6 +149,8 @@ mod tests {
         swap.stack_height = 2;
         swap.source_transfer_index = Some(10);
         swap.transfer_verified = true;
+        swap.source_burn_index = Some(11);
+        swap.burn_output_verified = true;
         assert!(missing_swaps(old, new).unwrap().transactions.is_empty());
     }
 

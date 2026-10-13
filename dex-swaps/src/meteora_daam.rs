@@ -209,9 +209,12 @@ mod tests {
     #[test]
     fn finalized_damm_and_whirlpool_zero_outputs_never_create_prices() {
         use base64::Engine;
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage/live-meteora-whirlpool26");
-        let cases = include_str!("../fixtures/swap-coverage/live-meteora-whirlpool26/cases.tsv");
         let mut counts = [0usize; 2];
+        for (folder, cases, epoch) in [
+            ("live-meteora-whirlpool26", include_str!("../fixtures/swap-coverage/live-meteora-whirlpool26/cases.tsv"), 1055),
+            ("live-meteora-whirlpool27", include_str!("../fixtures/swap-coverage/live-meteora-whirlpool27/cases.tsv"), 1056),
+        ] {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/swap-coverage").join(folder);
         for line in cases.lines() {
             let f: Vec<_> = line.split('\t').collect();
             let source = f[1].parse::<u32>().unwrap();
@@ -253,13 +256,14 @@ mod tests {
                 let swaps = crate::process_transaction_with_metadata(changed, None, |_, _| None, |_, _| None, |mint, _| {
                     let raw = std::fs::read(dir.join("fee-mints").join(format!("{}.bin", base58::encode(mint)))).ok()?;
                     let (schedule, initialized) = crate::token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, &raw)?;
-                    initialized.then(|| schedule.at(1055)).flatten()
+                    initialized.then(|| schedule.at(epoch)).flatten()
                 });
                 assert!(swaps.map_or(true, |tx| tx.swaps.iter().all(|s| s.source_index != Some(source))),
                     "{} source{source}: zero proceeds must not create a price, fabricated_event={fabricated_event}", f[0]);
             }
         }
-        assert_eq!(counts, [19, 10]);
+        }
+        assert_eq!(counts, [29, 17]);
     }
 
 }

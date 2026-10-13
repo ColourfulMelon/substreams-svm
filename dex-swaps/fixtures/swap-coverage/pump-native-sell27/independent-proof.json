@@ -1,0 +1,312 @@
+[
+  {
+    "signature": "2zwTeTTCVyegg6ARVivLsTdUD91wxB6me9tjGvb2um599Um9iMzqzzXeW9URUPA79oDQvhP1zA6598hR4y7fY6Ss",
+    "slot": 456213576,
+    "rawPbSha256": "cd4f902cfad3c56a6eab6682ec706a6b92527182f3320f0469a1770a98e1cd5b",
+    "rpcGzipSha256": "3ac122075d35705da3722660c0a477c42c077847f9b1b8dbc2b4ce3ebb118122",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 25,
+    "originalRuntimeLogCount": 25,
+    "legs": [
+      {
+        "signature": "2zwTeTTCVyegg6ARVivLsTdUD91wxB6me9tjGvb2um599Um9iMzqzzXeW9URUPA79oDQvhP1zA6598hR4y7fY6Ss",
+        "slot": 456213576,
+        "protocol": 9,
+        "source_index": 3,
+        "first_transfer_index": 5,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "8Rj2TwJCPwtekmyNUVjr5F4yuXuDwwsFAtx16uZSCiQg",
+        "user": "E3YwB5TQCA83J29g49aNkH7gnyvgnwYF4dD6Sev3VZuD",
+        "input_mint": "GZE8kjhJL5bZgv7bLTi2hpw3fEPCBsM9f8Awr1qNpump",
+        "input_amount": "2488343626572",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "91348405",
+        "independentCP": {
+          "low": "34639205347",
+          "high": "34639205347",
+          "gross": "92504715",
+          "protocol": "878795",
+          "creator": "277515",
+          "buyback": "439397"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "E3YwB5TQCA83J29g49aNkH7gnyvgnwYF4dD6Sev3VZuD",
+        "expected": "88343405",
+        "actual": "88343405"
+      },
+      {
+        "account": "8Rj2TwJCPwtekmyNUVjr5F4yuXuDwwsFAtx16uZSCiQg",
+        "expected": "-92504715",
+        "actual": "-92504715"
+      },
+      {
+        "account": "CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM",
+        "expected": "439398",
+        "actual": "439398"
+      },
+      {
+        "account": "9M4giFFMxmFGXtc3feFzRai56WbBqehoSeRE5GK7gf7",
+        "expected": "439397",
+        "actual": "439397"
+      },
+      {
+        "account": "FWSbkjZLo7tws3y48qkyoD5r2oDBcyZ3EzUeGN3pG5zt",
+        "expected": "277515",
+        "actual": "277515"
+      },
+      {
+        "account": "9bnz4RShgq1hAnLnZbP8kbgBg1kEmcJBYQq3gQbmnSta",
+        "expected": "1000000",
+        "actual": "1000000"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "7nrf4zWZuDo1cthiFASQC9Ks6o9mxiRyqz6PU6DBsNDD",
+        "mint": "GZE8kjhJL5bZgv7bLTi2hpw3fEPCBsM9f8Awr1qNpump",
+        "expected": "-2488343626572",
+        "actual": "-2488343626572"
+      },
+      {
+        "account": "3FoQ1fgheRLT935dqVRGn6Rct9LCTJju4uwoGsgr4vbd",
+        "mint": "GZE8kjhJL5bZgv7bLTi2hpw3fEPCBsM9f8Awr1qNpump",
+        "expected": "2488343626572",
+        "actual": "2488343626572"
+      }
+    ],
+    "implicitSettlements": []
+  },
+  {
+    "signature": "2NDQxf8Ai42xfuvFbSdx5w4K7CuYZWhAQMtUNuL73ekGRAdmtMBzTKo1zi8oGWpZU2rM9ZCfKQ7FkEsnRvCLdUQV",
+    "slot": 456213876,
+    "rawPbSha256": "3de6f76751be36839ae90b91e3cfbf26412080d326765a50c98d2eba9ec36983",
+    "rpcGzipSha256": "33aa9139fc4af3ce1724d725ecbf92ac25c18da48f3fe4461e2a2484d6c33512",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 118,
+    "originalRuntimeLogCount": 118,
+    "legs": [
+      {
+        "signature": "2NDQxf8Ai42xfuvFbSdx5w4K7CuYZWhAQMtUNuL73ekGRAdmtMBzTKo1zi8oGWpZU2rM9ZCfKQ7FkEsnRvCLdUQV",
+        "slot": 456213876,
+        "protocol": 9,
+        "source_index": 19,
+        "first_transfer_index": 21,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "G8oPQqYHQ1SQbcSjAXXPp1iSP1wujoyyKshPYdzRjeNv",
+        "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "input_mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "input_amount": "3142111055996",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "104877106",
+        "independentCP": {
+          "low": "33038527322",
+          "high": "33038527322",
+          "gross": "106204665",
+          "protocol": "1008945",
+          "creator": "318614",
+          "buyback": "504472"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "E4whZwSStL3FRMEh212GSuQjhtdpZf7hxzVNiULECJs4",
+        "expected": "99542368",
+        "actual": "99542368"
+      },
+      {
+        "account": "GoyWHT9PjZ4K8hVtrnsMpkEZKk3CT7zhpnaCL71p2GPY",
+        "expected": "1513840",
+        "actual": "1513840"
+      },
+      {
+        "account": "DX4Eo56gahjZAFG2hDZByr5XsHxVmh7pQFQdPSHD34Qr",
+        "expected": "1488440",
+        "actual": "1488440"
+      },
+      {
+        "account": "3T1Uo21V23mKzUddEzad4BFjoXeBGd2UuJBuPqJRtio1",
+        "expected": "1488440",
+        "actual": "1488440"
+      },
+      {
+        "account": "G8oPQqYHQ1SQbcSjAXXPp1iSP1wujoyyKshPYdzRjeNv",
+        "expected": "-106204665",
+        "actual": "-106204665"
+      },
+      {
+        "account": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+        "expected": "504473",
+        "actual": "504473"
+      },
+      {
+        "account": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+        "expected": "504472",
+        "actual": "504472"
+      },
+      {
+        "account": "ENPZsEm3EkgVmHYyC5Yvpp43n9VFaDdTRosfbHZpqdPe",
+        "expected": "318614",
+        "actual": "318614"
+      },
+      {
+        "account": "EW9diL91VgHY5i9qYScz53W3PihQPSnPoMtAKCo1Bs7J",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "595S5w2SypCZ9c7ELkzp1LUQXG2sMg64d6xLLPrSiyJc",
+        "expected": "839016",
+        "actual": "839016"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "7Pb4dzdW957aXhsnMEFVz5Q4gwLEST7RGnMWoinFrmce",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "-3142111055996",
+        "actual": "-3142111055996"
+      },
+      {
+        "account": "GoyWHT9PjZ4K8hVtrnsMpkEZKk3CT7zhpnaCL71p2GPY",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "4kFrrfNeGG2SNmvB1enuA6vtUSefY98whgYKPLBorbYs",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "3142111055996",
+        "actual": "3142111055996"
+      }
+    ],
+    "implicitSettlements": [
+      {
+        "program": "T1TANpTeScyeqVzzgNViGDNrkQ6qHz9KrSBS4aNXvGT",
+        "sourceRoot": 7,
+        "sourceNative": 19,
+        "atlas": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "funder": "E4whZwSStL3FRMEh212GSuQjhtdpZf7hxzVNiULECJs4",
+        "amount": "104877106",
+        "wrap": 23
+      }
+    ]
+  },
+  {
+    "signature": "4Z5FB9RoGwVw32rVS1doAnNZpLHcpgfMR7GEtjwH1MyGwPy2DWBqLjpBNa9DhaQL9XLgbg3cML3GDNRTYL5eKXzE",
+    "slot": 456214092,
+    "rawPbSha256": "49d79d788a75827c2dcf83ff52e2f4a7d6c17ed1bada4bd0446d8120b6ffdc9e",
+    "rpcGzipSha256": "3981fda40a51cdfeaef0a04d03ea212fbd246cd4b611ebf9b43164279ed0546a",
+    "completeRuntime": true,
+    "rpcLogsTruncated": false,
+    "rpcRuntimeLogCount": 64,
+    "originalRuntimeLogCount": 64,
+    "legs": [
+      {
+        "signature": "4Z5FB9RoGwVw32rVS1doAnNZpLHcpgfMR7GEtjwH1MyGwPy2DWBqLjpBNa9DhaQL9XLgbg3cML3GDNRTYL5eKXzE",
+        "slot": 456214092,
+        "protocol": 9,
+        "source_index": 4,
+        "first_transfer_index": 6,
+        "amm": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+        "pool": "G8oPQqYHQ1SQbcSjAXXPp1iSP1wujoyyKshPYdzRjeNv",
+        "user": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "input_mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "input_amount": "4955342969207",
+        "output_mint": "So11111111111111111111111111111111111111112",
+        "output_amount": "154427822",
+        "independentCP": {
+          "low": "31950913591",
+          "high": "31950913591",
+          "gross": "156382605",
+          "protocol": "1485635",
+          "creator": "469148",
+          "buyback": "742817"
+        }
+      }
+    ],
+    "nativeLedgers": [
+      {
+        "account": "Gs3MYDmKMi4KH1TJrsXzs5Tncad7syHk7d756oW87SoQ",
+        "expected": "153187398",
+        "actual": "153187398"
+      },
+      {
+        "account": "G8oPQqYHQ1SQbcSjAXXPp1iSP1wujoyyKshPYdzRjeNv",
+        "expected": "-156382605",
+        "actual": "-156382605"
+      },
+      {
+        "account": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "9rPYyANsfQZw3DnDmKE3YCQF5E8oD89UXoHn9JFEhJUz",
+        "expected": "742818",
+        "actual": "742818"
+      },
+      {
+        "account": "3BpXnfJaUTiwXnJNe7Ej1rcbzqTTQUvLShZaWazebsVR",
+        "expected": "742817",
+        "actual": "742817"
+      },
+      {
+        "account": "ENPZsEm3EkgVmHYyC5Yvpp43n9VFaDdTRosfbHZpqdPe",
+        "expected": "469148",
+        "actual": "469148"
+      },
+      {
+        "account": "EW9diL91VgHY5i9qYScz53W3PihQPSnPoMtAKCo1Bs7J",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "595S5w2SypCZ9c7ELkzp1LUQXG2sMg64d6xLLPrSiyJc",
+        "expected": "1235422",
+        "actual": "1235422"
+      }
+    ],
+    "tokenLedgers": [
+      {
+        "account": "yJ5GEQrePvBqBHC3UYnzTAZUPsWrvQrfuwvgrBMJu47",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "-4955342969207",
+        "actual": "-4955342969207"
+      },
+      {
+        "account": "GoyWHT9PjZ4K8hVtrnsMpkEZKk3CT7zhpnaCL71p2GPY",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "0",
+        "actual": "0"
+      },
+      {
+        "account": "4kFrrfNeGG2SNmvB1enuA6vtUSefY98whgYKPLBorbYs",
+        "mint": "8nY1c3SSJ5U6rwBSNybbucEnzsHSyFeyiQB6Mwiapump",
+        "expected": "4955342969207",
+        "actual": "4955342969207"
+      }
+    ],
+    "implicitSettlements": [
+      {
+        "program": "T1TANpTeScyeqVzzgNViGDNrkQ6qHz9KrSBS4aNXvGT",
+        "sourceRoot": 2,
+        "sourceNative": 4,
+        "atlas": "D5YqVMoSxnqeZAKAUUE1Dm3bmjtdxQ5DCF356ozqN9cM",
+        "funder": "Gs3MYDmKMi4KH1TJrsXzs5Tncad7syHk7d756oW87SoQ",
+        "amount": "154427822",
+        "wrap": 8
+      }
+    ]
+  }
+]

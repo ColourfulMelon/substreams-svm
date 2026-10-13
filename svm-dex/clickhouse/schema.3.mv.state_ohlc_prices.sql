@@ -140,7 +140,7 @@ WITH
         '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'
     ] AS sol_mints,
     (
-        (transfer_verified = 1 OR orderbook_fill_verified = 1) AND
+        (transfer_verified = 1 OR orderbook_fill_verified = 1 OR (burn_output_verified = 1 AND protocol = 'pumpfun_amm_buy_burn')) AND
         amount0 >= multiIf(mint0 IN stable_mints, 10000, mint0 IN sol_mints, 100000, 1)
         AND amount1 >= multiIf(mint1 IN stable_mints, 10000, mint1 IN sol_mints, 100000, 1)
     ) AS price_eligible,

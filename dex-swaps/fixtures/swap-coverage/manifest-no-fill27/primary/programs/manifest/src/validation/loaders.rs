@@ -1,0 +1,1077 @@
+use pinocchio::account::Ref;
+use std::{cell::Cell, slice::Iter};
+
+#[cfg(not(feature = "certora"))]
+use hypertree::get_mut_helper;
+use pinocchio::{error::ProgramError, ProgramResult};
+
+use hypertree::{get_helper, trace};
+use pinocchio::account::AccountView;
+use solana_program::pubkey::Pubkey;
+use solana_sdk_ids::system_program;
+
+use crate::validation::AccountViewExt;
+
+use crate::{
+    program::ManifestError,
+    require,
+    state::{GlobalFixed, MarketFixed},
+    validation::{
+        get_global_address, is_global_address, next_account_info, EmptyAccount, MintAccountInfo,
+        Program, Signer, TokenAccountInfo,
+    },
+};
+
+use super::{get_vault_address, ManifestAccountInfo, TokenProgram};
+
+#[cfg(feature = "certora")]
+use early_panic::early_panic;
+
+/// CreateMarket account infos
+pub(crate) struct CreateMarketContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub base_mint: MintAccountInfo<'a>,
+    pub quote_mint: MintAccountInfo<'a>,
+    pub base_vault: EmptyAccount<'a>,
+    pub quote_vault: EmptyAccount<'a>,
+    /// Bumps of the vault PDAs, derived once here for signing and the market
+    /// header.
+    pub base_vault_bump: u8,
+    pub quote_vault_bump: u8,
+    pub system_program: Program<'a>,
+    // Loaded so the accounts are validated and present for the CPIs below,
+    // which name the instruction's accounts rather than its program.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+    #[allow(dead_code)]
+    pub token_program_22: TokenProgram<'a>,
+}
+
+impl<'a> CreateMarketContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        // The supported create-market transaction creates and initializes this
+        // keypair atomically. SystemProgram::create_account requires the new
+        // account key to sign that transaction; once assigned to Manifest, the
+        // runtime permits this program to initialize its writable data without
+        // requiring a redundant signer flag on the program instruction.
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new_init(next_account_info(account_iter)?)?;
+        let system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        let base_mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+        let quote_mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+        let base_vault: EmptyAccount = EmptyAccount::new(next_account_info(account_iter)?)?;
+        let quote_vault: EmptyAccount = EmptyAccount::new(next_account_info(account_iter)?)?;
+
+        let (expected_base_vault, base_vault_bump) =
+            get_vault_address(market.pubkey(), base_mint.info.pubkey());
+        let (expected_quote_vault, quote_vault_bump) =
+            get_vault_address(market.pubkey(), quote_mint.info.pubkey());
+
+        require!(
+            expected_base_vault == *base_vault.info.pubkey(),
+            ManifestError::IncorrectAccount,
+            "Incorrect base vault account",
+        )?;
+        require!(
+            expected_quote_vault == *quote_vault.info.pubkey(),
+            ManifestError::IncorrectAccount,
+            "Incorrect quote vault account",
+        )?;
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        let token_program_22: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+
+        Ok(Self {
+            payer,
+            market,
+            base_vault,
+            quote_vault,
+            base_vault_bump,
+            quote_vault_bump,
+            base_mint,
+            quote_mint,
+            token_program,
+            token_program_22,
+            system_program,
+        })
+    }
+}
+
+/// ClaimSeat account infos
+pub(crate) struct ClaimSeatContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub _system_program: Program<'a>,
+}
+
+impl<'a> ClaimSeatContext<'a> {
+    #[cfg_attr(all(feature = "certora", not(feature = "certora-test")), early_panic)]
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let _system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        Ok(Self {
+            payer,
+            market,
+            _system_program,
+        })
+    }
+}
+
+/// ExpandMarketContext account infos
+pub(crate) struct ExpandMarketContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub _system_program: Program<'a>,
+}
+
+impl<'a> ExpandMarketContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let _system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        Ok(Self {
+            payer,
+            market,
+            _system_program,
+        })
+    }
+}
+
+/// Deposit into a market account infos
+pub(crate) struct DepositContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub trader_token: TokenAccountInfo<'a>,
+    pub vault: TokenAccountInfo<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+    pub mint: MintAccountInfo<'a>,
+}
+
+impl<'a> DepositContext<'a> {
+    #[cfg_attr(all(feature = "certora", not(feature = "certora-test")), early_panic)]
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+
+        let market_fixed: Ref<MarketFixed> = market.get_fixed()?;
+        let base_mint: &Pubkey = market_fixed.get_base_mint();
+        let quote_mint: &Pubkey = market_fixed.get_quote_mint();
+
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+
+        // Infer the mint key from the token account.
+        let (mint, expected_vault_address) =
+            if &token_account_info.try_borrow()?[0..32] == base_mint.as_ref() {
+                (base_mint, market_fixed.get_base_vault())
+            } else if &token_account_info.try_borrow()?[0..32] == quote_mint.as_ref() {
+                (quote_mint, market_fixed.get_quote_vault())
+            } else {
+                return Err(ManifestError::InvalidWithdrawAccounts.into());
+            };
+
+        trace!("trader token account {:?}", token_account_info.pubkey());
+        let trader_token: TokenAccountInfo =
+            TokenAccountInfo::new_with_owner(token_account_info, mint, payer.pubkey())?;
+
+        trace!("vault token account {:?}", expected_vault_address);
+        let vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            mint,
+            &expected_vault_address,
+            &expected_vault_address,
+        )?;
+
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        let mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+
+        // Drop the market ref so it can be passed through the return.
+        drop(market_fixed);
+        Ok(Self {
+            payer,
+            market,
+            trader_token,
+            vault,
+            token_program,
+            mint,
+        })
+    }
+}
+
+/// Withdraw account infos
+pub(crate) struct WithdrawContext<'a> {
+    // TODO: Separate owner and payer so you can crank a withdraw on behalf of
+    // someone else to their token account.
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub trader_token: TokenAccountInfo<'a>,
+    pub vault: TokenAccountInfo<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+    pub mint: MintAccountInfo<'a>,
+}
+
+impl<'a> WithdrawContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+
+        let market_fixed: Ref<MarketFixed> = market.get_fixed()?;
+        let base_mint: &Pubkey = market_fixed.get_base_mint();
+        let quote_mint: &Pubkey = market_fixed.get_quote_mint();
+
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+
+        let (mint, expected_vault_address) =
+            if &token_account_info.try_borrow()?[0..32] == base_mint.as_ref() {
+                (base_mint, market_fixed.get_base_vault())
+            } else if &token_account_info.try_borrow()?[0..32] == quote_mint.as_ref() {
+                (quote_mint, market_fixed.get_quote_vault())
+            } else {
+                return Err(ManifestError::InvalidWithdrawAccounts.into());
+            };
+
+        let trader_token: TokenAccountInfo =
+            TokenAccountInfo::new_with_owner(token_account_info, mint, payer.pubkey())?;
+        let vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            mint,
+            &expected_vault_address,
+            &expected_vault_address,
+        )?;
+
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        let mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+
+        // Drop the market ref so it can be passed through the return.
+        drop(market_fixed);
+        Ok(Self {
+            payer,
+            market,
+            trader_token,
+            vault,
+            token_program,
+            mint,
+        })
+    }
+}
+
+/// Swap account infos
+pub(crate) struct SwapContext<'a> {
+    pub payer: AccountView,
+    pub owner: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub trader_base: TokenAccountInfo<'a>,
+    pub trader_quote: TokenAccountInfo<'a>,
+    pub base_vault: TokenAccountInfo<'a>,
+    pub quote_vault: TokenAccountInfo<'a>,
+    pub token_program_base: TokenProgram<'a>,
+    pub token_program_quote: TokenProgram<'a>,
+    pub base_mint: Option<MintAccountInfo<'a>>,
+    pub quote_mint: Option<MintAccountInfo<'a>>,
+
+    // One for each side. First is base, then is quote.
+    pub global_trade_accounts_opts: [Option<GlobalTradeAccounts<'a>>; 2],
+}
+
+impl<'a> SwapContext<'a> {
+    #[cfg_attr(all(feature = "certora", not(feature = "certora-test")), early_panic)]
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        // Do not check the signer here and let it fail later. This allows the
+        // case where the payer is not actually required to be a signer and the
+        // user just puts another account.
+        let payer: &AccountView = next_account_info(account_iter)?;
+
+        let owner_or_market: &'a AccountView = next_account_info(account_iter)?;
+        let (owner, market): (Signer, ManifestAccountInfo<MarketFixed>) =
+            if owner_or_market.owner_pubkey() == crate::ID {
+                // Normal case where the payer of rent is the same as the token account
+                // owners and the caller has only included one to save ix call data
+                // bytes.
+                (
+                    Signer::new(payer)?,
+                    ManifestAccountInfo::<MarketFixed>::new(owner_or_market)?,
+                )
+            } else {
+                // Separate token account owner from rent payer. This is SwapV2.
+                (
+                    Signer::new(owner_or_market)?,
+                    ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?,
+                )
+            };
+
+        // Included in case we need to expand for a reverse order.
+        let _system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+
+        let market_fixed: Ref<MarketFixed> = market.get_fixed()?;
+        let base_mint_key: Pubkey = *market_fixed.get_base_mint();
+        let quote_mint_key: Pubkey = *market_fixed.get_quote_mint();
+
+        let trader_base: TokenAccountInfo =
+            TokenAccountInfo::new(next_account_info(account_iter)?, &base_mint_key)?;
+        let trader_quote: TokenAccountInfo =
+            TokenAccountInfo::new(next_account_info(account_iter)?, &quote_mint_key)?;
+        let base_vault_address: &Pubkey = market_fixed.get_base_vault();
+        let quote_vault_address: &Pubkey = market_fixed.get_quote_vault();
+
+        let base_vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            &base_mint_key,
+            &base_vault_address,
+            &base_vault_address,
+        )?;
+        let quote_vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            &quote_mint_key,
+            &quote_vault_address,
+            &quote_vault_address,
+        )?;
+        drop(market_fixed);
+
+        let token_program_base: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        let mut base_mint: Option<MintAccountInfo> = None;
+
+        let mut current_account_info_or: Result<&AccountView, ProgramError> =
+            next_account_info(account_iter);
+
+        // Possibly includes base mint.
+        if current_account_info_or.as_ref().is_ok_and(|f| {
+            f.owner_pubkey() == spl_token::id() || f.owner_pubkey() == spl_token_2022::id()
+        }) {
+            let current_account_info: &AccountView = current_account_info_or?;
+            require!(
+                current_account_info.pubkey() == &base_mint_key,
+                ManifestError::IncorrectAccount,
+                "Optional base mint does not match the market base mint",
+            )?;
+            require!(
+                current_account_info.owner_pubkey() == *token_program_base.info.pubkey(),
+                ProgramError::IncorrectProgramId,
+                "Base mint owner does not match the base token program",
+            )?;
+            base_mint = Some(MintAccountInfo::new(current_account_info)?);
+            current_account_info_or = next_account_info(account_iter);
+        }
+
+        // Clone is not a problem since we are deserializing token program
+        // anyways, so at most this is one more.
+        let mut token_program_quote: TokenProgram = token_program_base.clone();
+        let mut quote_mint: Option<MintAccountInfo> = None;
+        let mut global_trade_accounts_opts: [Option<GlobalTradeAccounts<'a>>; 2] = [None, None];
+
+        // Possibly includes quote token program.
+        if current_account_info_or
+            .as_ref()
+            .is_ok_and(|f| *f.pubkey() == spl_token::id() || *f.pubkey() == spl_token_2022::id())
+        {
+            let current_account_info: &AccountView = current_account_info_or?;
+            token_program_quote = TokenProgram::new(current_account_info)?;
+            current_account_info_or = next_account_info(account_iter);
+        }
+        // Possibly includes quote mint if the quote token program was token22.
+        if current_account_info_or.as_ref().is_ok_and(|f| {
+            f.owner_pubkey() == spl_token::id() || f.owner_pubkey() == spl_token_2022::id()
+        }) {
+            let current_account_info: &AccountView = current_account_info_or?;
+            require!(
+                current_account_info.pubkey() == &quote_mint_key,
+                ManifestError::IncorrectAccount,
+                "Optional quote mint does not match the market quote mint",
+            )?;
+            require!(
+                current_account_info.owner_pubkey() == *token_program_quote.info.pubkey(),
+                ProgramError::IncorrectProgramId,
+                "Quote mint owner does not match the quote token program",
+            )?;
+            quote_mint = Some(MintAccountInfo::new(current_account_info)?);
+            current_account_info_or = next_account_info(account_iter);
+        }
+
+        require!(
+            *token_program_base.info.pubkey() != spl_token_2022::id() || base_mint.is_some(),
+            ManifestError::IncorrectAccount,
+            "Token-2022 base transfers require the validated market base mint",
+        )?;
+        require!(
+            *token_program_quote.info.pubkey() != spl_token_2022::id() || quote_mint.is_some(),
+            ManifestError::IncorrectAccount,
+            "Token-2022 quote transfers require the validated market quote mint",
+        )?;
+
+        if current_account_info_or.is_ok() {
+            let current_account_info: &AccountView = current_account_info_or?;
+
+            // It is possible that the global account does not exist. Do not
+            // throw an error. This will happen when users just blindly include
+            // global accounts that have not been initialized.
+            if !current_account_info.is_data_empty() {
+                let global: ManifestAccountInfo<'a, GlobalFixed> =
+                    ManifestAccountInfo::<GlobalFixed>::new(current_account_info)?;
+                let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+                let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+                let global_mint_key: &Pubkey = global_fixed.get_mint();
+                let expected_global_vault_address: &Pubkey = global_fixed.get_vault();
+
+                let global_vault: TokenAccountInfo<'a> = TokenAccountInfo::new_with_owner_and_key(
+                    next_account_info(account_iter)?,
+                    global_mint_key,
+                    &expected_global_vault_address,
+                    &expected_global_vault_address,
+                )?;
+
+                let index: usize = if *global_mint_key == base_mint_key {
+                    0
+                } else {
+                    require!(
+                        quote_mint_key == *global_mint_key,
+                        ManifestError::MissingGlobal,
+                        "Unexpected global accounts",
+                    )?;
+                    1
+                };
+                // Assert that the global itself is at the expected address,
+                // see `verify_market_global`.
+                verify_market_global(&market, index, global_mint_key, global.info.pubkey())?;
+
+                drop(global_data);
+                global_trade_accounts_opts[index] = Some(GlobalTradeAccounts {
+                    mint_opt: if index == 0 {
+                        base_mint.clone()
+                    } else {
+                        quote_mint.clone()
+                    },
+                    global,
+                    global_vault_opt: Some(global_vault),
+                    market_vault_opt: if index == 0 {
+                        Some(base_vault.clone())
+                    } else {
+                        Some(quote_vault.clone())
+                    },
+                    token_program_opt: if index == 0 {
+                        Some(token_program_base.clone())
+                    } else {
+                        Some(token_program_quote.clone())
+                    },
+                    gas_payer_opt: None,
+                    gas_receiver_opt: if payer.is_signer() {
+                        Some(Signer::new(payer)?)
+                    } else {
+                        None
+                    },
+                    market: *market.info.pubkey(),
+                    system_program: None,
+                    num_deferred_gas_refunds: Cell::new(0),
+                });
+            }
+        }
+
+        Ok(Self {
+            payer: payer.clone(),
+            owner,
+            market,
+            trader_base,
+            trader_quote,
+            base_vault,
+            quote_vault,
+            token_program_base,
+            token_program_quote,
+            base_mint,
+            quote_mint,
+            global_trade_accounts_opts,
+        })
+    }
+}
+
+/// Accounts needed to make a global trade. Scope is beyond just crate so
+/// clients can place orders on markets in testing.
+pub struct GlobalTradeAccounts<'a> {
+    /// Required if this is a token22 token.
+    pub mint_opt: Option<MintAccountInfo<'a>>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+
+    // These are required when matching a global order, not necessarily when
+    // cancelling since tokens dont move in that case.
+    pub global_vault_opt: Option<TokenAccountInfo<'a>>,
+    pub market_vault_opt: Option<TokenAccountInfo<'a>>,
+    pub token_program_opt: Option<TokenProgram<'a>>,
+
+    pub system_program: Option<Program<'a>>,
+
+    // Trader is sending or cancelling the order. They are the one who will pay
+    // or receive gas prepayments.
+    pub gas_payer_opt: Option<Signer<'a>>,
+    pub gas_receiver_opt: Option<Signer<'a>>,
+    pub market: Pubkey,
+
+    // Number of gas prepayment refunds owed to the gas receiver for removed
+    // global orders. Refunds are accumulated here and the lamports are only
+    // moved at the end of the instruction (settle_global_gas_refunds) because
+    // moving them directly before a later CPI that includes only one of the
+    // two accounts makes the runtime lamport sum check fail with
+    // UnbalancedInstruction. Processors that pass a system_program must settle
+    // before returning or the refunds are stranded on the global account.
+    pub num_deferred_gas_refunds: Cell<u64>,
+}
+
+/// BatchUpdate account infos
+pub(crate) struct BatchUpdateContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub _system_program: Program<'a>,
+
+    // One for each side. First is base, then is quote.
+    pub global_trade_accounts_opts: [Option<GlobalTradeAccounts<'a>>; 2],
+}
+
+impl<'a> BatchUpdateContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        // Does not have to be writable, but this ix will fail if removing a
+        // global or requiring expanding.
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        // Certora version is not mutable.
+        #[cfg(feature = "certora")]
+        let global_trade_accounts_opts: [Option<GlobalTradeAccounts<'a>>; 2] = [None, None];
+        #[cfg(not(feature = "certora"))]
+        let mut global_trade_accounts_opts: [Option<GlobalTradeAccounts<'a>>; 2] = [None, None];
+
+        // The mints and vaults below are only used to work out which side a
+        // global account belongs to, and most batch updates pass none. Copying
+        // four addresses out of the market header for a loop that is about to
+        // do nothing is worth skipping, so this checks first.
+        #[cfg(not(feature = "certora"))]
+        if account_iter.len() > 0 {
+            let market_fixed: Ref<MarketFixed> = market.get_fixed()?;
+            let base_mint: Pubkey = *market_fixed.get_base_mint();
+            let quote_mint: Pubkey = *market_fixed.get_quote_mint();
+            let base_vault: Pubkey = *market_fixed.get_base_vault();
+            let quote_vault: Pubkey = *market_fixed.get_quote_vault();
+            drop(market_fixed);
+
+            for _ in 0..2 {
+                let next_account_info_or: Result<&AccountView, ProgramError> =
+                    next_account_info(account_iter);
+                if next_account_info_or.is_ok() {
+                    let mint: MintAccountInfo<'a> = MintAccountInfo::new(next_account_info_or?)?;
+                    let (index, expected_market_vault_address) = if base_mint == *mint.info.pubkey()
+                    {
+                        (0, &base_vault)
+                    } else {
+                        require!(
+                            quote_mint == *mint.info.pubkey(),
+                            ManifestError::MissingGlobal,
+                            "Unexpected global mint",
+                        )?;
+                        (1, &quote_vault)
+                    };
+
+                    let global_or: Result<ManifestAccountInfo<'a, GlobalFixed>, ProgramError> =
+                        ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?);
+
+                    // If a client blindly fills in the global account and vault,
+                    // then handle that case and allow them to try to work without
+                    // the global accounts.
+                    if global_or.is_err() {
+                        let _global_vault: Result<&AccountView, ProgramError> =
+                            next_account_info(account_iter);
+                        let _market_vault: Result<&AccountView, ProgramError> =
+                            next_account_info(account_iter);
+                        let _token_program: Result<&AccountView, ProgramError> =
+                            next_account_info(account_iter);
+                        continue;
+                    }
+                    let global: ManifestAccountInfo<'a, GlobalFixed> = global_or.unwrap();
+                    // Assert that the global itself is at the expected address,
+                    // see `verify_market_global`.
+                    verify_market_global(&market, index, mint.info.pubkey(), global.info.pubkey())?;
+                    let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+                    let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+                    let expected_global_vault_address: &Pubkey = global_fixed.get_vault();
+
+                    let global_vault: TokenAccountInfo<'a> =
+                        TokenAccountInfo::new_with_owner_and_key(
+                            next_account_info(account_iter)?,
+                            mint.info.pubkey(),
+                            &expected_global_vault_address,
+                            &expected_global_vault_address,
+                        )?;
+                    drop(global_data);
+
+                    let market_vault: TokenAccountInfo<'a> =
+                        TokenAccountInfo::new_with_owner_and_key(
+                            next_account_info(account_iter)?,
+                            mint.info.pubkey(),
+                            &expected_market_vault_address,
+                            &expected_market_vault_address,
+                        )?;
+                    let token_program: TokenProgram<'a> =
+                        TokenProgram::new(next_account_info(account_iter)?)?;
+
+                    global_trade_accounts_opts[index] = Some(GlobalTradeAccounts {
+                        mint_opt: Some(mint),
+                        global,
+                        global_vault_opt: Some(global_vault),
+                        market_vault_opt: Some(market_vault),
+                        token_program_opt: Some(token_program),
+                        system_program: Some(system_program.clone()),
+                        gas_payer_opt: Some(payer.clone()),
+                        gas_receiver_opt: Some(payer.clone()),
+                        market: *market.info.pubkey(),
+                        num_deferred_gas_refunds: Cell::new(0),
+                    })
+                };
+            }
+        }
+
+        Ok(Self {
+            payer,
+            market,
+            _system_program: system_program,
+            global_trade_accounts_opts,
+        })
+    }
+}
+
+/// Verifies that `global_key` is the canonical global account for the
+/// market's base (`index` 0) or quote (`index` 1) mint, `mint`.
+///
+/// The canonical address is a program derived address, which is what makes
+/// the check meaningful: an attacker can create an account and assign it to
+/// this program, and even if they could make its owner and discriminant
+/// match, they cannot place it at the derived address because that needs the
+/// program's signature, which only its init provides. Deriving costs 1,500 CU
+/// per bump tried, so the address is derived once per market and side, stored
+/// on the market (`MarketFixed::get_base_global` / `get_quote_global`), and
+/// checked with a key compare from then on. Markets from before the cache
+/// existed have it filled in on their first global trade.
+#[cfg(not(feature = "certora"))]
+fn verify_market_global<'a>(
+    market: &ManifestAccountInfo<'a, MarketFixed>,
+    index: usize,
+    mint: &Pubkey,
+    global_key: &Pubkey,
+) -> ProgramResult {
+    let cached_global: Pubkey = {
+        let market_fixed: Ref<MarketFixed> = market.get_fixed()?;
+        if index == 0 {
+            *market_fixed.get_base_global()
+        } else {
+            *market_fixed.get_quote_global()
+        }
+    };
+    if cached_global != Pubkey::default() {
+        require!(
+            cached_global == *global_key,
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+        return Ok(());
+    }
+
+    let (expected_global_key, _global_bump) = get_global_address(mint);
+    require!(
+        expected_global_key == *global_key,
+        ManifestError::MissingGlobal,
+        "Unexpected global accounts",
+    )?;
+    let market_bytes: &mut [u8] = &mut market.try_borrow_mut()?[..];
+    let market_fixed: &mut MarketFixed = get_mut_helper::<MarketFixed>(market_bytes, 0_u32);
+    if index == 0 {
+        market_fixed.set_base_global(expected_global_key);
+    } else {
+        market_fixed.set_quote_global(expected_global_key);
+    }
+    Ok(())
+}
+
+/// Formal verification derives the address every time instead of reading the
+/// cache, for two reasons. The cached fields do not exist in that build:
+/// `MarketFixed` is 256 bytes either way, and under `certora` the same 64
+/// bytes hold the informational atom totals the specs reason about. And the
+/// prover models `create_program_address`, so deriving is what lets it state
+/// the property directly, that the account is the canonical global for this
+/// mint.
+///
+/// That splits the coverage: the prover checks the property, and the tests
+/// check that the fast path implements it. `is_global_address` is compared
+/// against `create_program_address` for every bump in `manifest_checker`, and
+/// `tests/cases/global_address.rs` covers the cache being filled in on an old
+/// market, a global for the wrong mint, and a forged account that copies a
+/// real global but does not sit at the derived address.
+#[cfg(feature = "certora")]
+fn verify_market_global<'a>(
+    _market: &ManifestAccountInfo<'a, MarketFixed>,
+    _index: usize,
+    mint: &Pubkey,
+    global_key: &Pubkey,
+) -> ProgramResult {
+    let (expected_global_key, _global_bump) = get_global_address(mint);
+    require!(
+        expected_global_key == *global_key,
+        ManifestError::MissingGlobal,
+        "Unexpected global accounts",
+    )
+}
+
+/// Global create
+pub(crate) struct GlobalCreateContext<'a> {
+    pub payer: Signer<'a>,
+    pub global: EmptyAccount<'a>,
+    pub system_program: Program<'a>,
+    pub global_mint: MintAccountInfo<'a>,
+    pub global_vault: EmptyAccount<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+    /// Bump of the global PDA, derived once here for signing and the header.
+    pub global_bump: u8,
+}
+
+impl<'a> GlobalCreateContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        let global: EmptyAccount = EmptyAccount::new(next_account_info(account_iter)?)?;
+        let system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        let global_mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+        let global_vault: EmptyAccount = EmptyAccount::new(next_account_info(account_iter)?)?;
+
+        let (expected_global_key, global_bump) = get_global_address(global_mint.info.pubkey());
+        assert_eq!(expected_global_key, *global.info.pubkey());
+
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        Ok(Self {
+            payer,
+            global,
+            system_program,
+            global_mint,
+            global_vault,
+            token_program,
+            global_bump,
+        })
+    }
+}
+
+/// Global add trader
+pub(crate) struct GlobalAddTraderContext<'a> {
+    pub payer: Signer<'a>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+    pub _system_program: Program<'a>,
+}
+
+impl<'a> GlobalAddTraderContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        let global: ManifestAccountInfo<GlobalFixed> =
+            ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?)?;
+
+        let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+        let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+        let global_mint_key: &Pubkey = global_fixed.get_mint();
+        // The global is validated against its own stored bump, see
+        // `is_global_address` for why that is as strong as deriving it.
+        require!(
+            is_global_address(
+                global.info.pubkey(),
+                global_mint_key,
+                global_fixed.get_global_bump()
+            ),
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+        drop(global_data);
+
+        let _system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        Ok(Self {
+            payer,
+            global,
+            _system_program,
+        })
+    }
+}
+
+/// Global deposit
+pub(crate) struct GlobalDepositContext<'a> {
+    pub payer: Signer<'a>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+    pub mint: MintAccountInfo<'a>,
+    pub global_vault: TokenAccountInfo<'a>,
+    pub trader_token: TokenAccountInfo<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+}
+
+impl<'a> GlobalDepositContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let global: ManifestAccountInfo<GlobalFixed> =
+            ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?)?;
+
+        let mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+
+        let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+        let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+
+        let global_mint_key: &Pubkey = global_fixed.get_mint();
+        // The global is validated against its own stored bump, see
+        // `is_global_address` for why that is as strong as deriving it.
+        require!(
+            is_global_address(
+                global.info.pubkey(),
+                global_mint_key,
+                global_fixed.get_global_bump()
+            ),
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+
+        let expected_global_vault_address: &Pubkey = global_fixed.get_vault();
+
+        let global_vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            mint.info.pubkey(),
+            &expected_global_vault_address,
+            &expected_global_vault_address,
+        )?;
+        drop(global_data);
+
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+        let trader_token: TokenAccountInfo = TokenAccountInfo::new_with_owner(
+            token_account_info,
+            mint.info.pubkey(),
+            payer.pubkey(),
+        )?;
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        Ok(Self {
+            payer,
+            global,
+            mint,
+            global_vault,
+            trader_token,
+            token_program,
+        })
+    }
+}
+
+/// Global withdraw
+pub(crate) struct GlobalWithdrawContext<'a> {
+    pub payer: Signer<'a>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+    pub mint: MintAccountInfo<'a>,
+    pub global_vault: TokenAccountInfo<'a>,
+    pub trader_token: TokenAccountInfo<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+}
+
+impl<'a> GlobalWithdrawContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new(next_account_info(account_iter)?)?;
+        let global: ManifestAccountInfo<GlobalFixed> =
+            ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?)?;
+
+        let mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+
+        let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+        let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+
+        let global_mint_key: &Pubkey = global_fixed.get_mint();
+        // The global is validated against its own stored bump, see
+        // `is_global_address` for why that is as strong as deriving it.
+        require!(
+            is_global_address(
+                global.info.pubkey(),
+                global_mint_key,
+                global_fixed.get_global_bump()
+            ),
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+
+        let expected_global_vault_address: &Pubkey = global_fixed.get_vault();
+
+        let global_vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            mint.info.pubkey(),
+            &expected_global_vault_address,
+            &expected_global_vault_address,
+        )?;
+        drop(global_data);
+
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+        let trader_token: TokenAccountInfo = TokenAccountInfo::new_with_owner(
+            token_account_info,
+            mint.info.pubkey(),
+            payer.pubkey(),
+        )?;
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        Ok(Self {
+            payer,
+            global,
+            mint,
+            global_vault,
+            trader_token,
+            token_program,
+        })
+    }
+}
+
+/// Global evict
+pub(crate) struct GlobalEvictContext<'a> {
+    pub payer: Signer<'a>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+    pub mint: MintAccountInfo<'a>,
+    pub global_vault: TokenAccountInfo<'a>,
+    pub trader_token: TokenAccountInfo<'a>,
+    pub evictee_token: TokenAccountInfo<'a>,
+    // Loaded so the account is validated and present for the CPI.
+    #[allow(dead_code)]
+    pub token_program: TokenProgram<'a>,
+    pub _system_program: Program<'a>,
+}
+
+impl<'a> GlobalEvictContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        let global: ManifestAccountInfo<GlobalFixed> =
+            ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?)?;
+
+        let mint: MintAccountInfo = MintAccountInfo::new(next_account_info(account_iter)?)?;
+
+        let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+        let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+
+        let global_mint_key: &Pubkey = global_fixed.get_mint();
+        // The global is validated against its own stored bump, see
+        // `is_global_address` for why that is as strong as deriving it.
+        require!(
+            is_global_address(
+                global.info.pubkey(),
+                global_mint_key,
+                global_fixed.get_global_bump()
+            ),
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+
+        let expected_global_vault_address: &Pubkey = global_fixed.get_vault();
+
+        let global_vault: TokenAccountInfo = TokenAccountInfo::new_with_owner_and_key(
+            next_account_info(account_iter)?,
+            mint.info.pubkey(),
+            &expected_global_vault_address,
+            &expected_global_vault_address,
+        )?;
+        drop(global_data);
+
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+        let trader_token: TokenAccountInfo = TokenAccountInfo::new_with_owner(
+            token_account_info,
+            mint.info.pubkey(),
+            payer.pubkey(),
+        )?;
+        let token_account_info: &AccountView = next_account_info(account_iter)?;
+        let evictee_token: TokenAccountInfo =
+            TokenAccountInfo::new(token_account_info, mint.info.pubkey())?;
+        let token_program: TokenProgram = TokenProgram::new(next_account_info(account_iter)?)?;
+        let _system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        Ok(Self {
+            payer,
+            global,
+            mint,
+            global_vault,
+            trader_token,
+            evictee_token,
+            token_program,
+            _system_program,
+        })
+    }
+}
+
+/// Global clean
+pub(crate) struct GlobalCleanContext<'a> {
+    pub payer: Signer<'a>,
+    pub market: ManifestAccountInfo<'a, MarketFixed>,
+    pub system_program: Program<'a>,
+    pub global: ManifestAccountInfo<'a, GlobalFixed>,
+}
+
+impl<'a> GlobalCleanContext<'a> {
+    pub fn load(accounts: &'a [AccountView]) -> Result<Self, ProgramError> {
+        let account_iter: &mut Iter<AccountView> = &mut accounts.iter();
+
+        let payer: Signer = Signer::new_payer(next_account_info(account_iter)?)?;
+        let market: ManifestAccountInfo<MarketFixed> =
+            ManifestAccountInfo::<MarketFixed>::new(next_account_info(account_iter)?)?;
+        let system_program: Program =
+            Program::new(next_account_info(account_iter)?, &system_program::id())?;
+        let global: ManifestAccountInfo<GlobalFixed> =
+            ManifestAccountInfo::<GlobalFixed>::new(next_account_info(account_iter)?)?;
+
+        let global_data: pinocchio::account::Ref<[u8]> = global.try_borrow()?;
+        let global_fixed: &GlobalFixed = get_helper::<GlobalFixed>(&global_data, 0_u32);
+        let global_mint_key: &Pubkey = global_fixed.get_mint();
+        // The global is validated against its own stored bump, see
+        // `is_global_address` for why that is as strong as deriving it.
+        require!(
+            is_global_address(
+                global.info.pubkey(),
+                global_mint_key,
+                global_fixed.get_global_bump()
+            ),
+            ManifestError::MissingGlobal,
+            "Unexpected global accounts",
+        )?;
+        drop(global_data);
+
+        Ok(Self {
+            payer,
+            market,
+            system_program,
+            global,
+        })
+    }
+}

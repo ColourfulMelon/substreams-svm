@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/igneous-labs/inf-1.5",
+  "commit": "d4bfdd4d1d34985f8639433c0308941fc84bf1a2",
+  "files": [
+    {
+      "path": "controller/core/src/instructions/swap/v1/exact_in.rs",
+      "sha256": "875a5eb02fdff25dac9ca1570461102e1d6f0c93650b4503f219b21d668efcd5"
+    },
+    {
+      "path": "controller/core/src/instructions/swap/v1/mod.rs",
+      "sha256": "4af35d36f63ae298c0f464925f3d1da626ac3cde682623474c41b1b00e8190cc"
+    },
+    {
+      "path": "controller/core/src/pda.rs",
+      "sha256": "b8fc37144c29cad929f55744ef819d6bbd6dd04ed6b743d35cf2278ef6dffc62"
+    },
+    {
+      "path": "controller/program/src/lib.rs",
+      "sha256": "d251dc1b03c2ec15499a010b89a89dfe529b7e101551619766cef805d2b6d51e"
+    }
+  ]
+}

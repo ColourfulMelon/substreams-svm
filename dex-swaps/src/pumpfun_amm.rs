@@ -4,6 +4,116 @@ use substreams_solana_idls::pumpswap;
 use substreams_solana_idls::pumpswap::accounts::TradeTokenAccounts;
 use substreams_solana_idls::pumpswap::events::TradeDirection;
 
+// Boost trades acquire base inventory by burning the pool's base reserve.
+// Keep the burn receipt separate from a trader token-account credit.
+pub(crate) struct BoostBurn { pub swap: pb::Swap, pub burn_index: u32 }
+
+pub(crate) fn decode_boost_burns(tx:&substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction)->Vec<BoostBurn> {
+    use std::collections::HashMap;
+    use substreams_solana_idls::spl::{token,token_2022};
+    let prove=||->Option<Vec<BoostBurn>> {
+        let meta=tx.meta.as_ref()?;if meta.err.is_some(){return None;}
+        let walk:Vec<_>=tx.walk_instructions().collect();let keys=tx.resolved_accounts();
+        let committed=crate::logs::successful_invocations(tx);
+        let mut native=HashMap::<Vec<u8>,i128>::new();let mut token_delta=HashMap::<Vec<u8>,i128>::new();
+        let mut mints=HashMap::<Vec<u8>,Vec<u8>>::new();
+        for b in meta.pre_token_balances.iter().chain(&meta.post_token_balances) {
+            let key=keys.get(b.account_index as usize)?;let mint=substreams_solana::base58::decode(&b.mint).ok()?;
+            if mints.insert((*key).clone(),mint.clone()).is_some_and(|other|other!=mint){return None;}
+        }
+        let mut result=Vec::new();
+        for (source,ix) in walk.iter().enumerate() {
+            let a=ix.accounts();let d=ix.data();let program=ix.program_id().0;
+            if !committed.contains(&(source as u32)) {return None;}
+            if program.as_slice()==pumpswap::PROGRAM_ID && d.starts_with(&[105,68,6,175,0,7,35,162]) {
+                if !ix.is_root() || d.len()!=24 || a.len()!=13 || a[4].0.as_slice()!=crate::SOL_MINT || a[9].0.as_slice()!=token_2022::PROGRAM_ID
+                    || a[10].0.as_slice()!=token::PROGRAM_ID || a[12].0.as_slice()!=pumpswap::PROGRAM_ID
+                    || [0,1,3,4,5,6,7,8].iter().enumerate().any(|(p,r)|[0,1,3,4,5,6,7,8][p+1..].iter().any(|q|a[*r].0==a[*q].0)) {return None;}
+                let authority=solana_pubkey::Pubkey::find_program_address(&[b"boost_vault",a[0].0],&solana_pubkey::Pubkey::new_from_array(pumpswap::PROGRAM_ID)).0.to_bytes();
+                let ata=solana_pubkey::Pubkey::find_program_address(&[&authority,&token::PROGRAM_ID,a[4].0],
+                    &solana_pubkey::Pubkey::new_from_array(substreams_solana::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"))).0.to_bytes();
+                let event_authority=solana_pubkey::Pubkey::find_program_address(&[b"__event_authority"],&solana_pubkey::Pubkey::new_from_array(pumpswap::PROGRAM_ID)).0.to_bytes();
+                if a[7].0.as_slice()!=authority || a[8].0.as_slice()!=ata || a[11].0.as_slice()!=event_authority {return None;}
+                let end=walk.iter().enumerate().skip(source+1).find(|(_,x)|x.is_root()).map(|(i,_)|i).unwrap_or(walk.len());
+                let c=walk.get(source+1..end)?;
+                if !matches!(c.len(),4|5) || c.iter().any(|x|x.is_root() || x.stack_height()!=2) {return None;}
+                let q=&c[0];let qa=q.accounts();let burn=&c[1];let ba=burn.accounts();let buy=&c[2];let event=&c[3];let e=event.data();let b=buy.data();
+                if q.program_id().0!=a[10].0 || q.data().len()!=10 || q.data()[0]!=12 || q.data()[9]!=9 || qa.len()!=4
+                    || qa[0].0!=a[8].0 || qa[1].0!=a[4].0 || qa[2].0!=a[6].0 || qa[3].0!=a[7].0
+                    || burn.program_id().0!=a[9].0 || burn.data().len()!=9 || burn.data()[0]!=8 || ba.len()!=3
+                    || ba[0].0!=a[5].0 || ba[1].0!=a[3].0 || ba[2].0!=a[0].0
+                    || event.program_id().0.as_slice()!=pumpswap::PROGRAM_ID || event.accounts().len()!=1 || event.accounts()[0].0!=a[11].0
+                    || e.len()!=216 || e[..16]!=[228,69,165,46,81,203,154,29,63,69,28,22,48,92,194,185]
+                    || e[24..56]!=a[3].0[..] || e[88..120]!=a[0].0[..] || e[120..152]!=a[1].0[..]
+                    || buy.program_id().0.as_slice()!=pumpswap::PROGRAM_ID || buy.accounts().len()!=1 || buy.accounts()[0].0!=a[11].0
+                    || b.len()!=512 || b[..16]!=[228,69,165,46,81,203,154,29,103,244,82,31,44,245,119,119]
+                    || b[128..160]!=a[0].0[..] || b[160..192]!=a[7].0[..] || b[192..224]!=[0;32] || b[224..256]!=a[8].0[..]
+                    || b[256..320]!=[0;64] || b[409..413]!=18u32.to_le_bytes() || b[413..431]!=b"buy_exact_quote_in"[..] {return None;}
+                let u=|data:&[u8],o|data.get(o..o+8).and_then(|x|x.try_into().ok()).map(u64::from_le_bytes);
+                let quote=u(q.data(),1)?;let output=u(burn.data(),1)?;
+                if quote==0 || output==0 || quote>u(d,8)? || output<u(d,16)? || u(e,152)?!=u(d,8)? || u(e,160)?!=quote || u(e,168)?!=output
+                    || u(b,24)?!=output || u(b,32)?!=u(d,8)? || u(b,72)?!=quote || u(b,112)?!=quote || u(b,120)?!=quote
+                    || u(b,401)?!=u(d,16)? || b[80..112]!=[0;32] || b[352..369]!=[0;17] || b[431..463]!=[0;32]
+                    || u(b,56)?.checked_sub(output)?!=u(e,200)? || u(b,64)?.checked_add(quote)?!=u(e,192)?
+                    || u(b,48)?.checked_sub(quote)?!=u(e,208)? || b[463..479]!=e[176..192] {return None;}
+                for (role,mint,owner) in [(5,3,0),(6,4,0),(8,4,7)] {
+                    let index=keys.iter().position(|k|*k==a[role].0)? as u32;
+                    for balance in meta.pre_token_balances.iter().chain(&meta.post_token_balances).filter(|b|b.account_index==index) {
+                        if balance.mint!=substreams_solana::base58::encode(a[mint].0) || balance.owner!=substreams_solana::base58::encode(a[owner].0)
+                            || balance.program_id!=substreams_solana::base58::encode(a[if mint==3 {9}else{10}].0) {return None;}
+                    }
+                }
+                if c.len()==5 {
+                    let close=&c[4];let ca=close.accounts();
+                    if close.program_id().0.as_slice()!=token::PROGRAM_ID || close.data().as_slice()!=[9] || ca.len()!=3
+                        || ca[0].0!=a[8].0 || ca[1].0!=a[1].0 || ca[2].0!=a[7].0 || u(e,208)?!=0 {return None;}
+                }
+                result.push(BoostBurn {burn_index:(source+2)as u32,swap:pb::Swap{
+                    protocol:pb::Protocol::PumpfunAmmBuyBurn as i32,program_id:pumpswap::PROGRAM_ID.to_vec(),amm:pumpswap::PROGRAM_ID.to_vec(),
+                    amm_pool:a[0].0.clone(),user:a[7].0.clone(),input_mint:a[4].0.clone(),output_mint:a[3].0.clone(),
+                    input_amount:quote,output_amount:output,source_index:Some(source as u32),source_transfer_index:Some((source+1)as u32),
+                    source_burn_index:Some((source+2)as u32),burn_output_verified:true,stack_height:1,..Default::default()
+                }});
+            } else if program.as_slice()==pumpswap::PROGRAM_ID {
+                // Only the two direct native events can occur in this profile.
+                if ix.is_root() || a.len()!=1 || !d.starts_with(&[228,69,165,46,81,203,154,29]) {return None;}
+            } else if program.iter().all(|v|*v==0) {
+                if d.len()!=12 || d[..4]!=[2,0,0,0] || a.len()!=2 {return None;}
+                let amount=u64::from_le_bytes(d[4..12].try_into().ok()?);
+                *native.entry(a[0].0.clone()).or_default()-=i128::from(amount);*native.entry(a[1].0.clone()).or_default()+=i128::from(amount);
+            } else if program.as_slice()==token::PROGRAM_ID || program.as_slice()==token_2022::PROGRAM_ID {
+                match d.first().copied()? {
+                    12 if d.len()==10 && a.len()==4 && mints.get(a[0].0)==Some(a[1].0) && mints.get(a[2].0)==Some(a[1].0) => {
+                        let amount=u64::from_le_bytes(d[1..9].try_into().ok()?);
+                        *token_delta.entry(a[0].0.clone()).or_default()-=i128::from(amount);*token_delta.entry(a[2].0.clone()).or_default()+=i128::from(amount);
+                        if a[1].0.as_slice()==crate::SOL_MINT {
+                            if program.as_slice()!=token::PROGRAM_ID {return None;}
+                            *native.entry(a[0].0.clone()).or_default()-=i128::from(amount);*native.entry(a[2].0.clone()).or_default()+=i128::from(amount);
+                        }
+                    },
+                    8 if d.len()==9 && a.len()==3 && mints.get(a[0].0)==Some(a[1].0) => {*token_delta.entry(a[0].0.clone()).or_default()-=i128::from(u64::from_le_bytes(d[1..9].try_into().ok()?));},
+                    9 if d.as_slice()==[9] && a.len()==3 && mints.get(a[0].0).is_some_and(|m|m.as_slice()==crate::SOL_MINT) => {
+                        let i=keys.iter().position(|k|*k==a[0].0)?;if *meta.post_balances.get(i)?!=0 {return None;}
+                        let residual=i128::from(*meta.pre_balances.get(i)?)+native.get(a[0].0).copied().unwrap_or(0);
+                        if residual<0 {return None;}
+                        *native.entry(a[0].0.clone()).or_default()-=residual;*native.entry(a[1].0.clone()).or_default()+=residual;
+                    },
+                    _=>return None,
+                }
+            } else if program.as_slice()!=substreams_solana::b58!("ComputeBudget111111111111111111111111111111") {return None;}
+        }
+        *native.entry(keys.first()?.to_vec()).or_default()-=i128::from(meta.fee);
+        if keys.iter().enumerate().any(|(i,key)|meta.post_balances.get(i).zip(meta.pre_balances.get(i)).map(|(after,before)|i128::from(*after)-i128::from(*before))!=Some(native.get(*key).copied().unwrap_or(0))) {return None;}
+        for (key,delta) in token_delta {
+            let index=keys.iter().position(|k|**k==key)? as u32;
+            let balance=|rows:&[substreams_solana::pb::sf::solana::r#type::v1::TokenBalance]|rows.iter().find(|x|x.account_index==index).map(|x|x.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()).unwrap_or(Some(0));
+            if i128::from(balance(&meta.post_token_balances)?)-i128::from(balance(&meta.pre_token_balances)?)!=delta {return None;}
+        }
+        Some(result)
+    };
+    prove().unwrap_or_default()
+}
+
 pub(crate) struct PendingTrade {
     pool: Vec<u8>,
     base_mint: Vec<u8>,
@@ -189,6 +299,126 @@ mod tests {
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
+
+    #[test]
+    fn finalized_boost_burns_bind_actual_quote_debit_and_destroyed_base() {
+        let fixtures:&[(&[u8],usize)]=&[
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/0.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/1.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/2.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/3.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/4.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/5.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/6.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/7.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/8.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/9.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/10.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/11.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/12.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/13.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/14.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/15.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/16.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/17.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/18.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/19.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/20.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/21.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/22.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/23.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/24.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/25.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/26.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/27.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/28.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/29.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/30.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/31.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/32.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/33.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/34.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/35.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/36.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/37.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/38.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/39.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/40.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/41.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/42.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/43.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/44.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/45.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/46.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/47.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/48.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/49.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/50.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/51.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/52.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/53.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/54.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/55.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/56.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/57.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/58.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/59.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/60.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/61.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/62.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/63.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/64.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/65.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/66.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/67.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/68.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/69.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/70.transaction.pb").as_slice(),2),
+(include_bytes!("../fixtures/swap-coverage/pumpswap-boost-burn27/71.transaction.pb").as_slice(),2),
+        ];
+        for &(bytes,source) in fixtures {
+            let tx=substreams::proto::decode::<substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction>(&bytes.to_vec()).unwrap();
+            let rows=decode_boost_burns(&tx);
+            assert_eq!(rows.len(),1,"source{source}");
+            assert_eq!(rows[0].burn_index,(source+2)as u32);
+            let walk:Vec<_>=tx.walk_instructions().collect();let a=walk[source].accounts();let native=walk[source].data().clone();
+            let quote=walk[source+1].data().clone();let burn=walk[source+2].data().clone();let buy_event=walk[source+3].data().clone();let event=walk[source+4].data().clone();
+            let r=&rows[0].swap;
+            assert_eq!((r.protocol,r.source_index,r.source_transfer_index,r.source_burn_index,r.amm_pool.clone(),r.user.clone(),r.input_mint.clone(),r.input_amount,r.output_mint.clone(),r.output_amount),
+                (pb::Protocol::PumpfunAmmBuyBurn as i32,Some(source as u32),Some((source+1)as u32),Some((source+2)as u32),a[0].0.clone(),a[7].0.clone(),a[4].0.clone(),u64::from_le_bytes(quote[1..9].try_into().unwrap()),a[3].0.clone(),u64::from_le_bytes(burn[1..9].try_into().unwrap())));
+            assert!(r.burn_output_verified && !r.transfer_verified && !r.orderbook_fill_verified);
+            let processed=crate::process_transaction(tx.clone()).expect("verified burn transaction");
+            let published:Vec<_>=processed.swaps.iter().filter(|s|s.source_index==Some(source as u32)).collect();
+            assert_eq!(published.len(),1,"one economic burn row");
+            assert_eq!(published[0],r,"published tuple preserves the guarded burn proof");
+            for mode in 0..29 {
+                let mut wrong=tx.clone();
+                if mode<5 {
+                    let root=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|x|x.data==native).unwrap();
+                    match mode {0=>root.data[8..16].copy_from_slice(&(r.input_amount-1).to_le_bytes()),1=>root.data[16..24].copy_from_slice(&(r.output_amount+1).to_le_bytes()),2=>root.data.push(0),3=>root.accounts[0]=root.accounts[1],_=>root.accounts[7]=root.accounts[1]}
+                } else if mode==23 {
+                    let index=tx.resolved_accounts().iter().position(|k|*k==a[5].0).unwrap() as u32;
+                    wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index==index).unwrap().ui_token_amount.as_mut().unwrap().amount="1".into();
+                } else if mode==24 {
+                    wrong.meta.as_mut().unwrap().post_balances[0]+=1;
+                } else if mode==25 {
+                    let logs=&mut wrong.meta.as_mut().unwrap().log_messages;
+                    let index=logs.iter().rposition(|l|l==&format!("Program {} success",substreams_solana::base58::encode(&pumpswap::PROGRAM_ID))).unwrap();
+                    logs[index]=format!("Program {} failed: custom program error: 1",substreams_solana::base58::encode(&pumpswap::PROGRAM_ID));
+                } else {
+                    let data=if matches!(mode,6..=9){&quote}else if matches!(mode,5|10..=13){&burn}else if matches!(mode,14..=18|27){&buy_event}else{&event};
+                    let call=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|x|&x.data==data).unwrap();
+                    match mode {5=>call.program_id_index^=1,6=>call.data[1]^=1,7=>call.accounts[0]=call.accounts[2],8=>call.accounts[2]=call.accounts[0],9=>call.accounts[3]=call.accounts[2],
+                        10=>call.data[1]^=1,11=>call.accounts[0]=call.accounts[1],12=>call.accounts[1]=call.accounts[0],13=>call.accounts[2]=call.accounts[1],
+                        14=>call.data[24]^=1,15=>call.data[128]^=1,16=>call.data[160]^=1,17=>call.data[32]^=1,18=>call.data[401]^=1,
+                        19=>call.data[24]^=1,20=>call.data[88]^=1,21=>call.data[160]^=1,22=>call.data[168]^=1,26=>call.accounts[0]^=1,27=>call.data[104]=1,_=>call.data[176]^=1}
+                }
+                assert!(decode_boost_burns(&wrong).is_empty(),"boost source{source} mutation{mode}");
+                assert!(crate::process_transaction(wrong).map(|p|p.swaps.iter().all(|s|s.source_index!=Some(source as u32))).unwrap_or(true),"malformed burn cannot publish source{source} mutation{mode}");
+            }
+
+        }
+    }
 
     #[test]
     fn finalized_exact_quote_budgets_preserve_all_existing_financial_tuples() {

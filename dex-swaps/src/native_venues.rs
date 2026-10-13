@@ -53,12 +53,19 @@ pub(crate) const VENUES: &[(Protocol, [u8; 32])] = &[
     (Protocol::Saber, crate::saber::PROGRAM_ID),
     (Protocol::SplTokenSwap, crate::spl_swap_forks::DOOAR),
     (Protocol::SplTokenSwap, crate::spl_swap_forks::DEXLAB),
+    (Protocol::SplTokenSwap, crate::spl_swap_forks::PENGUIN),
     (Protocol::Quantum, crate::proprietary_swaps::QUANTUM),
     (Protocol::Binaryfi, crate::proprietary_swaps::BINARYFI),
     (Protocol::Triangle, crate::triangle::PROGRAM_ID),
     (Protocol::Archer, crate::archer::PROGRAM_ID),
     (Protocol::Riptide, crate::riptide::PROGRAM_ID),
     (Protocol::Hadron, crate::hadron::PROGRAM_ID),
+    (Protocol::AldrinV1, crate::legacy_amm::ALDRIN),
+    (Protocol::Cropper, crate::legacy_amm::CROPPER),
+    (Protocol::PiconDlmm, crate::picon_dlmm::PROGRAM_ID),
+    (Protocol::M0NativeOrder, crate::m0_native_order::PROGRAM_ID),
+    (Protocol::PatchBuyback, crate::patch_bxlw::PATCH),
+    (Protocol::Bxlw, crate::patch_bxlw::BXLW),
     (Protocol::Quay, crate::quay::PROGRAM_ID),
     (Protocol::AnchorSwap, crate::anchor_swap::PROGRAM_ID),
     (Protocol::RaydiumCpmmFork, crate::raydium_cpmm_fork::PROGRAM_ID),
@@ -93,6 +100,11 @@ pub(crate) struct Layout {
 }
 
 pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
+    if ix.program_id().0.as_slice()==substreams_solana_idls::pancakeswap::PROGRAM_ID && ix.data().starts_with(&crate::pancakeswap::LEGACY_SWAP) { return crate::pancakeswap::legacy_layout(ix); }
+    if [crate::patch_bxlw::PATCH.as_slice(),crate::patch_bxlw::BXLW.as_slice()].contains(&ix.program_id().0.as_slice()) { return crate::patch_bxlw::layout(ix); }
+    if ix.program_id().0.as_slice() == crate::m0_native_order::PROGRAM_ID { return crate::m0_native_order::layout(ix); }
+    if ix.program_id().0.as_slice() == crate::picon_dlmm::PROGRAM_ID { return crate::picon_dlmm::layout(ix); }
+    if [crate::legacy_amm::ALDRIN.as_slice(),crate::legacy_amm::CROPPER.as_slice()].contains(&ix.program_id().0.as_slice()) { return crate::legacy_amm::layout(ix); }
     if ix.program_id().0.as_slice()==crate::raydium_cpmm_fork::PROGRAM_ID { return crate::raydium_cpmm_fork::layout(ix); }
     if ix.program_id().0.as_slice()==crate::janus::PROGRAM_ID { return crate::janus::layout(ix); }
     if ix.program_id().0.as_slice()==crate::exponent::PROGRAM_ID { return crate::exponent::layout(ix); }
@@ -103,7 +115,7 @@ pub(crate) fn layout(ix: &InstructionView) -> Option<Layout> {
     if crate::suffixed_anchor_swaps::applies(ix) { return crate::suffixed_anchor_swaps::layout(ix); }
     if crate::current_proprietary::applies(ix) { return crate::current_proprietary::layout(ix); }
     let program = ix.program_id();
-    if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice()].contains(&program.0.as_slice()) {
+    if [crate::spl_swap_forks::DOOAR.as_slice(), crate::spl_swap_forks::DEXLAB.as_slice(),crate::spl_swap_forks::PENGUIN.as_slice()].contains(&program.0.as_slice()) {
         return crate::spl_swap_forks::layout(ix);
     }
     let protocol = VENUES.iter().find(|(_, id)| id.as_slice() == program.0.as_slice())?.0;
