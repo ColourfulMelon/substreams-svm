@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &phoenix::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -48,20 +48,24 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Swap(pb::SwapInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        phoenix_program: accounts.phoenix_program.to_bytes().to_vec(),
-                        log_authority: accounts.log_authority.to_bytes().to_vec(),
-                        market: accounts.market.to_bytes().to_vec(),
-                        trader: accounts.trader.to_bytes().to_vec(),
-                        base_account: accounts.base_account.to_bytes().to_vec(),
-                        quote_account: accounts.quote_account.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        token_program: accounts.token_program.to_bytes().to_vec(),
-                    }),
-                    order_packet: event.order_packet,
-                })),
+                instruction: Some(pb::instruction::Instruction::Swap(
+                    pb::SwapInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            phoenix_program: accounts.phoenix_program.to_bytes().to_vec(),
+                            log_authority: accounts.log_authority.to_bytes().to_vec(),
+                            market: accounts.market.to_bytes().to_vec(),
+                            trader: accounts.trader.to_bytes().to_vec(),
+                            base_account: accounts.base_account.to_bytes().to_vec(),
+                            quote_account: accounts.quote_account.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            token_program: accounts.token_program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        order_packet: event.order_packet,
+                    }
+                    .into(),
+                )),
             })
         }
         Ok(phoenix::instructions::PhonenixInstruction::SwapWithFreeFunds(event)) => {
@@ -69,20 +73,24 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::SwapWithFreeFunds(pb::SwapWithFreeFundsInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        phoenix_program: accounts.phoenix_program.to_bytes().to_vec(),
-                        log_authority: accounts.log_authority.to_bytes().to_vec(),
-                        market: accounts.market.to_bytes().to_vec(),
-                        trader: accounts.trader.to_bytes().to_vec(),
-                        base_account: accounts.base_account.to_bytes().to_vec(),
-                        quote_account: accounts.quote_account.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        token_program: accounts.token_program.to_bytes().to_vec(),
-                    }),
-                    order_packet: event.order_packet,
-                })),
+                instruction: Some(pb::instruction::Instruction::SwapWithFreeFunds(
+                    pb::SwapWithFreeFundsInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            phoenix_program: accounts.phoenix_program.to_bytes().to_vec(),
+                            log_authority: accounts.log_authority.to_bytes().to_vec(),
+                            market: accounts.market.to_bytes().to_vec(),
+                            trader: accounts.trader.to_bytes().to_vec(),
+                            base_account: accounts.base_account.to_bytes().to_vec(),
+                            quote_account: accounts.quote_account.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            token_program: accounts.token_program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        order_packet: event.order_packet,
+                    }
+                    .into(),
+                )),
             })
         }
         _ => None,
@@ -121,14 +129,17 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(phoenix::events::PhonenixEvent::Fill(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Fill(pb::FillEvent {
-                index: event.index as u32,
-                maker_id: event.maker_id.to_bytes().to_vec(),
-                order_sequence_number: event.order_sequence_number,
-                price_in_ticks: event.price_in_ticks,
-                base_lots_filled: event.base_lots_filled,
-                base_lots_remaining: event.base_lots_remaining,
-            })),
+            log: Some(pb::log::Log::Fill(
+                pb::FillEvent {
+                    index: event.index as u32,
+                    maker_id: event.maker_id.to_bytes().to_vec(),
+                    order_sequence_number: event.order_sequence_number,
+                    price_in_ticks: event.price_in_ticks,
+                    base_lots_filled: event.base_lots_filled,
+                    base_lots_remaining: event.base_lots_remaining,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

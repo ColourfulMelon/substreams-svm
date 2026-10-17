@@ -64,7 +64,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 }
 
 fn process_transaction_with_provenance(tx: &ConfirmedTransaction, max_swaps: usize) -> Result<Option<ProjectedTransaction>, ProjectError> {
-    let Some(tx_meta) = tx.meta.as_ref() else { return Ok(None) };
+    let Some(tx_meta) = tx.meta.as_option() else { return Ok(None) };
     let mut swaps = native::Collector::new(max_swaps);
     let mut boop_state = boop::State::new();
     let mut byreal_state = byreal::State::new();
@@ -176,7 +176,7 @@ fn process_transaction_with_provenance(tx: &ConfirmedTransaction, max_swaps: usi
     Ok(Some(ProjectedTransaction {
         transaction_index: 0,
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),

@@ -79,8 +79,7 @@ pub(crate) mod test_fixture {
     //! gets its own account_keys slot). The instruction's `accounts` list
     //! references those by index.
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction,
-        TransactionStatusMeta,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
 
     /// Fee payer placeholder — `account_keys[0]` in real Solana txs is the
@@ -104,7 +103,8 @@ pub(crate) mod test_fixture {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -114,9 +114,12 @@ pub(crate) mod test_fixture {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta::default()),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: Some(TransactionStatusMeta::default()).into(),
         }
     }
 }
@@ -241,7 +244,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 0, 15);
         let mut data = METEORA_AMM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // in_amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_out_amount
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_out_amount
         let tx = test_fixture::make_tx(meteora::amm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -258,7 +261,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 1, 14);
         let mut data = METEORA_DAAM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
         let tx = test_fixture::make_tx(meteora::daam::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -275,9 +278,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 13);
         let mut data = BYREAL_SWAP_V2.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(byreal::clmm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -294,9 +297,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 10);
         let mut data = PANCAKESWAP_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(pancakeswap::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -313,9 +316,9 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 14);
         let mut data = RAYDIUM_CLMM_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit_x64
-        data.push(1);                                      // is_base_input
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit_x64
+        data.push(1); // is_base_input
         let tx = test_fixture::make_tx(raydium::clmm::v3::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -332,7 +335,7 @@ mod tests {
         let accounts = accounts_with_pool(pool, 3, 14);
         let mut data = RAYDIUM_CPMM_SWAP_BASE_INPUT.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
         let tx = test_fixture::make_tx(raydium::cpmm::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -350,10 +353,10 @@ mod tests {
         let accounts = accounts_with_pool(pool, 2, 14);
         let mut data = ORCA_SWAP.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // other_amount_threshold
-        data.extend_from_slice(&0u128.to_le_bytes());      // sqrt_price_limit
-        data.push(1);                                      // amount_specified_is_input
-        data.push(1);                                      // a_to_b
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // other_amount_threshold
+        data.extend_from_slice(&0u128.to_le_bytes()); // sqrt_price_limit
+        data.push(1); // amount_specified_is_input
+        data.push(1); // a_to_b
         let tx = test_fixture::make_tx(orca::whirlpool::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {
@@ -372,8 +375,8 @@ mod tests {
         let accounts = accounts_with_pool(pool, 4, 18);
         let mut data = LAUNCHPAD_BUY_EXACT_IN.to_vec();
         data.extend_from_slice(&100_000u64.to_le_bytes()); // amount_in
-        data.extend_from_slice(&50_000u64.to_le_bytes());  // minimum_amount_out
-        data.extend_from_slice(&0u64.to_le_bytes());       // share_fee_rate
+        data.extend_from_slice(&50_000u64.to_le_bytes()); // minimum_amount_out
+        data.extend_from_slice(&0u64.to_le_bytes()); // share_fee_rate
         let tx = test_fixture::make_tx(raydium::launchpad::PROGRAM_ID, &accounts, data);
         let mut tracker = Tracker::new();
         for ix in tx.walk_instructions() {

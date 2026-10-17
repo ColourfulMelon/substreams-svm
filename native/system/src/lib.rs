@@ -19,7 +19,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
     let resolved_accounts = tx.resolved_accounts();
 
     let create_balances = |balances: &[u64], tag: &str| -> Vec<pb::Balance> {
@@ -67,7 +67,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -75,4 +75,68 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         post_balances,
         pre_balances,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use substreams::buffa::{Message as _, MessageField};
+    use substreams_solana::pb::sf::solana::r#type::v1 as sol;
+
+    fn transfer_transaction() -> ConfirmedTransaction {
+        ConfirmedTransaction {
+            transaction: sol::Transaction {
+                signatures: vec![vec![0x33; 64]],
+                message: sol::Message {
+                    header: sol::MessageHeader {
+                        num_required_signatures: 1,
+                        ..Default::default()
+                    }
+                    .into(),
+                    account_keys: vec![vec![0x11; 32], vec![0x22; 32], SYSTEM_PROGRAM.to_vec()],
+                    instructions: vec![sol::CompiledInstruction {
+                        program_id_index: 2,
+                        accounts: vec![0, 1],
+                        // SystemInstruction::Transfer, fixed-width bincode, 42 lamports.
+                        data: vec![2, 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0],
+                    }],
+                    ..Default::default()
+                }
+                .into(),
+            }
+            .into(),
+            meta: sol::TransactionStatusMeta {
+                pre_balances: vec![100, 0, 0],
+                post_balances: vec![58, 42, 0],
+                ..Default::default()
+            }
+            .into(),
+        }
+    }
+
+    #[test]
+    fn native_transfer_preserves_legacy_oneof_wire_and_optional_scalar_default() {
+        let decoded = process_transaction(transfer_transaction()).expect("decoded transfer");
+        assert_eq!(decoded.compute_units_consumed, 0);
+        assert_eq!(decoded.instructions.len(), 1);
+
+        // Existing native-token.proto wire: program_id=1, is_root=3,
+        // transfer=10 with source=1, destination=2, lamports=3.
+        let mut expected = vec![0x0a, 32];
+        expected.extend_from_slice(&SYSTEM_PROGRAM);
+        expected.extend_from_slice(&[0x18, 1, 0x52, 70, 0x0a, 32]);
+        expected.extend_from_slice(&[0x11; 32]);
+        expected.extend_from_slice(&[0x12, 32]);
+        expected.extend_from_slice(&[0x22; 32]);
+        expected.extend_from_slice(&[0x18, 42]);
+        assert_eq!(decoded.instructions[0].encode_to_vec(), expected);
+        assert_eq!(pb::Instruction::decode_from_slice(&expected).unwrap(), decoded.instructions[0]);
+    }
+
+    #[test]
+    fn missing_metadata_still_rejects_a_transaction_with_valid_transfer_bytes() {
+        let mut tx = transfer_transaction();
+        tx.meta = MessageField::none();
+        assert!(process_transaction(tx).is_none());
+    }
 }

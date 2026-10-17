@@ -1,6 +1,6 @@
 use crate::{map_events, native::Collector, pb, project, project_with_limits, InstructionPosition, Limits, ProjectError, Provenance, SwapKind};
+use buffa::Message;
 use flate2::read::GzDecoder;
-use prost::Message;
 use std::io::Read;
 use substreams_solana::pb::sf::solana::r#type::v1 as source;
 
@@ -9,7 +9,7 @@ fn fixture() -> source::Block {
     GzDecoder::new(include_bytes!("../fixtures/solana-mainnet-350000026.pb.gz").as_slice())
         .read_to_end(&mut bytes)
         .unwrap();
-    source::Block::decode(bytes.as_slice()).unwrap()
+    source::Block::decode_from_slice(bytes.as_slice()).unwrap()
 }
 
 #[test]
@@ -22,19 +22,19 @@ fn complete_block_native_projection_preserves_legacy_fields_and_original_positio
     let mut summaries = 0;
     for transaction in &projection.transactions {
         let original = &block.transactions[transaction.transaction_index as usize];
-        assert_eq!(original.meta.as_ref().unwrap().err, None);
-        assert_eq!(transaction.signature, original.transaction.as_ref().unwrap().signatures[0]);
+        assert!(original.meta.as_option().unwrap().err.is_unset());
+        assert_eq!(transaction.signature, original.transaction.as_option().unwrap().signatures[0]);
         for row in &transaction.swaps {
             summaries += usize::from(row.kind == SwapKind::AggregatorSummary);
             match row.provenance {
                 Provenance::Instruction { position, .. } => {
                     instructions += 1;
-                    let message = original.transaction.as_ref().unwrap().message.as_ref().unwrap();
+                    let message = original.transaction.as_option().unwrap().message.as_option().unwrap();
                     assert!((position.instruction_index as usize) < message.instructions.len());
                     if let Some(inner) = position.inner_instruction_index {
                         let group = original
                             .meta
-                            .as_ref()
+                            .as_option()
                             .unwrap()
                             .inner_instructions
                             .iter()
@@ -45,7 +45,7 @@ fn complete_block_native_projection_preserves_legacy_fields_and_original_positio
                 }
                 Provenance::Log { log_index, .. } => {
                     logs += 1;
-                    assert!((log_index as usize) < original.meta.as_ref().unwrap().log_messages.len());
+                    assert!((log_index as usize) < original.meta.as_option().unwrap().log_messages.len());
                 }
             }
         }
@@ -58,9 +58,7 @@ fn complete_block_native_projection_preserves_legacy_fields_and_original_positio
         .iter()
         .flat_map(|tx| &tx.swaps)
         .filter(|row| {
-            row.invocation_outcome == crate::InvocationOutcome::Succeeded
-                && row.verified_context.is_some()
-                && row.swap.protocol == pb::Protocol::MeteoraDlmm as i32
+            row.invocation_outcome == crate::InvocationOutcome::Succeeded && row.verified_context.is_some() && row.swap.protocol == pb::Protocol::MeteoraDlmm
         })
         .count();
     assert_eq!(qualified, 5);
@@ -82,7 +80,7 @@ use sha2::Digest;
 fn empty_missing_time_and_skipped_slot_block_has_a_clock() {
     let mut block = fixture();
     block.transactions.clear();
-    block.block_time = None;
+    block.block_time = None.into();
     block.parent_slot = block.slot - 5;
     let projection = project(&block).unwrap();
     assert!(projection.transactions.is_empty());
@@ -96,14 +94,14 @@ fn structural_failure_and_capacity_return_no_partial_projection() {
     let success = block
         .transactions
         .iter()
-        .position(|tx| tx.meta.as_ref().is_some_and(|meta| meta.err.is_none()))
+        .position(|tx| tx.meta.as_option().is_some_and(|meta| meta.err.is_unset()))
         .unwrap();
     block.transactions[success]
         .transaction
-        .as_mut()
+        .as_option_mut()
         .unwrap()
         .message
-        .as_mut()
+        .as_option_mut()
         .unwrap()
         .instructions
         .push(source::CompiledInstruction {
@@ -173,16 +171,16 @@ fn collector_keeps_distinct_event_positions_and_aggregator_kind() {
     };
     collector.at_instruction(position);
     collector.push(pb::Swap {
-        protocol: pb::Protocol::MeteoraDlmm as i32,
+        protocol: pb::Protocol::MeteoraDlmm.into(),
         ..Default::default()
     });
     collector.push(pb::Swap {
-        protocol: pb::Protocol::JupiterV6 as i32,
+        protocol: pb::Protocol::JupiterV6.into(),
         ..Default::default()
     });
     collector.at_log(99);
     collector.push(pb::Swap {
-        protocol: pb::Protocol::OkxDex as i32,
+        protocol: pb::Protocol::OkxDex.into(),
         ..Default::default()
     });
     let rows = collector.finish().unwrap();
@@ -208,7 +206,7 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
     fn instruction(tx: &source::ConfirmedTransaction, position: InstructionPosition) -> source::InnerInstruction {
         if let Some(inner) = position.inner_instruction_index {
             tx.meta
-                .as_ref()
+                .as_option()
                 .unwrap()
                 .inner_instructions
                 .iter()
@@ -217,7 +215,7 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
                 .instructions[inner as usize]
                 .clone()
         } else {
-            let ix = &tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions[position.instruction_index as usize];
+            let ix = &tx.transaction.as_option().unwrap().message.as_option().unwrap().instructions[position.instruction_index as usize];
             source::InnerInstruction {
                 program_id_index: ix.program_id_index,
                 accounts: ix.accounts.clone(),
@@ -240,7 +238,7 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
     let program = substreams_solana::base58::encode(&row.swap.program_id);
     for stale in [false, true] {
         let mut tx = original.clone();
-        tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions = vec![source::CompiledInstruction {
+        tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions = vec![source::CompiledInstruction {
             program_id_index: parent.program_id_index,
             ..Default::default()
         }];
@@ -258,7 +256,7 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
             format!("Program {program} success"),
             format!("Program {program} success"),
         ]);
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![source::InnerInstructions { index: 0, instructions }];
         meta.log_messages = logs;
         let mut block = fixture.clone();
@@ -274,4 +272,19 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
         }
         assert_eq!(native.into_legacy(), map_events(block).unwrap());
     }
+}
+
+#[test]
+fn native_projection_rejects_new_or_unknown_transaction_versions() {
+    for version in [1, 17] {
+        let mut block = fixture();
+        let message = block.transactions[0].transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+        message.versioned = true;
+        message.version = Some(version);
+        assert!(matches!(project(&block), Err(ProjectError::UnsupportedMessage(_))));
+    }
+    let mut block = fixture();
+    let message = block.transactions[0].transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+    message.transaction_config = source::TransactionConfig::default().into();
+    assert!(matches!(project(&block), Err(ProjectError::UnsupportedMessage(_))));
 }

@@ -82,16 +82,17 @@ license = "Apache-2.0"
 
 [workspace.dependencies]
 bs58 = "0.5.1"
-substreams = "0.7.3"
-substreams-abis = "0.7.12"
-substreams-solana = "0.14.2"
-# Native-compatible dependency graph; decoder behavior remains at the v1.4.0 baseline.
-substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", rev = "256a572be9cc7481df9bb03cfbd5ca8503056a3d" }
+substreams = "0.8.0"
+substreams-abis = "2.0.0"
+substreams-solana = "0.16.0"
+# Buffa-native Solana decoder API; no Substreams runtime in native consumers.
+substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", rev = "6b348224fcfc931f3132f6b93f3e0a74d660be06" }
 spl-token = "9.0.0"
-substreams-solana-program-instructions = "0.3"
-substreams-database-change = "4.0.0"
-prost = "0.13"
-prost-types = "0.13"
+# SDK-free error alias fix, pending upstream review.
+substreams-solana-program-instructions = { git = "https://github.com/DenisCarriere/substreams-solana-program-instructions", rev = "10b5b8d402b350b015c8f15af6ff3cac2b44729c" }
+substreams-database-change = "5.0.0"
+buffa = { version = "0.9.2", default-features = false, features = ["std"] }
+buffa-types = { version = "0.9.2", default-features = false, features = ["std"] }
 
 [profile.release]
 lto = true

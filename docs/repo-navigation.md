@@ -13,7 +13,8 @@ This guide is a quick map for contributors and coding agents working in this mon
 ## 2) Top-level layout
 
 - `Cargo.toml`: workspace members and shared dependency versions.
-- `proto/`: shared protobuf definitions in `proto/v1/*.proto`.
+- `proto/`: shared protobuf definitions in `proto/v1/`, pinned Buffa generation,
+  and committed owned/view/lazy-view Rust models. See [protobuf development](protobuf.md).
 - `common/`: shared Rust helpers (`db.rs`, `solana.rs`).
 - `dex/`: protocol-level DEX modules (one crate per DEX/program).
 - `spl/`, `native/`, `nft/`, `staking/`: protocol-level non-DEX modules.
@@ -80,6 +81,7 @@ extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes
 
 ## 6) Build/test entry points
 
+- Generate all shared protobuf models: `make -C proto protogen`
 - Build workspace WASM: `cargo build --target wasm32-unknown-unknown --release`
 - Build/pack per package: `make build`, `make pack` (where Makefile exists)
 - Local stream checks: `make noop` / `make gui` in module directories

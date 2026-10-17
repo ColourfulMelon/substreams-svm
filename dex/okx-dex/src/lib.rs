@@ -15,12 +15,14 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
-    if instructions.is_empty() { return None; }
+    if instructions.is_empty() {
+        return None;
+    }
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -31,16 +33,21 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
 fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
     let program_id = ix.program_id().0;
-    if program_id != &okx::v2::PROGRAM_ID { return None; }
+    if program_id != &okx::v2::PROGRAM_ID {
+        return None;
+    }
 
     match okx::v2::instructions::unpack(ix.data()) {
         Ok(okx::v2::instructions::OkxV2Instruction::SwapV3(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::Swap(pb::SwapInstruction {
-                amount_in: event.args.amount_in,
-                minimum_amount_out: event.args.min_return,
-            })),
+            instruction: Some(pb::instruction::Instruction::Swap(
+                pb::SwapInstruction {
+                    amount_in: event.args.amount_in,
+                    minimum_amount_out: event.args.min_return,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

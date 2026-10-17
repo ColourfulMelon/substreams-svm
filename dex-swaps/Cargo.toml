@@ -16,7 +16,7 @@ substreams = ["dep:substreams", "common/substreams"]
 [dependencies]
 common = { path = "../common", default-features = false }
 substreams = { workspace = true, optional = true }
-substreams-solana = { package = "substreams-solana-core", version = "0.14.2" }
+substreams-solana = { package = "substreams-solana-core", version = "0.16.0" }
 anyhow = "1"
 log = "0.4"
 substreams-solana-idls = { workspace = true }
@@ -31,12 +31,12 @@ solana-program = "2.3.0"
 # independent of the decoder behavior fixes in PRs #223 and #224.
 [dependencies.spl-transfers]
 git = "https://github.com/pinax-network/substreams-svm"
-rev = "3de4050e4bd6febfeca526281181d1ec3e23307c"
+rev = "8a6cd5abfe0d275b81354ba29c62e000b5a503f8"
 
 [dev-dependencies.flate2]
 version = "1"
 
-[dev-dependencies.prost]
+[dev-dependencies.buffa]
 workspace = true
 
 [dev-dependencies.sha2]

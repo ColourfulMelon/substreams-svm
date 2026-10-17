@@ -26,7 +26,7 @@ impl State {
             Ok(moonshot::events::MoonshotEvent::TradeEvent(event)) => {
                 let is_buy = matches!(event.trade_type, moonshot::events::TradeType::Buy);
                 Some(pb::Swap {
-                    protocol: pb::Protocol::Moonshot as i32,
+                    protocol: pb::Protocol::Moonshot.into(),
                     program_id: moonshot::PROGRAM_ID.to_vec(),
                     stack_height: 0,
                     amm: moonshot::PROGRAM_ID.to_vec(),

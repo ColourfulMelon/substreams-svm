@@ -53,6 +53,44 @@ Currently excluded:
 - DFlow
   Current decoder is a placeholder that treats any instruction as a swap and does not expose reliable normalized swap fields.
 
+## Solana 0.16 and Buffa migration
+
+The Rust API now uses `substreams-solana-core` 0.16 and Buffa 0.9.2, with
+Substreams 0.8 for the default WASM feature. This is a Rust source compatibility
+change: older Prost-generated `Block` and output types are different Rust types,
+even when they represent the same protobuf messages. Native callers must update
+their chain model and protobuf runtime together. The SPL projector's separate
+legacy Prost adapter remains available; it does not make an old `Block` directly
+acceptable to `dex-swaps::project`.
+
+Message fields use `buffa::MessageField<T>` instead of `Option<T>`; use
+`as_option()` to preserve absence and `MessageField::some(value)` to construct a
+present message. Enum fields use `buffa::EnumValue<E>` instead of `i32`; use
+`as_known()` for a recognized variant or `to_i32()` when preserving an unknown
+numeric value. Encoding and decoding use the `buffa::Message` trait. See
+[protobuf development](../docs/protobuf.md) for generation and presence rules.
+
+The `.proto` package names, field numbers, enum IDs and output meanings remain
+unchanged. The existing normalized swap rows, ordering and WASM module output
+schema remain the compatibility contract. Captured output-byte goldens and
+native/wrapper parity tests check this migration; they do not qualify untested
+protocol behavior or a live provider.
+
+The native `project` and `project_with_limits` APIs cover legacy and v0 Solana
+messages only. They return `ProjectError::UnsupportedMessage` for an explicit
+version above zero, contradictory explicit v0 metadata, or any present inline
+transaction configuration, including in failed transactions. An absent version
+with `versioned: true` remains supported for older v0 producers. These checks
+prevent newly added upstream fields from being silently discarded. They apply
+to the validated native API; the legacy `map_events` wrapper retains its existing
+filtering and extraction behavior.
+
+The [Linux compatibility workflow](../.github/workflows/sdk-migration.yml) checks
+formatting, clean regeneration with Buf 1.69.0, both native DEX feature modes,
+native-token and svm-dex tests, and the complete release WASM workspace on Rust
+1.85. Generated files are committed and checked for both modifications and new
+untracked output; run `make -C proto protogen` to reproduce them locally.
+
 ## Native complete-block API
 
 Native applications should depend on `dex-swaps` with `default-features = false`.

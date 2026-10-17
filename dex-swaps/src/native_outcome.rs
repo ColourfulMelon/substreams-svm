@@ -10,7 +10,7 @@ pub(crate) struct Evidence {
 }
 
 pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPosition, Evidence>> {
-    let meta = tx.meta.as_ref()?;
+    let meta = tx.meta.as_option()?;
     let expected = instruction_positions(tx)
         .into_iter()
         .zip(tx.walk_instructions())
@@ -173,15 +173,18 @@ mod tests {
                     header: Some(pb::MessageHeader {
                         num_required_signatures: 1,
                         ..Default::default()
-                    }),
+                    })
+                    .into(),
                     account_keys: vec![a.to_vec(), b.to_vec(), c.to_vec()],
                     instructions: vec![pb::CompiledInstruction {
                         program_id_index: 0,
                         ..Default::default()
                     }],
                     ..Default::default()
-                }),
-            }),
+                })
+                .into(),
+            })
+            .into(),
             meta: Some(pb::TransactionStatusMeta {
                 inner_instructions: vec![pb::InnerInstructions {
                     index: 0,
@@ -200,7 +203,8 @@ mod tests {
                 }],
                 log_messages: logs,
                 ..Default::default()
-            }),
+            })
+            .into(),
         }
     }
 
@@ -214,7 +218,7 @@ mod tests {
     #[test]
     fn caught_parent_failure_revokes_preceding_successful_event() {
         let mut tx = transaction();
-        tx.meta.as_mut().unwrap().log_messages[4] = format!("Program {} failed: caught inner call ended with success", base58::encode([2; 32]));
+        tx.meta.as_option_mut().unwrap().log_messages[4] = format!("Program {} failed: caught inner call ended with success", base58::encode([2; 32]));
         let result = prove(&tx).unwrap();
         assert_eq!(
             result[&InstructionPosition {
@@ -240,10 +244,10 @@ mod tests {
             let mut tx = transaction();
             match mutation {
                 0 => {
-                    tx.meta.as_mut().unwrap().log_messages.pop();
+                    tx.meta.as_option_mut().unwrap().log_messages.pop();
                 }
-                1 => tx.meta.as_mut().unwrap().inner_instructions[0].instructions[0].stack_height = None,
-                2 => tx.meta.as_mut().unwrap().log_messages[1] = format!("Program {} invoke [2]", base58::encode([9; 32])),
+                1 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].stack_height = None,
+                2 => tx.meta.as_option_mut().unwrap().log_messages[1] = format!("Program {} invoke [2]", base58::encode([9; 32])),
                 _ => unreachable!(),
             }
             assert!(prove(&tx).is_none());

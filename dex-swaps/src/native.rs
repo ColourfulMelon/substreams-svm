@@ -3,7 +3,7 @@ use crate::{pb, process_transaction_with_provenance};
 use std::fmt;
 use substreams_solana::pb::sf::solana::r#type::v1::{Block, ConfirmedTransaction};
 
-spl_transfers::block_view!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
+spl_transfers::block_view_buffa!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct InstructionPosition {
@@ -126,6 +126,7 @@ impl Default for Limits {
 pub enum ProjectError {
     Capacity,
     InvalidBlock(spl_transfers::ProjectError),
+    UnsupportedMessage(spl_transfers::UnsupportedMessage),
 }
 
 impl fmt::Display for ProjectError {
@@ -133,6 +134,7 @@ impl fmt::Display for ProjectError {
         match self {
             Self::Capacity => f.write_str("native swap projection capacity exceeded"),
             Self::InvalidBlock(_) => f.write_str("invalid complete Solana block"),
+            Self::UnsupportedMessage(_) => f.write_str("unsupported Solana transaction version or inline configuration"),
         }
     }
 }
@@ -151,10 +153,10 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
     }
     let (mut instructions, mut logs, mut log_bytes) = (0usize, 0usize, 0usize);
     for tx in &block.transactions {
-        if let Some(message) = tx.transaction.as_ref().and_then(|tx| tx.message.as_ref()) {
+        if let Some(message) = tx.transaction.as_option().and_then(|tx| tx.message.as_option()) {
             instructions = instructions.saturating_add(message.instructions.len());
         }
-        if let Some(meta) = &tx.meta {
+        if let Some(meta) = tx.meta.as_option() {
             for group in &meta.inner_instructions {
                 instructions = instructions.saturating_add(group.instructions.len());
             }
@@ -172,11 +174,12 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
             return Err(ProjectError::Capacity);
         }
     }
-    spl_transfers::validate_block(&view_block(block)).map_err(ProjectError::InvalidBlock)?;
+    let view = view_block(block).map_err(ProjectError::UnsupportedMessage)?;
+    spl_transfers::validate_block(&view).map_err(ProjectError::InvalidBlock)?;
     let mut transactions = Vec::new();
     let mut swaps = 0usize;
     for (index, tx) in block.transactions.iter().enumerate() {
-        if tx.meta.as_ref().is_some_and(|meta| meta.err.is_some()) {
+        if tx.meta.as_option().is_some_and(|meta| meta.err.is_set()) {
             continue;
         }
         if let Some(mut transaction) = process_transaction_with_provenance(tx, limits.max_swaps.saturating_sub(swaps))? {
@@ -210,8 +213,8 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
             parent_slot: block.parent_slot,
             blockhash: block.blockhash.clone(),
             previous_blockhash: block.previous_blockhash.clone(),
-            block_time: block.block_time.as_ref().map(|time| time.timestamp),
-            block_height: block.block_height.as_ref().map(|height| height.block_height),
+            block_time: block.block_time.as_option().map(|time| time.timestamp),
+            block_height: block.block_height.as_option().map(|height| height.block_height),
             transaction_count: block.transactions.len() as u32,
         },
         transactions,
@@ -219,14 +222,14 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
 }
 
 pub(crate) fn instruction_positions(tx: &ConfirmedTransaction) -> Vec<InstructionPosition> {
-    let Some(message) = tx.transaction.as_ref().and_then(|tx| tx.message.as_ref()) else {
+    let Some(message) = tx.transaction.as_option().and_then(|tx| tx.message.as_option()) else {
         return Vec::new();
     };
     // Match the SDK walk's last-entry behavior without a repeated linear scan.
     // The validated native API rejects duplicate parent entries beforehand.
     let inner_by_outer: std::collections::HashMap<_, _> = tx
         .meta
-        .as_ref()
+        .as_option()
         .into_iter()
         .flat_map(|meta| &meta.inner_instructions)
         .map(|group| (group.index, group))
@@ -277,8 +280,8 @@ impl Collector {
             return;
         }
         let kind = if matches!(
-            pb::Protocol::try_from(swap.protocol),
-            Ok(pb::Protocol::JupiterV4 | pb::Protocol::JupiterV6 | pb::Protocol::OkxDex)
+            swap.protocol.as_known(),
+            Some(pb::Protocol::JupiterV4 | pb::Protocol::JupiterV6 | pb::Protocol::OkxDex)
         ) {
             SwapKind::AggregatorSummary
         } else {

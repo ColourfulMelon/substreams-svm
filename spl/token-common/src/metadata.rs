@@ -10,25 +10,31 @@ pub fn unpack_metadata(instruction: &InstructionView, program_id: &[u8], is_spl_
         Err(_err) => return None,
         Ok(token_instruction) => match token_instruction {
             TokenMetadataInstruction::Initialize { 0: data } => {
-                return Some(pb::instruction::Instruction::InitializeTokenMetadata(pb::InitializeTokenMetadata {
-                    // accounts
-                    metadata: instruction.accounts()[0].0.to_vec(),
-                    update_authority: instruction.accounts()[1].0.to_vec(),
-                    mint: instruction.accounts()[2].0.to_vec(),
-                    mint_authority: instruction.accounts()[3].0.to_vec(),
-                    // instruction data
-                    name: data.name,
-                    symbol: data.symbol,
-                    uri: data.uri,
-                }));
+                return Some(pb::instruction::Instruction::InitializeTokenMetadata(
+                    pb::InitializeTokenMetadata {
+                        // accounts
+                        metadata: instruction.accounts()[0].0.to_vec(),
+                        update_authority: instruction.accounts()[1].0.to_vec(),
+                        mint: instruction.accounts()[2].0.to_vec(),
+                        mint_authority: instruction.accounts()[3].0.to_vec(),
+                        // instruction data
+                        name: data.name,
+                        symbol: data.symbol,
+                        uri: data.uri,
+                    }
+                    .into(),
+                ));
             }
             TokenMetadataInstruction::UpdateAuthority { 0: data } => {
-                return Some(pb::instruction::Instruction::UpdateTokenMetadataAuthority(pb::UpdateTokenMetadataAuthority {
-                    // accounts
-                    metadata: instruction.accounts()[0].0.to_vec(),
-                    update_authority: instruction.accounts()[1].0.to_vec(),
-                    new_authority: data.new_authority.0.to_bytes().to_vec(),
-                }));
+                return Some(pb::instruction::Instruction::UpdateTokenMetadataAuthority(
+                    pb::UpdateTokenMetadataAuthority {
+                        // accounts
+                        metadata: instruction.accounts()[0].0.to_vec(),
+                        update_authority: instruction.accounts()[1].0.to_vec(),
+                        new_authority: data.new_authority.0.to_bytes().to_vec(),
+                    }
+                    .into(),
+                ));
             }
             TokenMetadataInstruction::UpdateField { 0: data } => {
                 let field = match data.field {
@@ -38,24 +44,30 @@ pub fn unpack_metadata(instruction: &InstructionView, program_id: &[u8], is_spl_
                     Field::Key(key) => key,
                 };
 
-                return Some(pb::instruction::Instruction::UpdateTokenMetadataField(pb::UpdateTokenMetadataField {
-                    // accounts
-                    metadata: instruction.accounts()[0].0.to_vec(),
-                    update_authority: instruction.accounts()[1].0.to_vec(),
-                    // instruction data
-                    field,
-                    value: data.value,
-                }));
+                return Some(pb::instruction::Instruction::UpdateTokenMetadataField(
+                    pb::UpdateTokenMetadataField {
+                        // accounts
+                        metadata: instruction.accounts()[0].0.to_vec(),
+                        update_authority: instruction.accounts()[1].0.to_vec(),
+                        // instruction data
+                        field,
+                        value: data.value,
+                    }
+                    .into(),
+                ));
             }
             TokenMetadataInstruction::RemoveKey { 0: data } => {
-                return Some(pb::instruction::Instruction::RemoveTokenMetadataField(pb::RemoveTokenMetadataField {
-                    // accounts
-                    metadata: instruction.accounts()[0].0.to_vec(),
-                    update_authority: instruction.accounts()[1].0.to_vec(),
-                    // instruction data
-                    idempotent: data.idempotent,
-                    key: data.key,
-                }));
+                return Some(pb::instruction::Instruction::RemoveTokenMetadataField(
+                    pb::RemoveTokenMetadataField {
+                        // accounts
+                        metadata: instruction.accounts()[0].0.to_vec(),
+                        update_authority: instruction.accounts()[1].0.to_vec(),
+                        // instruction data
+                        idempotent: data.idempotent,
+                        key: data.key,
+                    }
+                    .into(),
+                ));
             }
             _ => None,
         },

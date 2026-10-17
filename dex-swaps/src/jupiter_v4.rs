@@ -40,7 +40,7 @@ impl State {
                     }
                     return Some(pb::Swap {
                         program_id: jupiter::v4::PROGRAM_ID.to_vec(),
-                        protocol: pb::Protocol::JupiterV4 as i32,
+                        protocol: pb::Protocol::JupiterV4.into(),
                         stack_height: self.current_stack_height,
                         amm: amm_program.to_vec(),
                         amm_pool,

@@ -44,7 +44,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::MeteoraDlmm as i32,
+        protocol: pb::Protocol::MeteoraDlmm.into(),
         program_id: dlmm::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: dlmm::PROGRAM_ID.to_vec(),
@@ -159,7 +159,7 @@ pub(crate) fn matches_context(parent: &InstructionView, event_ix: &InstructionVi
     } else {
         (&context.token_y_mint, &context.token_x_mint)
     };
-    row.protocol == pb::Protocol::MeteoraDlmm as i32
+    row.protocol == pb::Protocol::MeteoraDlmm
         && row.program_id == dlmm::PROGRAM_ID
         && row.amm == dlmm::PROGRAM_ID
         && row.stack_height == event_ix.stack_height()

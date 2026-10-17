@@ -29,7 +29,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
 
     let mint = event.mint.to_vec();
     Some(pb::Swap {
-        protocol: pb::Protocol::Pumpfun as i32,
+        protocol: pb::Protocol::Pumpfun.into(),
         program_id: pumpfun::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: pumpfun::PROGRAM_ID.to_vec(),

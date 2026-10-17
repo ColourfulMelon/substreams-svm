@@ -21,8 +21,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
     }
 
     Some(pb::Transaction {
-        fee: tx.meta.as_ref()?.fee,
-        compute_units_consumed: tx.meta.as_ref()?.compute_units_consumed(),
+        fee: tx.meta.as_option()?.fee,
+        compute_units_consumed: tx.meta.as_option()?.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -41,22 +41,28 @@ fn process_instruction(instruction: &InstructionView) -> Option<pb::Instruction>
         Ok(jupiter::v6::events::JupiterV6Event::Swap(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: instruction.stack_height(),
-            instruction: Some(pb::instruction::Instruction::SwapEvent(pb::SwapEvent {
-                amm: event.amm.to_bytes().to_vec(),
-                input_mint: event.input_mint.to_bytes().to_vec(),
-                input_amount: event.input_amount,
-                output_mint: event.output_mint.to_bytes().to_vec(),
-                output_amount: event.output_amount,
-            })),
+            instruction: Some(pb::instruction::Instruction::SwapEvent(
+                pb::SwapEvent {
+                    amm: event.amm.to_bytes().to_vec(),
+                    input_mint: event.input_mint.to_bytes().to_vec(),
+                    input_amount: event.input_amount,
+                    output_mint: event.output_mint.to_bytes().to_vec(),
+                    output_amount: event.output_amount,
+                }
+                .into(),
+            )),
         }),
         Ok(jupiter::v6::events::JupiterV6Event::Fee(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: instruction.stack_height(),
-            instruction: Some(pb::instruction::Instruction::FeeEvent(pb::FeeEvent {
-                account: event.account.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                amount: event.amount,
-            })),
+            instruction: Some(pb::instruction::Instruction::FeeEvent(
+                pb::FeeEvent {
+                    account: event.account.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    amount: event.amount,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }
