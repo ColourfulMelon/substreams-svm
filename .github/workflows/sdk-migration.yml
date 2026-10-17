@@ -73,9 +73,11 @@ jobs:
           import os, re
           from pathlib import Path
           graph = (Path(os.environ["RUNNER_TEMP"]) / "workspace-dependencies.txt").read_text()
-          versions = set(re.findall(r"\bsubstreams v(\S+)", graph))
+          # Match the SDK crate only, not workspace members such as
+          # spl-transfers-substreams.
+          versions = set(re.findall(r"(?<![\w-])substreams v(\S+)", graph))
           assert versions == {"0.8.0"}, versions
-          assert not re.search(r"\bprost(?:-types)? v", graph)
+          assert not re.search(r"(?<![\w-])prost(?:-types)? v", graph)
           PY
       - name: Test native token decoding and account and DEX database output
         run: cargo test --locked -p common -p native-token -p svm-accounts -p svm-dex
