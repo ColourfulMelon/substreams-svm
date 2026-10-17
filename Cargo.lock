@@ -2919,7 +2919,7 @@ dependencies = [
 [[package]]
 name = "spl-transfers"
 version = "0.1.0"
-source = "git+https://github.com/pinax-network/substreams-svm?rev=8a6cd5abfe0d275b81354ba29c62e000b5a503f8#8a6cd5abfe0d275b81354ba29c62e000b5a503f8"
+source = "git+https://github.com/pinax-network/substreams-svm?rev=c8e051cb1c069313423dc60e672df25de212b9da#c8e051cb1c069313423dc60e672df25de212b9da"
 dependencies = [
  "bs58 0.5.1",
 ]
