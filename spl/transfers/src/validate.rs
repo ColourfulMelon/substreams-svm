@@ -1,4 +1,4 @@
-use crate::error::{Position, ProjectError, TransactionError};
+use crate::error::{Position, ProjectError, TransactionError, UnsupportedMessage};
 use crate::model::{Block, Instruction, Message, Meta, Transaction};
 
 /// Resolved account keys of a transaction: static keys, then loaded writable,
@@ -69,7 +69,19 @@ pub fn validate_block(block: &Block) -> Result<(), ProjectError> {
     validate(block).map(|_| ())
 }
 
+/// [`validate_block`], except that the transactions reported by
+/// [`block_view_buffa_lenient!`](crate::block_view_buffa_lenient) are not
+/// checked. The caller must skip them as well; every other transaction keeps
+/// its original index and its full structural validation.
+pub fn validate_block_except(block: &Block, unsupported: &[UnsupportedMessage]) -> Result<(), ProjectError> {
+    validate_except(block, |index| unsupported.iter().any(|message| message.transaction_index == index)).map(|_| ())
+}
+
 pub(crate) fn validate(block: &Block) -> Result<BlockIdentity, ProjectError> {
+    validate_except(block, |_| false)
+}
+
+fn validate_except(block: &Block, skip: impl Fn(usize) -> bool) -> Result<BlockIdentity, ProjectError> {
     let hash = |field: &'static str, value: &str| {
         decode_key(value).ok_or_else(|| ProjectError::InvalidBlockHash {
             field,
@@ -89,7 +101,7 @@ pub(crate) fn validate(block: &Block) -> Result<BlockIdentity, ProjectError> {
     if let Some(block_time) = block.block_time.filter(|time| *time < 0) {
         return Err(ProjectError::NegativeBlockTime { block_time });
     }
-    for (index, transaction) in block.transactions.iter().enumerate() {
+    for (index, transaction) in block.transactions.iter().enumerate().filter(|(index, _)| !skip(*index)) {
         validate_transaction(transaction).map_err(|error| ProjectError::Transaction {
             transaction_index: index as u32,
             error,

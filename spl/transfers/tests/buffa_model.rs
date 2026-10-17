@@ -7,6 +7,7 @@ use spl_transfers::{project, Coverage};
 use substreams_solana_buffa::pb::sf::solana::r#type::v1 as buffa_pb;
 
 spl_transfers::block_view_buffa!(fn view_buffa_block, buffa_pb);
+spl_transfers::block_view_buffa_lenient!(fn view_buffa_block_lenient, buffa_pb);
 
 fn buffa_block(fixture: &[u8]) -> buffa_pb::Block {
     buffa_pb::Block::decode_from_slice(&gunzip(fixture)).unwrap()
@@ -145,4 +146,41 @@ fn only_legacy_and_v0_message_shapes_are_admitted() {
             );
         }
     }
+}
+
+#[test]
+fn lenient_adapter_reports_unsupported_messages_without_dropping_positions() {
+    let original = buffa_block(BLOCK_350000009);
+    let (view, unsupported) = view_buffa_block_lenient(&original);
+    assert!(unsupported.is_empty());
+    assert_eq!(view, view_buffa_block(&original).unwrap());
+
+    let mut block = original.clone();
+    for index in [3, 1366] {
+        let message = block.transactions[index].transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+        message.version = Some(1);
+        message.versioned = true;
+    }
+    // Malformed, but only inside an unsupported transaction.
+    block.transactions[1366]
+        .transaction
+        .as_option_mut()
+        .unwrap()
+        .message
+        .as_option_mut()
+        .unwrap()
+        .instructions[0]
+        .accounts[2] = 255;
+
+    let (view, unsupported) = view_buffa_block_lenient(&block);
+    assert_eq!(view.transactions.len(), original.transactions.len());
+    assert_eq!(unsupported.iter().map(|message| message.transaction_index).collect::<Vec<_>>(), [3, 1366]);
+    assert_eq!(view_buffa_block(&block).unwrap_err(), unsupported[0]);
+    assert!(spl_transfers::validate_block(&view).is_err());
+    assert!(spl_transfers::validate_block_except(&view, &unsupported).is_ok());
+
+    // Supported transactions are still validated.
+    block.transactions[1365].transaction.as_option_mut().unwrap().signatures.clear();
+    let (view, unsupported) = view_buffa_block_lenient(&block);
+    assert!(spl_transfers::validate_block_except(&view, &unsupported).is_err());
 }

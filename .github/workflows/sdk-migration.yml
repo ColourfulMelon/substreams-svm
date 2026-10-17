@@ -1,0 +1,87 @@
+name: SDK and protobuf compatibility
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sdk-compatibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_BUILD_JOBS: "2"
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_TERM_COLOR: always
+
+jobs:
+  linux:
+    name: Linux native and WASM
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.85.0
+          components: rustfmt
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: sdk-buffa-linux
+      - name: Install pinned Buf CLI
+        uses: bufbuild/buf-action@v1
+        with:
+          version: 1.69.0
+          setup_only: true
+          pr_comment: false
+      - name: Check Rust formatting
+        run: cargo fmt --all -- --check
+      - name: Reproduce generated protobuf bindings
+        run: |
+          # Rebuild the generated directory so removed schemas cannot leave
+          # stale bindings behind. No hand-written Rust files live here.
+          rm proto/src/pb/*.rs
+          make -C proto protogen
+          git diff --exit-code -- proto/src/pb
+          generated_status="$(git status --porcelain=v1 --untracked-files=all -- proto/src/pb)"
+          if [ -n "$generated_status" ]; then
+            printf '%s\n' "$generated_status"
+            echo "Generated bindings differ from the committed files."
+            exit 1
+          fi
+      - name: Test native DEX API with default features
+        run: cargo test --locked -p dex-swaps
+      - name: Test native DEX API without the Substreams runtime
+        run: |
+          cargo tree --locked -p dex-swaps --no-default-features --edges normal,build,dev > "$RUNNER_TEMP/dex-native-dependencies.txt"
+          if grep -Eq '(^|[[:space:]])(substreams|prost|prost-types|substreams-database-change) v' "$RUNNER_TEMP/dex-native-dependencies.txt"; then
+            cat "$RUNNER_TEMP/dex-native-dependencies.txt"
+            echo "The native dependency graph unexpectedly includes the Substreams runtime or legacy protobuf dependencies."
+            exit 1
+          fi
+          cargo test --locked -p dex-swaps --no-default-features
+      - name: Check workspace SDK generation
+        run: |
+          cargo tree --locked --workspace --edges normal,build > "$RUNNER_TEMP/workspace-dependencies.txt"
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          graph = (Path(os.environ["RUNNER_TEMP"]) / "workspace-dependencies.txt").read_text()
+          # Match the SDK crate only, not workspace members such as
+          # spl-transfers-substreams.
+          versions = set(re.findall(r"(?<![\w-])substreams v(\S+)", graph))
+          assert versions == {"0.8.0"}, versions
+          assert not re.search(r"(?<![\w-])prost(?:-types)? v", graph)
+          PY
+      - name: Test native token decoding and account and DEX database output
+        run: cargo test --locked -p common -p native-token -p svm-accounts -p svm-dex
+      - name: Test the SPL transfer projector, parser and transfer database output
+        run: cargo test --locked -p spl-transfers -p spl-transfers-substreams -p spl-token-common -p svm-transfers
+      - name: Build all Substreams WASM modules
+        run: cargo build --locked --workspace --release --target wasm32-unknown-unknown

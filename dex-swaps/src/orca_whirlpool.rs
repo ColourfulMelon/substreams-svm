@@ -31,9 +31,7 @@ impl State {
     }
 
     pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
-        else {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &orca::whirlpool::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
             return None;
         };
 
@@ -51,7 +49,7 @@ impl State {
         let (input_mint, output_mint) = if instruction.a_to_b { (mint_a, mint_b) } else { (mint_b, mint_a) };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::OrcaWhirlpool as i32,
+            protocol: pb::Protocol::OrcaWhirlpool.into(),
             program_id: orca::whirlpool::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: orca::whirlpool::PROGRAM_ID.to_vec(),
@@ -236,8 +234,7 @@ mod tests {
     use super::*;
     use substreams_solana::base58;
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction,
-        TransactionStatusMeta, UiTokenAmount,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction, TransactionStatusMeta, UiTokenAmount,
     };
 
     /// Whirlpool `swap` discriminator from the IDL.
@@ -288,7 +285,7 @@ mod tests {
                 mint: base58::encode(mint),
                 owner: "".to_string(),
                 program_id: "".to_string(),
-                ui_token_amount: Some(UiTokenAmount::default()),
+                ui_token_amount: Some(UiTokenAmount::default()).into(),
             })
             .collect();
 
@@ -300,7 +297,8 @@ mod tests {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -310,12 +308,16 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
             meta: Some(TransactionStatusMeta {
                 pre_token_balances,
                 ..Default::default()
-            }),
+            })
+            .into(),
         }
     }
 
@@ -355,7 +357,7 @@ mod tests {
             ],
             token_balances,
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -373,7 +375,7 @@ mod tests {
     fn legacy_swap_unresolved_lookup_keeps_placeholder_with_none() {
         let accounts: Vec<[u8; 32]> = (0u8..11u8).map(|i| [i + 1; 32]).collect();
         let tx = make_tx(SWAP_DISC, swap_body(true), &accounts, &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -452,7 +454,7 @@ mod tests {
             ],
             token_balances,
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -568,7 +570,7 @@ mod tests {
             ],
             &[],
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -577,7 +579,11 @@ mod tests {
 
         // hop 1: a_to_b_one=true → mint_a=input, mint_b=intermediate
         assert_eq!(swaps[0].whirlpool, whirlpool_one.to_vec());
-        assert_eq!(swaps[0].mint_a.as_deref(), Some(mint_input.as_slice()), "hop 1 mint_a (a_to_b=true) must be the user's input mint");
+        assert_eq!(
+            swaps[0].mint_a.as_deref(),
+            Some(mint_input.as_slice()),
+            "hop 1 mint_a (a_to_b=true) must be the user's input mint"
+        );
         assert_eq!(swaps[0].mint_b.as_deref(), Some(mint_intermediate.as_slice()));
         assert!(swaps[0].a_to_b);
 
@@ -608,17 +614,29 @@ mod tests {
             mint_input,
             mint_intermediate,
             mint_output,
-            [0x06; 32], [0x07; 32], [0x08; 32], [0x09; 32], // programs + user owner input
-            [0x0a; 32], [0x0b; 32], [0x0c; 32], [0x0d; 32], // vaults
-            [0x0e; 32], [0x01; 32],                         // owner output, token_authority
-            [0x10; 32], [0x11; 32], [0x12; 32],             // tick_array_one_*
-            [0x13; 32], [0x14; 32], [0x15; 32],             // tick_array_two_*
-            [0x16; 32], [0x17; 32],                         // oracles
-            [0x18; 32],                                      // memo_program
+            [0x06; 32],
+            [0x07; 32],
+            [0x08; 32],
+            [0x09; 32], // programs + user owner input
+            [0x0a; 32],
+            [0x0b; 32],
+            [0x0c; 32],
+            [0x0d; 32], // vaults
+            [0x0e; 32],
+            [0x01; 32], // owner output, token_authority
+            [0x10; 32],
+            [0x11; 32],
+            [0x12; 32], // tick_array_one_*
+            [0x13; 32],
+            [0x14; 32],
+            [0x15; 32], // tick_array_two_*
+            [0x16; 32],
+            [0x17; 32], // oracles
+            [0x18; 32], // memo_program
         ];
 
         let tx = make_tx(TWO_HOP_SWAP_V2_DISC, two_hop_swap_v2_body(false, true), &accounts, &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 

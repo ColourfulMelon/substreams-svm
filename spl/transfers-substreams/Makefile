@@ -7,7 +7,7 @@ PARAMS ?=
 
 .PHONY: protogen
 protogen:
-	buf generate ../../proto --template buf.gen.yaml --path ../../proto/v1/spl/spl-transfers.proto
+	$(MAKE) -C ../../proto protogen
 
 .PHONY: build
 build:

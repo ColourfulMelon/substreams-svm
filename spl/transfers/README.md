@@ -91,6 +91,15 @@ generated type. The native crate has no protobuf or Substreams dependency.
   inline transaction configuration rejects the block with its original
   transaction index, including when that transaction failed. An unset version
   with `versioned: true` remains supported for older producers' v0 messages.
+  Native projection (`project`) and the `spl_transfers` package use this
+  fail-closed adapter.
+- `block_view_buffa_lenient!` is for production Substreams modules that must
+  not halt on a message shape this crate does not cover. It returns the full
+  view, so original indexes are unchanged, plus the transactions
+  `block_view_buffa!` would reject. The caller skips those transactions and
+  validates the others with `validate_block_except`. `spl-token-common`
+  (`spl_token`, `spl_token_2022`, `svm-transfers`) uses it and logs each skipped
+  transaction; malformed supported transactions still fail the block.
 - The existing `block_view!` still accepts Prost `Vec<u8>` and `bytes::Bytes`
   models, with its original infallible view signature. Older generated models
   do not expose the newer version/configuration fields; callers must establish
@@ -101,12 +110,11 @@ compare borrowed fields and projections on all four pinned blocks. The older
 Prost model is a development dependency only, retained for compatibility tests.
 
 The Substreams wrapper uses SDK 0.8, Solana core 0.16 and Buffa 0.9.2. Its output
-types are exported through `spl_transfers_substreams::pb`. They are generated
-from the unchanged canonical `proto/v1/spl/spl-transfers.proto`; run
-`make protogen` in `spl/transfers-substreams` to regenerate with the pinned Buf
-plugin. The package-local output avoids linking the rest of the workspace's
-older Prost messages. The protobuf package, field numbers and output bytes are
-unchanged; `wire_compatibility` checks 16 pre-migration output hashes. A release
+types are exported through `spl_transfers_substreams::pb` and come from the
+shared workspace bindings, generated from the canonical
+`proto/v1/spl/spl-transfers.proto` with `make -C proto protogen`. The protobuf
+package, field numbers and output bytes are unchanged; `wire_compatibility`
+checks 16 pre-migration output hashes. A release
 WASM still requires rebuilding and repacking after any source change; previous
 live evidence applies to the revision that was tested.
 

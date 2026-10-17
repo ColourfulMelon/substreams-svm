@@ -30,15 +30,7 @@ pub fn process_events(tables: &mut Tables, clock: &Clock, events: &pb::Events) {
     }
 }
 
-fn handle_take(
-    tables: &mut Tables,
-    clock: &Clock,
-    tx: &pb::Transaction,
-    log: &pb::Log,
-    event: &pb::TakeEvent,
-    transaction_index: usize,
-    log_index: usize,
-) {
+fn handle_take(tables: &mut Tables, clock: &Clock, tx: &pb::Transaction, log: &pb::Log, event: &pb::TakeEvent, transaction_index: usize, log_index: usize) {
     let key = common_key_v2(clock, transaction_index, log_index);
     let row = tables
         .create_row("tensor_take", key)

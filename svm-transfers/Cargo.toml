@@ -17,6 +17,4 @@ common = { path = "../common" }
 
 [dev-dependencies]
 flate2 = "1"
-prost = { workspace = true }
-prost-types = { workspace = true }
 spl-token-common = { path = "../spl/token-common" }

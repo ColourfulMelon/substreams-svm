@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     // Process instructions first
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
@@ -30,7 +30,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -53,21 +53,27 @@ fn process_instruction(instruction: &InstructionView) -> Option<pb::Instruction>
         Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseIn(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: instruction.stack_height(),
-            instruction: Some(pb::instruction::Instruction::SwapBaseIn(pb::SwapBaseInInstruction {
-                accounts: Some(get_swap_accounts(instruction)),
-                amount_in: event.amount_in,
-                minimum_amount_out: event.minimum_amount_out,
-            })),
+            instruction: Some(pb::instruction::Instruction::SwapBaseIn(
+                pb::SwapBaseInInstruction {
+                    accounts: Some(get_swap_accounts(instruction)).into(),
+                    amount_in: event.amount_in,
+                    minimum_amount_out: event.minimum_amount_out,
+                }
+                .into(),
+            )),
         }),
         // -- SwapBaseOut --
         Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseOut(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: instruction.stack_height(),
-            instruction: Some(pb::instruction::Instruction::SwapBaseOut(pb::SwapBaseOutInstruction {
-                accounts: Some(get_swap_accounts(instruction)),
-                amount_out: event.amount_out,
-                max_amount_in: event.max_amount_in,
-            })),
+            instruction: Some(pb::instruction::Instruction::SwapBaseOut(
+                pb::SwapBaseOutInstruction {
+                    accounts: Some(get_swap_accounts(instruction)).into(),
+                    amount_out: event.amount_out,
+                    max_amount_in: event.max_amount_in,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }
@@ -117,28 +123,34 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
     match raydium::amm::v4::logs::unpack(data.as_slice()) {
         // -- SwapBaseIn --
         Ok(raydium::amm::v4::logs::RaydiumV4Log::SwapBaseIn(event)) => {
-            log.log = Some(pb::log::Log::SwapBaseIn(pb::SwapBaseInLog {
-                amount_in: event.amount_in,
-                minimum_out: event.minimum_out,
-                direction: event.direction,
-                user_source: event.user_source,
-                pool_coin: event.pool_coin,
-                pool_pc: event.pool_pc,
-                out_amount: event.out_amount,
-            }));
+            log.log = Some(pb::log::Log::SwapBaseIn(
+                pb::SwapBaseInLog {
+                    amount_in: event.amount_in,
+                    minimum_out: event.minimum_out,
+                    direction: event.direction,
+                    user_source: event.user_source,
+                    pool_coin: event.pool_coin,
+                    pool_pc: event.pool_pc,
+                    out_amount: event.out_amount,
+                }
+                .into(),
+            ));
             Some(log)
         }
         // -- SwapBaseOut --
         Ok(raydium::amm::v4::logs::RaydiumV4Log::SwapBaseOut(event)) => {
-            log.log = Some(pb::log::Log::SwapBaseOut(pb::SwapBaseOutLog {
-                max_in: event.max_in,
-                amount_out: event.amount_out,
-                direction: event.direction,
-                user_source: event.user_source,
-                pool_coin: event.pool_coin,
-                pool_pc: event.pool_pc,
-                deduct_in: event.deduct_in,
-            }));
+            log.log = Some(pb::log::Log::SwapBaseOut(
+                pb::SwapBaseOutLog {
+                    max_in: event.max_in,
+                    amount_out: event.amount_out,
+                    direction: event.direction,
+                    user_source: event.user_source,
+                    pool_coin: event.pool_coin,
+                    pool_pc: event.pool_pc,
+                    deduct_in: event.deduct_in,
+                }
+                .into(),
+            ));
             Some(log)
         }
 

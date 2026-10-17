@@ -91,3 +91,10 @@ cargo build --target wasm32-unknown-unknown --release
 ```
 
 Most module directories also expose `make build`, `make pack`, `make noop`, and `make gui` targets.
+
+## Rust SDK and protobuf models
+
+New modules use Substreams 0.8, Solana 0.16 and Buffa-generated messages.
+The protobuf wire schemas and existing Substreams module outputs remain the
+compatibility contract. See [protobuf development](docs/protobuf.md) for pinned
+code generation, message presence, enum handling and native decoder boundaries.

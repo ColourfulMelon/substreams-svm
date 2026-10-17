@@ -8,11 +8,11 @@ ALTER TABLE transfers
 
     -- require `decimals` to be present for token transfers
     DROP COLUMN IF EXISTS decimals_raw,
-    ADD COLUMN decimals Nullable(UInt8),
+    ADD COLUMN IF NOT EXISTS decimals Nullable(UInt8),
 
     -- authority --
     DROP COLUMN IF EXISTS multisig_authority_raw,
-    ADD COLUMN multisig_authority Array(String),
+    ADD COLUMN IF NOT EXISTS multisig_authority Array(String),
 
     -- Indexes --
     ADD INDEX IF NOT EXISTS idx_amount (amount) TYPE minmax GRANULARITY 1,

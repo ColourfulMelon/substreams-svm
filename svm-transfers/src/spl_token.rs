@@ -78,10 +78,10 @@ fn handle_transfer(
 mod tests {
     use super::*;
     use flate2::read::GzDecoder;
-    use prost::Message;
     use spl_token_common::{process_block, SOLANA_TOKEN_PROGRAM_KEG, SOLANA_TOKEN_PROGRAM_ZQB};
     use std::collections::HashMap;
     use std::io::Read;
+    use substreams::buffa::{Message, MessageField};
     use substreams_database_change::pb::sf::substreams::sink::database::v1::table_change::PrimaryKey;
     use substreams_solana::pb::sf::solana::r#type::v1::Block;
 
@@ -93,11 +93,12 @@ mod tests {
 
     /// spl_transfer rows by (transaction_index, instruction_index, inner_instruction_index).
     fn rows(events: &pb::Events) -> HashMap<(u32, u32, u32), HashMap<String, String>> {
-        let clock = Clock {
+        let mut clock = Clock {
             id: "block".to_string(),
             number: 350000026,
-            timestamp: Some(prost_types::Timestamp { seconds: 1751210691, nanos: 0 }),
+            timestamp: MessageField::some(Default::default()),
         };
+        clock.timestamp.get_or_insert_default().seconds = 1751210691;
         let mut tables = substreams_database_change::tables::Tables::new();
         process_events(&mut tables, &clock, events);
         let mut rows = HashMap::new();
@@ -117,7 +118,7 @@ mod tests {
     fn one_row_per_operation_at_its_original_position() {
         let mut bytes = Vec::new();
         GzDecoder::new(BLOCK_350000026).read_to_end(&mut bytes).unwrap();
-        let block = Block::decode(bytes.as_slice()).unwrap();
+        let block = Block::decode_from_slice(bytes.as_slice()).unwrap();
         let events = process_block(&block, is_spl_token_program).unwrap();
 
         let mut expected = Vec::new();

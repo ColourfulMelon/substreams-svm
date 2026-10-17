@@ -41,7 +41,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::MeteoraDaam as i32,
+        protocol: pb::Protocol::MeteoraDaam.into(),
         program_id: daam::PROGRAM_ID.to_vec(),
         stack_height: swap.stack_height,
         amm: daam::PROGRAM_ID.to_vec(),

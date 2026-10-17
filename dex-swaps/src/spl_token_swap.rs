@@ -1,8 +1,8 @@
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::{
-    spl::token_swap::{self, accounts},
     spl::token_swap::instructions::{self, TokenSwapInstruction},
+    spl::token_swap::{self, accounts},
 };
 
 use crate::token_mints::TokenMintLookup;
@@ -19,10 +19,7 @@ pub(crate) fn handle_instruction(ix: &InstructionView, token_mints: &TokenMintLo
     if !ALLOWED_PROGRAM_IDS.iter().any(|allowed| allowed.as_slice() == program_id.as_slice()) {
         return None;
     }
-    let TokenSwapInstruction::Swap {
-        amount_in,
-        minimum_amount_out,
-    } = instructions::unpack(ix.data()).ok()? else {
+    let TokenSwapInstruction::Swap { amount_in, minimum_amount_out } = instructions::unpack(ix.data()).ok()? else {
         return None;
     };
 
@@ -39,7 +36,7 @@ pub(crate) fn handle_instruction(ix: &InstructionView, token_mints: &TokenMintLo
     }
 
     Some(pb::Swap {
-        protocol: pb::Protocol::SplTokenSwap as i32,
+        protocol: pb::Protocol::SplTokenSwap.into(),
         program_id: program_id.to_vec(),
         stack_height: ix.stack_height(),
         amm: program_id.to_vec(),
@@ -90,7 +87,8 @@ mod tests {
             ui_token_amount: Some(UiTokenAmount {
                 amount: amount.to_string(),
                 ..Default::default()
-            }),
+            })
+            .into(),
             ..Default::default()
         }
     }
@@ -112,14 +110,8 @@ mod tests {
             swap_data(500, 450),
         );
         let mut meta = TransactionStatusMeta::default();
-        meta.pre_token_balances = vec![
-            token_balance(5, INPUT_MINT, 1_000),
-            token_balance(8, OUTPUT_MINT, 100),
-        ];
-        meta.post_token_balances = vec![
-            token_balance(5, INPUT_MINT, 500),
-            token_balance(8, OUTPUT_MINT, 100),
-        ];
+        meta.pre_token_balances = vec![token_balance(5, INPUT_MINT, 1_000), token_balance(8, OUTPUT_MINT, 100)];
+        meta.post_token_balances = vec![token_balance(5, INPUT_MINT, 500), token_balance(8, OUTPUT_MINT, 100)];
         TokenMintLookup::new(&tx, &meta)
     }
 
@@ -203,7 +195,7 @@ mod tests {
 
         let swap = handle_instruction(&instruction, &token_mints).expect("spl token swap");
 
-        assert_eq!(swap.protocol, pb::Protocol::SplTokenSwap as i32);
+        assert_eq!(swap.protocol, pb::Protocol::SplTokenSwap);
         assert_eq!(swap.program_id, token_swap::PROGRAM_ID.to_vec());
         assert_eq!(swap.amm, token_swap::PROGRAM_ID.to_vec());
         assert_eq!(swap.amm_pool, SWAP_ACCOUNT.to_vec());

@@ -4,8 +4,8 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-fn protocol_slug(protocol: i32) -> &'static str {
-    match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
+fn protocol_slug(protocol: substreams::buffa::EnumValue<pb::Protocol>) -> &'static str {
+    match protocol.as_known().unwrap_or(pb::Protocol::Unspecified) {
         pb::Protocol::Unspecified => "unspecified",
         pb::Protocol::Boop => "boop",
         pb::Protocol::Byreal => "byreal",
@@ -48,7 +48,6 @@ pub fn db_out(mut clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Er
                 .set("compute_units_consumed", transaction.compute_units_consumed)
                 .set("program_id", base58::encode(&swap.program_id))
                 .set("stack_height", swap.stack_height)
-
                 // Swap
                 .set("protocol", protocol_slug(swap.protocol))
                 .set("amm", base58::encode(&swap.amm))
@@ -68,4 +67,16 @@ pub fn db_out(mut clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Er
     }
 
     Ok(tables.to_database_changes())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn protocol_slug_preserves_known_values_and_unknown_numeric_fallback() {
+        assert_eq!(protocol_slug(pb::Protocol::MeteoraDlmm.into()), "meteora_dlmm");
+        assert_eq!(protocol_slug(pb::Protocol::Unspecified.into()), "unspecified");
+        assert_eq!(protocol_slug(999_i32.into()), "unspecified");
+    }
 }

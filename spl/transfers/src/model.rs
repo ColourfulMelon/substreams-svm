@@ -152,20 +152,65 @@ macro_rules! block_view_buffa {
     ($vis:vis fn $name:ident, $($pb:ident)::+) => {
         $vis fn $name(block: &$($pb)::+::Block) -> ::core::result::Result<$crate::model::Block<'_>, $crate::UnsupportedMessage> {
             for (transaction_index, confirmed) in block.transactions.iter().enumerate() {
-                if let Some(message) = confirmed.transaction.as_option().and_then(|transaction| transaction.message.as_option()) {
-                    if message.version.is_some_and(|version| version != 0 || !message.versioned) || message.transaction_config.is_set() {
-                        return Err($crate::UnsupportedMessage {
-                            transaction_index,
-                            version: message.version,
-                            versioned: message.versioned,
-                            inline_configuration: message.transaction_config.is_set(),
-                        });
-                    }
+                if let Some(unsupported) = $crate::__unsupported_message!(transaction_index, confirmed) {
+                    return Err(unsupported);
                 }
             }
             $crate::__block_view!(fn borrow_block, $($pb)::+; as_option, is_set);
             Ok(borrow_block(block))
         }
+    };
+}
+
+/// Lenient variant of [`block_view_buffa!`] for production Substreams modules
+/// that must not halt on a message shape this crate does not cover.
+///
+/// Returns the complete borrowed view, so original transaction indexes are
+/// unchanged, together with every transaction whose message
+/// [`block_view_buffa!`] would reject. Callers must skip those transactions and
+/// validate the rest with [`validate_block_except`](crate::validate_block_except).
+/// [`project`](crate::project) does not accept this policy; use the
+/// fail-closed adapter for native projection.
+///
+/// ```ignore
+/// spl_transfers::block_view_buffa_lenient!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
+///
+/// let (view, unsupported) = view_block(&block);
+/// spl_transfers::validate_block_except(&view, &unsupported)?;
+/// ```
+#[macro_export]
+macro_rules! block_view_buffa_lenient {
+    ($vis:vis fn $name:ident, $($pb:ident)::+) => {
+        $vis fn $name(block: &$($pb)::+::Block) -> ($crate::model::Block<'_>, ::std::vec::Vec<$crate::UnsupportedMessage>) {
+            let unsupported = block
+                .transactions
+                .iter()
+                .enumerate()
+                .filter_map(|(transaction_index, confirmed)| $crate::__unsupported_message!(transaction_index, confirmed))
+                .collect();
+            $crate::__block_view!(fn borrow_block, $($pb)::+; as_option, is_set);
+            (borrow_block(block), unsupported)
+        }
+    };
+}
+
+// The message shapes the Buffa adapters do not cover: explicit versions other
+// than v0, contradictory version metadata, or inline transaction configuration.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __unsupported_message {
+    ($transaction_index:expr, $confirmed:expr) => {
+        $confirmed
+            .transaction
+            .as_option()
+            .and_then(|transaction| transaction.message.as_option())
+            .filter(|message| message.version.is_some_and(|version| version != 0 || !message.versioned) || message.transaction_config.is_set())
+            .map(|message| $crate::UnsupportedMessage {
+                transaction_index: $transaction_index,
+                version: message.version,
+                versioned: message.versioned,
+                inline_configuration: message.transaction_config.is_set(),
+            })
     };
 }
 

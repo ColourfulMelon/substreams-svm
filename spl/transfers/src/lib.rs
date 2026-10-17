@@ -31,4 +31,4 @@ mod validate;
 pub use decode::{decode, DecodeError, Decoded, OperationKind, TokenProgram, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID};
 pub use error::{Position, ProjectError, TransactionError, UnsupportedMessage};
 pub use project::{project, Clock, Coverage, CoverageError, Operation, Projection, Pubkey, Signature, SPEC_REVISION};
-pub use validate::{validate_block, validate_transaction, Keys};
+pub use validate::{validate_block, validate_block_except, validate_transaction, Keys};

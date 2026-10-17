@@ -12,7 +12,7 @@ use substreams_solana::base58;
 use crate::{to_global_sequence, Address, Hash};
 
 pub fn common_key(clock: &Clock, execution_index: u64) -> [(&'static str, String); 4] {
-    let seconds = clock.timestamp.as_ref().expect("clock.timestamp is required").seconds;
+    let seconds = clock.timestamp.as_option().expect("clock.timestamp is required").seconds;
     [
         ("timestamp", seconds.to_string()),
         ("block_num", clock.number.to_string()),
@@ -137,7 +137,7 @@ pub fn set_native_token_instruction_v2(instruction: &native::Instruction, row: &
 pub fn set_clock(clock: &Clock, row: &mut Row) {
     row.set("block_num", clock.number.to_string())
         .set("block_hash", &clock.id)
-        .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
+        .set("timestamp", clock.timestamp.as_option().expect("missing timestamp").seconds.to_string());
 }
 
 // TO-DO: handle multisig authority

@@ -4,4 +4,5 @@ all:
 
 .PHONY: protogen
 protogen:
-	substreams protogen
+	buf generate v1 --template buf.gen.yaml
+	python3 generate-modules.py

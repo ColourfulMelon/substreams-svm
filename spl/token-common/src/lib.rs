@@ -31,19 +31,28 @@ pub fn is_spl_memo_program(program_id: &[u8]) -> bool {
     program_id == &SOLANA_MEMO_PROGRAM_V1 || program_id == &SOLANA_MEMO_PROGRAM_V2
 }
 
-spl_transfers::block_view!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
+spl_transfers::block_view_buffa_lenient!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
 
 /// Processes the successful transactions of a complete block.
 ///
-/// The block is validated first (`spl_transfers::validate_block`), so
+/// The block is validated first (`spl_transfers::validate_block_except`), so
 /// malformed input is an error rather than a panic or a wrong account. Pass
 /// the unfiltered block: positions are original only when no transaction was
 /// removed upstream.
+///
+/// Transactions with a message shape the shared decoder does not cover (an
+/// explicit version other than v0, or inline transaction configuration) are
+/// logged and skipped instead of halting the stream; the other transactions
+/// keep their original indexes.
 pub fn process_block(block: &Block, is_spl_token_program: fn(&[u8]) -> bool) -> Result<pb::Events, Error> {
-    spl_transfers::validate_block(&view_block(block))?;
+    let (view, unsupported) = view_block(block);
+    for message in &unsupported {
+        substreams::log::info!("skipping {}", message);
+    }
+    spl_transfers::validate_block_except(&view, &unsupported)?;
     let mut transactions = Vec::new();
     for (index, tx) in block.transactions.iter().enumerate() {
-        if !tx.is_successful() {
+        if !tx.is_successful() || unsupported.iter().any(|message| message.transaction_index == index) {
             continue;
         }
         if let Some(transaction) = process_transaction(tx, index as u32, is_spl_token_program)? {
@@ -60,7 +69,7 @@ pub fn process_transaction(
     transaction_index: u32,
     is_spl_token_program: fn(&[u8]) -> bool,
 ) -> Result<Option<pb::Transaction>, Error> {
-    let Some(tx_meta) = tx.meta.as_ref() else {
+    let Some(tx_meta) = tx.meta.as_option() else {
         return Ok(None);
     };
     let signers = get_signers(tx).unwrap_or_default();
@@ -94,7 +103,7 @@ pub fn process_transaction(
 
     Ok(Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(tx).unwrap_or_default(),
         signers,

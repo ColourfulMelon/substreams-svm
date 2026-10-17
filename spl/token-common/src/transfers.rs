@@ -31,8 +31,8 @@ pub fn unpack_transfers(
         decimals: decoded.decimals.map(u32::from),
     };
     Ok(Some(match decoded.kind {
-        OperationKind::Transfer | OperationKind::TransferChecked => pb::instruction::Instruction::Transfer(transfer),
-        OperationKind::MintTo | OperationKind::MintToChecked => pb::instruction::Instruction::Mint(transfer),
-        OperationKind::Burn | OperationKind::BurnChecked => pb::instruction::Instruction::Burn(transfer),
+        OperationKind::Transfer | OperationKind::TransferChecked => pb::instruction::Instruction::Transfer(transfer.into()),
+        OperationKind::MintTo | OperationKind::MintToChecked => pb::instruction::Instruction::Mint(transfer.into()),
+        OperationKind::Burn | OperationKind::BurnChecked => pb::instruction::Instruction::Burn(transfer.into()),
     }))
 }

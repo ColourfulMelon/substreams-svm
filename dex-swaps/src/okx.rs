@@ -173,7 +173,7 @@ impl State {
         }
 
         Some(pb::Swap {
-            protocol: pb::Protocol::OkxDex as i32,
+            protocol: pb::Protocol::OkxDex.into(),
             program_id: okx::v2::PROGRAM_ID.to_vec(),
             stack_height: ctx.stack_height,
             amm: okx::v2::PROGRAM_ID.to_vec(),
@@ -259,7 +259,7 @@ mod tests {
 
         assert_eq!(swaps.len(), 1);
         let swap = &swaps[0];
-        assert_eq!(swap.protocol, pb::Protocol::OkxDex as i32);
+        assert_eq!(swap.protocol, pb::Protocol::OkxDex);
         assert_eq!(swap.program_id, okx::v2::PROGRAM_ID.to_vec());
         assert_eq!(swap.amm, okx::v2::PROGRAM_ID.to_vec());
         assert_eq!(swap.amm_pool, pool.to_vec());

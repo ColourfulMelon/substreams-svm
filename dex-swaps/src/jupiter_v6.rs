@@ -1,6 +1,6 @@
+use crate::log;
 use common::solana::get_fee_payer;
 use proto::pb::dex::swaps::v1 as pb;
-use substreams::log;
 use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 use substreams_solana_idls::jupiter;
 
@@ -30,7 +30,7 @@ pub(crate) fn decode_instruction(tx: &ConfirmedTransaction, instruction: &Instru
             }
             Some(pb::Swap {
                 program_id: jupiter::v6::PROGRAM_ID.to_vec(),
-                protocol: pb::Protocol::JupiterV6 as i32,
+                protocol: pb::Protocol::JupiterV6.into(),
                 stack_height: instruction.stack_height(),
                 amm: amm_program.to_vec(),
                 amm_pool,

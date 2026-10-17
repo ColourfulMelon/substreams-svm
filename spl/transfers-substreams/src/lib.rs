@@ -1,6 +1,14 @@
 //! `spl_transfers:map_events`: a thin Substreams wrapper over the native
 //! [`spl_transfers::project`]. The module params are a [`Coverage`] flag list.
-pub mod pb;
+/// Output types, generated with the shared workspace bindings from the
+/// canonical `proto/v1/spl/spl-transfers.proto` (`make -C proto protogen`).
+pub mod pb {
+    pub mod solana {
+        pub mod spl {
+            pub use proto::pb::solana::spl::transfers;
+        }
+    }
+}
 use pb::solana::spl::transfers::v1 as output;
 use spl_transfers::{Coverage, OperationKind, Projection, TokenProgram};
 use substreams::errors::Error;

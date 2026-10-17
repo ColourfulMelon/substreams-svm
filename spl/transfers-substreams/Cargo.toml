@@ -10,9 +10,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 spl-transfers = { path = "../transfers" }
-buffa = { version = "0.9.2", default-features = false, features = ["std"] }
-substreams = "0.8.0"
-substreams-solana = { package = "substreams-solana-core", version = "0.16.0" }
+proto = { path = "../../proto" }
+buffa = { workspace = true }
+substreams = { workspace = true }
+substreams-solana = { workspace = true }
 
 [dev-dependencies]
 flate2 = "1"
