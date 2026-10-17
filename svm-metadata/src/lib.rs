@@ -7,11 +7,7 @@ use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 
 #[substreams::handlers::map]
-pub fn db_out(
-    mut clock: Clock,
-    spl_token: pb::spl::token::v1::Events,
-    metaplex: pb::metaplex::v1::Events,
-) -> Result<DatabaseChanges, Error> {
+pub fn db_out(mut clock: Clock, spl_token: pb::spl::token::v1::Events, metaplex: pb::metaplex::v1::Events) -> Result<DatabaseChanges, Error> {
     clock = update_genesis_clock(clock);
     let mut tables = substreams_database_change::tables::Tables::new();
 

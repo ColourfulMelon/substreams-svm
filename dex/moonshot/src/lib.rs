@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &moonshot::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -43,28 +43,30 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
     }
 
     match moonshot::instructions::unpack(ix.data()) {
-        Ok(moonshot::instructions::MoonshotInstruction::Buy(event)) => {
-            Some(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+        Ok(moonshot::instructions::MoonshotInstruction::Buy(event)) => Some(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     amount: event.amount,
                     collateral_amount: event.collateral_amount,
                     slippage_bps: event.slippage_bps,
-                })),
-            })
-        }
-        Ok(moonshot::instructions::MoonshotInstruction::Sell(event)) => {
-            Some(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Sell(pb::SellInstruction {
+                }
+                .into(),
+            )),
+        }),
+        Ok(moonshot::instructions::MoonshotInstruction::Sell(event)) => Some(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Sell(
+                pb::SellInstruction {
                     amount: event.amount,
                     collateral_amount: event.collateral_amount,
                     slippage_bps: event.slippage_bps,
-                })),
-            })
-        }
+                }
+                .into(),
+            )),
+        }),
         _ => None,
     }
 }
@@ -101,29 +103,35 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(moonshot::events::MoonshotEvent::TradeEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Trade(pb::TradeEvent {
-                amount: event.amount,
-                collateral_amount: event.collateral_amount,
-                dex_fee: event.dex_fee,
-                helio_fee: event.helio_fee,
-                allocation: event.allocation,
-                curve: event.curve.to_bytes().to_vec(),
-                cost_token: event.cost_token.to_bytes().to_vec(),
-                sender: event.sender.to_bytes().to_vec(),
-                trade_type: event.trade_type as u32,
-                label: event.label,
-            })),
+            log: Some(pb::log::Log::Trade(
+                pb::TradeEvent {
+                    amount: event.amount,
+                    collateral_amount: event.collateral_amount,
+                    dex_fee: event.dex_fee,
+                    helio_fee: event.helio_fee,
+                    allocation: event.allocation,
+                    curve: event.curve.to_bytes().to_vec(),
+                    cost_token: event.cost_token.to_bytes().to_vec(),
+                    sender: event.sender.to_bytes().to_vec(),
+                    trade_type: event.trade_type as u32,
+                    label: event.label,
+                }
+                .into(),
+            )),
         }),
         Ok(moonshot::events::MoonshotEvent::MigrationEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Migration(pb::MigrationEvent {
-                tokens_migrated: event.tokens_migrated,
-                tokens_burned: event.tokens_burned,
-                collateral_migrated: event.collateral_migrated,
-                fee: event.fee,
-                label: event.label,
-            })),
+            log: Some(pb::log::Log::Migration(
+                pb::MigrationEvent {
+                    tokens_migrated: event.tokens_migrated,
+                    tokens_burned: event.tokens_burned,
+                    collateral_migrated: event.collateral_migrated,
+                    fee: event.fee,
+                    label: event.label,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

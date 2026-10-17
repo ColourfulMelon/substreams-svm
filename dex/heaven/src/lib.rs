@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &heaven::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -46,11 +46,14 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
         Ok(heaven::instructions::HeavenInstruction::Sell(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::Sell(pb::SellInstruction {
-                amount_in: event.amount_in,
-                minimum_amount_out: event.minimum_amount_out,
-                encoded_user_defined_event_data: event.encoded_user_defined_event_data,
-            })),
+            instruction: Some(pb::instruction::Instruction::Sell(
+                pb::SellInstruction {
+                    amount_in: event.amount_in,
+                    minimum_amount_out: event.minimum_amount_out,
+                    encoded_user_defined_event_data: event.encoded_user_defined_event_data,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }
@@ -88,11 +91,14 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(heaven::logs::HeavenLog::Sell(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Sell(pb::SellLog {
-                user: event.user.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                amount: event.amount,
-            })),
+            log: Some(pb::log::Log::Sell(
+                pb::SellLog {
+                    user: event.user.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    amount: event.amount,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

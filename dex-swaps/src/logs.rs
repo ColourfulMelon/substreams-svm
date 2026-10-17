@@ -6,11 +6,7 @@ pub(crate) enum ProgramLog<'a> {
     Exit,
 }
 
-pub(crate) fn scoped_program_log<'a>(
-    log_message: &'a str,
-    program_id: &[u8],
-    is_invoked: &mut bool,
-) -> Option<ProgramLog<'a>> {
+pub(crate) fn scoped_program_log<'a>(log_message: &'a str, program_id: &[u8], is_invoked: &mut bool) -> Option<ProgramLog<'a>> {
     let matches_program = parse_program_id(log_message).map_or(false, |id| id == program_id);
 
     if is_invoke(log_message) && matches_program {

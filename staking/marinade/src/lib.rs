@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &marinade::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -44,43 +44,38 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
 
     let instruction = match marinade::instructions::unpack(ix.data()) {
         Ok(marinade::instructions::MarinadeInstruction::Deposit(event)) => {
-            pb::instruction::Instruction::Deposit(pb::DepositInstruction {
-                lamports: event.lamports,
-            })
+            pb::instruction::Instruction::Deposit(pb::DepositInstruction { lamports: event.lamports }.into())
         }
         Ok(marinade::instructions::MarinadeInstruction::DepositStakeAccount) => {
-            pb::instruction::Instruction::DepositStakeAccount(pb::DepositStakeAccountInstruction {})
+            pb::instruction::Instruction::DepositStakeAccount(pb::DepositStakeAccountInstruction {}.into())
         }
-        Ok(marinade::instructions::MarinadeInstruction::LiquidUnstake(event)) => {
-            pb::instruction::Instruction::LiquidUnstake(pb::LiquidUnstakeInstruction {
+        Ok(marinade::instructions::MarinadeInstruction::LiquidUnstake(event)) => pb::instruction::Instruction::LiquidUnstake(
+            pb::LiquidUnstakeInstruction {
                 msol_amount: event.msol_amount,
-            })
-        }
+            }
+            .into(),
+        ),
         Ok(marinade::instructions::MarinadeInstruction::AddLiquidity(event)) => {
-            pb::instruction::Instruction::AddLiquidity(pb::AddLiquidityInstruction {
-                lamports: event.lamports,
-            })
+            pb::instruction::Instruction::AddLiquidity(pb::AddLiquidityInstruction { lamports: event.lamports }.into())
         }
         Ok(marinade::instructions::MarinadeInstruction::RemoveLiquidity(event)) => {
-            pb::instruction::Instruction::RemoveLiquidity(pb::RemoveLiquidityInstruction {
-                tokens: event.tokens,
-            })
+            pb::instruction::Instruction::RemoveLiquidity(pb::RemoveLiquidityInstruction { tokens: event.tokens }.into())
         }
-        Ok(marinade::instructions::MarinadeInstruction::OrderUnstake(event)) => {
-            pb::instruction::Instruction::OrderUnstake(pb::OrderUnstakeInstruction {
+        Ok(marinade::instructions::MarinadeInstruction::OrderUnstake(event)) => pb::instruction::Instruction::OrderUnstake(
+            pb::OrderUnstakeInstruction {
                 msol_amount: event.msol_amount,
-            })
-        }
-        Ok(marinade::instructions::MarinadeInstruction::Claim) => {
-            pb::instruction::Instruction::Claim(pb::ClaimInstruction {})
-        }
-        Ok(marinade::instructions::MarinadeInstruction::WithdrawStakeAccount(event)) => {
-            pb::instruction::Instruction::WithdrawStakeAccount(pb::WithdrawStakeAccountInstruction {
+            }
+            .into(),
+        ),
+        Ok(marinade::instructions::MarinadeInstruction::Claim) => pb::instruction::Instruction::Claim(pb::ClaimInstruction {}.into()),
+        Ok(marinade::instructions::MarinadeInstruction::WithdrawStakeAccount(event)) => pb::instruction::Instruction::WithdrawStakeAccount(
+            pb::WithdrawStakeAccountInstruction {
                 msol_amount: event.msol_amount,
                 stake_index: event.stake_index,
                 validator_index: event.validator_index,
-            })
-        }
+            }
+            .into(),
+        ),
         _ => return None,
     };
 
@@ -123,78 +118,96 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(marinade::events::MarinadeEvent::Deposit(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Deposit(pb::DepositEvent {
-                state: event.state.to_bytes().to_vec(),
-                sol_owner: event.sol_owner.to_bytes().to_vec(),
-                sol_swapped: event.sol_swapped,
-                msol_swapped: event.msol_swapped,
-                sol_deposited: event.sol_deposited,
-                msol_minted: event.msol_minted,
-                total_virtual_staked_lamports: event.total_virtual_staked_lamports,
-                msol_supply: event.msol_supply,
-            })),
+            log: Some(pb::log::Log::Deposit(
+                pb::DepositEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    sol_owner: event.sol_owner.to_bytes().to_vec(),
+                    sol_swapped: event.sol_swapped,
+                    msol_swapped: event.msol_swapped,
+                    sol_deposited: event.sol_deposited,
+                    msol_minted: event.msol_minted,
+                    total_virtual_staked_lamports: event.total_virtual_staked_lamports,
+                    msol_supply: event.msol_supply,
+                }
+                .into(),
+            )),
         }),
         Ok(marinade::events::MarinadeEvent::DepositStakeAccount(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::DepositStakeAccount(pb::DepositStakeAccountEvent {
-                state: event.state.to_bytes().to_vec(),
-                stake: event.stake.to_bytes().to_vec(),
-                delegated: event.delegated,
-                withdrawer: event.withdrawer.to_bytes().to_vec(),
-                validator: event.validator.to_bytes().to_vec(),
-                msol_minted: event.msol_minted,
-                total_virtual_staked_lamports: event.total_virtual_staked_lamports,
-                msol_supply: event.msol_supply,
-            })),
+            log: Some(pb::log::Log::DepositStakeAccount(
+                pb::DepositStakeAccountEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    stake: event.stake.to_bytes().to_vec(),
+                    delegated: event.delegated,
+                    withdrawer: event.withdrawer.to_bytes().to_vec(),
+                    validator: event.validator.to_bytes().to_vec(),
+                    msol_minted: event.msol_minted,
+                    total_virtual_staked_lamports: event.total_virtual_staked_lamports,
+                    msol_supply: event.msol_supply,
+                }
+                .into(),
+            )),
         }),
         Ok(marinade::events::MarinadeEvent::LiquidUnstake(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::LiquidUnstake(pb::LiquidUnstakeEvent {
-                state: event.state.to_bytes().to_vec(),
-                msol_owner: event.msol_owner.to_bytes().to_vec(),
-                msol_amount: event.msol_amount,
-                msol_fee: event.msol_fee,
-                treasury_msol_cut: event.treasury_msol_cut,
-                sol_amount: event.sol_amount,
-            })),
+            log: Some(pb::log::Log::LiquidUnstake(
+                pb::LiquidUnstakeEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    msol_owner: event.msol_owner.to_bytes().to_vec(),
+                    msol_amount: event.msol_amount,
+                    msol_fee: event.msol_fee,
+                    treasury_msol_cut: event.treasury_msol_cut,
+                    sol_amount: event.sol_amount,
+                }
+                .into(),
+            )),
         }),
         Ok(marinade::events::MarinadeEvent::AddLiquidity(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::AddLiquidity(pb::AddLiquidityEvent {
-                state: event.state.to_bytes().to_vec(),
-                sol_owner: event.sol_owner.to_bytes().to_vec(),
-                sol_added_amount: event.sol_added_amount,
-                lp_minted: event.lp_minted,
-                total_virtual_staked_lamports: event.total_virtual_staked_lamports,
-                msol_supply: event.msol_supply,
-            })),
+            log: Some(pb::log::Log::AddLiquidity(
+                pb::AddLiquidityEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    sol_owner: event.sol_owner.to_bytes().to_vec(),
+                    sol_added_amount: event.sol_added_amount,
+                    lp_minted: event.lp_minted,
+                    total_virtual_staked_lamports: event.total_virtual_staked_lamports,
+                    msol_supply: event.msol_supply,
+                }
+                .into(),
+            )),
         }),
         Ok(marinade::events::MarinadeEvent::RemoveLiquidity(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::RemoveLiquidity(pb::RemoveLiquidityEvent {
-                state: event.state.to_bytes().to_vec(),
-                lp_burned: event.lp_burned,
-                sol_out_amount: event.sol_out_amount,
-                msol_out_amount: event.msol_out_amount,
-            })),
+            log: Some(pb::log::Log::RemoveLiquidity(
+                pb::RemoveLiquidityEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    lp_burned: event.lp_burned,
+                    sol_out_amount: event.sol_out_amount,
+                    msol_out_amount: event.msol_out_amount,
+                }
+                .into(),
+            )),
         }),
         Ok(marinade::events::MarinadeEvent::WithdrawStakeAccount(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::WithdrawStakeAccount(pb::WithdrawStakeAccountEvent {
-                state: event.state.to_bytes().to_vec(),
-                stake: event.stake.to_bytes().to_vec(),
-                validator: event.validator.to_bytes().to_vec(),
-                user_msol_auth: event.user_msol_auth.to_bytes().to_vec(),
-                msol_burned: event.msol_burned,
-                msol_fees: event.msol_fees,
-                beneficiary: event.beneficiary.to_bytes().to_vec(),
-                split_lamports: event.split_lamports,
-            })),
+            log: Some(pb::log::Log::WithdrawStakeAccount(
+                pb::WithdrawStakeAccountEvent {
+                    state: event.state.to_bytes().to_vec(),
+                    stake: event.stake.to_bytes().to_vec(),
+                    validator: event.validator.to_bytes().to_vec(),
+                    user_msol_auth: event.user_msol_auth.to_bytes().to_vec(),
+                    msol_burned: event.msol_burned,
+                    msol_fees: event.msol_fees,
+                    beneficiary: event.beneficiary.to_bytes().to_vec(),
+                    split_lamports: event.split_lamports,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

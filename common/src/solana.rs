@@ -1,35 +1,43 @@
 use base64::Engine;
-use prost_types::Timestamp;
+#[cfg(feature = "substreams")]
+use buffa_types::google::protobuf::Timestamp;
+#[cfg(feature = "substreams")]
 use substreams::pb::substreams::Clock;
 use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 
+#[cfg(feature = "substreams")]
 const GENESIS_TIMESTAMP: u64 = 1584332940; // Genesis timestamp in seconds
+#[cfg(feature = "substreams")]
 const SLOT_DURATION_MS: u64 = 400; // Slot duration in milliseconds
 
+#[cfg(feature = "substreams")]
 pub fn to_timestamp(clock: &Clock) -> i64 {
     // GENESIS_TIMESTAMP is the genesis timestamp
     // SLOT_DURATION_MS per slot, so we multiply the slot number by SLOT_DURATION_MS and divide by 1000 to get seconds
     (GENESIS_TIMESTAMP + (clock.number * SLOT_DURATION_MS) / 1000) as i64
 }
 
+#[cfg(feature = "substreams")]
 pub fn update_genesis_clock(mut clock: Clock) -> Clock {
     // only apply if the clock has not been set yet
     // early votes in Solana that do not contain votes do not include a timestamp
-    if clock.timestamp.unwrap().seconds > 0 {
+    if clock.timestamp.as_option().expect("clock timestamp").seconds > 0 {
         return clock;
     }
-    clock.timestamp = Some(Timestamp {
+    clock.timestamp = Timestamp {
         seconds: to_timestamp(&clock),
         nanos: 0,
-    });
+        ..Default::default()
+    }
+    .into();
     clock
 }
 
 pub fn get_fee_payer(tx: &ConfirmedTransaction) -> Option<Vec<u8>> {
     // ConfirmedTransaction → Transaction → Message → account_keys[0]
     tx.transaction
-        .as_ref() // Option<&Transaction>
-        .and_then(|t| t.message.as_ref()) // Option<&Message>
+        .as_option() // Option<&Transaction>
+        .and_then(|t| t.message.as_option()) // Option<&Message>
         .and_then(|msg| msg.account_keys.get(0))
         .cloned() // Option<Vec<u8>>
 }
@@ -39,10 +47,10 @@ pub fn get_fee_payer(tx: &ConfirmedTransaction) -> Option<Vec<u8>> {
 /// `None` is returned only if the protobuf is missing the expected fields.
 pub fn get_signers(tx: &ConfirmedTransaction) -> Option<Vec<Vec<u8>>> {
     tx.transaction
-        .as_ref() // Option<&Transaction>
-        .and_then(|t| t.message.as_ref()) // Option<&Message>
+        .as_option() // Option<&Transaction>
+        .and_then(|t| t.message.as_option()) // Option<&Message>
         .and_then(|msg| {
-            msg.header.as_ref().map(|hdr| {
+            msg.header.as_option().map(|hdr| {
                 let n = hdr.num_required_signatures as usize;
                 msg.account_keys
                     .iter()

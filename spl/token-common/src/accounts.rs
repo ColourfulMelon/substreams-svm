@@ -13,59 +13,77 @@ pub fn unpack_accounts(instruction: &InstructionView, program_id: &[u8], is_spl_
         Ok(token_instruction) => match token_instruction {
             // -- InitializeAccount --
             TokenInstruction::InitializeAccount {} => {
-                return Some(pb::instruction::Instruction::InitializeAccount(pb::InitializeAccount {
-                    account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
-                    mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
-                    owner: instruction.accounts()[2].0.to_vec(),   // The new account's owner/multisignature.
-                }));
+                return Some(pb::instruction::Instruction::InitializeAccount(
+                    pb::InitializeAccount {
+                        account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
+                        mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
+                        owner: instruction.accounts()[2].0.to_vec(),   // The new account's owner/multisignature.
+                    }
+                    .into(),
+                ));
             }
             // -- InitializeAccount2 --
             TokenInstruction::InitializeAccount2 { owner } => {
-                return Some(pb::instruction::Instruction::InitializeAccount(pb::InitializeAccount {
-                    account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
-                    mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
-                    owner: owner.to_bytes().to_vec(),
-                }));
+                return Some(pb::instruction::Instruction::InitializeAccount(
+                    pb::InitializeAccount {
+                        account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
+                        mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
+                        owner: owner.to_bytes().to_vec(),
+                    }
+                    .into(),
+                ));
             }
             // -- InitializeAccount3 --
             TokenInstruction::InitializeAccount3 { owner } => {
-                return Some(pb::instruction::Instruction::InitializeAccount(pb::InitializeAccount {
-                    account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
-                    mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
-                    owner: owner.to_bytes().to_vec(),
-                }));
+                return Some(pb::instruction::Instruction::InitializeAccount(
+                    pb::InitializeAccount {
+                        account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
+                        mint: instruction.accounts()[1].0.to_vec(),    // The mint this account will be associated with.
+                        owner: owner.to_bytes().to_vec(),
+                    }
+                    .into(),
+                ));
             }
             // -- InitializeImmutableOwner --
             TokenInstruction::InitializeImmutableOwner => {
-                return Some(pb::instruction::Instruction::InitializeImmutableOwner(pb::InitializeImmutableOwner {
-                    account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
-                }));
+                return Some(pb::instruction::Instruction::InitializeImmutableOwner(
+                    pb::InitializeImmutableOwner {
+                        account: instruction.accounts()[0].0.to_vec(), // The account to initialize.
+                    }
+                    .into(),
+                ));
             }
             // -- CloseAccount --
             TokenInstruction::CloseAccount {} => {
                 if instruction.accounts().len() < 3 {
                     panic!("CloseAccount requires at least 3 accounts {}", base58::encode(instruction.transaction().hash()));
                 }
-                return Some(pb::instruction::Instruction::CloseAccount(pb::CloseAccount {
-                    account: instruction.accounts()[0].0.to_vec(),     // The account to close.
-                    destination: instruction.accounts()[1].0.to_vec(), // The destination to transfer the lamports to.
-                    authority: instruction.accounts()[2].0.to_vec(),   // The authority to close the account.
-                    multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
-                }));
+                return Some(pb::instruction::Instruction::CloseAccount(
+                    pb::CloseAccount {
+                        account: instruction.accounts()[0].0.to_vec(),     // The account to close.
+                        destination: instruction.accounts()[1].0.to_vec(), // The destination to transfer the lamports to.
+                        authority: instruction.accounts()[2].0.to_vec(),   // The authority to close the account.
+                        multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+                    }
+                    .into(),
+                ));
             }
             // -- SetAuthority --
             TokenInstruction::SetAuthority { authority_type, new_authority } => {
                 // accounts
-                return Some(pb::instruction::Instruction::SetAuthority(pb::SetAuthority {
-                    account: instruction.accounts()[0].0.to_vec(),
-                    authority_type: authority_type as i32 + 1,
-                    authority: instruction.accounts()[1].0.to_vec(),
-                    multisig_authority: instruction.accounts()[2..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
-                    new_authority: match new_authority {
-                        COption::Some(key) => Some(key.to_bytes().to_vec()),
-                        COption::None => None,
-                    },
-                }));
+                return Some(pb::instruction::Instruction::SetAuthority(
+                    pb::SetAuthority {
+                        account: instruction.accounts()[0].0.to_vec(),
+                        authority_type: (authority_type as i32 + 1).into(),
+                        authority: instruction.accounts()[1].0.to_vec(),
+                        multisig_authority: instruction.accounts()[2..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+                        new_authority: match new_authority {
+                            COption::Some(key) => Some(key.to_bytes().to_vec()),
+                            COption::None => None,
+                        },
+                    }
+                    .into(),
+                ));
             }
             _ => None,
         },

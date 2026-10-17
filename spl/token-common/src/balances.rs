@@ -12,7 +12,7 @@ pub fn get_token_balance(tx: &ConfirmedTransaction, balance: &TokenBalance, is_s
     if !is_spl_token_program(&program_id) {
         return None;
     }
-    let ui_token_amount = balance.ui_token_amount.as_ref()?;
+    let ui_token_amount = balance.ui_token_amount.as_option()?;
 
     Some(pb::TokenBalance {
         program_id,

@@ -27,9 +27,7 @@ impl State {
     }
 
     pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &raydium::cpmm::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
-        else {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &raydium::cpmm::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
             return None;
         };
 
@@ -38,7 +36,7 @@ impl State {
         self.next_index += 1;
 
         Some(pb::Swap {
-            protocol: pb::Protocol::RaydiumCpmm as i32,
+            protocol: pb::Protocol::RaydiumCpmm.into(),
             program_id: raydium::cpmm::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: raydium::cpmm::PROGRAM_ID.to_vec(),

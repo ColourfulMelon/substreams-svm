@@ -26,8 +26,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         return None;
     }
     Some(pb::Transaction {
-        fee: tx.meta.as_ref()?.fee,
-        compute_units_consumed: tx.meta.as_ref()?.compute_units_consumed(),
+        fee: tx.meta.as_option()?.fee,
+        compute_units_consumed: tx.meta.as_option()?.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -43,12 +43,15 @@ fn process_instruction(instruction: &InstructionView) -> Option<pb::Instruction>
     decode_swap_instruction(instruction.data()).map(|swap| pb::Instruction {
         program_id: BONKSWAP_PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
-        instruction: Some(pb::instruction::Instruction::SwapInstruction(pb::SwapInstruction {
-            accounts: Some(get_swap_accounts(instruction)),
-            delta_in: swap.delta_in,
-            price_limit: swap.price_limit.to_string(),
-            x_to_y: swap.x_to_y,
-        })),
+        instruction: Some(pb::instruction::Instruction::SwapInstruction(
+            pb::SwapInstruction {
+                accounts: Some(get_swap_accounts(instruction)).into(),
+                delta_in: swap.delta_in,
+                price_limit: swap.price_limit.to_string(),
+                x_to_y: swap.x_to_y,
+            }
+            .into(),
+        )),
     })
 }
 

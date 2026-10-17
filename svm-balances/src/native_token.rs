@@ -37,11 +37,7 @@ pub fn process_events(tables: &mut substreams_database_change::tables::Tables, c
     substreams::log::info!("Skipped {} out of {} native token balances", skipped, system_post_balances_per_block.len());
 }
 
-fn handle_balances(
-    tables: &mut substreams_database_change::tables::Tables,
-    clock: &Clock,
-    data: &pb::Balance
-) {
+fn handle_balances(tables: &mut substreams_database_change::tables::Tables, clock: &Clock, data: &pb::Balance) {
     let account = base58::encode(&data.account);
     let row = tables
         .upsert_row("native_balances", account.clone())
