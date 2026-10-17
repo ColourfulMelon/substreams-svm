@@ -345,7 +345,7 @@ mod tests {
 
     #[test]
     fn aqua_public_multihop_preserves_each_pool_mints_and_amounts() {
-        let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/aqua-orca-multihop.transaction.pb").to_vec()).unwrap();
+        let tx = <ConfirmedTransaction as buffa::Message>::decode_from_slice(include_bytes!("../fixtures/aqua-orca-multihop.transaction.pb")).unwrap();
         let decoded = crate::process_transaction(tx).unwrap();
         let sol = "So11111111111111111111111111111111111111112";
         let aqua = "AQVcP67EpMyu4cBZZjqMu91cVsWy1aX98JmcZm1FyY9";
