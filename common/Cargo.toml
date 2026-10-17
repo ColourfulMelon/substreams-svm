@@ -7,10 +7,16 @@ version = { workspace = true }
 [lib]
 crate-type = ["rlib"]
 
+[features]
+default = ["substreams"]
+# Existing Substreams consumers retain the database, Clock and scalar helpers.
+# Native decoders can use the model and pure helpers without the WASM runtime.
+substreams = ["dep:substreams", "dep:substreams-database-change"]
+
 [dependencies]
-substreams = { workspace = true }
-substreams-solana = { workspace = true }
-substreams-database-change = { workspace = true }
+substreams = { workspace = true, optional = true }
+substreams-solana = { package = "substreams-solana-core", version = "0.14.2" }
+substreams-database-change = { workspace = true, optional = true }
 prost = { workspace = true }
 prost-types = { workspace = true }
 proto = { path = "../proto" }

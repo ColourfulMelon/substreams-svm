@@ -408,7 +408,7 @@ dependencies = [
  "proto",
  "substreams 0.7.3",
  "substreams-database-change",
- "substreams-solana",
+ "substreams-solana-core",
 ]
 
 [[package]]
@@ -531,17 +531,19 @@ checksum = "6e5c37193a1db1d8ed868c03ec7b152175f26160a5b740e5e484143877e0adf0"
 name = "dex-swaps"
 version = "0.0.0"
 dependencies = [
+ "anyhow",
  "base64 0.22.1",
  "borsh 1.5.7",
  "common",
  "flate2",
+ "log",
  "prost",
  "proto",
  "sha2 0.10.9",
  "solana-program",
  "spl-transfers",
  "substreams 0.7.3",
- "substreams-solana",
+ "substreams-solana-core",
  "substreams-solana-idls",
 ]
 
@@ -3093,9 +3095,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-solana-core"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "978172a3ea534b72c15b7cf60f90c992a2b28528707c33f086adcbd62c317ef9"
+checksum = "2c8f004f8c264cf7a2d14efd0e1fbb7da8af865a8f19edd8044904d1637e3e8a"
 dependencies = [
  "bs58 0.4.0",
  "prost",
@@ -3106,23 +3108,23 @@ dependencies = [
 [[package]]
 name = "substreams-solana-idls"
 version = "1.4.0"
-source = "git+https://github.com/pinax-network/substreams-solana-idls?tag=v1.4.0#67dc692c5000b616f3d942973ac3d58bffee204a"
+source = "git+https://github.com/pinax-network/substreams-solana-idls?rev=256a572be9cc7481df9bb03cfbd5ca8503056a3d#256a572be9cc7481df9bb03cfbd5ca8503056a3d"
 dependencies = [
  "base64 0.22.1",
  "borsh 1.5.7",
  "mpl-token-metadata",
  "sha2 0.10.9",
  "solana-program",
- "substreams 0.6.2",
- "substreams-solana",
+ "substreams-solana-core",
+ "substreams-solana-macro",
  "thiserror 2.0.16",
 ]
 
 [[package]]
 name = "substreams-solana-macro"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bcfc2c094a426c1b487a0ee5392c4e55abcc5fc4ff6150bacc3d0d928c092b3d"
+checksum = "dc66db824cd16a4627281414de01a4bd3e67cdbd60e9656580712f467b257c9b"
 dependencies = [
  "bs58 0.4.0",
 ]

@@ -7,10 +7,18 @@ version = { workspace = true }
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[features]
+default = ["substreams"]
+# Preserve the existing WASM entry point and logging by default. Native callers
+# disable this feature to avoid linking Substreams allocator exports.
+substreams = ["dep:substreams", "common/substreams"]
+
 [dependencies]
-common = { path = "../common" }
-substreams = { workspace = true }
-substreams-solana = { workspace = true }
+common = { path = "../common", default-features = false }
+substreams = { workspace = true, optional = true }
+substreams-solana = { package = "substreams-solana-core", version = "0.14.2" }
+anyhow = "1"
+log = "0.4"
 substreams-solana-idls = { workspace = true }
 proto = { path = "../proto" }
 

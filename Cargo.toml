@@ -85,7 +85,8 @@ bs58 = "0.5.1"
 substreams = "0.7.3"
 substreams-abis = "0.7.12"
 substreams-solana = "0.14.2"
-substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", tag = "v1.4.0" }
+# Native-compatible dependency graph; decoder behavior remains at the v1.4.0 baseline.
+substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", rev = "256a572be9cc7481df9bb03cfbd5ca8503056a3d" }
 spl-token = "9.0.0"
 substreams-solana-program-instructions = "0.3"
 substreams-database-change = "4.0.0"

@@ -1,6 +1,6 @@
+use crate::log;
 use common::solana::{get_fee_payer, parse_program_data};
 use proto::pb::dex::swaps::v1 as pb;
-use substreams::log;
 use substreams_solana::base58;
 use substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction;
 use substreams_solana_idls::jupiter;

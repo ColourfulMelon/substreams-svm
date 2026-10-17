@@ -34,9 +34,13 @@ mod token_mints;
 
 use std::collections::VecDeque;
 
+use anyhow::Error;
 use common::solana::{get_fee_payer, get_signers};
+#[cfg(not(feature = "substreams"))]
+use log;
 use proto::pb::dex::swaps::v1 as pb;
-use substreams::{errors::Error, log};
+#[cfg(feature = "substreams")]
+use substreams::log;
 use substreams_solana::{
     base58,
     pb::sf::solana::r#type::v1::{Block, ConfirmedTransaction},
@@ -46,7 +50,7 @@ pub(crate) const SOL_MINT: [u8; 32] = [
     6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1,
 ]; // So11111111111111111111111111111111111111111
 
-#[cfg_attr(target_arch = "wasm32", substreams::handlers::map)]
+#[cfg_attr(all(target_arch = "wasm32", feature = "substreams"), substreams::handlers::map)]
 pub fn map_events(block: Block) -> Result<pb::Events, Error> {
     Ok(pb::Events {
         transactions: block.transactions_owned().filter_map(process_transaction).collect(),

@@ -55,6 +55,17 @@ Currently excluded:
 
 ## Native complete-block API
 
+Native applications should depend on `dex-swaps` with `default-features = false`.
+This uses `substreams-solana-core` (the same model and instruction views reexported
+by `substreams-solana`) and avoids linking Substreams WASM allocator exports into
+the host process. Native logging uses the standard `log` facade. The default
+`substreams` feature retains the existing WASM entry point and Substreams logging;
+`map_events` remains callable in both feature modes with the same error type and
+output. `common` uses the same default feature for its database, `Clock` and scalar
+helpers; its pure Solana helpers remain available without it. The SDK-free IDL
+dependency is pinned to [substreams-solana-idls PR #148](https://github.com/pinax-network/substreams-solana-idls/pull/148);
+review and resolve that dependency before release.
+
 `project(&substreams_solana::pb::sf::solana::r#type::v1::Block)` is callable from
 native Rust and returns a validated `Projection`. It borrows the existing decoded
 block and calls the same protocol extraction as the WASM wrapper, with no store,
