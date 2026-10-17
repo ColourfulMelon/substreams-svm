@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let mut instructions: Vec<pb::Instruction> = Vec::new();
     let mut logs: Vec<pb::Log> = Vec::new();
@@ -35,7 +35,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -58,12 +58,12 @@ fn process_instruction(ix: &InstructionView) -> Option<InstructionOrLog> {
 
     match tensor::instructions::unpack(ix.data()) {
         // Tcomp noop CPI carries the event payload
-        Ok(tensor::instructions::TensorInstruction::TcompNoop) => {
-            match tensor::events::unpack(ix.data()) {
-                Ok(tensor::events::TensorEvent::Maker(event)) => Some(InstructionOrLog::Log(pb::Log {
-                    program_id: program_id.to_vec(),
-                    invoke_depth: ix.stack_height(),
-                    log: Some(pb::log::Log::Make(pb::MakeEvent {
+        Ok(tensor::instructions::TensorInstruction::TcompNoop) => match tensor::events::unpack(ix.data()) {
+            Ok(tensor::events::TensorEvent::Maker(event)) => Some(InstructionOrLog::Log(pb::Log {
+                program_id: program_id.to_vec(),
+                invoke_depth: ix.stack_height(),
+                log: Some(pb::log::Log::Make(
+                    pb::MakeEvent {
                         maker: event.maker.to_bytes().to_vec(),
                         bid_id: event.bid_id.map(|b| b.to_bytes().to_vec()),
                         target: event.target as u32,
@@ -74,12 +74,15 @@ fn process_instruction(ix: &InstructionView) -> Option<InstructionOrLog> {
                         expiry: event.expiry,
                         private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                         asset_id: event.asset_id.map(|a| a.to_bytes().to_vec()),
-                    })),
-                })),
-                Ok(tensor::events::TensorEvent::Taker(event)) => Some(InstructionOrLog::Log(pb::Log {
-                    program_id: program_id.to_vec(),
-                    invoke_depth: ix.stack_height(),
-                    log: Some(pb::log::Log::Take(pb::TakeEvent {
+                    }
+                    .into(),
+                )),
+            })),
+            Ok(tensor::events::TensorEvent::Taker(event)) => Some(InstructionOrLog::Log(pb::Log {
+                program_id: program_id.to_vec(),
+                invoke_depth: ix.stack_height(),
+                log: Some(pb::log::Log::Take(
+                    pb::TakeEvent {
                         taker: event.taker.to_bytes().to_vec(),
                         bid_id: event.bid_id.map(|b| b.to_bytes().to_vec()),
                         target: event.target as u32,
@@ -92,214 +95,233 @@ fn process_instruction(ix: &InstructionView) -> Option<InstructionOrLog> {
                         creator_fee: event.creator_fee,
                         currency: event.currency.map(|c| c.to_bytes().to_vec()),
                         asset_id: event.asset_id.map(|a| a.to_bytes().to_vec()),
-                    })),
-                })),
-                _ => None,
-            }
-        }
-        Ok(tensor::instructions::TensorInstruction::List(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::List(pb::ListInstruction {
+                    }
+                    .into(),
+                )),
+            })),
+            _ => None,
+        },
+        Ok(tensor::instructions::TensorInstruction::List(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::List(
+                pb::ListInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
                     nft_standard: "cNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::Delist) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Delist(pb::DelistInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::Delist) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Delist(
+                pb::DelistInstruction {
                     nft_standard: "cNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::Edit(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Edit(pb::EditInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::Edit(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Edit(
+                pb::EditInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::Buy(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::Buy(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "cNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuySpl(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuySpl(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "cNFT_SPL".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::ListLegacy(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::List(pb::ListInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::ListLegacy(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::List(
+                pb::ListInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
                     nft_standard: "pNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::DelistLegacy) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Delist(pb::DelistInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::DelistLegacy) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Delist(
+                pb::DelistInstruction {
                     nft_standard: "pNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuyLegacy(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuyLegacy(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "pNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuyLegacySpl(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuyLegacySpl(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "pNFT_SPL".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::ListT22(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::List(pb::ListInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::ListT22(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::List(
+                pb::ListInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
                     nft_standard: "T22".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::DelistT22) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Delist(pb::DelistInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::DelistT22) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Delist(
+                pb::DelistInstruction {
                     nft_standard: "T22".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuyT22(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuyT22(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "T22".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::ListWns(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::List(pb::ListInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::ListWns(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::List(
+                pb::ListInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
                     nft_standard: "WNS".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::DelistWns) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Delist(pb::DelistInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::DelistWns) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Delist(
+                pb::DelistInstruction {
                     nft_standard: "WNS".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuyWns(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuyWns(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "WNS".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::ListCore(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::List(pb::ListInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::ListCore(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::List(
+                pb::ListInstruction {
                     amount: event.amount,
                     expire_in_sec: event.expire_in_sec,
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
                     nft_standard: "Core".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::DelistCore) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Delist(pb::DelistInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::DelistCore) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Delist(
+                pb::DelistInstruction {
                     nft_standard: "Core".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::BuyCore(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Buy(pb::BuyInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::BuyCore(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Buy(
+                pb::BuyInstruction {
                     max_amount: event.max_amount,
                     nft_standard: "Core".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::Bid(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Bid(pb::BidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::Bid(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::Bid(
+                pb::BidInstruction {
                     bid_id: event.bid_id.to_bytes().to_vec(),
                     target: event.target as u32,
                     target_id: event.target_id.to_bytes().to_vec(),
@@ -309,69 +331,76 @@ fn process_instruction(ix: &InstructionView) -> Option<InstructionOrLog> {
                     currency: event.currency.map(|c| c.to_bytes().to_vec()),
                     private_taker: event.private_taker.map(|p| p.to_bytes().to_vec()),
                     maker_broker: event.maker_broker.map(|m| m.to_bytes().to_vec()),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidMetaHash(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidMetaHash(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "cNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidFullMeta(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidFullMeta(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "cNFT_full".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidLegacy(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidLegacy(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "pNFT".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidT22(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidT22(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "T22".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidWns(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidWns(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "WNS".to_string(),
-                })),
-            }))
-        }
-        Ok(tensor::instructions::TensorInstruction::TakeBidCore(event)) => {
-            Some(InstructionOrLog::Instruction(pb::Instruction {
-                program_id: program_id.to_vec(),
-                stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TakeBid(pb::TakeBidInstruction {
+                }
+                .into(),
+            )),
+        })),
+        Ok(tensor::instructions::TensorInstruction::TakeBidCore(event)) => Some(InstructionOrLog::Instruction(pb::Instruction {
+            program_id: program_id.to_vec(),
+            stack_height: ix.stack_height(),
+            instruction: Some(pb::instruction::Instruction::TakeBid(
+                pb::TakeBidInstruction {
                     min_amount: event.min_amount,
                     nft_standard: "Core".to_string(),
-                })),
-            }))
-        }
+                }
+                .into(),
+            )),
+        })),
         _ => None,
     }
 }

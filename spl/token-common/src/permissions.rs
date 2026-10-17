@@ -11,73 +11,88 @@ pub fn unpack_permissions(instruction: &InstructionView, program_id: &[u8], is_s
         TokenInstruction::Approve { amount } => {
             // accounts
             let authority = instruction.accounts()[2].0.to_vec();
-            return Some(pb::instruction::Instruction::Approve(pb::Approve {
-                // authority
-                authority: authority.clone(),
-                multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+            return Some(pb::instruction::Instruction::Approve(
+                pb::Approve {
+                    // authority
+                    authority: authority.clone(),
+                    multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
 
-                // event
-                source: instruction.accounts()[0].0.to_vec(),
-                mint: None,
-                delegate: instruction.accounts()[1].0.to_vec(),
-                owner: authority,
-                amount,
-                decimals: None,
-            }));
+                    // event
+                    source: instruction.accounts()[0].0.to_vec(),
+                    mint: None,
+                    delegate: instruction.accounts()[1].0.to_vec(),
+                    owner: authority,
+                    amount,
+                    decimals: None,
+                }
+                .into(),
+            ));
         }
         // -- ApproveChecked --
         TokenInstruction::ApproveChecked { amount, decimals } => {
             // accounts
             let authority = instruction.accounts()[3].0.to_vec();
-            return Some(pb::instruction::Instruction::Approve(pb::Approve {
-                // authority
-                authority: authority.clone(),
-                multisig_authority: instruction.accounts()[4..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+            return Some(pb::instruction::Instruction::Approve(
+                pb::Approve {
+                    // authority
+                    authority: authority.clone(),
+                    multisig_authority: instruction.accounts()[4..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
 
-                // event
-                source: instruction.accounts()[0].0.to_vec(),
-                mint: Some(instruction.accounts()[1].0.to_vec()),
-                delegate: instruction.accounts()[2].0.to_vec(),
-                owner: authority,
-                amount,
-                decimals: Some(decimals as u32),
-            }));
+                    // event
+                    source: instruction.accounts()[0].0.to_vec(),
+                    mint: Some(instruction.accounts()[1].0.to_vec()),
+                    delegate: instruction.accounts()[2].0.to_vec(),
+                    owner: authority,
+                    amount,
+                    decimals: Some(decimals as u32),
+                }
+                .into(),
+            ));
         }
         // -- Revoke --
         TokenInstruction::Revoke {} => {
             // accounts
             let authority = instruction.accounts()[1].0.to_vec();
-            return Some(pb::instruction::Instruction::Revoke(pb::Revoke {
-                // authority
-                authority: authority.clone(),
-                multisig_authority: instruction.accounts()[2..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+            return Some(pb::instruction::Instruction::Revoke(
+                pb::Revoke {
+                    // authority
+                    authority: authority.clone(),
+                    multisig_authority: instruction.accounts()[2..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
 
-                // event
-                source: instruction.accounts()[0].0.to_vec(),
-                owner: authority,
-            }));
+                    // event
+                    source: instruction.accounts()[0].0.to_vec(),
+                    owner: authority,
+                }
+                .into(),
+            ));
         }
         // -- FreezeAccount --
         TokenInstruction::FreezeAccount {} => {
             // accounts
-            return Some(pb::instruction::Instruction::FreezeAccount(pb::FreezeAccount {
-                // authority
-                authority: instruction.accounts()[2].0.to_vec(),
-                multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
-                account: instruction.accounts()[0].0.to_vec(),
-                mint: instruction.accounts()[1].0.to_vec(),
-            }));
+            return Some(pb::instruction::Instruction::FreezeAccount(
+                pb::FreezeAccount {
+                    // authority
+                    authority: instruction.accounts()[2].0.to_vec(),
+                    multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+                    account: instruction.accounts()[0].0.to_vec(),
+                    mint: instruction.accounts()[1].0.to_vec(),
+                }
+                .into(),
+            ));
         }
         // -- ThawAccount --
         TokenInstruction::ThawAccount {} => {
             // accounts
-            return Some(pb::instruction::Instruction::ThawAccount(pb::ThawAccount {
-                // authority
-                authority: instruction.accounts()[2].0.to_vec(),
-                multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
-                account: instruction.accounts()[0].0.to_vec(),
-                mint: instruction.accounts()[1].0.to_vec(),
-            }));
+            return Some(pb::instruction::Instruction::ThawAccount(
+                pb::ThawAccount {
+                    // authority
+                    authority: instruction.accounts()[2].0.to_vec(),
+                    multisig_authority: instruction.accounts()[3..].iter().map(|a| a.0.to_vec()).collect::<Vec<_>>(),
+                    account: instruction.accounts()[0].0.to_vec(),
+                    mint: instruction.accounts()[1].0.to_vec(),
+                }
+                .into(),
+            ));
         }
         _ => None,
     }

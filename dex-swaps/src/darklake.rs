@@ -14,9 +14,7 @@ impl State {
     }
 
     pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &darklake::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
-        else {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &darklake::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
             return None;
         };
 
@@ -41,7 +39,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::Darklake as i32,
+            protocol: pb::Protocol::Darklake.into(),
             program_id: darklake::PROGRAM_ID.to_vec(),
             stack_height: 0,
             amm: darklake::PROGRAM_ID.to_vec(),
@@ -69,11 +67,9 @@ mod tests {
     fn settle_event_emits_swap_with_realised_amounts() {
         let mut state = State::new();
         assert!(state.handle_log(INVOKE_LOG).is_none(), "invoke is a header, not a swap");
-        let swap = state
-            .handle_log(SETTLE_LOG)
-            .expect("Settle event should decode into a swap");
+        let swap = state.handle_log(SETTLE_LOG).expect("Settle event should decode into a swap");
 
-        assert_eq!(swap.protocol, pb::Protocol::Darklake as i32);
+        assert_eq!(swap.protocol, pb::Protocol::Darklake);
         assert_eq!(swap.input_amount, 10_000_000);
         assert_eq!(swap.output_amount, 1_256_182);
         // direction=1 -> input = token_mint_x = wSOL (So11111111111111111111111111111111111111111)
@@ -82,8 +78,8 @@ mod tests {
         assert_eq!(
             swap.user,
             [
-                0xdb, 0x07, 0xcb, 0x09, 0x89, 0x99, 0x37, 0xbf, 0x5f, 0x53, 0xa8, 0x4e, 0xaa, 0x28, 0xda, 0x79,
-                0x32, 0xd4, 0x46, 0xd9, 0xd6, 0xfc, 0xe4, 0x56, 0xda, 0xd7, 0x0e, 0x20, 0xeb, 0x9c, 0x1e, 0x22,
+                0xdb, 0x07, 0xcb, 0x09, 0x89, 0x99, 0x37, 0xbf, 0x5f, 0x53, 0xa8, 0x4e, 0xaa, 0x28, 0xda, 0x79, 0x32, 0xd4, 0x46, 0xd9, 0xd6, 0xfc, 0xe4, 0x56,
+                0xda, 0xd7, 0x0e, 0x20, 0xeb, 0x9c, 0x1e, 0x22,
             ]
         );
     }
@@ -96,7 +92,6 @@ mod tests {
         let swap_event_log = "Program data: UWzjvs3QCsQLE/3EW00Z3UD/couPlpXnLjrnbc03ZEIcKMvzILA+OAFLE74XAAAAALqDAAAAAAAA3UEAAAAAAAAjZWYAAAAAAF0uDQAAAAAA3ehmAAAAAADI60EAAAAAAF0uDQAAAAAAlOqXAAAAAAAbZSEAAAAAANMIWgAAAAAALnITAAAAAAAzBz0AAAAAAF0uDQAAAAAA3ehmAAAAAAAAAAAAAAAAAI7aAAAAAAAAkMQAAAAAAADjBXni+/SMviQjZ16c3j/3bO0rtEbrozGeXFo12dr3SU55lnjhWzDrD1x9AiUrbwXOO8hFUaKgZYCIx+JuuPuHNJAPPbJjColiTw3TN8i+TYy3K/EcIbh3z6DzXqHNu9sGm4hX/quBhPtof2NGGMA12sQ53BrrO1WYoPAAAAAAAc4BDmCv7bInF71jGS9UFFo/llozu4LSxwKess4eIIJkAAAAAA==";
         let mut state = State::new();
         assert!(state.handle_log(INVOKE_LOG).is_none());
-        assert!(state.handle_log(swap_event_log).is_none(),
-                "SwapEvent (intent) must not be matched");
+        assert!(state.handle_log(swap_event_log).is_none(), "SwapEvent (intent) must not be matched");
     }
 }

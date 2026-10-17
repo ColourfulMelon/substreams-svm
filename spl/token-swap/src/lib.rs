@@ -21,7 +21,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<_> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
 
@@ -31,7 +31,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -59,15 +59,18 @@ fn process_instruction(instruction: &InstructionView) -> Option<pb::Instruction>
             if accounts.len() < 7 {
                 return None;
             }
-            Some(pb::instruction::Instruction::Initialize(pb::Initialize {
-                swap_account: accounts[0].0.to_vec(),
-                authority: accounts[1].0.to_vec(),
-                token_a: accounts[2].0.to_vec(),
-                token_b: accounts[3].0.to_vec(),
-                pool_mint: accounts[4].0.to_vec(),
-                fee_account: accounts[5].0.to_vec(),
-                destination: accounts[6].0.to_vec(),
-            }))
+            Some(pb::instruction::Instruction::Initialize(
+                pb::Initialize {
+                    swap_account: accounts[0].0.to_vec(),
+                    authority: accounts[1].0.to_vec(),
+                    token_a: accounts[2].0.to_vec(),
+                    token_b: accounts[3].0.to_vec(),
+                    pool_mint: accounts[4].0.to_vec(),
+                    fee_account: accounts[5].0.to_vec(),
+                    destination: accounts[6].0.to_vec(),
+                }
+                .into(),
+            ))
         }
         1 => {
             // Swap
@@ -75,19 +78,22 @@ fn process_instruction(instruction: &InstructionView) -> Option<pb::Instruction>
             if accounts.len() < 9 {
                 return None;
             }
-            Some(pb::instruction::Instruction::Swap(pb::Swap {
-                swap_account: accounts[0].0.to_vec(),
-                authority: accounts[1].0.to_vec(),
-                user_transfer_authority: accounts[2].0.to_vec(),
-                source: accounts[3].0.to_vec(),
-                swap_source: accounts[4].0.to_vec(),
-                swap_destination: accounts[5].0.to_vec(),
-                destination: accounts[6].0.to_vec(),
-                pool_mint: accounts[7].0.to_vec(),
-                fee_account: accounts[8].0.to_vec(),
-                amount_in: 0,
-                minimum_amount_out: 0,
-            }))
+            Some(pb::instruction::Instruction::Swap(
+                pb::Swap {
+                    swap_account: accounts[0].0.to_vec(),
+                    authority: accounts[1].0.to_vec(),
+                    user_transfer_authority: accounts[2].0.to_vec(),
+                    source: accounts[3].0.to_vec(),
+                    swap_source: accounts[4].0.to_vec(),
+                    swap_destination: accounts[5].0.to_vec(),
+                    destination: accounts[6].0.to_vec(),
+                    pool_mint: accounts[7].0.to_vec(),
+                    fee_account: accounts[8].0.to_vec(),
+                    amount_in: 0,
+                    minimum_amount_out: 0,
+                }
+                .into(),
+            ))
         }
         _ => None,
     };

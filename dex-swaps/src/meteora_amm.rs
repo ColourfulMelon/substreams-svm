@@ -39,7 +39,7 @@ impl State {
         self.next_index += 1;
 
         Some(pb::Swap {
-            protocol: pb::Protocol::MeteoraAmm as i32,
+            protocol: pb::Protocol::MeteoraAmm.into(),
             program_id: amm::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: amm::PROGRAM_ID.to_vec(),
