@@ -37,6 +37,14 @@ This guide is a quick map for contributors and coding agents working in this mon
 - Domain crates: `svm-balances`, `svm-transfers`, `svm-accounts`, `svm-metadata`, `svm-native`, `svm-spl`, `svm-nfts`, `svm-staking`, `svm-dex`.
 - Entry point is typically `src/lib.rs` plus per-protocol files in `src/*.rs`.
 
+### Native DEX projection
+
+`dex-swaps::project(&Block)` validates complete blocks and adds original
+transaction/event-instruction or log provenance, aggregator classification and
+conservative invocation outcome evidence while sharing the existing protocol
+extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes;
+`dex-swaps/fixtures/native-projection.md` records the unchanged-output baseline.
+
 ### Work on sink schemas
 
 - ClickHouse: `svm-*/clickhouse/schema.*.sql` and `Makefile`.

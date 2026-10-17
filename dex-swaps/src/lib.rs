@@ -1,3 +1,13 @@
+//! Native and Substreams views over the same protocol extraction. See
+//! [`project`] for validated complete-block projection and provenance limits.
+mod native;
+mod native_outcome;
+pub use native::{
+    project, project_with_limits, Clock, InstructionPosition, InvocationOutcome, Limits, ProjectError, ProjectedSwap, ProjectedTransaction, Projection,
+    Provenance, SwapKind,
+};
+pub use proto::pb::dex::swaps::v1::{Protocol, Swap};
+
 mod boop;
 mod byreal;
 mod darklake;
@@ -36,16 +46,22 @@ pub(crate) const SOL_MINT: [u8; 32] = [
     6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196, 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1,
 ]; // So11111111111111111111111111111111111111111
 
-#[substreams::handlers::map]
-fn map_events(block: Block) -> Result<pb::Events, Error> {
+#[cfg_attr(target_arch = "wasm32", substreams::handlers::map)]
+pub fn map_events(block: Block) -> Result<pb::Events, Error> {
     Ok(pb::Events {
         transactions: block.transactions_owned().filter_map(process_transaction).collect(),
     })
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
-    let mut swaps = Vec::new();
+    process_transaction_with_provenance(&tx, usize::MAX)
+        .expect("the legacy wrapper does not impose a new output limit")
+        .map(ProjectedTransaction::into_legacy)
+}
+
+fn process_transaction_with_provenance(tx: &ConfirmedTransaction, max_swaps: usize) -> Result<Option<ProjectedTransaction>, ProjectError> {
+    let Some(tx_meta) = tx.meta.as_ref() else { return Ok(None) };
+    let mut swaps = native::Collector::new(max_swaps);
     let mut boop_state = boop::State::new();
     let mut byreal_state = byreal::State::new();
     let mut darklake_state = darklake::State::new();
@@ -66,7 +82,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
     let mut routed_pools = routed_pool::Tracker::new();
     let token_mints = token_mints::TokenMintLookup::new(&tx, tx_meta);
 
-    for instruction in tx.walk_instructions() {
+    for (position, instruction) in native::instruction_positions(tx).into_iter().zip(tx.walk_instructions()) {
+        swaps.at_instruction(position);
         routed_pools.observe(&instruction);
         if let Some(swap) = jupiter_v6::decode_instruction(&tx, &instruction, &routed_pools) {
             swaps.push(swap);
@@ -103,7 +120,8 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
     }
 
     let mut jupiter_v4_state = jupiter_v4::State::new();
-    for log_message in tx_meta.log_messages.iter() {
+    for (log_index, log_message) in tx_meta.log_messages.iter().enumerate() {
+        swaps.at_log(log_index as u32);
         if let Some(swap) = jupiter_v4_state.handle_log(&tx, log_message, &routed_pools) {
             swaps.push(swap);
         }
@@ -146,16 +164,21 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
         }
     }
 
+    let swaps = swaps.finish()?;
     if swaps.is_empty() {
-        return None;
+        return Ok(None);
     }
 
-    Some(pb::Transaction {
+    Ok(Some(ProjectedTransaction {
+        transaction_index: 0,
         fee: tx_meta.fee,
         compute_units_consumed: tx_meta.compute_units_consumed(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
         swaps,
-    })
+    }))
 }
+
+#[cfg(test)]
+mod native_tests;
