@@ -43,6 +43,10 @@ pub struct ProjectedSwap {
     pub kind: SwapKind,
     pub provenance: Provenance,
     pub invocation_outcome: InvocationOutcome,
+    /// An immediate enclosing swap instruction whose account context and event
+    /// fields independently match this row. Currently available only for DLMM.
+    /// None means unverified, even when the event invocation succeeded.
+    pub verified_context: Option<InstructionPosition>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -178,9 +182,21 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
         if let Some(mut transaction) = process_transaction_with_provenance(tx, limits.max_swaps.saturating_sub(swaps))? {
             transaction.transaction_index = index as u32;
             if let Some(outcomes) = crate::native_outcome::prove(tx) {
+                let instructions: std::collections::BTreeMap<_, _> = instruction_positions(tx).into_iter().zip(tx.walk_instructions()).collect();
                 for row in &mut transaction.swaps {
                     if let Provenance::Instruction { position, .. } = row.provenance {
-                        row.invocation_outcome = outcomes.get(&position).copied().unwrap_or(InvocationOutcome::Unknown);
+                        if let Some(evidence) = outcomes.get(&position) {
+                            row.invocation_outcome = evidence.outcome;
+                            if evidence.outcome == InvocationOutcome::Succeeded {
+                                if let Some(parent) = evidence.parent {
+                                    if let (Some(event), Some(context)) = (instructions.get(&position), instructions.get(&parent)) {
+                                        if crate::meteora_dlmm::matches_context(context, event, &row.swap) {
+                                            row.verified_context = Some(parent);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -273,6 +289,7 @@ impl Collector {
             kind,
             provenance: self.current,
             invocation_outcome: InvocationOutcome::Unknown,
+            verified_context: None,
         });
         match &mut self.current {
             Provenance::Instruction { event_index, .. } | Provenance::Log { event_index, .. } => *event_index += 1,

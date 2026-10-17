@@ -78,6 +78,11 @@ original index in the unfiltered block. Every row adds:
   ancestor failure revokes an earlier successful event. Truncated, ambiguous, or
   missing traces remain `Unknown`. This proves the event invocation outcome, not
   correctness of the protocol adapter's pool/amount association.
+- `verified_context`: for DLMM only, the exact immediate parent swap instruction
+  when its pool, user and token accounts match the event's intrinsic pool/user
+  and every decoded row field. This additionally requires proven event/ancestor
+  success. Other protocols and unverified associations remain `None`. A stale
+  FIFO row after a caught failed swap is retained but is never marked verified.
 
 `Projection::into_legacy()` strips only the added evidence. For a complete valid
 block it yields the same row fields and order as `map_events`; the WASM wrapper
@@ -88,11 +93,13 @@ The native API does **not** repair or qualify existing decoder behavior. In
 particular, the pending temporary-account/current-layout fixes in #223 and the
 Orca event/pool association fix in #224 remain separate changes. SPL Token Swap's
 current output amount is the instruction minimum, not proven realized output.
-Coverage can be restricted to positioned venue events with proven invocation
-success; the pinned full-block fixture includes five such Meteora DLMM rows.
+Consumers requiring execution association must additionally require a verified
+context, not just successful event invocation. The pinned full-block fixture
+includes five Meteora DLMM rows with both forms of evidence.
 That fixture is offline evidence, not broad protocol or live-provider coverage.
 
 Tests compare the native and WASM-wrapper body, including an encoded-output hash
 captured independently from unchanged main. They also cover original positions,
 aggregator classification, caught CPI failures, ambiguous/truncated invocation
-traces, malformed blocks, resource bounds, empty blocks, and missing time.
+traces, exact runtime log grammar, failed-prior-swap FIFO association, malformed
+blocks, resource bounds, empty blocks, and missing time.

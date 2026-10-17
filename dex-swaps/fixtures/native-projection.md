@@ -17,5 +17,7 @@ main. No additional provider request was made for this change.
   native API and wrapper body both reproduce it.
 
 These rows retain all existing decoder limitations. The five Meteora DLMM rows
-with proven instruction-event invocation success establish the evidence path on
-this block; they do not qualify all Solana swap coverage.
+with proven instruction-event invocation success and matching immediate-parent
+context establish the evidence path on this block; they do not qualify all
+Solana swap coverage. A separate mutation test keeps a caught failed swap's stale
+FIFO row unchanged while leaving its context explicitly unverified.

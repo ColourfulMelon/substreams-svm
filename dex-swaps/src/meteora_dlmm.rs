@@ -142,3 +142,33 @@ fn decode_swap_event(ix: &InstructionView) -> Option<SwapEvent> {
         _ => None,
     }
 }
+
+/// Native evidence only: do not change the legacy queue or its output. The
+/// event's proven immediate parent must be a DLMM swap whose full context and
+/// event fields match the emitted row; a stale FIFO association stays unverified.
+pub(crate) fn matches_context(parent: &InstructionView, event_ix: &InstructionView, row: &pb::Swap) -> bool {
+    if parent.program_id().0 != &dlmm::PROGRAM_ID || event_ix.program_id().0 != &dlmm::PROGRAM_ID {
+        return false;
+    }
+    let Some(context) = decode_swap_instruction(parent) else { return false };
+    let Ok(dlmm::anchor_cpi_event::MeteoraDlmmAnchorCpiEvent::Swap(event)) = dlmm::anchor_cpi_event::unpack(event_ix.data()) else {
+        return false;
+    };
+    let (input, output) = if event.swap_for_y {
+        (&context.token_x_mint, &context.token_y_mint)
+    } else {
+        (&context.token_y_mint, &context.token_x_mint)
+    };
+    row.protocol == pb::Protocol::MeteoraDlmm as i32
+        && row.program_id == dlmm::PROGRAM_ID
+        && row.amm == dlmm::PROGRAM_ID
+        && row.stack_height == event_ix.stack_height()
+        && event.lb_pair.to_bytes().as_slice() == context.lb_pair
+        && event.from.to_bytes().as_slice() == context.user
+        && row.amm_pool == context.lb_pair
+        && row.user == context.user
+        && &row.input_mint == input
+        && &row.output_mint == output
+        && row.input_amount == event.amount_in
+        && row.output_amount == event.amount_out
+}

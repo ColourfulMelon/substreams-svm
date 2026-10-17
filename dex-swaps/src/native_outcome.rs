@@ -1,10 +1,15 @@
 //! Conservative invocation evidence. This does not change protocol decoding.
 use crate::{native::instruction_positions, InstructionPosition, InvocationOutcome};
-use common::solana::{is_failed, is_invoke, is_success, parse_invoke_depth, parse_program_id};
 use std::collections::BTreeMap;
 use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 
-pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPosition, InvocationOutcome>> {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct Evidence {
+    pub outcome: InvocationOutcome,
+    pub parent: Option<InstructionPosition>,
+}
+
+pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPosition, Evidence>> {
     let meta = tx.meta.as_ref()?;
     let expected = instruction_positions(tx)
         .into_iter()
@@ -23,9 +28,8 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
     let mut parents: Vec<Option<usize>> = vec![None; expected.len()];
     let mut outcomes = vec![InvocationOutcome::Unknown; expected.len()];
     for log in &meta.log_messages {
-        let Some(program) = parse_program_id(log) else { continue };
-        if is_invoke(log) {
-            let depth = parse_invoke_depth(log)?;
+        let Some((program, event)) = parse_log(log).ok()? else { continue };
+        if let Event::Invoke(depth) = event {
             if depth as usize != stack.len() + 1 {
                 return None;
             }
@@ -45,15 +49,15 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
             parents[cursor] = stack.last().copied();
             stack.push(cursor);
             cursor += 1;
-        } else if is_success(log) || is_failed(log) {
+        } else {
             let index = stack.pop()?;
             if expected[index].1 != program {
                 return None;
             }
-            outcomes[index] = if is_success(log) {
-                InvocationOutcome::Succeeded
-            } else {
-                InvocationOutcome::Failed
+            outcomes[index] = match event {
+                Event::Success => InvocationOutcome::Succeeded,
+                Event::Failure => InvocationOutcome::Failed,
+                Event::Invoke(_) => unreachable!(),
             };
         }
     }
@@ -79,11 +83,57 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
     }
     Some(
         expected
-            .into_iter()
-            .zip(outcomes)
-            .map(|((position, _, _), outcome)| (position, outcome))
+            .iter()
+            .enumerate()
+            .map(|(index, (position, _, _))| {
+                (
+                    *position,
+                    Evidence {
+                        outcome: outcomes[index],
+                        parent: parents[index].map(|parent| expected[parent].0),
+                    },
+                )
+            })
             .collect(),
     )
+}
+
+#[derive(Clone, Copy)]
+enum Event {
+    Invoke(u32),
+    Success,
+    Failure,
+}
+
+/// Runtime invocation grammar must be exact. Protocol decoder helpers are
+/// deliberately permissive and cannot serve as execution-success evidence.
+fn parse_log(log: &str) -> Result<Option<(Vec<u8>, Event)>, ()> {
+    let Some(rest) = log.strip_prefix("Program ") else { return Ok(None) };
+    let Some((identity, tail)) = rest.split_once(' ') else { return Ok(None) };
+    if matches!(identity, "log:" | "data:" | "return:") {
+        return Ok(None);
+    }
+    let event = if tail == "success" {
+        Event::Success
+    } else if tail.strip_prefix("failed: ").is_some_and(|message| !message.is_empty()) {
+        // The failure message may itself end in the word "success".
+        Event::Failure
+    } else if let Some(depth) = tail.strip_prefix("invoke [").and_then(|rest| rest.strip_suffix(']')) {
+        let parsed: u32 = depth.parse().map_err(|_| ())?;
+        if parsed == 0 || parsed.to_string() != depth {
+            return Err(());
+        }
+        Event::Invoke(parsed)
+    } else if tail.starts_with("invoke") || tail.starts_with("success") || tail.starts_with("failed") {
+        return Err(());
+    } else {
+        return Ok(None);
+    };
+    let program = base58::decode(identity).map_err(|_| ())?;
+    if program.len() != 32 || base58::encode(&program) != identity {
+        return Err(());
+    }
+    Ok(Some((program, event)))
 }
 
 fn without_logs(position: InstructionPosition, program: &[u8]) -> bool {
@@ -158,26 +208,28 @@ mod tests {
     fn successful_trace_proves_each_original_instruction() {
         let result = prove(&transaction()).unwrap();
         assert_eq!(result.len(), 3);
-        assert!(result.values().all(|outcome| *outcome == InvocationOutcome::Succeeded));
+        assert!(result.values().all(|outcome| outcome.outcome == InvocationOutcome::Succeeded));
     }
 
     #[test]
     fn caught_parent_failure_revokes_preceding_successful_event() {
         let mut tx = transaction();
-        tx.meta.as_mut().unwrap().log_messages[4] = format!("Program {} failed: caught", base58::encode([2; 32]));
+        tx.meta.as_mut().unwrap().log_messages[4] = format!("Program {} failed: caught inner call ended with success", base58::encode([2; 32]));
         let result = prove(&tx).unwrap();
         assert_eq!(
             result[&InstructionPosition {
                 instruction_index: 0,
                 inner_instruction_index: None
-            }],
+            }]
+                .outcome,
             InvocationOutcome::Succeeded
         );
         assert_eq!(
             result[&InstructionPosition {
                 instruction_index: 0,
                 inner_instruction_index: Some(1)
-            }],
+            }]
+                .outcome,
             InvocationOutcome::Failed
         );
     }
@@ -196,5 +248,26 @@ mod tests {
             }
             assert!(prove(&tx).is_none());
         }
+    }
+}
+
+#[cfg(test)]
+mod exact_log_tests {
+    use super::*;
+    #[test]
+    fn failure_suffix_cannot_be_mistaken_for_success() {
+        let key = base58::encode([2; 32]);
+        assert!(matches!(
+            parse_log(&format!("Program {key} failed: custom error ending in success")).unwrap(),
+            Some((_, Event::Failure))
+        ));
+    }
+    #[test]
+    fn malformed_runtime_grammar_is_rejected() {
+        let key = base58::encode([2; 32]);
+        for tail in ["invoke [2] extra", "invoke [02]", "invoke [0]", "success extra", "failed:"] {
+            assert!(parse_log(&format!("Program {key} {tail}")).is_err());
+        }
+        assert!(parse_log("Program log: Program fake success").unwrap().is_none());
     }
 }

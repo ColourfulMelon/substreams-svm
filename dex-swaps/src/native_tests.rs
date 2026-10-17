@@ -57,7 +57,11 @@ fn complete_block_native_projection_preserves_legacy_fields_and_original_positio
         .transactions
         .iter()
         .flat_map(|tx| &tx.swaps)
-        .filter(|row| row.invocation_outcome == crate::InvocationOutcome::Succeeded && row.swap.protocol == pb::Protocol::MeteoraDlmm as i32)
+        .filter(|row| {
+            row.invocation_outcome == crate::InvocationOutcome::Succeeded
+                && row.verified_context.is_some()
+                && row.swap.protocol == pb::Protocol::MeteoraDlmm as i32
+        })
         .count();
     assert_eq!(qualified, 5);
     let native = projection.into_legacy();
@@ -188,4 +192,86 @@ fn collector_keeps_distinct_event_positions_and_aggregator_kind() {
     assert_eq!(rows[0].kind, SwapKind::PoolExecution);
     assert_eq!(rows[1].kind, SwapKind::AggregatorSummary);
     assert_eq!(rows[2].kind, SwapKind::AggregatorSummary);
+}
+
+#[test]
+fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
+    use crate::InvocationOutcome;
+    let fixture = fixture();
+    let projected = project(&fixture).unwrap();
+    let (transaction, row) = projected
+        .transactions
+        .iter()
+        .find_map(|tx| tx.swaps.iter().find(|row| row.verified_context.is_some()).map(|row| (tx, row)))
+        .unwrap();
+    let original = &fixture.transactions[transaction.transaction_index as usize];
+    fn instruction(tx: &source::ConfirmedTransaction, position: InstructionPosition) -> source::InnerInstruction {
+        if let Some(inner) = position.inner_instruction_index {
+            tx.meta
+                .as_ref()
+                .unwrap()
+                .inner_instructions
+                .iter()
+                .find(|group| group.index == position.instruction_index)
+                .unwrap()
+                .instructions[inner as usize]
+                .clone()
+        } else {
+            let ix = &tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions[position.instruction_index as usize];
+            source::InnerInstruction {
+                program_id_index: ix.program_id_index,
+                accounts: ix.accounts.clone(),
+                data: ix.data.clone(),
+                stack_height: None,
+            }
+        }
+    }
+    let Provenance::Instruction { position, .. } = row.provenance else {
+        panic!("expected instruction evidence")
+    };
+    let mut parent = instruction(original, row.verified_context.unwrap());
+    parent.stack_height = Some(2);
+    let mut event = instruction(original, position);
+    event.stack_height = Some(3);
+    let mut previous = parent.clone();
+    // All are valid account indices, but this previous swap has a different
+    // context. It fails without emitting an event, leaving the legacy FIFO stale.
+    previous.accounts.fill(parent.program_id_index as u8);
+    let program = substreams_solana::base58::encode(&row.swap.program_id);
+    for stale in [false, true] {
+        let mut tx = original.clone();
+        tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions = vec![source::CompiledInstruction {
+            program_id_index: parent.program_id_index,
+            ..Default::default()
+        }];
+        let mut instructions = Vec::new();
+        let mut logs = vec![format!("Program {program} invoke [1]")];
+        if stale {
+            instructions.push(previous.clone());
+            logs.extend([format!("Program {program} invoke [2]"), format!("Program {program} failed: caught error")]);
+        }
+        instructions.extend([parent.clone(), event.clone()]);
+        logs.extend([
+            format!("Program {program} invoke [2]"),
+            format!("Program {program} invoke [3]"),
+            format!("Program {program} success"),
+            format!("Program {program} success"),
+            format!("Program {program} success"),
+        ]);
+        let meta = tx.meta.as_mut().unwrap();
+        meta.inner_instructions = vec![source::InnerInstructions { index: 0, instructions }];
+        meta.log_messages = logs;
+        let mut block = fixture.clone();
+        block.transactions = vec![tx];
+        let native = project(&block).unwrap();
+        let rows = &native.transactions[0].swaps;
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].invocation_outcome, InvocationOutcome::Succeeded);
+        assert_eq!(rows[0].verified_context.is_some(), !stale);
+        if stale {
+            assert_eq!(rows[0].swap.amm_pool, row.swap.program_id);
+            assert_ne!(rows[0].swap.amm_pool, row.swap.amm_pool);
+        }
+        assert_eq!(native.into_legacy(), map_events(block).unwrap());
+    }
 }
