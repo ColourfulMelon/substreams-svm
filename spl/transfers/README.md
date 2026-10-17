@@ -13,10 +13,10 @@ spl-transfers = { git = "https://github.com/pinax-network/substreams-svm", rev =
 ```
 
 ```rust
-// One line per generated `sf.solana.type.v1` model; no re-encode, any prost version.
-spl_transfers::block_view!(fn view_block, firehose_protos::sf::solana::r#type::v1);
+// Current substreams-solana-core 0.16 / Buffa model; no re-encode.
+spl_transfers::block_view_buffa!(fn view_block, substreams_solana_core::pb::sf::solana::r#type::v1);
 
-let projection = spl_transfers::project(&view_block(&block), spl_transfers::Coverage::TRANSFER_CHECKED)?;
+let projection = spl_transfers::project(&view_block(&block)?, spl_transfers::Coverage::TRANSFER_CHECKED)?;
 // projection.clock: slot, parent_slot, hashes, optional block_time, transaction_count, coverage
 // projection.operations: execution-ordered `Operation`s
 ```
@@ -82,12 +82,33 @@ instead of panicking or attributing a wrong account:
 ## Protobuf models
 
 The projector works over `model::Block`, a borrowed view, rather than a
-generated type. `block_view!` writes the conversion for a generated module by
-reading fields only, so it accepts prost 0.13 `Vec<u8>` models
-(substreams-solana) and prost 0.14 `bytes::Bytes` models (firehose-protos)
-alike, without encoding, copying byte fields or pinning a prost version. The
-`bytes_model` test decodes the fixtures into a `Bytes` mirror of
-`sf.solana.type.v1` and checks for zero-copy fields and identical projections.
+generated type. The native crate has no protobuf or Substreams dependency.
+
+- `block_view_buffa!` reads the current `substreams-solana-core` 0.16 model and
+  returns `Result<model::Block<'_>, UnsupportedMessage>`. Message presence is
+  explicit: absent messages never become Buffa's default instance. Coverage is
+  legacy/v0 only: an explicit version above 0, contradictory v0 metadata, or any
+  inline transaction configuration rejects the block with its original
+  transaction index, including when that transaction failed. An unset version
+  with `versioned: true` remains supported for older producers' v0 messages.
+- The existing `block_view!` still accepts Prost `Vec<u8>` and `bytes::Bytes`
+  models, with its original infallible view signature. Older generated models
+  do not expose the newer version/configuration fields; callers must establish
+  legacy/v0 coverage before using a model that cannot represent them.
+
+Neither adapter encodes or copies byte fields. `buffa_model` and `bytes_model`
+compare borrowed fields and projections on all four pinned blocks. The older
+Prost model is a development dependency only, retained for compatibility tests.
+
+The Substreams wrapper uses SDK 0.8, Solana core 0.16 and Buffa 0.9.2. Its output
+types are exported through `spl_transfers_substreams::pb`. They are generated
+from the unchanged canonical `proto/v1/spl/spl-transfers.proto`; run
+`make protogen` in `spl/transfers-substreams` to regenerate with the pinned Buf
+plugin. The package-local output avoids linking the rest of the workspace's
+older Prost messages. The protobuf package, field numbers and output bytes are
+unchanged; `wire_compatibility` checks 16 pre-migration output hashes. A release
+WASM still requires rebuilding and repacking after any source change; previous
+live evidence applies to the revision that was tested.
 
 ## Tests
 

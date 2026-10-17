@@ -39,8 +39,8 @@ This guide is a quick map for contributors and coding agents working in this mon
 
 ### Native (non-WASM) projectors
 
-- `spl/transfers` (`spl-transfers`): storage-independent SPL transfer projection over complete blocks, callable from native Rust (Pinax Streams, Firehose Parquet). It has no protobuf or Substreams dependency: callers pass a borrowed `model::Block` built with `block_view!` from any generated `sf.solana.type.v1` model. Fixtures, coverage and validation rules are in its README.
-- `spl/transfers-substreams`: the `spl_transfers` Substreams package, a thin wrapper over `spl_transfers::project` (handler exported only on wasm32).
+- `spl/transfers` (`spl-transfers`): storage-independent SPL transfer projection over complete blocks, callable from native Rust (Pinax Streams, Firehose Parquet). It has no protobuf or Substreams dependency: use `block_view_buffa!` for the current Solana 0.16 model, or the unchanged `block_view!` for Prost models. The Buffa adapter returns a result and rejects unsupported message versions/configuration before constructing the borrowed view. Fixtures, coverage and validation rules are in its README.
+- `spl/transfers-substreams`: the `spl_transfers` Substreams package, a thin SDK 0.8/Buffa wrapper over `spl_transfers::project` (handler exported only on wasm32). Its package-local generated output comes from the canonical shared SPL transfer schema; `make protogen` uses the pinned Buffa plugin. It does not link the older shared Prost `proto` crate.
 - `spl/token-common` uses the same `spl_transfers::decode` for amount-moving instructions, so `spl_token`, `svm-transfers` and the native projector agree.
 
 ### Work on sink schemas

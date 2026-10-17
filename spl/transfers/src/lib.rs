@@ -6,7 +6,8 @@
 //! its original transaction, outer instruction and inner instruction index.
 //! It needs no Substreams runtime, store, network access or protobuf runtime:
 //! callers pass a [`model::Block`] that borrows from whichever generated model
-//! they already decoded, built with [`block_view!`]. The `spl_transfers`
+//! they already decoded, built with [`block_view!`] for Prost or
+//! [`block_view_buffa!`] for Buffa. The `spl_transfers`
 //! Substreams package is a thin wrapper over the same function.
 //!
 //! ```ignore
@@ -28,6 +29,6 @@ mod project;
 mod validate;
 
 pub use decode::{decode, DecodeError, Decoded, OperationKind, TokenProgram, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID};
-pub use error::{Position, ProjectError, TransactionError};
+pub use error::{Position, ProjectError, TransactionError, UnsupportedMessage};
 pub use project::{project, Clock, Coverage, CoverageError, Operation, Projection, Pubkey, Signature, SPEC_REVISION};
 pub use validate::{validate_block, validate_transaction, Keys};

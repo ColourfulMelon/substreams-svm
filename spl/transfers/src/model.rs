@@ -3,8 +3,9 @@
 //! The view only holds references into a block the caller already decoded, so
 //! any generated Rust model can be projected without re-encoding it: prost 0.13
 //! with `Vec<u8>` fields (substreams-solana) or prost 0.14 with `bytes::Bytes`
-//! fields (firehose-protos) alike. [`block_view!`](crate::block_view) generates
-//! the conversion for a generated module.
+//! fields (firehose-protos) alike. [`block_view!`](crate::block_view) handles
+//! Prost, and [`block_view_buffa!`](crate::block_view_buffa) handles Buffa's
+//! presence-aware `MessageField` without adding a protobuf runtime dependency.
 //!
 //! Fields mirror the protobuf names. Presence (`Option`) is kept where the
 //! protobuf message field is optional so validation can reject missing parts
@@ -128,6 +129,51 @@ pub struct TokenBalance<'a> {
 #[macro_export]
 macro_rules! block_view {
     ($vis:vis fn $name:ident, $($pb:ident)::+) => {
+        $crate::__block_view!($vis fn $name, $($pb)::+; as_ref, is_some);
+    };
+}
+
+/// Generates a borrowed block view for Buffa's `sf.solana.type.v1` model,
+/// including `substreams-solana-core` 0.16.
+///
+/// Missing messages remain absent instead of dereferencing Buffa's default
+/// instance. Byte fields are borrowed, never copied or re-encoded. This macro
+/// does not make the native projector depend on Buffa or Substreams.
+///
+/// Returns `Result<model::Block<'_>, UnsupportedMessage>`: only legacy messages
+/// (`version: None`) and v0 (`Some(0)`) without inline transaction configuration
+/// are covered. Newer message shapes fail before their fields can be discarded.
+///
+/// ```ignore
+/// spl_transfers::block_view_buffa!(pub fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
+/// ```
+#[macro_export]
+macro_rules! block_view_buffa {
+    ($vis:vis fn $name:ident, $($pb:ident)::+) => {
+        $vis fn $name(block: &$($pb)::+::Block) -> ::core::result::Result<$crate::model::Block<'_>, $crate::UnsupportedMessage> {
+            for (transaction_index, confirmed) in block.transactions.iter().enumerate() {
+                if let Some(message) = confirmed.transaction.as_option().and_then(|transaction| transaction.message.as_option()) {
+                    if message.version.is_some_and(|version| version != 0 || !message.versioned) || message.transaction_config.is_set() {
+                        return Err($crate::UnsupportedMessage {
+                            transaction_index,
+                            version: message.version,
+                            versioned: message.versioned,
+                            inline_configuration: message.transaction_config.is_set(),
+                        });
+                    }
+                }
+            }
+            $crate::__block_view!(fn borrow_block, $($pb)::+; as_option, is_set);
+            Ok(borrow_block(block))
+        }
+    };
+}
+
+// Keep both adapters on the same field mapping; only message presence differs.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __block_view {
+    ($vis:vis fn $name:ident, $($pb:ident)::+; $as_option:ident, $is_present:ident) => {
         $vis fn $name(block: &$($pb)::+::Block) -> $crate::model::Block<'_> {
             fn bytes<T: ::core::convert::AsRef<[u8]> + ?Sized>(value: &T) -> &[u8] {
                 value.as_ref()
@@ -137,21 +183,21 @@ macro_rules! block_view {
                 parent_slot: block.parent_slot,
                 blockhash: &block.blockhash,
                 previous_blockhash: &block.previous_blockhash,
-                block_time: block.block_time.as_ref().map(|time| time.timestamp),
-                block_height: block.block_height.as_ref().map(|height| height.block_height),
+                block_time: block.block_time.$as_option().map(|time| time.timestamp),
+                block_height: block.block_height.$as_option().map(|height| height.block_height),
                 transactions: block
                     .transactions
                     .iter()
                     .map(|confirmed| {
-                        let transaction = confirmed.transaction.as_ref();
+                        let transaction = confirmed.transaction.$as_option();
                         $crate::model::Transaction {
                             signatures: transaction
                                 .map(|transaction| transaction.signatures.iter().map(|signature| bytes(signature)).collect())
                                 .unwrap_or_default(),
                             message: transaction
-                                .and_then(|transaction| transaction.message.as_ref())
+                                .and_then(|transaction| transaction.message.$as_option())
                                 .map(|message| $crate::model::Message {
-                                    header: message.header.as_ref().map(|header| $crate::model::MessageHeader {
+                                    header: message.header.$as_option().map(|header| $crate::model::MessageHeader {
                                         num_required_signatures: header.num_required_signatures,
                                         num_readonly_signed_accounts: header.num_readonly_signed_accounts,
                                         num_readonly_unsigned_accounts: header.num_readonly_unsigned_accounts,
@@ -177,8 +223,8 @@ macro_rules! block_view {
                                         })
                                         .collect(),
                                 }),
-                            meta: confirmed.meta.as_ref().map(|meta| $crate::model::Meta {
-                                failed: meta.err.is_some(),
+                            meta: confirmed.meta.$as_option().map(|meta| $crate::model::Meta {
+                                failed: meta.err.$is_present(),
                                 loaded_writable_addresses: meta.loaded_writable_addresses.iter().map(|key| bytes(key)).collect(),
                                 loaded_readonly_addresses: meta.loaded_readonly_addresses.iter().map(|key| bytes(key)).collect(),
                                 inner_instructions: meta

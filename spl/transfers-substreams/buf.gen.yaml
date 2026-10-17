@@ -1,0 +1,9 @@
+# From the canonical workspace schema, without generating the unrelated Prost
+# workspace messages. Run `make protogen` in spl/transfers-substreams/.
+version: v2
+plugins:
+  - remote: buf.build/anthropics/buffa:v0.9.2
+    out: src/pb
+    opt:
+      - lazy_views=true
+      - unknown_fields=false

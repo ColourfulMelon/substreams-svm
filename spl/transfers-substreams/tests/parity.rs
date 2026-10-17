@@ -1,8 +1,8 @@
 //! Native projection versus the Substreams module body, on the pinned blocks.
+use buffa::Message;
 use flate2::read::GzDecoder;
-use prost::Message;
-use proto::pb::solana::spl::transfers::v1 as pb;
 use spl_transfers::{project, Coverage, OperationKind, Projection, TokenProgram};
+use spl_transfers_substreams::pb::solana::spl::transfers::v1 as pb;
 use spl_transfers_substreams::{map_events_impl, view_block};
 use std::io::Read;
 use substreams_solana::pb::sf::solana::r#type::v1::Block;
@@ -17,13 +17,13 @@ const FIXTURES: [&[u8]; 4] = [
 fn decode_block(fixture: &[u8]) -> Block {
     let mut bytes = Vec::new();
     GzDecoder::new(fixture).read_to_end(&mut bytes).unwrap();
-    Block::decode(bytes.as_slice()).unwrap()
+    Block::decode_from_slice(bytes.as_slice()).unwrap()
 }
 
 /// Compares field by field rather than through `to_proto`, so the mapping
 /// itself is checked.
 fn assert_same(native: &Projection, events: &pb::Events) {
-    let clock = events.clock.as_ref().expect("clock on every block");
+    let clock = events.clock.as_option().expect("clock on every block");
     assert_eq!(clock.slot, native.clock.slot);
     assert_eq!(clock.parent_slot, native.clock.parent_slot);
     assert_eq!(clock.blockhash, native.clock.blockhash);
@@ -32,7 +32,7 @@ fn assert_same(native: &Projection, events: &pb::Events) {
     assert_eq!(clock.block_height, native.clock.block_height);
     assert_eq!(clock.transaction_count, native.clock.transaction_count);
     assert_eq!(clock.spec_revision, native.clock.spec_revision);
-    let coverage = clock.coverage.as_ref().unwrap();
+    let coverage = clock.coverage.as_option().unwrap();
     assert_eq!(
         Coverage {
             token_2022: coverage.token_2022,
@@ -50,20 +50,20 @@ fn assert_same(native: &Projection, events: &pb::Events) {
         assert_eq!(record.inner_instruction_index, operation.inner_instruction_index);
         assert_eq!(record.stack_height, operation.stack_height);
         assert_eq!(record.signature, operation.signature);
-        let program = match record.program() {
-            pb::TokenProgram::Token => TokenProgram::Token,
-            pb::TokenProgram::Token2022 => TokenProgram::Token2022,
-            pb::TokenProgram::Unspecified => panic!("unspecified program"),
+        let program = match record.program.to_i32() {
+            1 => TokenProgram::Token,
+            2 => TokenProgram::Token2022,
+            _ => panic!("unknown or unspecified program"),
         };
         assert_eq!(program, operation.program);
-        let kind = match record.kind() {
-            pb::OperationKind::Transfer => OperationKind::Transfer,
-            pb::OperationKind::TransferChecked => OperationKind::TransferChecked,
-            pb::OperationKind::MintTo => OperationKind::MintTo,
-            pb::OperationKind::MintToChecked => OperationKind::MintToChecked,
-            pb::OperationKind::Burn => OperationKind::Burn,
-            pb::OperationKind::BurnChecked => OperationKind::BurnChecked,
-            pb::OperationKind::Unspecified => panic!("unspecified kind"),
+        let kind = match record.kind.to_i32() {
+            1 => OperationKind::Transfer,
+            2 => OperationKind::TransferChecked,
+            3 => OperationKind::MintTo,
+            4 => OperationKind::MintToChecked,
+            5 => OperationKind::Burn,
+            6 => OperationKind::BurnChecked,
+            _ => panic!("unknown or unspecified kind"),
         };
         assert_eq!(kind, operation.kind);
         assert_eq!(record.amount, operation.amount);
@@ -86,11 +86,11 @@ fn assert_same(native: &Projection, events: &pb::Events) {
 
 fn assert_parity(block: &Block) {
     for params in ["", "all", "inner_instructions", "token_2022,mint_burn,unchecked_transfers"] {
-        let native = project(&view_block(block), Coverage::parse(params).unwrap()).unwrap();
+        let native = project(&view_block(block).unwrap(), Coverage::parse(params).unwrap()).unwrap();
         let events = map_events_impl(params, block).unwrap();
         assert_same(&native, &events);
         // Serialized module output decodes back to the same records.
-        assert_eq!(pb::Events::decode(events.encode_to_vec().as_slice()).unwrap(), events);
+        assert_eq!(pb::Events::decode_from_slice(events.encode_to_vec().as_slice()).unwrap(), events);
     }
 }
 
@@ -104,23 +104,23 @@ fn real_blocks() {
 #[test]
 fn missing_block_time_and_empty_block() {
     let mut block = decode_block(FIXTURES[1]);
-    block.block_time = None;
+    block.block_time = buffa::MessageField::none();
     assert_parity(&block);
-    assert_eq!(map_events_impl("", &block).unwrap().clock.unwrap().block_time, None);
+    assert_eq!(map_events_impl("", &block).unwrap().clock.as_option().unwrap().block_time, None);
 
     block.transactions.clear();
     assert_parity(&block);
     let events = map_events_impl("all", &block).unwrap();
     assert!(events.operations.is_empty());
-    assert_eq!(events.clock.unwrap().transaction_count, 0);
+    assert_eq!(events.clock.as_option().unwrap().transaction_count, 0);
 }
 
 #[test]
 fn malformed_input_fails_the_same_way() {
     let mut block = decode_block(FIXTURES[1]);
-    let message = block.transactions[1366].transaction.as_mut().unwrap().message.as_mut().unwrap();
+    let message = block.transactions[1366].transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
     message.instructions[0].accounts[2] = 255;
-    let native = project(&view_block(&block), Coverage::TRANSFER_CHECKED).unwrap_err();
+    let native = project(&view_block(&block).unwrap(), Coverage::TRANSFER_CHECKED).unwrap_err();
     let wrapper = map_events_impl("", &block).unwrap_err();
     assert_eq!(wrapper.to_string(), native.to_string());
 }
@@ -129,4 +129,21 @@ fn malformed_input_fails_the_same_way() {
 fn unknown_coverage_flag_is_rejected() {
     let block = decode_block(FIXTURES[1]);
     assert!(map_events_impl("cpi", &block).is_err());
+}
+
+#[test]
+fn unsupported_message_version_is_rejected_before_projection() {
+    let mut block = decode_block(FIXTURES[1]);
+    block.transactions[1366]
+        .transaction
+        .as_option_mut()
+        .unwrap()
+        .message
+        .as_option_mut()
+        .unwrap()
+        .version = Some(1);
+    let error = map_events_impl("all", &block).unwrap_err();
+    let error = error.downcast_ref::<spl_transfers::UnsupportedMessage>().expect("typed adapter error");
+    assert_eq!(error.transaction_index, 1366);
+    assert_eq!(error.version, Some(1));
 }

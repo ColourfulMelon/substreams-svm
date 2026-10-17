@@ -1,23 +1,24 @@
 //! `spl_transfers:map_events`: a thin Substreams wrapper over the native
 //! [`spl_transfers::project`]. The module params are a [`Coverage`] flag list.
-use proto::pb::solana::spl::transfers::v1 as pb;
+pub mod pb;
+use pb::solana::spl::transfers::v1 as output;
 use spl_transfers::{Coverage, OperationKind, Projection, TokenProgram};
 use substreams::errors::Error;
 use substreams_solana::pb::sf::solana::r#type::v1::Block;
 
-spl_transfers::block_view!(pub fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
+spl_transfers::block_view_buffa!(pub fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
 
 /// The module body, callable natively for parity checks.
-pub fn map_events_impl(params: &str, block: &Block) -> Result<pb::Events, Error> {
+pub fn map_events_impl(params: &str, block: &Block) -> Result<output::Events, Error> {
     let coverage = Coverage::parse(params)?;
-    let projection = spl_transfers::project(&view_block(block), coverage)?;
+    let projection = spl_transfers::project(&view_block(block)?, coverage)?;
     Ok(to_proto(&projection))
 }
 
-pub fn to_proto(projection: &Projection) -> pb::Events {
+pub fn to_proto(projection: &Projection) -> output::Events {
     let clock = &projection.clock;
-    pb::Events {
-        clock: Some(pb::Clock {
+    output::Events {
+        clock: buffa::MessageField::some(output::Clock {
             slot: clock.slot,
             parent_slot: clock.parent_slot,
             blockhash: clock.blockhash.to_vec(),
@@ -25,7 +26,7 @@ pub fn to_proto(projection: &Projection) -> pb::Events {
             block_time: clock.block_time,
             block_height: clock.block_height,
             transaction_count: clock.transaction_count,
-            coverage: Some(pb::Coverage {
+            coverage: buffa::MessageField::some(output::Coverage {
                 token_2022: clock.coverage.token_2022,
                 inner_instructions: clock.coverage.inner_instructions,
                 unchecked_transfers: clock.coverage.unchecked_transfers,
@@ -36,24 +37,24 @@ pub fn to_proto(projection: &Projection) -> pb::Events {
         operations: projection
             .operations
             .iter()
-            .map(|operation| pb::Operation {
+            .map(|operation| output::Operation {
                 transaction_index: operation.transaction_index,
                 instruction_index: operation.instruction_index,
                 inner_instruction_index: operation.inner_instruction_index,
                 stack_height: operation.stack_height,
                 signature: operation.signature.to_vec(),
                 program: match operation.program {
-                    TokenProgram::Token => pb::TokenProgram::Token,
-                    TokenProgram::Token2022 => pb::TokenProgram::Token2022,
+                    TokenProgram::Token => output::TokenProgram::TOKEN_PROGRAM_TOKEN,
+                    TokenProgram::Token2022 => output::TokenProgram::TOKEN_PROGRAM_TOKEN_2022,
                 }
                 .into(),
                 kind: match operation.kind {
-                    OperationKind::Transfer => pb::OperationKind::Transfer,
-                    OperationKind::TransferChecked => pb::OperationKind::TransferChecked,
-                    OperationKind::MintTo => pb::OperationKind::MintTo,
-                    OperationKind::MintToChecked => pb::OperationKind::MintToChecked,
-                    OperationKind::Burn => pb::OperationKind::Burn,
-                    OperationKind::BurnChecked => pb::OperationKind::BurnChecked,
+                    OperationKind::Transfer => output::OperationKind::OPERATION_KIND_TRANSFER,
+                    OperationKind::TransferChecked => output::OperationKind::OPERATION_KIND_TRANSFER_CHECKED,
+                    OperationKind::MintTo => output::OperationKind::OPERATION_KIND_MINT_TO,
+                    OperationKind::MintToChecked => output::OperationKind::OPERATION_KIND_MINT_TO_CHECKED,
+                    OperationKind::Burn => output::OperationKind::OPERATION_KIND_BURN,
+                    OperationKind::BurnChecked => output::OperationKind::OPERATION_KIND_BURN_CHECKED,
                 }
                 .into(),
                 amount: operation.amount,
@@ -76,7 +77,7 @@ mod handler {
     use super::*;
 
     #[substreams::handlers::map]
-    fn map_events(params: String, block: Block) -> Result<pb::Events, Error> {
+    fn map_events(params: String, block: Block) -> Result<output::Events, Error> {
         map_events_impl(&params, &block)
     }
 }

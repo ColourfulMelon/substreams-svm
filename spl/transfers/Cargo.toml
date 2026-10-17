@@ -14,7 +14,11 @@ crate-type = ["rlib"]
 bs58 = { workspace = true }
 
 [dev-dependencies]
+buffa = { version = "0.9.2", default-features = false, features = ["std"] }
 bytes = "1"
 flate2 = "1"
 prost = { workspace = true }
-substreams-solana = { workspace = true }
+# Keep the previous Prost model only for compatibility regressions. Neither
+# core model pulls the Substreams runtime into native tests.
+substreams-solana = { package = "substreams-solana-core", version = "=0.14.3" }
+substreams-solana-buffa = { package = "substreams-solana-core", version = "0.16.0" }

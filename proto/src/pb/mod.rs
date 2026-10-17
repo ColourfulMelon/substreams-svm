@@ -144,12 +144,5 @@ pub mod solana {
                 // @@protoc_insertion_point(solana.spl.token_swap.v1)
             }
         }
-        pub mod transfers {
-            // @@protoc_insertion_point(attribute:solana.spl.transfers.v1)
-            pub mod v1 {
-                include!("solana.spl.transfers.v1.rs");
-                // @@protoc_insertion_point(solana.spl.transfers.v1)
-            }
-        }
     }
 }

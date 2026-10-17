@@ -5,6 +5,10 @@ PARAMS ?=
 
 .DEFAULT_GOAL := pack
 
+.PHONY: protogen
+protogen:
+	buf generate ../../proto --template buf.gen.yaml --path ../../proto/v1/spl/spl-transfers.proto
+
 .PHONY: build
 build:
 	cargo build --target wasm32-unknown-unknown --release

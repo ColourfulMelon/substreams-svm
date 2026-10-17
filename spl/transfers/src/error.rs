@@ -1,6 +1,29 @@
 use crate::decode::DecodeError;
 use std::fmt;
 
+/// A message shape outside the projector's legacy/v0 coverage, discovered by
+/// the Buffa adapter before newer schema fields would be lost in the view.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct UnsupportedMessage {
+    /// Original transaction position, including votes and failures.
+    pub transaction_index: usize,
+    pub version: Option<u32>,
+    pub versioned: bool,
+    pub inline_configuration: bool,
+}
+
+impl fmt::Display for UnsupportedMessage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "transaction {}: unsupported message version {:?} (versioned: {}) or inline configuration {}",
+            self.transaction_index, self.version, self.versioned, self.inline_configuration
+        )
+    }
+}
+
+impl std::error::Error for UnsupportedMessage {}
+
 /// Original position of an instruction inside its transaction.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Position {
