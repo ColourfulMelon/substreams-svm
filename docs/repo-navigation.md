@@ -61,6 +61,12 @@ one-off schema rewrites and hand-written Prost models must not be reused.
 - Domain crates: `svm-balances`, `svm-transfers`, `svm-accounts`, `svm-metadata`, `svm-native`, `svm-spl`, `svm-nfts`, `svm-staking`, `svm-dex`.
 - Entry point is typically `src/lib.rs` plus per-protocol files in `src/*.rs`.
 
+### Native (non-WASM) projectors
+
+- `spl/transfers` (`spl-transfers`): storage-independent SPL transfer projection over complete blocks, callable from native Rust (Pinax Streams, Firehose Parquet). It has no protobuf or Substreams dependency: use `block_view_buffa!` for the current Solana 0.16 model, or the unchanged `block_view!` for Prost models. `block_view_buffa!` fails closed: it rejects a block containing an unsupported message version or inline configuration. `block_view_buffa_lenient!` instead reports those transactions so production Substreams modules can skip them without halting; other transactions keep their original indexes. Fixtures, coverage and validation rules are in its README.
+- `spl/transfers-substreams`: the `spl_transfers` Substreams package, a thin SDK 0.8/Buffa wrapper over `spl_transfers::project` (handler exported only on wasm32). Its output types come from the shared `proto` crate (`solana.spl.transfers.v1`).
+- `spl/token-common` uses the same `spl_transfers::decode` for amount-moving instructions, so `spl_token`, `svm-transfers` and the native projector agree. It uses the lenient adapter: unsupported message versions are logged and skipped rather than halting the stream.
+
 ### Native DEX projection
 
 `dex-swaps::project(&Block)` validates complete blocks and adds original
@@ -89,6 +95,7 @@ extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes
 ### Non-DEX protocol crates
 
 - `spl/token`, `spl/token-2022`, `spl/token-swap`, `spl/token-lending`
+- `spl/token-common` (shared SPL Token parsing), `spl/transfers` (native projector), `spl/transfers-substreams`
 - `native/system`, `native/stake`, `native/vote`
 - `nft/magiceden/m2`, `nft/magiceden/m3`, `nft/tensor`
 - `staking/marinade`
@@ -113,5 +120,6 @@ extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes
 
 - Many historical docs still mention old `db-svm-*` folder names; current structure is `svm-*`.
 - Root `README.md` previously under-described current module coverage.
+- `substreams run` fails on manifests importing `substreams-sink-sql-protodefs-v1.0.7.spkg` with substreams CLI 1.25.0 (`deprecated.proto` name conflict over `sf.substreams.sink.sql.v1.Service`); dropping that import from a local copy works around it for verification.
 - Generator output is a scaffold, not protocol coverage evidence; review its
   schema, decoding logic, manifest imports and fixtures before release.

@@ -347,6 +347,10 @@ pub struct Transaction {
     ///
     /// Field 8: `post_token_balances`
     pub post_token_balances: ::buffa::alloc::vec::Vec<TokenBalance>,
+    /// Original index of the transaction in the block, votes and failures included.
+    ///
+    /// Field 9: `transaction_index`
+    pub transaction_index: u32,
 }
 impl ::core::fmt::Debug for Transaction {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -359,6 +363,7 @@ impl ::core::fmt::Debug for Transaction {
             .field("instructions", &self.instructions)
             .field("pre_token_balances", &self.pre_token_balances)
             .field("post_token_balances", &self.post_token_balances)
+            .field("transaction_index", &self.transaction_index)
             .finish()
     }
 }
@@ -431,6 +436,11 @@ impl ::buffa::Message for Transaction {
                 += 1u64 + ::buffa::encoding::varint_len(inner_size as u64) as u64
                     + inner_size as u64;
         }
+        if self.transaction_index != 0u32 {
+            size
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.transaction_index) as u64;
+        }
         ::buffa::saturate_size(size)
     }
     fn write_to(
@@ -478,6 +488,9 @@ impl ::buffa::Message for Transaction {
                 buf,
             );
             v.write_to(__cache, buf);
+        }
+        if self.transaction_index != 0u32 {
+            ::buffa::types::put_uint32_field(9u32, self.transaction_index, buf);
         }
     }
     fn merge_field(
@@ -566,6 +579,13 @@ impl ::buffa::Message for Transaction {
                 ::buffa::Message::merge_length_delimited(&mut elem, buf, ctx)?;
                 self.post_token_balances.push(elem);
             }
+            9u32 => {
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
+                self.transaction_index = ::buffa::types::decode_uint32(buf)?;
+            }
             _ => {
                 ::buffa::encoding::skip_field_depth(tag, buf, ctx.depth())?;
             }
@@ -581,6 +601,7 @@ impl ::buffa::Message for Transaction {
         self.instructions.clear();
         self.pre_token_balances.clear();
         self.post_token_balances.clear();
+        self.transaction_index = 0u32;
     }
 }
 #[derive(Clone, PartialEq, Default)]
@@ -593,6 +614,14 @@ pub struct Instruction {
     ///
     /// Field 3: `is_root`
     pub is_root: bool,
+    /// Original index of the outer (top-level) instruction.
+    ///
+    /// Field 4: `instruction_index`
+    pub instruction_index: u32,
+    /// Original index among the inner instructions of instruction_index; absent for an outer instruction.
+    ///
+    /// Field 5: `inner_instruction_index`
+    pub inner_instruction_index: ::core::option::Option<u32>,
     pub instruction: ::core::option::Option<__buffa::oneof::instruction::Instruction>,
 }
 impl ::core::fmt::Debug for Instruction {
@@ -601,6 +630,8 @@ impl ::core::fmt::Debug for Instruction {
             .field("program_id", &self.program_id)
             .field("stack_height", &self.stack_height)
             .field("is_root", &self.is_root)
+            .field("instruction_index", &self.instruction_index)
+            .field("inner_instruction_index", &self.inner_instruction_index)
             .field("instruction", &self.instruction)
             .finish()
     }
@@ -611,6 +642,15 @@ impl Instruction {
     ///
     /// Format: `type.googleapis.com/<fully.qualified.TypeName>`
     pub const TYPE_URL: &'static str = "type.googleapis.com/solana.spl.token.v1.Instruction";
+}
+impl Instruction {
+    #[must_use = "with_* setters return `self` by value; assign or chain the result"]
+    #[inline]
+    ///Sets [`Self::inner_instruction_index`] to `Some(value)`, consuming and returning `self`.
+    pub fn with_inner_instruction_index(mut self, value: u32) -> Self {
+        self.inner_instruction_index = Some(value);
+        self
+    }
 }
 ::buffa::impl_default_instance!(Instruction);
 impl ::buffa::MessageName for Instruction {
@@ -640,6 +680,14 @@ impl ::buffa::Message for Instruction {
         }
         if self.is_root {
             size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
+        }
+        if self.instruction_index != 0u32 {
+            size
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.instruction_index) as u64;
+        }
+        if let Some(v) = self.inner_instruction_index {
+            size += 1u64 + ::buffa::types::uint32_encoded_len(v) as u64;
         }
         if let ::core::option::Option::Some(ref v) = self.instruction {
             match v {
@@ -806,6 +854,12 @@ impl ::buffa::Message for Instruction {
         }
         if self.is_root {
             ::buffa::types::put_bool_field(3u32, self.is_root, buf);
+        }
+        if self.instruction_index != 0u32 {
+            ::buffa::types::put_uint32_field(4u32, self.instruction_index, buf);
+        }
+        if let Some(v) = self.inner_instruction_index {
+            ::buffa::types::put_uint32_field(5u32, v, buf);
         }
         if let ::core::option::Option::Some(ref v) = self.instruction {
             match v {
@@ -987,6 +1041,22 @@ impl ::buffa::Message for Instruction {
                     ::buffa::encoding::WireType::Varint,
                 )?;
                 self.is_root = ::buffa::types::decode_bool(buf)?;
+            }
+            4u32 => {
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
+                self.instruction_index = ::buffa::types::decode_uint32(buf)?;
+            }
+            5u32 => {
+                ::buffa::encoding::check_wire_type(
+                    tag,
+                    ::buffa::encoding::WireType::Varint,
+                )?;
+                self.inner_instruction_index = ::core::option::Option::Some(
+                    ::buffa::types::decode_uint32(buf)?,
+                );
             }
             10u32 => {
                 ::buffa::encoding::check_wire_type(
@@ -1360,6 +1430,8 @@ impl ::buffa::Message for Instruction {
         self.program_id.clear();
         self.stack_height = 0u32;
         self.is_root = false;
+        self.instruction_index = 0u32;
+        self.inner_instruction_index = ::core::option::Option::None;
         self.instruction = ::core::option::Option::None;
     }
 }
@@ -1528,23 +1600,33 @@ impl ::buffa::Message for TokenBalance {
 pub struct Transfer {
     /// -- authority --
     ///
+    /// Owner, delegate or mint authority.
+    ///
     /// Field 1: `authority`
     pub authority: ::buffa::alloc::vec::Vec<u8>,
+    /// Accounts after the authority.
+    ///
     /// Field 2: `multisig_authority`
     pub multisig_authority: ::buffa::alloc::vec::Vec<::buffa::alloc::vec::Vec<u8>>,
     /// -- event --
     ///
+    /// Source token account; empty for mints.
+    ///
     /// Field 10: `source`
     pub source: ::buffa::alloc::vec::Vec<u8>,
+    /// Destination token account; empty for burns.
+    ///
     /// Field 11: `destination`
     pub destination: ::buffa::alloc::vec::Vec<u8>,
+    /// Exact raw amount; zero amounts are kept.
+    ///
     /// Field 12: `amount`
     pub amount: u64,
-    /// Field 13: `mint`
-    pub mint: ::buffa::alloc::vec::Vec<u8>,
-    /// SPL-2022
+    /// Absent for unchecked Transfer, which does not name the mint.
     ///
-    /// uint8
+    /// Field 13: `mint`
+    pub mint: ::core::option::Option<::buffa::alloc::vec::Vec<u8>>,
+    /// uint8, from checked instructions only.
     ///
     /// Field 14: `decimals`
     pub decimals: ::core::option::Option<u32>,
@@ -1570,6 +1652,13 @@ impl Transfer {
     pub const TYPE_URL: &'static str = "type.googleapis.com/solana.spl.token.v1.Transfer";
 }
 impl Transfer {
+    #[must_use = "with_* setters return `self` by value; assign or chain the result"]
+    #[inline]
+    ///Sets [`Self::mint`] to `Some(value)`, consuming and returning `self`.
+    pub fn with_mint(mut self, value: impl Into<::buffa::alloc::vec::Vec<u8>>) -> Self {
+        self.mint = Some(value.into());
+        self
+    }
     #[must_use = "with_* setters return `self` by value; assign or chain the result"]
     #[inline]
     ///Sets [`Self::decimals`] to `Some(value)`, consuming and returning `self`.
@@ -1613,8 +1702,8 @@ impl ::buffa::Message for Transfer {
         if self.amount != 0u64 {
             size += 1u64 + ::buffa::types::uint64_encoded_len(self.amount) as u64;
         }
-        if !self.mint.is_empty() {
-            size += 1u64 + ::buffa::types::bytes_encoded_len(&self.mint) as u64;
+        if let Some(ref v) = self.mint {
+            size += 1u64 + ::buffa::types::bytes_encoded_len(v) as u64;
         }
         if let Some(v) = self.decimals {
             size += 1u64 + ::buffa::types::uint32_encoded_len(v) as u64;
@@ -1643,8 +1732,8 @@ impl ::buffa::Message for Transfer {
         if self.amount != 0u64 {
             ::buffa::types::put_uint64_field(12u32, self.amount, buf);
         }
-        if !self.mint.is_empty() {
-            ::buffa::types::put_shared_bytes_field(13u32, &self.mint, buf);
+        if let Some(ref v) = self.mint {
+            ::buffa::types::put_shared_bytes_field(13u32, v, buf);
         }
         if let Some(v) = self.decimals {
             ::buffa::types::put_uint32_field(14u32, v, buf);
@@ -1705,7 +1794,10 @@ impl ::buffa::Message for Transfer {
                     tag,
                     ::buffa::encoding::WireType::LengthDelimited,
                 )?;
-                ::buffa::types::merge_bytes(&mut self.mint, buf)?;
+                ::buffa::types::merge_bytes(
+                    self.mint.get_or_insert_with(::buffa::alloc::vec::Vec::new),
+                    buf,
+                )?;
             }
             14u32 => {
                 ::buffa::encoding::check_wire_type(
@@ -1728,7 +1820,7 @@ impl ::buffa::Message for Transfer {
         self.source.clear();
         self.destination.clear();
         self.amount = 0u64;
-        self.mint.clear();
+        self.mint = ::core::option::Option::None;
         self.decimals = ::core::option::Option::None;
     }
 }

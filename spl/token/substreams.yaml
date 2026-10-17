@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: spl_token
-  version: v0.3.0
+  version: v0.4.0
   url: https://github.com/pinax-network/substreams-solana
   description: SPL Token
   image: ../../image.png
@@ -25,7 +25,8 @@ modules:
     kind: map
     doc: SPL Token
     inputs:
-      - map: solana_common:blocks_without_votes
+      # Unfiltered blocks, so transaction indexes are original block positions.
+      - source: sf.solana.type.v1.Block
     blockFilter:
       module: solana_common:program_ids_without_votes
       query:

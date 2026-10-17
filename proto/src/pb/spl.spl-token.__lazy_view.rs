@@ -386,6 +386,10 @@ pub struct TransactionLazyView<'a> {
         'a,
         super::super::__buffa::lazy_view::TokenBalanceLazyView<'a>,
     >,
+    /// Original index of the transaction in the block, votes and failures included.
+    ///
+    /// Field 9: `transaction_index`
+    pub transaction_index: u32,
 }
 impl<'a> TransactionLazyView<'a> {
     /// Decode from `buf` under the limits carried by `ctx`, recording
@@ -447,6 +451,13 @@ impl<'a> TransactionLazyView<'a> {
                     view.compute_units_consumed = ::buffa::types::decode_uint64(
                         &mut cur,
                     )?;
+                }
+                9u32 => {
+                    ::buffa::encoding::check_wire_type(
+                        tag,
+                        ::buffa::encoding::WireType::Varint,
+                    )?;
+                    view.transaction_index = ::buffa::types::decode_uint32(&mut cur)?;
                 }
                 3u32 => {
                     ::buffa::encoding::check_wire_type(
@@ -564,6 +575,7 @@ impl<'a> ::buffa::LazyMessageView<'a> for TransactionLazyView<'a> {
                 }
                 __out
             },
+            transaction_index: self.transaction_index,
             ..::core::default::Default::default()
         })
     }
@@ -619,6 +631,11 @@ impl<'a> TransactionLazyView<'a> {
             size
                 += 1u64 + ::buffa::encoding::varint_len(__frag.len() as u64) as u64
                     + __frag.len() as u64;
+        }
+        if self.transaction_index != 0u32 {
+            size
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.transaction_index) as u64;
         }
         ::buffa::saturate_size(size)
     }
@@ -676,6 +693,9 @@ impl<'a> TransactionLazyView<'a> {
                 .encode(buf);
             ::buffa::encoding::encode_varint(__frag.len() as u64, buf);
             buf.put_slice(__frag);
+        }
+        if self.transaction_index != 0u32 {
+            ::buffa::types::put_uint32_field(9u32, self.transaction_index, buf);
         }
     }
     /// Compute size, then write. Primary encode entry point.
@@ -862,6 +882,14 @@ pub struct InstructionLazyView<'a> {
     ///
     /// Field 3: `is_root`
     pub is_root: bool,
+    /// Original index of the outer (top-level) instruction.
+    ///
+    /// Field 4: `instruction_index`
+    pub instruction_index: u32,
+    /// Original index among the inner instructions of instruction_index; absent for an outer instruction.
+    ///
+    /// Field 5: `inner_instruction_index`
+    pub inner_instruction_index: ::core::option::Option<u32>,
     pub instruction: ::core::option::Option<
         super::super::__buffa::view::oneof::instruction::Instruction<'a>,
     >,
@@ -917,6 +945,22 @@ impl<'a> InstructionLazyView<'a> {
                         ::buffa::encoding::WireType::Varint,
                     )?;
                     view.is_root = ::buffa::types::decode_bool(&mut cur)?;
+                }
+                4u32 => {
+                    ::buffa::encoding::check_wire_type(
+                        tag,
+                        ::buffa::encoding::WireType::Varint,
+                    )?;
+                    view.instruction_index = ::buffa::types::decode_uint32(&mut cur)?;
+                }
+                5u32 => {
+                    ::buffa::encoding::check_wire_type(
+                        tag,
+                        ::buffa::encoding::WireType::Varint,
+                    )?;
+                    view.inner_instruction_index = Some(
+                        ::buffa::types::decode_uint32(&mut cur)?,
+                    );
                 }
                 10u32 => {
                     ::buffa::encoding::check_wire_type(
@@ -1491,6 +1535,8 @@ impl<'a> ::buffa::LazyMessageView<'a> for InstructionLazyView<'a> {
             program_id: (self.program_id).to_vec(),
             stack_height: self.stack_height,
             is_root: self.is_root,
+            instruction_index: self.instruction_index,
+            inner_instruction_index: self.inner_instruction_index,
             instruction: match self.instruction.as_ref() {
                 ::core::option::Option::Some(v) => {
                     ::core::option::Option::Some(
@@ -1684,6 +1730,14 @@ impl<'a> InstructionLazyView<'a> {
         }
         if self.is_root {
             size += 1u64 + ::buffa::types::BOOL_ENCODED_LEN as u64;
+        }
+        if self.instruction_index != 0u32 {
+            size
+                += 1u64
+                    + ::buffa::types::uint32_encoded_len(self.instruction_index) as u64;
+        }
+        if let Some(v) = self.inner_instruction_index {
+            size += 1u64 + ::buffa::types::uint32_encoded_len(v) as u64;
         }
         if let ::core::option::Option::Some(ref v) = self.instruction {
             match v {
@@ -1882,6 +1936,12 @@ impl<'a> InstructionLazyView<'a> {
         }
         if self.is_root {
             ::buffa::types::put_bool_field(3u32, self.is_root, buf);
+        }
+        if self.instruction_index != 0u32 {
+            ::buffa::types::put_uint32_field(4u32, self.instruction_index, buf);
+        }
+        if let Some(v) = self.inner_instruction_index {
+            ::buffa::types::put_uint32_field(5u32, v, buf);
         }
         if let ::core::option::Option::Some(ref v) = self.instruction {
             match v {
@@ -2608,23 +2668,33 @@ impl<'a> ::buffa::MessageName for TokenBalanceLazyView<'a> {
 pub struct TransferLazyView<'a> {
     /// -- authority --
     ///
+    /// Owner, delegate or mint authority.
+    ///
     /// Field 1: `authority`
     pub authority: &'a [u8],
+    /// Accounts after the authority.
+    ///
     /// Field 2: `multisig_authority`
     pub multisig_authority: ::buffa::RepeatedView<'a, &'a [u8]>,
     /// -- event --
     ///
+    /// Source token account; empty for mints.
+    ///
     /// Field 10: `source`
     pub source: &'a [u8],
+    /// Destination token account; empty for burns.
+    ///
     /// Field 11: `destination`
     pub destination: &'a [u8],
+    /// Exact raw amount; zero amounts are kept.
+    ///
     /// Field 12: `amount`
     pub amount: u64,
-    /// Field 13: `mint`
-    pub mint: &'a [u8],
-    /// SPL-2022
+    /// Absent for unchecked Transfer, which does not name the mint.
     ///
-    /// uint8
+    /// Field 13: `mint`
+    pub mint: ::core::option::Option<&'a [u8]>,
+    /// uint8, from checked instructions only.
     ///
     /// Field 14: `decimals`
     pub decimals: ::core::option::Option<u32>,
@@ -2693,7 +2763,7 @@ impl<'a> TransferLazyView<'a> {
                         tag,
                         ::buffa::encoding::WireType::LengthDelimited,
                     )?;
-                    view.mint = ::buffa::types::borrow_bytes(&mut cur)?;
+                    view.mint = Some(::buffa::types::borrow_bytes(&mut cur)?);
                 }
                 14u32 => {
                     ::buffa::encoding::check_wire_type(
@@ -2765,7 +2835,7 @@ impl<'a> ::buffa::LazyMessageView<'a> for TransferLazyView<'a> {
             source: (self.source).to_vec(),
             destination: (self.destination).to_vec(),
             amount: self.amount,
-            mint: (self.mint).to_vec(),
+            mint: self.mint.map(|b| (b).to_vec()),
             decimals: self.decimals,
             ..::core::default::Default::default()
         })
@@ -2805,8 +2875,8 @@ impl<'a> TransferLazyView<'a> {
         if self.amount != 0u64 {
             size += 1u64 + ::buffa::types::uint64_encoded_len(self.amount) as u64;
         }
-        if !self.mint.is_empty() {
-            size += 1u64 + ::buffa::types::bytes_encoded_len(&self.mint) as u64;
+        if let Some(ref v) = self.mint {
+            size += 1u64 + ::buffa::types::bytes_encoded_len(v) as u64;
         }
         if let Some(v) = self.decimals {
             size += 1u64 + ::buffa::types::uint32_encoded_len(v) as u64;
@@ -2841,8 +2911,8 @@ impl<'a> TransferLazyView<'a> {
         if self.amount != 0u64 {
             ::buffa::types::put_uint64_field(12u32, self.amount, buf);
         }
-        if !self.mint.is_empty() {
-            ::buffa::types::put_shared_bytes_field(13u32, &self.mint, buf);
+        if let Some(ref v) = self.mint {
+            ::buffa::types::put_shared_bytes_field(13u32, v, buf);
         }
         if let Some(v) = self.decimals {
             ::buffa::types::put_uint32_field(14u32, v, buf);

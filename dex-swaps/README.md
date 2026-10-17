@@ -109,8 +109,8 @@ native Rust and returns a validated `Projection`. It borrows the existing decode
 block and calls the same protocol extraction as the WASM wrapper, with no store,
 RPC request, or Substreams execution. `project_with_limits` additionally lets a
 caller bound transactions, instructions, logs, log bytes, and output rows. The
-structural validator is pinned to the pending native SPL projector in PR #225;
-that dependency must be reviewed before release.
+structural validator is the workspace's native SPL projector (`spl/transfers`),
+used with its fail-closed Buffa adapter.
 
 Every projection includes a clock, even for an empty block. Missing block time
 remains `None`, and a parent slot may skip several slots. Transactions carry their

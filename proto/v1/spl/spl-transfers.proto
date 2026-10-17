@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package solana.spl.transfers.v1;
+// Output of the `spl_transfers` package, a thin wrapper over the native
+// `spl_transfers::project` function (spl/transfers). One message per block.
+
+message Events {
+  Clock clock = 1;
+  // Operations in execution order: by transaction, then outer instruction,
+  // with each outer instruction followed by its inner instructions.
+  repeated Operation operations = 2;
+}
+
+// Identity and completeness evidence of the projected block; present for every
+// block, including blocks without operations.
+message Clock {
+  uint64 slot = 1;
+  uint64 parent_slot = 2; // Lower than slot - 1 after skipped slots.
+  bytes blockhash = 3; // 32 bytes
+  bytes previous_blockhash = 4; // 32 bytes
+  optional int64 block_time = 5; // Unix seconds; absent when the block has no time.
+  optional uint64 block_height = 6;
+  uint32 transaction_count = 7; // All transactions, votes and failures included.
+  Coverage coverage = 8;
+  uint32 spec_revision = 9;
+}
+
+// Declared coverage. Only executed instructions of successful transactions are
+// projected. With every flag off, the scope is classic Token program
+// TransferChecked in top-level instructions.
+message Coverage {
+  bool token_2022 = 1; // Token-2022 operations (requested amounts, before transfer fees).
+  bool inner_instructions = 2; // Inner (CPI) instructions.
+  bool unchecked_transfers = 3; // Unchecked Transfer, whose mint and decimals stay unknown.
+  bool mint_burn = 4; // MintTo, MintToChecked, Burn and BurnChecked.
+}
+
+enum TokenProgram {
+  TOKEN_PROGRAM_UNSPECIFIED = 0;
+  TOKEN_PROGRAM_TOKEN = 1; // TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+  TOKEN_PROGRAM_TOKEN_2022 = 2; // TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+}
+
+enum OperationKind {
+  OPERATION_KIND_UNSPECIFIED = 0;
+  OPERATION_KIND_TRANSFER = 1;
+  OPERATION_KIND_TRANSFER_CHECKED = 2;
+  OPERATION_KIND_MINT_TO = 3;
+  OPERATION_KIND_MINT_TO_CHECKED = 4;
+  OPERATION_KIND_BURN = 5;
+  OPERATION_KIND_BURN_CHECKED = 6;
+}
+
+message Operation {
+  // -- original position --
+  uint32 transaction_index = 1; // Index in the block, votes and failures included.
+  uint32 instruction_index = 2; // Outer (top-level) instruction index.
+  optional uint32 inner_instruction_index = 3; // Index among the inner instructions of instruction_index; absent for an outer instruction.
+  optional uint32 stack_height = 4; // Recorded height of an inner instruction.
+  bytes signature = 5; // First transaction signature, 64 bytes.
+
+  // -- operation --
+  TokenProgram program = 6;
+  OperationKind kind = 7;
+  uint64 amount = 8; // Exact raw amount in base units; zero is kept.
+  optional uint32 decimals = 9; // From checked instructions only.
+  optional bytes mint = 10; // Absent for unchecked Transfer.
+  optional bytes source = 11; // Source token account; absent for mints.
+  optional bytes destination = 12; // Destination token account; absent for burns. May equal source.
+  bytes authority = 13; // Owner, delegate or mint authority.
+  repeated bytes extra_accounts = 14; // Accounts after the authority (multisig signers, Token-2022 hook accounts).
+
+  // -- owner wallets recorded in the transaction's token balances --
+  optional bytes source_owner = 15;
+  optional bytes destination_owner = 16;
+}

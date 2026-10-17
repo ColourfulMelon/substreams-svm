@@ -60,7 +60,11 @@ type or a base58 macro.
 The SPL projector accepts a borrowed structural view and has no protobuf runtime
 dependency. Its Buffa adapter preserves message presence and explicitly rejects
 unsupported transaction versions or inline transaction configuration; recognizing
-new upstream model fields does not qualify new transaction coverage.
+new upstream model fields does not qualify new transaction coverage. Native
+projection stays fail-closed. Production Substreams modules built on
+`spl-token-common` use the lenient adapter instead: they log and skip those
+transactions, keep original indexes, and still fail on malformed supported
+transactions, so a new message format cannot halt the stream.
 
 Preserve captured legacy output bytes alongside native projection and transport
 tests. Successful compilation does not prove unchanged client payloads or live

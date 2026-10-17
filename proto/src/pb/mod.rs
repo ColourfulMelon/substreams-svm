@@ -240,6 +240,11 @@ pub mod solana {
                 include!("solana.spl.token_swap.v1.mod.rs");
             }
         }
+        pub mod transfers {
+            pub mod v1 {
+                include!("solana.spl.transfers.v1.mod.rs");
+            }
+        }
     }
 }
 pub mod solfi {

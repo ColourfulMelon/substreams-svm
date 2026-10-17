@@ -8,7 +8,7 @@ main. No additional provider request was made for this change.
 - Slot: 350000026; 1444 original transactions.
 - Decompressed SHA-256: `ec6e4f3c1805034babeee7e35498989f73224a8419903e164eaf0703fe760969`.
 - Original capture date: 2026-10-11; source provenance and RPC cross-checks are in
-  PR #225's `spl/transfers/tests/fixtures/README.md`.
+  `spl/transfers/tests/fixtures/README.md`, which holds the same file.
 - Existing `map_events` on unmodified main `e7af0dc108ea4cd0105dc16eda9782376141abb2`
   emits 156 transactions / 231 swaps. Encoded protobuf output SHA-256:
   `c1e611c718878724d851e446c0a13bec1b28e682ebf99e2ab7b4a2d221b78218`.

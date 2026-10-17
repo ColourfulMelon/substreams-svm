@@ -21,17 +21,13 @@ anyhow = "1"
 log = "0.4"
 substreams-solana-idls = { workspace = true }
 proto = { path = "../proto" }
+# Complete-block structural validation shared with the SPL transfer projector.
+spl-transfers = { path = "../spl/transfers" }
 
 [dev-dependencies]
 base64 = "0.22.1"
 borsh = "1"
 solana-program = "2.3.0"
-
-# Complete-block structural validation; pending upstream PR #225. This pin is
-# independent of the decoder behavior fixes in PRs #223 and #224.
-[dependencies.spl-transfers]
-git = "https://github.com/pinax-network/substreams-svm"
-rev = "c8e051cb1c069313423dc60e672df25de212b9da"
 
 [dev-dependencies.flate2]
 version = "1"
