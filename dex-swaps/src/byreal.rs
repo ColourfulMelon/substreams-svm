@@ -45,7 +45,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::Byreal as i32,
+            protocol: pb::Protocol::Byreal.into(),
             program_id: byreal::clmm::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: byreal::clmm::PROGRAM_ID.to_vec(),

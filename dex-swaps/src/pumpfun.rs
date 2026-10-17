@@ -29,7 +29,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
 
     let mint = event.mint.to_vec();
     Some(pb::Swap {
-        protocol: pb::Protocol::Pumpfun as i32,
+        protocol: pb::Protocol::Pumpfun.into(),
         program_id: pumpfun::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: pumpfun::PROGRAM_ID.to_vec(),
@@ -65,6 +65,7 @@ fn decode_trade_instruction(instruction: &InstructionView) -> Option<PendingTrad
 #[cfg(test)]
 mod tests {
     use super::*;
+    use buffa::MessageField;
     use substreams_solana::pb::sf::solana::r#type::v1::{
         CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, Transaction, TransactionStatusMeta,
     };
@@ -88,9 +89,9 @@ mod tests {
             event.extend_from_slice(&accounts[6]);
 
             let tx = ConfirmedTransaction {
-                transaction: Some(Transaction {
-                    message: Some(Message {
-                        header: Some(MessageHeader {
+                transaction: MessageField::some(Transaction {
+                    message: MessageField::some(Message {
+                        header: MessageField::some(MessageHeader {
                             num_required_signatures: 1,
                             ..Default::default()
                         }),
@@ -111,7 +112,7 @@ mod tests {
                     }),
                     ..Default::default()
                 }),
-                meta: Some(TransactionStatusMeta::default()),
+                meta: MessageField::some(TransactionStatusMeta::default()),
             };
             let mut pending = None;
             let swaps: Vec<_> = tx.walk_instructions().filter_map(|ix| handle_instruction(&mut pending, &ix)).collect();

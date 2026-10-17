@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &dumpfun::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -46,26 +46,35 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
         Ok(dumpfun::instructions::DumpfunInstruction::BuyExactTokens(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::BuyExactTokens(pb::BuyExactTokensInstruction {
-                token_out: event.token_out,
-                max_sol_in: event.max_sol_in,
-            })),
+            instruction: Some(pb::instruction::Instruction::BuyExactTokens(
+                pb::BuyExactTokensInstruction {
+                    token_out: event.token_out,
+                    max_sol_in: event.max_sol_in,
+                }
+                .into(),
+            )),
         }),
         Ok(dumpfun::instructions::DumpfunInstruction::BuyTokensWithExactSol(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::BuyTokensWithExactSol(pb::BuyTokensWithExactSolInstruction {
-                sol_in: event.sol_in,
-                min_token_out: event.min_token_out,
-            })),
+            instruction: Some(pb::instruction::Instruction::BuyTokensWithExactSol(
+                pb::BuyTokensWithExactSolInstruction {
+                    sol_in: event.sol_in,
+                    min_token_out: event.min_token_out,
+                }
+                .into(),
+            )),
         }),
         Ok(dumpfun::instructions::DumpfunInstruction::SellExactTokens(event)) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::SellExactTokens(pb::SellExactTokensInstruction {
-                token_in: event.token_in,
-                min_sol_out: event.min_sol_out,
-            })),
+            instruction: Some(pb::instruction::Instruction::SellExactTokens(
+                pb::SellExactTokensInstruction {
+                    token_in: event.token_in,
+                    min_sol_out: event.min_sol_out,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }
@@ -103,48 +112,60 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(dumpfun::events::DumpfunEvent::BuyTokenEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Buy(pb::BuyTokenEvent {
-                user: event.user.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                sol_in: event.sol_in,
-                token_out: event.token_out,
-                buy_time: event.buy_time,
-            })),
+            log: Some(pb::log::Log::Buy(
+                pb::BuyTokenEvent {
+                    user: event.user.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    sol_in: event.sol_in,
+                    token_out: event.token_out,
+                    buy_time: event.buy_time,
+                }
+                .into(),
+            )),
         }),
         Ok(dumpfun::events::DumpfunEvent::SellTokenEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Sell(pb::SellTokenEvent {
-                user: event.user.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                token_in: event.token_in,
-                sol_out: event.sol_out,
-                sell_time: event.sell_time,
-            })),
+            log: Some(pb::log::Log::Sell(
+                pb::SellTokenEvent {
+                    user: event.user.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    token_in: event.token_in,
+                    sol_out: event.sol_out,
+                    sell_time: event.sell_time,
+                }
+                .into(),
+            )),
         }),
         Ok(dumpfun::events::DumpfunEvent::TokenCreatedEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::TokenCreated(pb::TokenCreatedEvent {
-                creator: event.creator.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                create_time: event.create_time,
-                sell_lock_period: event.sell_lock_period,
-            })),
+            log: Some(pb::log::Log::TokenCreated(
+                pb::TokenCreatedEvent {
+                    creator: event.creator.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    create_time: event.create_time,
+                    sell_lock_period: event.sell_lock_period,
+                }
+                .into(),
+            )),
         }),
         Ok(dumpfun::events::DumpfunEvent::DrainPoolEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::DrainPool(pb::DrainPoolEvent {
-                pool: event.pool.to_bytes().to_vec(),
-                mint: event.mint.to_bytes().to_vec(),
-                creator_wallet: event.creator_wallet.to_bytes().to_vec(),
-                company_wallet: event.company_wallet.to_bytes().to_vec(),
-                creator_amount: event.creator_amount,
-                company_amount: event.company_amount,
-                total_drained: event.total_drained,
-                drain_time: event.drain_time,
-            })),
+            log: Some(pb::log::Log::DrainPool(
+                pb::DrainPoolEvent {
+                    pool: event.pool.to_bytes().to_vec(),
+                    mint: event.mint.to_bytes().to_vec(),
+                    creator_wallet: event.creator_wallet.to_bytes().to_vec(),
+                    company_wallet: event.company_wallet.to_bytes().to_vec(),
+                    creator_amount: event.creator_amount,
+                    company_amount: event.company_amount,
+                    total_drained: event.total_drained,
+                    drain_time: event.drain_time,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

@@ -28,9 +28,7 @@ impl State {
     }
 
     pub(crate) fn handle_log(&mut self, log_message: &str) -> Option<pb::Swap> {
-        let ProgramLog::Data(log_message) =
-            scoped_program_log(log_message, &raydium::amm::v4::PROGRAM_ID.to_vec(), &mut self.is_invoked)?
-        else {
+        let ProgramLog::Data(log_message) = scoped_program_log(log_message, &raydium::amm::v4::PROGRAM_ID.to_vec(), &mut self.is_invoked)? else {
             return None;
         };
 
@@ -65,7 +63,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::RaydiumAmmV4 as i32,
+            protocol: pb::Protocol::RaydiumAmmV4.into(),
             program_id: raydium::amm::v4::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: raydium::amm::v4::PROGRAM_ID.to_vec(),
@@ -113,8 +111,7 @@ fn decode_instruction(ix: &InstructionView, token_mints: Option<&TokenMintLookup
     }
 
     match raydium::amm::v4::instructions::unpack(ix.data()) {
-        Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseIn(_))
-        | Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseOut(_)) => {
+        Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseIn(_)) | Ok(raydium::amm::v4::instructions::RaydiumV4Instruction::SwapBaseOut(_)) => {
             // V1 — Use the IDL-canonical typed account helper. It transparently
             // handles both the post-fork (18-account, with `amm_target_orders`)
             // and legacy pre-fork (17-account) layouts.
@@ -176,8 +173,7 @@ mod tests {
     use super::*;
     use substreams_solana::base58;
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction,
-        TransactionStatusMeta, UiTokenAmount,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction, TransactionStatusMeta, UiTokenAmount,
     };
 
     /// SwapBaseIn discriminator (single byte for V4 — see idl.json + raydium_clmm pattern).
@@ -225,7 +221,7 @@ mod tests {
                 mint: base58::encode(mint),
                 owner: "".to_string(),
                 program_id: "".to_string(),
-                ui_token_amount: Some(UiTokenAmount::default()),
+                ui_token_amount: Some(UiTokenAmount::default()).into(),
             })
             .collect();
 
@@ -237,7 +233,8 @@ mod tests {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -247,12 +244,16 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
             meta: Some(TransactionStatusMeta {
                 pre_token_balances,
                 ..Default::default()
-            }),
+            })
+            .into(),
         }
     }
 
@@ -296,7 +297,7 @@ mod tests {
         let pc_mint = [0xbb; 32];
 
         let tx = make_tx(&accounts, &[(coin_key_idx as u32, coin_mint), (pc_key_idx as u32, pc_mint)]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -341,7 +342,7 @@ mod tests {
         let pc_mint = [0xbb; 32];
 
         let tx = make_tx(&accounts, &[(coin_key_idx as u32, coin_mint), (pc_key_idx as u32, pc_mint)]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -377,7 +378,7 @@ mod tests {
             token_balances,
             swap_body_v2(),
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -398,7 +399,7 @@ mod tests {
         // No pre/post token balances → mint_for misses for both vaults.
         let (accounts, _, _) = make_post_fork_accounts();
         let tx = make_tx(&accounts, &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 

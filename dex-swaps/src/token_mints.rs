@@ -57,13 +57,14 @@ impl TokenMintLookup {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use buffa::MessageField;
     use substreams_solana::pb::sf::solana::r#type::v1::{CompiledInstruction, Message, MessageHeader, TokenBalance, Transaction};
 
     fn initialization(program: [u8; 32], data: Vec<u8>) -> ConfirmedTransaction {
         ConfirmedTransaction {
-            transaction: Some(Transaction {
-                message: Some(Message {
-                    header: Some(MessageHeader {
+            transaction: MessageField::some(Transaction {
+                message: MessageField::some(Message {
+                    header: MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         ..Default::default()
                     }),
@@ -77,7 +78,7 @@ mod tests {
                 }),
                 ..Default::default()
             }),
-            meta: Some(TransactionStatusMeta::default()),
+            meta: MessageField::some(TransactionStatusMeta::default()),
         }
     }
 
@@ -90,7 +91,7 @@ mod tests {
                     data.extend_from_slice(&[9; 32]);
                 }
                 let tx = initialization(program, data);
-                let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+                let lookup = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
                 assert_eq!(lookup.mint_for(&[7; 32]), Some(vec![8; 32]));
             }
         }
@@ -100,7 +101,7 @@ mod tests {
     fn does_not_infer_mints_from_other_programs_or_malformed_initializations() {
         for (program, data) in [(token::PROGRAM_ID, vec![18]), ([3; 32], vec![1])] {
             let tx = initialization(program, data);
-            let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let lookup = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             assert!(lookup.mint_for(&[7; 32]).is_none());
         }
     }
@@ -108,12 +109,12 @@ mod tests {
     #[test]
     fn preserves_mints_observed_in_balance_snapshots() {
         let mut tx = initialization(token::PROGRAM_ID, vec![1]);
-        tx.meta.as_mut().unwrap().post_token_balances.push(TokenBalance {
+        tx.meta.as_option_mut().unwrap().post_token_balances.push(TokenBalance {
             account_index: 0,
             mint: base58::encode(&[10; 32]),
             ..Default::default()
         });
-        let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let lookup = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         assert_eq!(lookup.mint_for(&[7; 32]), Some(vec![10; 32]));
     }
 }

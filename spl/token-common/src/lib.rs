@@ -35,7 +35,7 @@ pub fn is_spl_memo_program(program_id: &[u8]) -> bool {
 }
 
 pub fn process_transaction(tx: ConfirmedTransaction, is_spl_token_program: fn(&[u8]) -> bool) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
     let signers = get_signers(&tx).unwrap_or_default();
 
     // Process SPL-Token Balances
@@ -51,7 +51,10 @@ pub fn process_transaction(tx: ConfirmedTransaction, is_spl_token_program: fn(&[
         .filter_map(|balance| balances::get_token_balance(&tx, balance, is_spl_token_program))
         .collect();
 
-    let instructions: Vec<_> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview, is_spl_token_program)).collect();
+    let instructions: Vec<_> = tx
+        .walk_instructions()
+        .filter_map(|iview| process_instruction(&iview, is_spl_token_program))
+        .collect();
 
     if instructions.is_empty() && pre_token_balances.is_empty() && post_token_balances.is_empty() {
         return None;
@@ -59,7 +62,7 @@ pub fn process_transaction(tx: ConfirmedTransaction, is_spl_token_program: fn(&[
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers,

@@ -36,7 +36,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::PumpfunAmm as i32,
+        protocol: pb::Protocol::PumpfunAmm.into(),
         program_id: pumpswap::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: pumpswap::PROGRAM_ID.to_vec(),
@@ -144,7 +144,8 @@ mod tests {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -154,9 +155,12 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta::default()),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: Some(TransactionStatusMeta::default()).into(),
         }
     }
 

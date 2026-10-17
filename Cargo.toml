@@ -82,15 +82,18 @@ license = "Apache-2.0"
 
 [workspace.dependencies]
 bs58 = "0.5.1"
-substreams = "0.7.3"
-substreams-abis = "0.7.12"
-substreams-solana = "0.14.2"
-substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", rev = "fb8fd5b75e4122534f118c9471315212abdca6bf" }
+substreams = "0.8.0"
+substreams-abis = "2.0.0"
+substreams-solana = "0.16.0"
+# Buffa-native Solana decoder API (v2 line, includes #147 decoder fixes); no
+# Substreams runtime in native consumers.
+substreams-solana-idls = { git = "https://github.com/pinax-network/substreams-solana-idls", rev = "aed8bcb1fb61950554df0eab0e4d8f7989aebfe1" }
 spl-token = "9.0.0"
-substreams-solana-program-instructions = "0.3"
-substreams-database-change = "4.0.0"
-prost = "0.13"
-prost-types = "0.13"
+# SDK-free error alias fix, pending upstream review.
+substreams-solana-program-instructions = { git = "https://github.com/DenisCarriere/substreams-solana-program-instructions", rev = "10b5b8d402b350b015c8f15af6ff3cac2b44729c" }
+substreams-database-change = "5.0.0"
+buffa = { version = "0.9.2", default-features = false, features = ["std"] }
+buffa-types = { version = "0.9.2", default-features = false, features = ["std"] }
 
 [profile.release]
 lto = true

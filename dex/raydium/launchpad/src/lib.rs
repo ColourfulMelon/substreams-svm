@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iv| process_instruction(&iv)).collect();
 
@@ -25,7 +25,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -43,128 +43,155 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV1(event) => Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TradeEvent(pb::TradeEvent {
-                    pool_state: event.pool_state.to_bytes().to_vec(),
-                    total_base_sell: event.total_base_sell,
-                    virtual_base: event.virtual_base,
-                    virtual_quote: event.virtual_quote,
-                    real_base_before: event.real_base_before,
-                    real_quote_before: event.real_quote_before,
-                    real_base_after: event.real_base_after,
-                    real_quote_after: event.real_quote_after,
-                    amount_in: event.amount_in,
-                    amount_out: event.amount_out,
-                    protocol_fee: event.protocol_fee,
-                    platform_fee: event.platform_fee,
-                    creator_fee: Some(event.creator_fee),
-                    share_fee: event.share_fee,
-                    trade_direction: match event.trade_direction {
-                        raydium::launchpad::anchor_cpi_event::TradeDirection::Buy => pb::TradeDirection::Buy as i32,
-                        raydium::launchpad::anchor_cpi_event::TradeDirection::Sell => pb::TradeDirection::Sell as i32,
-                    },
-                    pool_status: match event.pool_status {
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Fund => pb::PoolStatus::Fund as i32,
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Migrate => pb::PoolStatus::Migrate as i32,
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Trade => pb::PoolStatus::Trade as i32,
-                    },
-                    exact_in: Some(event.exact_in),
-                })),
+                instruction: Some(pb::instruction::Instruction::TradeEvent(
+                    pb::TradeEvent {
+                        pool_state: event.pool_state.to_bytes().to_vec(),
+                        total_base_sell: event.total_base_sell,
+                        virtual_base: event.virtual_base,
+                        virtual_quote: event.virtual_quote,
+                        real_base_before: event.real_base_before,
+                        real_quote_before: event.real_quote_before,
+                        real_base_after: event.real_base_after,
+                        real_quote_after: event.real_quote_after,
+                        amount_in: event.amount_in,
+                        amount_out: event.amount_out,
+                        protocol_fee: event.protocol_fee,
+                        platform_fee: event.platform_fee,
+                        creator_fee: Some(event.creator_fee),
+                        share_fee: event.share_fee,
+                        trade_direction: match event.trade_direction {
+                            raydium::launchpad::anchor_cpi_event::TradeDirection::Buy => pb::TradeDirection::Buy.into(),
+                            raydium::launchpad::anchor_cpi_event::TradeDirection::Sell => pb::TradeDirection::Sell.into(),
+                        },
+                        pool_status: match event.pool_status {
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Fund => pb::PoolStatus::Fund.into(),
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Migrate => pb::PoolStatus::Migrate.into(),
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Trade => pb::PoolStatus::Trade.into(),
+                        },
+                        exact_in: Some(event.exact_in),
+                    }
+                    .into(),
+                )),
             }),
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV2(event) => Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::TradeEvent(pb::TradeEvent {
-                    pool_state: event.pool_state.to_bytes().to_vec(),
-                    total_base_sell: event.total_base_sell,
-                    virtual_base: event.virtual_base,
-                    virtual_quote: event.virtual_quote,
-                    real_base_before: event.real_base_before,
-                    real_quote_before: event.real_quote_before,
-                    real_base_after: event.real_base_after,
-                    real_quote_after: event.real_quote_after,
-                    amount_in: event.amount_in,
-                    amount_out: event.amount_out,
-                    protocol_fee: event.protocol_fee,
-                    platform_fee: event.platform_fee,
-                    creator_fee: None,
-                    share_fee: event.share_fee,
-                    trade_direction: match event.trade_direction {
-                        raydium::launchpad::anchor_cpi_event::TradeDirection::Buy => pb::TradeDirection::Buy as i32,
-                        raydium::launchpad::anchor_cpi_event::TradeDirection::Sell => pb::TradeDirection::Sell as i32,
-                    },
-                    pool_status: match event.pool_status {
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Fund => pb::PoolStatus::Fund as i32,
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Migrate => pb::PoolStatus::Migrate as i32,
-                        raydium::launchpad::anchor_cpi_event::PoolStatus::Trade => pb::PoolStatus::Trade as i32,
-                    },
-                    exact_in: None,
-                })),
+                instruction: Some(pb::instruction::Instruction::TradeEvent(
+                    pb::TradeEvent {
+                        pool_state: event.pool_state.to_bytes().to_vec(),
+                        total_base_sell: event.total_base_sell,
+                        virtual_base: event.virtual_base,
+                        virtual_quote: event.virtual_quote,
+                        real_base_before: event.real_base_before,
+                        real_quote_before: event.real_quote_before,
+                        real_base_after: event.real_base_after,
+                        real_quote_after: event.real_quote_after,
+                        amount_in: event.amount_in,
+                        amount_out: event.amount_out,
+                        protocol_fee: event.protocol_fee,
+                        platform_fee: event.platform_fee,
+                        creator_fee: None,
+                        share_fee: event.share_fee,
+                        trade_direction: match event.trade_direction {
+                            raydium::launchpad::anchor_cpi_event::TradeDirection::Buy => pb::TradeDirection::Buy.into(),
+                            raydium::launchpad::anchor_cpi_event::TradeDirection::Sell => pb::TradeDirection::Sell.into(),
+                        },
+                        pool_status: match event.pool_status {
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Fund => pb::PoolStatus::Fund.into(),
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Migrate => pb::PoolStatus::Migrate.into(),
+                            raydium::launchpad::anchor_cpi_event::PoolStatus::Trade => pb::PoolStatus::Trade.into(),
+                        },
+                        exact_in: None,
+                    }
+                    .into(),
+                )),
             }),
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::ClaimVestedEvent(event) => Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::ClaimVestedEvent(pb::ClaimVestedEvent {
-                    pool_state: event.pool_state.to_bytes().to_vec(),
-                    beneficiary: event.beneficiary.to_bytes().to_vec(),
-                    claim_amount: event.claim_amount,
-                })),
+                instruction: Some(pb::instruction::Instruction::ClaimVestedEvent(
+                    pb::ClaimVestedEvent {
+                        pool_state: event.pool_state.to_bytes().to_vec(),
+                        beneficiary: event.beneficiary.to_bytes().to_vec(),
+                        claim_amount: event.claim_amount,
+                    }
+                    .into(),
+                )),
             }),
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::CreateVestingEvent(event) => Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::CreateVestingEvent(pb::CreateVestingEvent {
-                    pool_state: event.pool_state.to_bytes().to_vec(),
-                    beneficiary: event.beneficiary.to_bytes().to_vec(),
-                    share_amount: event.share_amount,
-                })),
+                instruction: Some(pb::instruction::Instruction::CreateVestingEvent(
+                    pb::CreateVestingEvent {
+                        pool_state: event.pool_state.to_bytes().to_vec(),
+                        beneficiary: event.beneficiary.to_bytes().to_vec(),
+                        share_amount: event.share_amount,
+                    }
+                    .into(),
+                )),
             }),
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::PoolCreateEvent(event) => Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::PoolCreateEvent(pb::PoolCreateEvent {
-                    pool_state: event.pool_state.to_bytes().to_vec(),
-                    creator: event.creator.to_bytes().to_vec(),
-                    config: event.config.to_bytes().to_vec(),
-                    base_mint_param: Some(pb::MintParams {
-                        decimals: event.base_mint_param.decimals as u32,
-                        name: event.base_mint_param.name,
-                        symbol: event.base_mint_param.symbol,
-                        uri: event.base_mint_param.uri,
-                    }),
-                    curve_param: Some(match event.curve_param {
-                        raydium::launchpad::anchor_cpi_event::CurveParams::Constant { data } => pb::CurveParams {
-                            curve: Some(pb::curve_params::Curve::Constant(pb::ConstantCurve {
-                                supply: data.supply,
-                                total_base_sell: data.total_base_sell,
-                                total_quote_fund_raising: data.total_quote_fund_raising,
-                                migrate_type: data.migrate_type as u32,
-                            })),
+                instruction: Some(pb::instruction::Instruction::PoolCreateEvent(
+                    pb::PoolCreateEvent {
+                        pool_state: event.pool_state.to_bytes().to_vec(),
+                        creator: event.creator.to_bytes().to_vec(),
+                        config: event.config.to_bytes().to_vec(),
+                        base_mint_param: Some(pb::MintParams {
+                            decimals: event.base_mint_param.decimals as u32,
+                            name: event.base_mint_param.name,
+                            symbol: event.base_mint_param.symbol,
+                            uri: event.base_mint_param.uri,
+                        })
+                        .into(),
+                        curve_param: Some(match event.curve_param {
+                            raydium::launchpad::anchor_cpi_event::CurveParams::Constant { data } => pb::CurveParams {
+                                curve: Some(pb::curve_params::Curve::Constant(
+                                    pb::ConstantCurve {
+                                        supply: data.supply,
+                                        total_base_sell: data.total_base_sell,
+                                        total_quote_fund_raising: data.total_quote_fund_raising,
+                                        migrate_type: data.migrate_type as u32,
+                                    }
+                                    .into(),
+                                )),
+                            },
+                            raydium::launchpad::anchor_cpi_event::CurveParams::Fixed { data } => pb::CurveParams {
+                                curve: Some(pb::curve_params::Curve::Fixed(
+                                    pb::FixedCurve {
+                                        supply: data.supply,
+                                        total_quote_fund_raising: data.total_quote_fund_raising,
+                                        migrate_type: data.migrate_type as u32,
+                                    }
+                                    .into(),
+                                )),
+                            },
+                            raydium::launchpad::anchor_cpi_event::CurveParams::Linear { data } => pb::CurveParams {
+                                curve: Some(pb::curve_params::Curve::Linear(
+                                    pb::LinearCurve {
+                                        supply: data.supply,
+                                        total_quote_fund_raising: data.total_quote_fund_raising,
+                                        migrate_type: data.migrate_type as u32,
+                                    }
+                                    .into(),
+                                )),
+                            },
+                        })
+                        .into(),
+                        vesting_param: Some(pb::VestingParams {
+                            total_locked_amount: event.vesting_param.total_locked_amount,
+                            cliff_period: event.vesting_param.cliff_period,
+                            unlock_period: event.vesting_param.unlock_period,
+                        })
+                        .into(),
+                        amm_fee_on: match event.amm_fee_on {
+                            raydium::launchpad::anchor_cpi_event::AmmCreatorFeeOn::QuoteToken => pb::AmmCreatorFeeOn::QuoteToken.into(),
+                            raydium::launchpad::anchor_cpi_event::AmmCreatorFeeOn::BothToken => pb::AmmCreatorFeeOn::BothToken.into(),
                         },
-                        raydium::launchpad::anchor_cpi_event::CurveParams::Fixed { data } => pb::CurveParams {
-                            curve: Some(pb::curve_params::Curve::Fixed(pb::FixedCurve {
-                                supply: data.supply,
-                                total_quote_fund_raising: data.total_quote_fund_raising,
-                                migrate_type: data.migrate_type as u32,
-                            })),
-                        },
-                        raydium::launchpad::anchor_cpi_event::CurveParams::Linear { data } => pb::CurveParams {
-                            curve: Some(pb::curve_params::Curve::Linear(pb::LinearCurve {
-                                supply: data.supply,
-                                total_quote_fund_raising: data.total_quote_fund_raising,
-                                migrate_type: data.migrate_type as u32,
-                            })),
-                        },
-                    }),
-                    vesting_param: Some(pb::VestingParams {
-                        total_locked_amount: event.vesting_param.total_locked_amount,
-                        cliff_period: event.vesting_param.cliff_period,
-                        unlock_period: event.vesting_param.unlock_period,
-                    }),
-                    amm_fee_on: match event.amm_fee_on {
-                        raydium::launchpad::anchor_cpi_event::AmmCreatorFeeOn::QuoteToken => pb::AmmCreatorFeeOn::QuoteToken as i32,
-                        raydium::launchpad::anchor_cpi_event::AmmCreatorFeeOn::BothToken => pb::AmmCreatorFeeOn::BothToken as i32,
-                    },
-                })),
+                    }
+                    .into(),
+                )),
             }),
             raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::Unknown => None,
         };
@@ -176,28 +203,32 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::BuyExactIn(pb::BuyExactInInstruction {
-                    accounts: Some(pb::TradeAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        global_config: accounts.global_config.to_bytes().to_vec(),
-                        platform_config: accounts.platform_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        user_base_token: accounts.user_base_token.to_bytes().to_vec(),
-                        user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
-                        quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
-                        base_token_program: accounts.base_token_program.to_bytes().to_vec(),
-                        quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
-                        event_authority: accounts.event_authority.to_bytes().to_vec(),
-                        program: accounts.program.to_bytes().to_vec(),
-                    }),
-                    amount_in: evt.amount_in,
-                    minimum_amount_out: evt.minimum_amount_out,
-                    share_fee_rate: evt.share_fee_rate,
-                })),
+                instruction: Some(pb::instruction::Instruction::BuyExactIn(
+                    pb::BuyExactInInstruction {
+                        accounts: Some(pb::TradeAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            global_config: accounts.global_config.to_bytes().to_vec(),
+                            platform_config: accounts.platform_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            user_base_token: accounts.user_base_token.to_bytes().to_vec(),
+                            user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
+                            quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
+                            base_token_program: accounts.base_token_program.to_bytes().to_vec(),
+                            quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
+                            event_authority: accounts.event_authority.to_bytes().to_vec(),
+                            program: accounts.program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_in: evt.amount_in,
+                        minimum_amount_out: evt.minimum_amount_out,
+                        share_fee_rate: evt.share_fee_rate,
+                    }
+                    .into(),
+                )),
             })
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::BuyExactOut(evt)) => {
@@ -205,28 +236,32 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::BuyExactOut(pb::BuyExactOutInstruction {
-                    accounts: Some(pb::TradeAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        global_config: accounts.global_config.to_bytes().to_vec(),
-                        platform_config: accounts.platform_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        user_base_token: accounts.user_base_token.to_bytes().to_vec(),
-                        user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
-                        quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
-                        base_token_program: accounts.base_token_program.to_bytes().to_vec(),
-                        quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
-                        event_authority: accounts.event_authority.to_bytes().to_vec(),
-                        program: accounts.program.to_bytes().to_vec(),
-                    }),
-                    amount_out: evt.amount_out,
-                    maximum_amount_in: evt.maximum_amount_in,
-                    share_fee_rate: evt.share_fee_rate,
-                })),
+                instruction: Some(pb::instruction::Instruction::BuyExactOut(
+                    pb::BuyExactOutInstruction {
+                        accounts: Some(pb::TradeAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            global_config: accounts.global_config.to_bytes().to_vec(),
+                            platform_config: accounts.platform_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            user_base_token: accounts.user_base_token.to_bytes().to_vec(),
+                            user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
+                            quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
+                            base_token_program: accounts.base_token_program.to_bytes().to_vec(),
+                            quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
+                            event_authority: accounts.event_authority.to_bytes().to_vec(),
+                            program: accounts.program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_out: evt.amount_out,
+                        maximum_amount_in: evt.maximum_amount_in,
+                        share_fee_rate: evt.share_fee_rate,
+                    }
+                    .into(),
+                )),
             })
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::SellExactIn(evt)) => {
@@ -234,28 +269,32 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::SellExactIn(pb::SellExactInInstruction {
-                    accounts: Some(pb::TradeAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        global_config: accounts.global_config.to_bytes().to_vec(),
-                        platform_config: accounts.platform_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        user_base_token: accounts.user_base_token.to_bytes().to_vec(),
-                        user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
-                        quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
-                        base_token_program: accounts.base_token_program.to_bytes().to_vec(),
-                        quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
-                        event_authority: accounts.event_authority.to_bytes().to_vec(),
-                        program: accounts.program.to_bytes().to_vec(),
-                    }),
-                    amount_in: evt.amount_in,
-                    minimum_amount_out: evt.minimum_amount_out,
-                    share_fee_rate: evt.share_fee_rate,
-                })),
+                instruction: Some(pb::instruction::Instruction::SellExactIn(
+                    pb::SellExactInInstruction {
+                        accounts: Some(pb::TradeAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            global_config: accounts.global_config.to_bytes().to_vec(),
+                            platform_config: accounts.platform_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            user_base_token: accounts.user_base_token.to_bytes().to_vec(),
+                            user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
+                            quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
+                            base_token_program: accounts.base_token_program.to_bytes().to_vec(),
+                            quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
+                            event_authority: accounts.event_authority.to_bytes().to_vec(),
+                            program: accounts.program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_in: evt.amount_in,
+                        minimum_amount_out: evt.minimum_amount_out,
+                        share_fee_rate: evt.share_fee_rate,
+                    }
+                    .into(),
+                )),
             })
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::SellExactOut(evt)) => {
@@ -263,28 +302,32 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::SellExactOut(pb::SellExactOutInstruction {
-                    accounts: Some(pb::TradeAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        global_config: accounts.global_config.to_bytes().to_vec(),
-                        platform_config: accounts.platform_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        user_base_token: accounts.user_base_token.to_bytes().to_vec(),
-                        user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
-                        base_vault: accounts.base_vault.to_bytes().to_vec(),
-                        quote_vault: accounts.quote_vault.to_bytes().to_vec(),
-                        base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
-                        quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
-                        base_token_program: accounts.base_token_program.to_bytes().to_vec(),
-                        quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
-                        event_authority: accounts.event_authority.to_bytes().to_vec(),
-                        program: accounts.program.to_bytes().to_vec(),
-                    }),
-                    amount_out: evt.amount_out,
-                    maximum_amount_in: evt.maximum_amount_in,
-                    share_fee_rate: evt.share_fee_rate,
-                })),
+                instruction: Some(pb::instruction::Instruction::SellExactOut(
+                    pb::SellExactOutInstruction {
+                        accounts: Some(pb::TradeAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            global_config: accounts.global_config.to_bytes().to_vec(),
+                            platform_config: accounts.platform_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            user_base_token: accounts.user_base_token.to_bytes().to_vec(),
+                            user_quote_token: accounts.user_quote_token.to_bytes().to_vec(),
+                            base_vault: accounts.base_vault.to_bytes().to_vec(),
+                            quote_vault: accounts.quote_vault.to_bytes().to_vec(),
+                            base_token_mint: accounts.base_token_mint.to_bytes().to_vec(),
+                            quote_token_mint: accounts.quote_token_mint.to_bytes().to_vec(),
+                            base_token_program: accounts.base_token_program.to_bytes().to_vec(),
+                            quote_token_program: accounts.quote_token_program.to_bytes().to_vec(),
+                            event_authority: accounts.event_authority.to_bytes().to_vec(),
+                            program: accounts.program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_out: evt.amount_out,
+                        maximum_amount_in: evt.maximum_amount_in,
+                        share_fee_rate: evt.share_fee_rate,
+                    }
+                    .into(),
+                )),
             })
         }
         _ => None,

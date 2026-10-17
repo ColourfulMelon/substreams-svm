@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use proto::pb::solana::spl::token::v1 as pb;
-use substreams::{pb::substreams::Clock};
+use substreams::pb::substreams::Clock;
 use substreams_solana::base58;
 
 use crate::set_clock;
@@ -24,7 +24,7 @@ pub fn process_events(tables: &mut substreams_database_change::tables::Tables, c
         }
     }
     let mut skipped = 0;
-    for (post_balance,_,_,_) in post_token_balances_per_block.values() {
+    for (post_balance, _, _, _) in post_token_balances_per_block.values() {
         // if balance not changed in the block - no need to include it - skip it
         if let Some((pre_balance, _, _, _)) = pre_token_balances_per_block.get(&(post_balance.account.as_slice(), post_balance.mint.as_slice())) {
             if pre_balance.amount == post_balance.amount {
@@ -37,11 +37,7 @@ pub fn process_events(tables: &mut substreams_database_change::tables::Tables, c
     substreams::log::info!("Skipped {} out of {} spl token balances", skipped, post_token_balances_per_block.len());
 }
 
-fn handle_token_balances(
-    tables: &mut substreams_database_change::tables::Tables,
-    clock: &Clock,
-    data: &pb::TokenBalance,
-) {
+fn handle_token_balances(tables: &mut substreams_database_change::tables::Tables, clock: &Clock, data: &pb::TokenBalance) {
     let mint = base58::encode(&data.mint);
     let account = base58::encode(&data.account);
     let key = [("account", account.clone()), ("mint", mint.clone())];

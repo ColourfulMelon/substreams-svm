@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
 
@@ -25,7 +25,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -41,75 +41,85 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
     }
 
     let instruction = match m3::instructions::unpack(ix.data()) {
-        Ok(m3::instructions::MagicEdenInstruction::SolDepositBuy(event)) => {
-            pb::instruction::Instruction::SolDepositBuy(pb::SolDepositBuyInstruction {
+        Ok(m3::instructions::MagicEdenInstruction::SolDepositBuy(event)) => pb::instruction::Instruction::SolDepositBuy(
+            pb::SolDepositBuyInstruction {
                 payment_amount: event.args.payment_amount,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolWithdrawBuy(event)) => {
-            pb::instruction::Instruction::SolWithdrawBuy(pb::SolWithdrawBuyInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolWithdrawBuy(event)) => pb::instruction::Instruction::SolWithdrawBuy(
+            pb::SolWithdrawBuyInstruction {
                 payment_amount: event.args.payment_amount,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolFulfillBuy(event)) => {
-            pb::instruction::Instruction::SolFulfillBuy(pb::SolFulfillBuyInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolFulfillBuy(event)) => pb::instruction::Instruction::SolFulfillBuy(
+            pb::SolFulfillBuyInstruction {
                 asset_amount: event.args.asset_amount,
                 min_payment_amount: event.args.min_payment_amount,
                 maker_fee_bp: event.args.maker_fee_bp as i32,
                 taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolFulfillSell(event)) => {
-            pb::instruction::Instruction::SolFulfillSell(pb::SolFulfillSellInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolFulfillSell(event)) => pb::instruction::Instruction::SolFulfillSell(
+            pb::SolFulfillSellInstruction {
                 asset_amount: event.args.asset_amount,
                 max_payment_amount: event.args.max_payment_amount,
                 buyside_creator_royalty_bp: event.args.buyside_creator_royalty_bp as u32,
                 maker_fee_bp: event.args.maker_fee_bp as i32,
                 taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::DepositSell(event)) => {
-            pb::instruction::Instruction::DepositSell(pb::DepositSellInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::DepositSell(event)) => pb::instruction::Instruction::DepositSell(
+            pb::DepositSellInstruction {
                 asset_amount: event.args.asset_amount,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::WithdrawSell(event)) => {
-            pb::instruction::Instruction::WithdrawSell(pb::WithdrawSellInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::WithdrawSell(event)) => pb::instruction::Instruction::WithdrawSell(
+            pb::WithdrawSellInstruction {
                 asset_amount: event.args.asset_amount,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolMip1FulfillBuy(event)) => {
-            pb::instruction::Instruction::SolMip1FulfillBuy(pb::SolMip1FulfillBuyInstruction {
-                asset_amount: event.args.asset_amount,
-                min_payment_amount: event.args.min_payment_amount,
-                maker_fee_bp: event.args.maker_fee_bp as i32,
-                taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolMip1FulfillSell(event)) => {
-            pb::instruction::Instruction::SolMip1FulfillSell(pb::SolMip1FulfillSellInstruction {
-                asset_amount: event.args.asset_amount,
-                max_payment_amount: event.args.max_payment_amount,
-                maker_fee_bp: event.args.maker_fee_bp as i32,
-                taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolOcpFulfillBuy(event)) => {
-            pb::instruction::Instruction::SolOcpFulfillBuy(pb::SolOcpFulfillBuyInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolMip1FulfillBuy(event)) => pb::instruction::Instruction::SolMip1FulfillBuy(
+            pb::SolMip1FulfillBuyInstruction {
                 asset_amount: event.args.asset_amount,
                 min_payment_amount: event.args.min_payment_amount,
                 maker_fee_bp: event.args.maker_fee_bp as i32,
                 taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
-        Ok(m3::instructions::MagicEdenInstruction::SolOcpFulfillSell(event)) => {
-            pb::instruction::Instruction::SolOcpFulfillSell(pb::SolOcpFulfillSellInstruction {
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolMip1FulfillSell(event)) => pb::instruction::Instruction::SolMip1FulfillSell(
+            pb::SolMip1FulfillSellInstruction {
                 asset_amount: event.args.asset_amount,
                 max_payment_amount: event.args.max_payment_amount,
                 maker_fee_bp: event.args.maker_fee_bp as i32,
                 taker_fee_bp: event.args.taker_fee_bp as i32,
-            })
-        }
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolOcpFulfillBuy(event)) => pb::instruction::Instruction::SolOcpFulfillBuy(
+            pb::SolOcpFulfillBuyInstruction {
+                asset_amount: event.args.asset_amount,
+                min_payment_amount: event.args.min_payment_amount,
+                maker_fee_bp: event.args.maker_fee_bp as i32,
+                taker_fee_bp: event.args.taker_fee_bp as i32,
+            }
+            .into(),
+        ),
+        Ok(m3::instructions::MagicEdenInstruction::SolOcpFulfillSell(event)) => pb::instruction::Instruction::SolOcpFulfillSell(
+            pb::SolOcpFulfillSellInstruction {
+                asset_amount: event.args.asset_amount,
+                max_payment_amount: event.args.max_payment_amount,
+                maker_fee_bp: event.args.maker_fee_bp as i32,
+                taker_fee_bp: event.args.taker_fee_bp as i32,
+            }
+            .into(),
+        ),
         _ => return None,
     };
 

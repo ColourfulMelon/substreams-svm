@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &stabble::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -48,24 +48,28 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Swap(pb::SwapInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        user: accounts.user.to_bytes().to_vec(),
-                        user_token_in: accounts.user_token_in.to_bytes().to_vec(),
-                        user_token_out: accounts.user_token_out.to_bytes().to_vec(),
-                        vault_token_in: accounts.vault_token_in.to_bytes().to_vec(),
-                        vault_token_out: accounts.vault_token_out.to_bytes().to_vec(),
-                        beneficiary_token_out: accounts.beneficiary_token_out.to_bytes().to_vec(),
-                        pool: accounts.pool.to_bytes().to_vec(),
-                        withdraw_authority: accounts.withdraw_authority.to_bytes().to_vec(),
-                        vault: accounts.vault.to_bytes().to_vec(),
-                        vault_authority: accounts.vault_authority.to_bytes().to_vec(),
-                        vault_program: accounts.vault_program.to_bytes().to_vec(),
-                        token_program: accounts.token_program.to_bytes().to_vec(),
-                    }),
-                    amount_in: event.amount_in,
-                    minimum_amount_out: event.minimum_amount_out,
-                })),
+                instruction: Some(pb::instruction::Instruction::Swap(
+                    pb::SwapInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            user: accounts.user.to_bytes().to_vec(),
+                            user_token_in: accounts.user_token_in.to_bytes().to_vec(),
+                            user_token_out: accounts.user_token_out.to_bytes().to_vec(),
+                            vault_token_in: accounts.vault_token_in.to_bytes().to_vec(),
+                            vault_token_out: accounts.vault_token_out.to_bytes().to_vec(),
+                            beneficiary_token_out: accounts.beneficiary_token_out.to_bytes().to_vec(),
+                            pool: accounts.pool.to_bytes().to_vec(),
+                            withdraw_authority: accounts.withdraw_authority.to_bytes().to_vec(),
+                            vault: accounts.vault.to_bytes().to_vec(),
+                            vault_authority: accounts.vault_authority.to_bytes().to_vec(),
+                            vault_program: accounts.vault_program.to_bytes().to_vec(),
+                            token_program: accounts.token_program.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_in: event.amount_in,
+                        minimum_amount_out: event.minimum_amount_out,
+                    }
+                    .into(),
+                )),
             })
         }
         _ => None,
@@ -104,20 +108,26 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(stabble::events::StabbleEvent::PoolBalanceUpdatedEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::PoolBalanceUpdated(pb::PoolBalanceUpdatedEvent {
-                pubkey: event.pubkey.to_bytes().to_vec(),
-                balances: event.data.balances,
-            })),
+            log: Some(pb::log::Log::PoolBalanceUpdated(
+                pb::PoolBalanceUpdatedEvent {
+                    pubkey: event.pubkey.to_bytes().to_vec(),
+                    balances: event.data.balances,
+                }
+                .into(),
+            )),
         }),
         Ok(stabble::events::StabbleEvent::PoolUpdatedEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::PoolUpdated(pb::PoolUpdatedEvent {
-                pubkey: event.pubkey.to_bytes().to_vec(),
-                is_active: event.data.is_active,
-                swap_fee: event.data.swap_fee,
-                max_supply: event.data.max_supply,
-            })),
+            log: Some(pb::log::Log::PoolUpdated(
+                pb::PoolUpdatedEvent {
+                    pubkey: event.pubkey.to_bytes().to_vec(),
+                    is_active: event.data.is_active,
+                    swap_fee: event.data.swap_fee,
+                    max_supply: event.data.max_supply,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }
