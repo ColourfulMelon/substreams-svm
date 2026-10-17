@@ -7,7 +7,7 @@ output model. The existing `.proto` files remain the wire contracts; Buffa chang
 the Rust implementation, not the protobuf format.
 
 The migration follows the public
-[Substreams release guidance](https://github.com/streamingfast/substreams/releases),
+[Substreams Rust SDK release guidance](https://github.com/streamingfast/substreams-rs/releases),
 [ABI 2.0 migration](https://github.com/pinax-network/substreams-abis), and
 [EVM balances generation configuration](https://github.com/pinax-network/substreams-evm-balances/blob/8275bce35bcba61ff7ecc37167861d7dd710aa46/proto/buf.gen.yaml).
 Check current upstream releases before the next dependency upgrade rather than
