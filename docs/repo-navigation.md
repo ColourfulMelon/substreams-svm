@@ -33,6 +33,29 @@ This guide is a quick map for contributors and coding agents working in this mon
 4. Wire output into `svm-dex/substreams.yaml` imports + `db_out` inputs.
 5. Update ClickHouse sink schemas in `svm-dex/clickhouse/`.
 
+The reusable scripts resolve paths relative to their own repository and refuse
+to replace an existing crate, source file or schema:
+
+- `scripts/gen-dex.sh <name> <description> <program_id> <shape>` creates a crate
+  and manifest scaffold using workspace dependencies. The shape is a planning
+  hint (`swap-only`, `swap-xy`, or `buy-sell-events`), not an implemented decoder.
+  Review the program ID, workspace membership and local
+  `spkg/solana-common-v0.4.0.spkg` dependency before building or running it.
+- `scripts/gen-swap-proto.sh <name> [package]` creates a swap-only schema and
+  runs `make -C proto protogen` with the pinned Buffa plugin. It never handwrites
+  generated Rust. The default package replaces hyphens in the name with
+  underscores; an explicit package must also match the manifest's output type.
+- `scripts/gen-swap-lib.sh <crate> <idl_module> <instruction_enum> <swap_variant>
+  <proto_path>` creates the Buffa-aware transaction wrapper. Implement the
+  protocol-specific `process_instruction` and validate its field meanings before
+  treating the scaffold as a decoder. The enum and variant arguments describe
+  that remaining work; the script does not infer their semantics.
+
+For an existing module, edit its canonical source/schema deliberately and follow
+[protobuf development](protobuf.md); the generators have no overwrite option.
+`scripts/gen-batch2.sh` is retired and exits without writes. Its historical
+one-off schema rewrites and hand-written Prost models must not be reused.
+
 ### Add or edit aggregate database mapping logic
 
 - Domain crates: `svm-balances`, `svm-transfers`, `svm-accounts`, `svm-metadata`, `svm-native`, `svm-spl`, `svm-nfts`, `svm-staking`, `svm-dex`.
@@ -90,4 +113,5 @@ extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes
 
 - Many historical docs still mention old `db-svm-*` folder names; current structure is `svm-*`.
 - Root `README.md` previously under-described current module coverage.
-- `scripts/gen-dex.sh` uses a hard-coded base path (`/data/workspace/substreams-svm`), so it may require adaptation before use in other environments.
+- Generator output is a scaffold, not protocol coverage evidence; review its
+  schema, decoding logic, manifest imports and fixtures before release.

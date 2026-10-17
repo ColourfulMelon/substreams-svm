@@ -77,7 +77,7 @@ jobs:
           assert versions == {"0.8.0"}, versions
           assert not re.search(r"\bprost(?:-types)? v", graph)
           PY
-      - name: Test native token decoding and DEX database output
-        run: cargo test --locked -p common -p native-token -p svm-dex
+      - name: Test native token decoding and account and DEX database output
+        run: cargo test --locked -p common -p native-token -p svm-accounts -p svm-dex
       - name: Build all Substreams WASM modules
         run: cargo build --locked --workspace --release --target wasm32-unknown-unknown

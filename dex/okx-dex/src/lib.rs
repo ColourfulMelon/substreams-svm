@@ -1,5 +1,5 @@
 use common::solana::{get_fee_payer, get_signers};
-use proto::pb::okx::dex::v1 as pb;
+use proto::pb::okx_dex::v1 as pb;
 use substreams::errors::Error;
 use substreams_solana::{
     block_view::InstructionView,
