@@ -8,7 +8,8 @@ pub(crate) struct Evidence {
     pub outcome: InvocationOutcome,
     pub parent: Option<InstructionPosition>,
     /// Log index of this instruction's own `invoke [depth]` line. `None` only
-    /// for runtime/precompile instructions that never produce invocation logs.
+    /// for a top-level signature-verification precompile, which the runtime
+    /// verifies without an invocation log.
     pub invoke_log_index: Option<u32>,
 }
 
@@ -24,8 +25,10 @@ pub(crate) struct Trace {
 
 pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<Trace> {
     let meta = tx.meta.as_option()?;
-    // The runtime stops recording after this marker, so later invocations and
-    // outcomes are unobservable even if the remaining lines happen to balance.
+    // Past the byte limit the runtime drops each line that does not fit and
+    // writes this marker once, yet it still records later lines that fit. Lines
+    // can then be missing anywhere after the marker while the remaining
+    // invocation lines still balance, so no part of the trace is exact.
     if meta.log_messages.iter().any(|log| log == "Log truncated") {
         return None;
     }
@@ -65,8 +68,16 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<Trace> {
                 }
                 cursor += 1;
             }
-            let (_, candidate, candidate_depth) = expected.get(cursor)?;
+            let (position, candidate, candidate_depth) = expected.get(cursor)?;
             if candidate != &program || *candidate_depth != Some(depth) {
+                return None;
+            }
+            // An inner instruction runs inside its own outer instruction. The
+            // depth check alone would accept an inner instruction recorded at
+            // height 1, or one of a skipped precompile's group, inside another
+            // outer instruction's invocation.
+            if position.inner_instruction_index.is_some() && stack.first().map(|&outer| expected[outer].0.instruction_index) != Some(position.instruction_index)
+            {
                 return None;
             }
             parents[cursor] = stack.last().copied();
@@ -165,15 +176,14 @@ fn parse_log(log: &str) -> Result<Option<(Vec<u8>, Event)>, ()> {
 }
 
 fn without_logs(position: InstructionPosition, program: &[u8]) -> bool {
-    // These top-level runtime/precompile instructions do not produce program
-    // invocation logs. Never skip an arbitrary program to force alignment.
+    // Top-level signature-verification precompiles are checked without an
+    // invocation log. Every other executed instruction, ComputeBudget included,
+    // logs `invoke`; a successful transaction executes all of them. Never skip
+    // an arbitrary program to force alignment.
     position.inner_instruction_index.is_none()
         && matches!(
             base58::encode(program).as_str(),
-            "ComputeBudget111111111111111111111111111111"
-                | "Ed25519SigVerify111111111111111111111111111"
-                | "KeccakSecp256k11111111111111111111111111111"
-                | "Secp256r1SigVerify1111111111111111111111111"
+            "Ed25519SigVerify111111111111111111111111111" | "KeccakSecp256k11111111111111111111111111111" | "Secp256r1SigVerify1111111111111111111111111"
         )
 }
 
@@ -296,9 +306,25 @@ mod tests {
         );
     }
 
+    /// Append a top-level instruction of `program` that writes no log line.
+    fn with_silent_instruction(mut tx: pb::ConfirmedTransaction, program: &str) -> pb::ConfirmedTransaction {
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+        message.account_keys.push(base58::decode(program).unwrap());
+        message.instructions.push(pb::CompiledInstruction {
+            program_id_index: message.account_keys.len() as u32 - 1,
+            ..Default::default()
+        });
+        tx
+    }
+
+    const ED25519: &str = "Ed25519SigVerify111111111111111111111111111";
+
     #[test]
     fn truncated_unknown_depth_and_misaligned_traces_never_prove_success() {
-        for mutation in 0..3 {
+        // Control: a signature-verification precompile writes no invocation
+        // log and is the only instruction alignment may skip.
+        assert!(prove(&with_silent_instruction(transaction(), ED25519)).is_some());
+        for mutation in 0..6 {
             let mut tx = transaction();
             match mutation {
                 0 => {
@@ -306,9 +332,33 @@ mod tests {
                 }
                 1 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].stack_height = None,
                 2 => tx.meta.as_option_mut().unwrap().log_messages[1] = format!("Program {} invoke [2]", base58::encode([9; 32])),
+                3 => {
+                    // Inner 0.0 recorded at height 1 and logged after outer 0
+                    // closed: depths align, but it ran outside its outer call.
+                    let meta = tx.meta.as_option_mut().unwrap();
+                    meta.inner_instructions[0].instructions[0].stack_height = Some(1);
+                    meta.inner_instructions[0].instructions[1].stack_height = Some(2);
+                    let (a, b, c) = (base58::encode([1; 32]), base58::encode([2; 32]), base58::encode([3; 32]));
+                    meta.log_messages = vec![
+                        format!("Program {a} invoke [1]"),
+                        format!("Program {a} success"),
+                        format!("Program {b} invoke [1]"),
+                        format!("Program {c} invoke [2]"),
+                        format!("Program {c} success"),
+                        format!("Program {b} success"),
+                    ];
+                }
+                4 => {
+                    // The inner group belongs to the skipped precompile, so its
+                    // calls cannot have run inside outer 0.
+                    tx = with_silent_instruction(tx, ED25519);
+                    tx.meta.as_option_mut().unwrap().inner_instructions[0].index = 1;
+                }
+                // ComputeBudget always logs its invocation when executed.
+                5 => tx = with_silent_instruction(tx, "ComputeBudget111111111111111111111111111111"),
                 _ => unreachable!(),
             }
-            assert!(prove(&tx).is_none());
+            assert!(prove(&tx).is_none(), "mutation {mutation}");
         }
     }
 }

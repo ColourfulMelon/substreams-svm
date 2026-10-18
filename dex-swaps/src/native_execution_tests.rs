@@ -2,12 +2,13 @@
 //! transaction is built from nested calls, so its instruction walk and runtime
 //! invocation logs agree exactly unless a test deliberately breaks them.
 use crate::{map_events, pb, project, InstructionPosition, InvocationOutcome, ProjectedSwap, Provenance, SwapKind};
-use base64::Engine;
+use base64::{engine::general_purpose::STANDARD, Engine};
 use flate2::read::GzDecoder;
+use solana_program::pubkey::Pubkey;
 use std::io::Read;
 use substreams_solana::base58;
 use substreams_solana::pb::sf::solana::r#type::v1 as source;
-use substreams_solana_idls::{jupiter, orca, pumpfun::bonding_curve as pumpfun};
+use substreams_solana_idls::{jupiter, meteora, okx, orca, pumpfun::bonding_curve as pumpfun, raydium};
 
 const PAYER: [u8; 32] = [0xfe; 32];
 const TOKEN_PROGRAM: [u8; 32] = [0x77; 32];
@@ -39,6 +40,10 @@ impl Call {
     }
     fn child(mut self, call: Call) -> Self {
         self.children.push(call);
+        self
+    }
+    fn before(mut self, line: String) -> Self {
+        self.before.push(line);
         self
     }
     fn after(mut self, line: String) -> Self {
@@ -138,9 +143,17 @@ fn at(instruction_index: u32, inner_instruction_index: Option<u32>) -> Instructi
     }
 }
 
+fn pubkey(byte: u8) -> Pubkey {
+    Pubkey::new_from_array(key(byte))
+}
+
+fn program_data(data: Vec<u8>) -> String {
+    format!("Program data: {}", STANDARD.encode(data))
+}
+
 fn traded(pool: u8, a_to_b: bool, input_amount: u64, output_amount: u64) -> String {
     let event = orca::whirlpool::events::Traded {
-        whirlpool: solana_program::pubkey::Pubkey::new_from_array(key(pool)),
+        whirlpool: pubkey(pool),
         a_to_b,
         pre_sqrt_price: 0,
         post_sqrt_price: 0,
@@ -153,7 +166,12 @@ fn traded(pool: u8, a_to_b: bool, input_amount: u64, output_amount: u64) -> Stri
     };
     let mut data = vec![225, 202, 73, 175, 147, 43, 160, 150];
     data.extend_from_slice(&borsh::to_vec(&event).unwrap());
-    format!("Program data: {}", base64::engine::general_purpose::STANDARD.encode(data))
+    program_data(data)
+}
+
+/// A token-program transfer CPI, as every venue makes.
+fn transfer() -> Call {
+    Call::new(TOKEN_PROGRAM, vec![key(0x42), key(0x43)], vec![3])
 }
 
 /// Orca `swap_v2` by `user` on `pool` (mints `0x51`/`0x52`), without its event.
@@ -180,7 +198,7 @@ fn orca_swap(user: u8, pool: u8, a_to_b: bool) -> Call {
     data.extend_from_slice(&1u64.to_le_bytes());
     data.extend_from_slice(&0u128.to_le_bytes());
     data.extend_from_slice(&[1, u8::from(a_to_b), 0]);
-    Call::new(orca::whirlpool::PROGRAM_ID, accounts, data).child(Call::new(TOKEN_PROGRAM, vec![key(0x42), key(0x43)], vec![3]))
+    Call::new(orca::whirlpool::PROGRAM_ID, accounts, data).child(transfer())
 }
 
 fn orca_two_hop(user: u8, pool_one: u8, pool_two: u8) -> Call {
@@ -330,11 +348,16 @@ fn multi_hop_instruction_verifies_each_hop_in_log_order() {
         assert_eq!(row.verified_context, Some(at(0, None)));
     }
     assert_eq!(ordinals(&rows), [Some(0), Some(1)]);
-    // Hop two's event names the wrong direction: it no longer matches its hop.
+    // Hop two's event names the wrong direction: it no longer matches its hop,
+    // and hop one still verifies on its own.
     let block = block_with(vec![orca_two_hop(0x10, 0x50, 0x55)
         .after(traded(0x50, true, 100, 90))
         .after(traded(0x55, true, 90, 80))]);
-    assert_eq!(project_rows(&block).len(), 1);
+    let rows = project_rows(&block);
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].swap.amm_pool, key(0x50));
+    assert_eq!(rows[0].invocation, Some(at(0, None)));
+    assert_eq!(rows[0].verified_context, Some(at(0, None)));
 }
 
 #[test]
@@ -370,8 +393,43 @@ fn a_line_written_by_another_program_is_not_attributed() {
     assert_eq!(rows[0].invocation_outcome, InvocationOutcome::Unknown);
     assert_eq!(rows[0].verified_context, None);
     assert_eq!(rows[0].aggregator_route, None);
-    // The trace itself is exact, so execution order is still proved.
+    // The trace itself is exact, so the evidence line is still ranked.
     assert_eq!(rows[0].execution_ordinal, Some(0));
+}
+
+#[test]
+fn a_leg_written_by_another_program_has_unknown_route_membership() {
+    // Inside a proved Jupiter route, the leg's event line has a foreign writer:
+    // no invocation, so its None route means "unknown", not "unrouted". Only
+    // the summary, whose invocation is proved, joins the route.
+    let mut venue = orca_swap(0x10, 0x50, true);
+    venue.children[0].after.push(traded(0x50, true, 100, 90));
+    let rows = project_rows(&block_with(vec![jupiter_route(venue)]));
+    let orca = by_protocol(&rows, pb::Protocol::OrcaWhirlpool)[0];
+    let summary = by_protocol(&rows, pb::Protocol::JupiterV6)[0];
+    assert_eq!((orca.invocation, orca.aggregator_route), (None, None));
+    assert!(orca.execution_ordinal.is_some());
+    assert_eq!(summary.aggregator_route, Some(at(0, None)));
+}
+
+#[test]
+fn forged_runtime_text_and_sibling_calls_keep_each_line_with_its_writer() {
+    // A program can only write runtime-looking text behind `Program log:`.
+    let whirlpool = base58::encode(orca::whirlpool::PROGRAM_ID);
+    let mut venue = orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
+    venue.children[0].after.push(format!("Program log: Program {whirlpool} invoke [3]"));
+    venue.children[0].after.push(format!("Program log: Program {whirlpool} success"));
+    let rows = project_rows(&block_with(vec![venue]));
+    assert_eq!(rows[0].invocation, Some(at(0, None)));
+    assert_eq!(rows[0].verified_context, Some(at(0, None)));
+    // Two sibling calls to the same program at the same depth.
+    let route = Call::new(jupiter::v6::PROGRAM_ID, vec![key(0x20)], vec![1, 2, 3])
+        .child(orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90)))
+        .child(orca_swap(0x10, 0x50, true).after(traded(0x50, true, 90, 80)));
+    let rows = project_rows(&block_with(vec![route]));
+    assert_eq!(rows[0].invocation, Some(at(0, Some(0))));
+    assert_eq!(rows[1].invocation, Some(at(0, Some(2))));
+    assert!(rows.iter().all(|row| row.verified_context == row.invocation));
 }
 
 #[test]
@@ -409,26 +467,533 @@ fn truncated_ambiguous_or_misaligned_traces_leave_every_row_unattributed() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Log-row verifiers. Each legacy adapter below pairs events with instructions
+// by sequence or FIFO, so a missing, extra or undecodable call shifts the
+// pairing. The proved writer of the event line must then leave the row
+// unverified while `invocation` still names that writer.
+// ---------------------------------------------------------------------------
+
+const MINT_IN: u8 = 0x91;
+const MINT_OUT: u8 = 0x92;
+
+/// Record each token account's mint, as a transaction's pre-balances do.
+/// Accounts absent from the transaction are ignored.
+fn with_mints(mut block: source::Block, accounts: &[(u8, u8)]) -> source::Block {
+    let tx = &mut block.transactions[0];
+    let keys = tx.transaction.as_option().unwrap().message.as_option().unwrap().account_keys.clone();
+    let meta = tx.meta.as_option_mut().unwrap();
+    for &(account, mint) in accounts {
+        if let Some(index) = keys.iter().position(|existing| existing.as_slice() == key(account)) {
+            meta.pre_token_balances.push(source::TokenBalance {
+                account_index: index as u32,
+                mint: base58::encode(key(mint)),
+                ui_token_amount: Some(source::UiTokenAmount::default()).into(),
+                ..Default::default()
+            });
+        }
+    }
+    block
+}
+
+/// The only row pairs `pool` with `input_amount` taken from evidence that
+/// `writer` wrote for another call: attributed to the writer, never verified.
+fn assert_stale(rows: &[ProjectedSwap], writer: InstructionPosition, pool: u8, input_amount: u64) {
+    assert_eq!(rows.len(), 1);
+    let row = &rows[0];
+    assert_eq!((row.swap.amm_pool.as_slice(), row.swap.input_amount), (key(pool).as_slice(), input_amount));
+    assert_eq!(row.invocation, Some(writer));
+    assert_eq!(row.invocation_outcome, InvocationOutcome::Succeeded);
+    assert_eq!(row.verified_context, None);
+    assert_eq!(row.execution_ordinal, Some(0));
+}
+
+/// Every row is verified against the invocation that wrote its evidence.
+fn assert_verified(rows: &[ProjectedSwap], writers: &[InstructionPosition]) {
+    assert_eq!(rows.len(), writers.len());
+    for (row, writer) in rows.iter().zip(writers) {
+        assert_eq!(row.invocation, Some(*writer));
+        assert_eq!(row.verified_context, Some(*writer));
+    }
+}
+
+/// Raydium AMM v4 `swap_base_in_v2` by `owner` on `pool`, whose coin and pc
+/// vaults are `pool + 1` and `pool + 2`. Add its `ray_log` with `before`: on
+/// chain it precedes the swap's token transfers.
+fn amm_v4_swap(pool: u8, owner: u8) -> Call {
+    let accounts = vec![
+        TOKEN_PROGRAM,
+        key(pool),
+        key(0x80),
+        key(pool + 1),
+        key(pool + 2),
+        key(0x83),
+        key(0x84),
+        key(owner),
+    ];
+    let mut data = vec![16];
+    data.extend_from_slice(&100u64.to_le_bytes());
+    data.extend_from_slice(&1u64.to_le_bytes());
+    Call::new(raydium::amm::v4::PROGRAM_ID, accounts, data).child(transfer())
+}
+
+/// `ray_log` of a coin-to-pc `SwapBaseIn`.
+fn ray_log(amount_in: u64, amount_out: u64) -> String {
+    let mut data = vec![3];
+    for value in [amount_in, 1, 2, 0, 0, 0, amount_out] {
+        data.extend_from_slice(&value.to_le_bytes());
+    }
+    format!("Program log: ray_log: {}", STANDARD.encode(data))
+}
+
+const VAULT_MINTS: [(u8, u8); 4] = [(0x71, MINT_IN), (0x72, MINT_OUT), (0x75, MINT_IN), (0x76, MINT_OUT)];
+
+#[test]
+fn raydium_amm_v4_verifies_only_the_swap_that_wrote_its_log() {
+    let project = |calls| project_rows(&with_mints(block_with(calls), &VAULT_MINTS));
+    let rows = project(vec![
+        amm_v4_swap(0x70, 0x10).before(ray_log(100, 90)),
+        amm_v4_swap(0x74, 0x11).before(ray_log(200, 180)),
+    ]);
+    assert_verified(&rows, &[at(0, None), at(1, None)]);
+    assert_eq!(rows[1].swap.amm_pool, key(0x74));
+
+    // The first call does not decode (seven accounts) but still writes its
+    // log, which the sequence pairs with the second call's pool.
+    let mut undecodable = amm_v4_swap(0x70, 0x10).before(ray_log(100, 90));
+    undecodable.accounts.truncate(7);
+    let rows = project(vec![undecodable, amm_v4_swap(0x74, 0x11).before(ray_log(200, 180))]);
+    assert_stale(&rows, at(0, None), 0x74, 100);
+
+    // An extra call writes no log: the next log pairs with its pool.
+    let rows = project(vec![amm_v4_swap(0x70, 0x10), amm_v4_swap(0x74, 0x11).before(ray_log(200, 180))]);
+    assert_stale(&rows, at(1, None), 0x70, 200);
+}
+
+/// Raydium CLMM `swap_v2` by `payer` on `pool` (vaults `pool + 1`/`pool + 2`).
+fn clmm_swap(payer: u8, pool: u8) -> Call {
+    let accounts = vec![
+        key(payer),
+        key(0xa0),
+        key(pool),
+        key(0xa1),
+        key(0xa2),
+        key(pool + 1),
+        key(pool + 2),
+        key(0xa3),
+        TOKEN_PROGRAM,
+        key(0xa4),
+        key(0xa5),
+        key(MINT_IN),
+        key(MINT_OUT),
+    ];
+    let mut data = raydium::clmm::v3::instructions::SWAP_V2.to_vec();
+    data.extend_from_slice(&100u64.to_le_bytes());
+    data.extend_from_slice(&1u64.to_le_bytes());
+    data.extend_from_slice(&0u128.to_le_bytes());
+    data.push(1);
+    Call::new(raydium::clmm::v3::PROGRAM_ID, accounts, data).child(transfer())
+}
+
+/// Raydium CLMM `swap_router_base_in` by `payer`. Its hop events name their
+/// own pools and vaults; the vaults `0xb3..=0xb6` are its remaining accounts.
+fn clmm_router(payer: u8) -> Call {
+    let mut accounts = vec![key(payer), key(0xb0), key(MINT_IN), TOKEN_PROGRAM, key(0xb1), key(0xb2)];
+    accounts.extend((0xb3..=0xb6).map(key));
+    let mut data = raydium::clmm::v3::instructions::SWAP_ROUTER_BASE_IN.to_vec();
+    data.extend_from_slice(&100u64.to_le_bytes());
+    data.extend_from_slice(&1u64.to_le_bytes());
+    Call::new(raydium::clmm::v3::PROGRAM_ID, accounts, data).child(transfer())
+}
+
+/// CLMM `SwapEvent` on `pool`, token 0 (vault `vault_0`) in, token 1 out.
+fn clmm_event(pool: u8, vault_0: u8, vault_1: u8, amount_in: u64, amount_out: u64) -> String {
+    use raydium::clmm::v3::events::{SwapEvent, SWAP_EVENT};
+    let event = SwapEvent {
+        pool_state: pubkey(pool),
+        sender: pubkey(0x01),
+        token_account_0: pubkey(vault_0),
+        token_account_1: pubkey(vault_1),
+        amount_0: amount_in,
+        transfer_fee_0: 0,
+        amount_1: amount_out,
+        transfer_fee_1: 0,
+        zero_for_one: true,
+        sqrt_price_x64: 0,
+        liquidity: 0,
+        tick: 0,
+    };
+    let mut data = SWAP_EVENT.to_vec();
+    data.extend_from_slice(&borsh::to_vec(&event).unwrap());
+    program_data(data)
+}
+
+#[test]
+fn raydium_clmm_verifies_swaps_and_router_hops_only_against_their_writer() {
+    let mints = [VAULT_MINTS.as_slice(), &[(0xb3, MINT_IN), (0xb4, 0x93), (0xb5, 0x93), (0xb6, MINT_OUT)]].concat();
+    let project = |calls| project_rows(&with_mints(block_with(calls), &mints));
+    let rows = project(vec![
+        clmm_swap(0x10, 0x70).after(clmm_event(0x70, 0x71, 0x72, 100, 90)),
+        clmm_router(0x11)
+            .after(clmm_event(0xc0, 0xb3, 0xb4, 100, 80))
+            .after(clmm_event(0xc1, 0xb5, 0xb6, 80, 70)),
+    ]);
+    assert_verified(&rows, &[at(0, None), at(1, None), at(1, None)]);
+    // Router hops take their pools from their own events.
+    assert_eq!(
+        (rows[1].swap.amm_pool.clone(), rows[2].swap.amm_pool.clone()),
+        (key(0xc0).to_vec(), key(0xc1).to_vec())
+    );
+
+    // The first swap's event does not decode, so the second swap's event
+    // pairs with the first swap's pool.
+    let rows = project(vec![
+        clmm_swap(0x10, 0x70).after("Program data: AAAA".to_string()),
+        clmm_swap(0x11, 0x74).after(clmm_event(0x74, 0x75, 0x76, 200, 180)),
+    ]);
+    assert_stale(&rows, at(1, None), 0x70, 200);
+
+    // A router that writes no event keeps its placeholder, so the next
+    // router's event takes the first router's payer.
+    let rows = project(vec![clmm_router(0x10), clmm_router(0x11).after(clmm_event(0xc0, 0xb3, 0xb4, 100, 80))]);
+    assert_eq!(rows[0].swap.user, key(0x10));
+    assert_stale(&rows, at(1, None), 0xc0, 100);
+
+    // Same payer, but the event's writer is a nested router: the row carries
+    // the top-level router's stack height, not its writer's.
+    let nested = Call::new(OTHER_PROGRAM, vec![key(0x2f)], vec![1]).child(clmm_router(0x10).after(clmm_event(0xc0, 0xb3, 0xb4, 100, 80)));
+    let rows = project(vec![clmm_router(0x10), nested]);
+    assert_eq!((rows[0].swap.user.as_slice(), rows[0].swap.stack_height), (key(0x10).as_slice(), 0));
+    assert_stale(&rows, at(1, Some(0)), 0xc0, 100);
+}
+
+/// Raydium CPMM `swap_base_input` by `payer` on `pool`.
+fn cpmm_swap(payer: u8, pool: u8) -> Call {
+    let accounts = vec![
+        key(payer),
+        key(0xc8),
+        key(0xc9),
+        key(pool),
+        key(0xca),
+        key(0xcb),
+        key(pool + 1),
+        key(pool + 2),
+        TOKEN_PROGRAM,
+        TOKEN_PROGRAM,
+        key(MINT_IN),
+        key(MINT_OUT),
+        key(0xcc),
+    ];
+    let mut data = raydium::cpmm::instructions::SWAP_BASE_INPUT.to_vec();
+    data.extend_from_slice(&100u64.to_le_bytes());
+    data.extend_from_slice(&1u64.to_le_bytes());
+    Call::new(raydium::cpmm::PROGRAM_ID, accounts, data).child(transfer())
+}
+
+/// CPMM `SwapEvent` (v1 layout, no mints) on `pool`.
+fn cpmm_event(pool: u8, input_amount: u64, output_amount: u64) -> String {
+    use raydium::cpmm::events::{SwapEventV1, SWAP_EVENT};
+    let event = SwapEventV1 {
+        pool_id: pubkey(pool),
+        input_vault_before: 0,
+        output_vault_before: 0,
+        input_amount,
+        output_amount,
+        input_transfer_fee: 0,
+        output_transfer_fee: 0,
+        base_input: true,
+    };
+    let mut data = SWAP_EVENT.to_vec();
+    data.extend_from_slice(&borsh::to_vec(&event).unwrap());
+    program_data(data)
+}
+
+#[test]
+fn raydium_cpmm_verifies_only_the_swap_that_wrote_its_event() {
+    let rows = project_rows(&block_with(vec![
+        cpmm_swap(0x10, 0x70).after(cpmm_event(0x70, 100, 90)),
+        cpmm_swap(0x11, 0x74).after(cpmm_event(0x74, 200, 180)),
+    ]));
+    assert_verified(&rows, &[at(0, None), at(1, None)]);
+    let rows = project_rows(&block_with(vec![
+        cpmm_swap(0x10, 0x70).after("Program data: AAAA".to_string()),
+        cpmm_swap(0x11, 0x74).after(cpmm_event(0x74, 200, 180)),
+    ]));
+    assert_stale(&rows, at(1, None), 0x70, 200);
+}
+
+/// Meteora AMM `swap` by `user` on `pool`, from token account `0xd1` to `0xd2`.
+fn meteora_amm_swap(user: u8, pool: u8) -> Call {
+    let mut accounts = vec![key(pool), key(0xd1), key(0xd2)];
+    accounts.extend((0xd3..0xdc).map(key));
+    accounts.extend([key(user), key(0xdc), TOKEN_PROGRAM]);
+    assert_eq!(accounts.len(), 15);
+    let mut data = meteora::amm::instructions::SWAP.to_vec();
+    data.extend_from_slice(&100u64.to_le_bytes());
+    data.extend_from_slice(&1u64.to_le_bytes());
+    Call::new(meteora::amm::PROGRAM_ID, accounts, data).child(transfer())
+}
+
+/// Meteora AMM `Swap` event.
+fn meteora_amm_event(in_amount: u64, out_amount: u64) -> String {
+    let mut data = vec![81, 108, 227, 190, 205, 208, 10, 196];
+    for value in [in_amount, out_amount, 0, 0, 0] {
+        data.extend_from_slice(&value.to_le_bytes());
+    }
+    program_data(data)
+}
+
+#[test]
+fn meteora_amm_verifies_only_the_swap_that_wrote_its_event() {
+    let mints = [(0xd1, MINT_IN), (0xd2, MINT_OUT)];
+    let project = |calls| project_rows(&with_mints(block_with(calls), &mints));
+    let rows = project(vec![
+        meteora_amm_swap(0x10, 0x70).after(meteora_amm_event(100, 90)),
+        meteora_amm_swap(0x11, 0x74).after(meteora_amm_event(200, 180)),
+    ]);
+    assert_verified(&rows, &[at(0, None), at(1, None)]);
+    let rows = project(vec![
+        meteora_amm_swap(0x10, 0x70).after("Program data: AAAA".to_string()),
+        meteora_amm_swap(0x11, 0x74).after(meteora_amm_event(200, 180)),
+    ]);
+    assert_stale(&rows, at(1, None), 0x70, 200);
+}
+
+// ---------------------------------------------------------------------------
+// Aggregator summaries: route membership and order relative to their legs.
+// ---------------------------------------------------------------------------
+
+/// OKX `SwapV3` by payer `base` (source/destination mints `base + 3`/`base + 4`)
+/// over `hops` single-dex Whirlpool hops.
+fn okx_swap(base: u8, amount_in: u64, hops: usize) -> Call {
+    let mut data = okx::v2::instructions::SWAP_V3.to_vec();
+    for value in [amount_in, amount_in, amount_in] {
+        data.extend_from_slice(&value.to_le_bytes());
+    }
+    data.extend_from_slice(&1u32.to_le_bytes());
+    data.extend_from_slice(&amount_in.to_le_bytes());
+    data.extend_from_slice(&1u32.to_le_bytes());
+    data.extend_from_slice(&(hops as u32).to_le_bytes());
+    for _ in 0..hops {
+        // One dex (Whirlpool, tag 2) at weight 100.
+        data.extend_from_slice(&1u32.to_le_bytes());
+        data.push(2);
+        data.extend_from_slice(&1u32.to_le_bytes());
+        data.push(100);
+    }
+    data.extend_from_slice(&0u32.to_le_bytes());
+    data.extend_from_slice(&0u16.to_le_bytes());
+    data.extend_from_slice(&0u64.to_le_bytes());
+    Call::new(okx::v2::PROGRAM_ID, (0..8).map(|offset| key(base + offset)).collect(), data)
+}
+
+fn okx_event(amount_in: u64, amount_out: u64) -> String {
+    format!("Program log: SwapEvent {{ dex: Whirlpool, amount_in: {amount_in}, amount_out: {amount_out} }}")
+}
+
+/// The two-line route preamble OKX writes before a hop through `pool`.
+fn okx_preamble(call: Call, amount_in: u64, pool: u8) -> Call {
+    call.before(format!("Program log: Dex::Whirlpool amount_in: {amount_in}, offset: 0"))
+        .before(format!("Program log: {}", base58::encode(key(pool))))
+}
+
+/// Jupiter v4 swap event, as its route writes after a leg.
+fn jupiter_v4_event(input_amount: u64, output_amount: u64) -> String {
+    let event = jupiter::v4::events::SwapEvent {
+        amm: Pubkey::new_from_array(orca::whirlpool::PROGRAM_ID),
+        input_mint: pubkey(0x51),
+        input_amount,
+        output_mint: pubkey(0x52),
+        output_amount,
+    };
+    let mut data = vec![81, 108, 227, 190, 205, 208, 10, 196];
+    data.extend_from_slice(&borsh::to_vec(&event).unwrap());
+    program_data(data)
+}
+
+/// The summary's invocation is the aggregator invocation, it shares that
+/// route with the venue leg it describes, and it is ordered after the leg.
+fn assert_summary_follows_its_leg(rows: &[ProjectedSwap], protocol: pb::Protocol) -> &ProjectedSwap {
+    let leg = by_protocol(rows, pb::Protocol::OrcaWhirlpool)[0];
+    let summary = by_protocol(rows, protocol)[0];
+    assert_eq!(summary.kind, SwapKind::AggregatorSummary);
+    assert!(matches!(summary.provenance, Provenance::Log { .. }));
+    assert_eq!(summary.invocation, Some(at(0, None)));
+    assert_eq!(summary.invocation_outcome, InvocationOutcome::Succeeded);
+    assert_eq!(summary.aggregator_route, Some(at(0, None)));
+    assert_eq!(leg.invocation, Some(at(0, Some(0))));
+    assert_eq!(leg.verified_context, Some(at(0, Some(0))));
+    assert_eq!(leg.aggregator_route, summary.aggregator_route);
+    assert_eq!((leg.execution_ordinal, summary.execution_ordinal), (Some(0), Some(1)));
+    summary
+}
+
+#[test]
+fn jupiter_v4_summary_shares_its_route_with_its_leg() {
+    let leg = orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
+    let route = Call::new(jupiter::v4::PROGRAM_ID, vec![key(0x22)], vec![9, 9, 9])
+        .child(leg)
+        .after(jupiter_v4_event(100, 90));
+    let rows = project_rows(&block_with(vec![route]));
+    assert_eq!(rows.len(), 2);
+    // Jupiter v4 summaries have no context verifier.
+    assert_eq!(assert_summary_follows_its_leg(&rows, pb::Protocol::JupiterV4).verified_context, None);
+}
+
+#[test]
+fn okx_summary_shares_its_route_with_its_leg_and_verifies_against_its_own_lines() {
+    let leg = orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
+    let route = okx_preamble(okx_swap(0x80, 100, 1), 100, 0x50).child(leg).after(okx_event(100, 90));
+    let rows = project_rows(&block_with(vec![route]));
+    assert_eq!(rows.len(), 2);
+    let summary = assert_summary_follows_its_leg(&rows, pb::Protocol::OkxDex);
+    assert_eq!(summary.verified_context, Some(at(0, None)));
+    assert_eq!(
+        (summary.swap.user.as_slice(), summary.swap.amm_pool.as_slice()),
+        (key(0x80).as_slice(), key(0x50).as_slice())
+    );
+
+    // A two-hop route completes on its second event.
+    let rows = project_rows(&block_with(vec![okx_swap(0x80, 100, 2).after(okx_event(100, 95)).after(okx_event(95, 90))]));
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].swap.output_amount, 90);
+    assert_verified(&rows, &[at(0, None)]);
+}
+
+#[test]
+fn nested_aggregators_share_the_outermost_route() {
+    // Jupiter v6 -> OKX (not SwapV3, so no OKX summary) -> Orca.
+    let leg = orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
+    let okx = Call::new(okx::v2::PROGRAM_ID, vec![key(0x22)], vec![9, 9, 9]).child(leg);
+    let rows = project_rows(&block_with(vec![jupiter_route(okx)]));
+    let leg = by_protocol(&rows, pb::Protocol::OrcaWhirlpool)[0];
+    let summary = by_protocol(&rows, pb::Protocol::JupiterV6)[0];
+    assert_eq!(leg.invocation, Some(at(0, Some(1))));
+    assert_eq!(leg.aggregator_route, Some(at(0, None)));
+    assert_eq!(summary.aggregator_route, Some(at(0, None)));
+}
+
+/// The OKX adapter completes the oldest queued `SwapV3` context on any
+/// OKX-shaped `SwapEvent` line. Mispaired summaries keep the writer of their
+/// line as `invocation` and route, and are never verified.
+#[test]
+fn okx_summaries_paired_with_another_instruction_are_never_verified() {
+    let forged = |amount_in, amount_out| Call::new(OTHER_PROGRAM, vec![key(0x2f)], vec![9]).after(okx_event(amount_in, amount_out));
+    let row = |rows: &[ProjectedSwap], user: u8| rows.iter().find(|row| row.swap.user == key(user)).unwrap().clone();
+
+    // A top-level forger completes OKX#1's context, so OKX#1's own event
+    // completes OKX#2's: the row has OKX#2's accounts and OKX#1's output.
+    let rows = project_rows(&block_with(vec![
+        forged(1, 2),
+        okx_swap(0x80, 100, 1).after(okx_event(100, 200)),
+        okx_swap(0x90, 300, 1).after(okx_event(300, 400)),
+    ]));
+    let (forgery, leaked) = (row(&rows, 0x80), row(&rows, 0x90));
+    assert_eq!((forgery.swap.output_amount, forgery.invocation, forgery.verified_context), (2, None, None));
+    assert_eq!((leaked.swap.input_amount, leaked.swap.output_amount), (300, 200));
+    assert_eq!((leaked.invocation, leaked.aggregator_route), (Some(at(1, None)), Some(at(1, None))));
+    assert_eq!(leaked.invocation_outcome, InvocationOutcome::Succeeded);
+    assert_eq!(leaked.verified_context, None);
+    assert!(rows.iter().all(|row| row.aggregator_route != Some(at(2, None))));
+
+    // The forged line comes from a child of OKX#0 (a venue or transfer hook).
+    let rows = project_rows(&block_with(vec![
+        okx_swap(0x80, 100, 1).child(forged(1, 2)).after(okx_event(100, 200)),
+        okx_swap(0x90, 300, 1).child(transfer()).after(okx_event(300, 400)),
+    ]));
+    let leaked = row(&rows, 0x90);
+    assert_eq!((leaked.invocation, leaked.verified_context), (Some(at(0, None)), None));
+
+    // Within one two-hop route, a child's forged event counts as hop one, so
+    // OKX's own first event completes the summary with an interim output.
+    let rows = project_rows(&block_with(vec![okx_swap(0x80, 100, 2)
+        .child(forged(1, 2))
+        .after(okx_event(100, 95))
+        .after(okx_event(95, 90))]));
+    assert_eq!(rows.len(), 1);
+    assert_eq!(
+        (rows[0].swap.output_amount, rows[0].invocation, rows[0].verified_context),
+        (95, Some(at(0, None)), None)
+    );
+
+    // No forgery: OKX#0 writes one more event than its route has hops.
+    let rows = project_rows(&block_with(vec![
+        okx_swap(0x80, 100, 1).after(okx_event(100, 150)).after(okx_event(150, 200)),
+        okx_swap(0x90, 300, 1).after(okx_event(300, 400)),
+    ]));
+    assert_verified(&[row(&rows, 0x80)], &[at(0, None)]);
+    let leaked = row(&rows, 0x90);
+    assert_eq!(
+        (leaked.swap.output_amount, leaked.invocation, leaked.verified_context),
+        (200, Some(at(0, None)), None)
+    );
+
+    // An OKX instruction that is not SwapV3 has no context but writes an event.
+    let other = Call::new(
+        okx::v2::PROGRAM_ID,
+        (0..8).map(|offset| key(0xa0 + offset)).collect(),
+        vec![1, 2, 3, 4, 5, 6, 7, 8, 0],
+    )
+    .after(okx_event(50, 60));
+    let rows = project_rows(&block_with(vec![other, okx_swap(0x90, 300, 1).after(okx_event(300, 400))]));
+    assert_eq!(rows.len(), 1);
+    assert_eq!(
+        (rows[0].swap.output_amount, rows[0].invocation, rows[0].verified_context),
+        (60, Some(at(0, None)), None)
+    );
+    assert_eq!(rows[0].aggregator_route, Some(at(0, None)));
+}
+
+#[test]
+#[cfg_attr(debug_assertions, should_panic(expected = "distinct"))]
+fn colliding_order_keys_withhold_every_ordinal() {
+    assert_eq!(crate::native::execution_ordinals(&[(4, 0), (1, 0), (2, 1)]), Some(vec![2, 0, 1]));
+    // Unreachable from the current adapters; release builds withhold.
+    assert_eq!(crate::native::execution_ordinals(&[(4, 0), (1, 0), (4, 0)]), None);
+}
+
 /// Invariants and per-protocol attribution counts on the pinned mainnet blocks.
 #[test]
 fn real_blocks_attribute_log_rows_without_changing_legacy_output() {
+    use sha2::Digest;
     use std::collections::BTreeMap;
     let manifest = env!("CARGO_MANIFEST_DIR");
+    // Encoded `map_events` output SHA-256 captured from unchanged main
+    // (3760f70), which predates log-row attribution.
     let fixtures = [
-        format!("{manifest}/fixtures/solana-mainnet-350000026.pb.gz"),
-        format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-349019252.pb.gz"),
-        format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-350000009.pb.gz"),
-        format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-350000010.pb.gz"),
+        (
+            format!("{manifest}/fixtures/solana-mainnet-350000026.pb.gz"),
+            "c1e611c718878724d851e446c0a13bec1b28e682ebf99e2ab7b4a2d221b78218",
+        ),
+        (
+            format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-349019252.pb.gz"),
+            "812b832df23541624027634e8fc815be656087a98501b0aebd7873805f00e5b2",
+        ),
+        (
+            format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-350000009.pb.gz"),
+            "2787054499c4c0b78825a46dc8750d503705c19129cb465b6a00ae2fa8f09e26",
+        ),
+        (
+            format!("{manifest}/../spl/transfers/tests/fixtures/solana-mainnet-350000010.pb.gz"),
+            "e1a0255c46f4cf9bdfee21e24afac8e392582ecf02eaa166b31c169342da40a0",
+        ),
     ];
-    // protocol -> [rows, log rows, attributed log rows, verified rows, ordered rows, routed rows]
-    let mut counts: BTreeMap<String, [usize; 6]> = BTreeMap::new();
+    // protocol -> [rows, rows with an invocation, log rows, log rows with an
+    // invocation, verified rows, ordered rows, routed rows]
+    let mut counts: BTreeMap<String, [usize; 7]> = BTreeMap::new();
     let mut unordered_transactions = 0;
-    for path in &fixtures {
+    for (path, legacy_sha256) in &fixtures {
         let mut bytes = Vec::new();
         GzDecoder::new(std::fs::File::open(path).unwrap()).read_to_end(&mut bytes).unwrap();
         let block = <source::Block as buffa::Message>::decode_from_slice(bytes.as_slice()).unwrap();
         let projection = project(&block).unwrap();
-        assert_eq!(projection.clone().into_legacy(), map_events(block.clone()).unwrap());
+        let legacy = map_events(block.clone()).unwrap();
+        assert_eq!(
+            format!("{:x}", sha2::Sha256::digest(buffa::Message::encode_to_vec(&legacy))),
+            *legacy_sha256,
+            "{path}"
+        );
+        assert_eq!(projection.clone().into_legacy(), legacy);
         for transaction in &projection.transactions {
             let original = &block.transactions[transaction.transaction_index as usize];
             let instructions: BTreeMap<_, _> = crate::native::instruction_positions(original)
@@ -458,10 +1023,11 @@ fn real_blocks_attribute_log_rows_without_changing_legacy_output() {
                 let protocol = format!("{:?}", row.swap.protocol.as_known().unwrap());
                 let entry = counts.entry(protocol).or_default();
                 entry[0] += 1;
-                entry[4] += usize::from(row.execution_ordinal.is_some());
-                entry[5] += usize::from(row.aggregator_route.is_some());
+                entry[1] += usize::from(row.invocation.is_some());
+                entry[5] += usize::from(row.execution_ordinal.is_some());
+                entry[6] += usize::from(row.aggregator_route.is_some());
                 if row.verified_context.is_some() {
-                    entry[3] += 1;
+                    entry[4] += 1;
                     assert_eq!(row.invocation_outcome, InvocationOutcome::Succeeded);
                 }
                 if row.aggregator_route.is_some() {
@@ -472,9 +1038,9 @@ fn real_blocks_attribute_log_rows_without_changing_legacy_output() {
                         assert!(row.invocation.is_none() || row.invocation == Some(position));
                     }
                     Provenance::Log { .. } => {
-                        entry[1] += 1;
+                        entry[2] += 1;
                         if let Some(invocation) = row.invocation {
-                            entry[2] += 1;
+                            entry[3] += 1;
                             assert_eq!(instructions[&invocation].program_id().0.as_slice(), row.swap.program_id.as_slice());
                         }
                         if let Some(context) = row.verified_context {
@@ -490,11 +1056,16 @@ fn real_blocks_attribute_log_rows_without_changing_legacy_output() {
     }
     let summary: Vec<String> = counts
         .iter()
-        .map(|(protocol, [rows, logs, attributed, verified, ordered, routed])| {
-            format!("{protocol}: rows={rows} log={logs} attributed={attributed} verified={verified} ordered={ordered} routed={routed}")
+        .map(|(protocol, [rows, attributed, logs, log_attributed, verified, ordered, routed])| {
+            format!("{protocol}: rows={rows} attributed={attributed} log={logs} log_attributed={log_attributed} verified={verified} ordered={ordered} routed={routed}")
         })
         .collect();
     eprintln!("{}\nunordered transactions={unordered_transactions}", summary.join("\n"));
-    let golden = include_str!("../fixtures/native-execution-coverage.txt");
+    // The golden's `#` lines document its columns.
+    let golden: String = include_str!("../fixtures/native-execution-coverage.txt")
+        .lines()
+        .filter(|line| !line.starts_with('#'))
+        .map(|line| format!("{line}\n"))
+        .collect();
     assert_eq!(format!("{}\nunordered transactions={unordered_transactions}\n", summary.join("\n")), golden);
 }

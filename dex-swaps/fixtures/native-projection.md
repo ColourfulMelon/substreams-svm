@@ -27,11 +27,19 @@ FIFO row unchanged while leaving its context explicitly unverified.
 `native-execution-coverage.txt` is the per-protocol summary asserted by
 `native_execution_tests::real_blocks_attribute_log_rows_without_changing_legacy_output`
 over this block and the three other pinned blocks under
-`spl/transfers/tests/fixtures/` (349019252, 350000009, 350000010). Columns:
-total rows; log rows; log rows attributed to a proved invocation; rows with a
-verified context (DLMM instruction rows, and Orca/Raydium AMM v4/CLMM/CPMM log
-rows); rows with an execution ordinal; rows inside an aggregator route. Every
-log row on these blocks was attributed and every transaction had a proved
-order. Jupiter v4 and OKX do not appear on these blocks; their summaries are
-covered by synthetic fixtures only. Meteora AMM log rows are attributed but have
-no context verifier. These counts describe four blocks, not live coverage.
+`spl/transfers/tests/fixtures/` (349019252, 350000009, 350000010). The same test
+pins each block's encoded legacy `map_events` output SHA-256, captured from
+unchanged main `3760f70`. The file's `#` header defines its columns: total rows;
+rows with a proved `invocation`; log rows; log rows with a proved `invocation`;
+rows with a verified context; rows with an execution ordinal; rows inside an
+aggregator route. For a log row, `invocation` names the writer of its evidence
+line, not proof of association; only the verified column counts proven
+pool/user/amount association (DLMM instruction rows, and Orca, Raydium AMM
+v4/CLMM/CPMM and Meteora AMM log rows here). Every row on these blocks was
+attributed and every transaction had a proved order.
+
+No Jupiter v4 or OKX summary row is decoded on these blocks; their invocations
+appear only as routes enclosing venue rows. Summary attribution, OKX
+verification and route sharing with the venue leg are covered by synthetic
+fixtures that run through `project()` in `native_execution_tests`. These counts
+describe four blocks, not live coverage.

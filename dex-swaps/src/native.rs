@@ -3,7 +3,7 @@ use crate::{pb, process_transaction_with_provenance};
 use std::collections::BTreeMap;
 use std::fmt;
 use substreams_solana::block_view::InstructionView;
-use substreams_solana::pb::sf::solana::r#type::v1::{Block, ConfirmedTransaction};
+use substreams_solana::pb::sf::solana::r#type::v1::{Block, ConfirmedTransaction, TransactionStatusMeta};
 use substreams_solana_idls::{jupiter, okx};
 
 spl_transfers::block_view_buffa!(fn view_block, substreams_solana::pb::sf::solana::r#type::v1);
@@ -41,37 +41,65 @@ pub enum InvocationOutcome {
     Unknown,
 }
 
+/// One decoded row plus the evidence the native API can prove about it.
+///
+/// `invocation`, `invocation_outcome` and `aggregator_route` describe the
+/// writer of the row's evidence. Only `verified_context` proves that the row's
+/// pool, user, mints and amounts belong to one swap instruction. A row is
+/// identified by its `provenance`: instruction position and event index, or
+/// log index and event index.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ProjectedSwap {
     pub swap: pb::Swap,
     pub kind: SwapKind,
     pub provenance: Provenance,
+    /// Outcome of `invocation` and every enclosing invocation, from the exact
+    /// trace; Unknown when `invocation` is None. For a log row this is the
+    /// outcome of the invocation that wrote the evidence line, and says
+    /// nothing about which instruction the adapter paired with that line.
     pub invocation_outcome: InvocationOutcome,
-    /// The swap instruction whose account context and event fields
-    /// independently rebuild this row. For DLMM instruction rows it is the
-    /// immediate enclosing swap of the event self-CPI; for Orca Whirlpool and
-    /// Raydium AMM v4/CLMM/CPMM log rows it is the proved invocation that wrote
-    /// the event line. Requires proven success of that invocation and every
-    /// ancestor. None means unverified, even when the event invocation succeeded.
+    /// The swap instruction whose accounts, together with this row's own
+    /// evidence, independently rebuild every row field, after proven success
+    /// of that invocation and every ancestor. None means unverified, even
+    /// when the invocation succeeded.
+    /// - Meteora DLMM instruction rows: the swap that made the event self-CPI,
+    ///   which is the parent of `invocation`.
+    /// - Orca Whirlpool, Raydium AMM v4/CLMM/CPMM and Meteora AMM log rows:
+    ///   `invocation` itself, when its swap instruction and the evidence line
+    ///   rebuild the row.
+    /// - OKX summaries: `invocation` itself, when that `SwapV3` instruction and
+    ///   only the lines it wrote itself complete this summary at this line.
+    /// - Every other protocol: always None.
     pub verified_context: Option<InstructionPosition>,
-    /// The invocation that emitted this row's evidence, proved by an exact
-    /// alignment of the instruction walk with the runtime invocation logs:
-    /// the event instruction for instruction rows, or the innermost invocation
-    /// executing when a log row's line was written. A log row is attributed
-    /// only when that invocation's program is the row's `program_id`. None when
-    /// the trace is missing, truncated, ambiguous or inconsistent.
+    /// The invocation that wrote this row's evidence, proved by an exact
+    /// alignment of the instruction walk with the runtime invocation logs.
+    /// Instruction rows: the event instruction. Log rows: the innermost
+    /// invocation executing when the evidence line was written, reported only
+    /// when its program is the row's `program_id`. For a log row this names
+    /// the writer of the line, not the instruction the legacy adapter paired
+    /// with it (see `verified_context`). None when another program wrote the
+    /// line, or the trace is missing, truncated, ambiguous or inconsistent.
     pub invocation: Option<InstructionPosition>,
     /// The outermost Jupiter v4, Jupiter v6 or OKX invocation enclosing (or
-    /// equal to) `invocation`. Aggregator summaries and the venue legs they
-    /// describe share it, so one routed trade can be counted once. None for
-    /// unattributed rows and rows outside every aggregator invocation.
+    /// equal to) `invocation`: the route the evidence writer ran in. Nested
+    /// aggregators share the outermost route, so one route can hold a summary
+    /// from each aggregator invocation inside it. None has two meanings: with
+    /// `invocation` Some, the row is proved to be outside every route; with
+    /// `invocation` None, route membership is unknown, not "unrouted".
+    ///
+    /// To count a routed trade once, group only rows whose `invocation` is
+    /// Some by `(transaction_index, aggregator_route)`, and per route count
+    /// either its aggregator summaries or its venue legs, never both. Summaries
+    /// and legs do not correspond one to one (a route may have hops without a
+    /// decoded leg, or legs without a decoded summary), so choose per route.
     pub aggregator_route: Option<InstructionPosition>,
-    /// Position of this row in the transaction's execution order, counting
-    /// from 0 across instruction and log rows. Rows are ordered by where their
-    /// evidence appears in the proved invocation trace: an instruction row at
-    /// its event instruction's `invoke` line, a log row at its own line, then
-    /// by event index. Present for every row of a transaction or for none:
-    /// None when the transaction's trace cannot be proved.
+    /// Rank of this row's evidence in the transaction's proved invocation
+    /// trace, from 0 across instruction and log rows: an instruction row at its
+    /// event instruction's `invoke` line, a log row at its own line, then by
+    /// event index. It orders evidence lines only. It does not attribute the
+    /// row (an unattributed log row is ranked too), and it is not a stable
+    /// identity: a decoder change that adds or drops a row renumbers the rest.
+    /// Set for every row of a transaction whose trace is proved, else for none.
     pub execution_ordinal: Option<u32>,
 }
 
@@ -86,7 +114,10 @@ pub struct ProjectedTransaction {
     pub compute_units_consumed: u64,
     /// Existing adapter output order (instruction rows, then log rows), kept
     /// identical to the legacy wrapper. Sort by
-    /// [`ProjectedSwap::execution_ordinal`] for proved execution order.
+    /// [`ProjectedSwap::execution_ordinal`] for the order of the evidence in
+    /// the proved trace. Ordinals are set for every row exactly when the
+    /// transaction's trace is proved, so `swaps[0].execution_ordinal.is_some()`
+    /// says whether it was.
     pub swaps: Vec<ProjectedSwap>,
 }
 
@@ -238,7 +269,8 @@ pub fn project_with_limits(block: &Block, limits: Limits) -> Result<Projection, 
 fn annotate(tx: &ConfirmedTransaction, trace: &crate::native_outcome::Trace, rows: &mut [ProjectedSwap]) {
     let Some(meta) = tx.meta.as_option() else { return };
     let instructions: BTreeMap<_, _> = instruction_positions(tx).into_iter().zip(tx.walk_instructions()).collect();
-    let token_mints = crate::token_mints::TokenMintLookup::new(tx, meta);
+    let routes = aggregator_routes(trace, &instructions);
+    let verifier = LogRowVerifier::new(tx, meta, trace, &instructions, rows);
     let mut order_keys = Vec::with_capacity(rows.len());
     for row in rows.iter_mut() {
         let order_key = match row.provenance {
@@ -268,8 +300,7 @@ fn annotate(tx: &ConfirmedTransaction, trace: &crate::native_outcome::Trace, row
                     if view.program_id().0.as_slice() == row.swap.program_id.as_slice() {
                         row.invocation = Some(emitter);
                         row.invocation_outcome = evidence.outcome;
-                        let line = &meta.log_messages[log_index as usize];
-                        if evidence.outcome == InvocationOutcome::Succeeded && verify_log_context(view, line, &token_mints, &row.swap) {
+                        if evidence.outcome == InvocationOutcome::Succeeded && verifier.rebuilds(view, log_index, &row.swap) {
                             row.verified_context = Some(emitter);
                         }
                     }
@@ -277,45 +308,103 @@ fn annotate(tx: &ConfirmedTransaction, trace: &crate::native_outcome::Trace, row
                 Some((log_index, event_index))
             }
         };
-        row.aggregator_route = row.invocation.and_then(|invocation| aggregator_route(invocation, trace, &instructions));
+        row.aggregator_route = row.invocation.and_then(|invocation| routes.get(&invocation).copied());
         order_keys.push(order_key);
     }
-    // Every key is a distinct (trace line, event index) pair: an instruction
-    // row's `invoke` line is never a log row's evidence line.
-    if let Some(keys) = order_keys.into_iter().collect::<Option<Vec<_>>>() {
-        let mut order: Vec<usize> = (0..rows.len()).collect();
-        order.sort_by_key(|&index| (keys[index], index));
-        for (ordinal, index) in order.into_iter().enumerate() {
-            rows[index].execution_ordinal = Some(ordinal as u32);
+    if let Some(ordinals) = order_keys.into_iter().collect::<Option<Vec<_>>>().and_then(|keys| execution_ordinals(&keys)) {
+        for (row, ordinal) in rows.iter_mut().zip(ordinals) {
+            row.execution_ordinal = Some(ordinal);
         }
     }
 }
 
-fn verify_log_context(emitter: &InstructionView, line: &str, token_mints: &crate::token_mints::TokenMintLookup, row: &pb::Swap) -> bool {
-    match row.protocol.as_known() {
-        Some(pb::Protocol::OrcaWhirlpool) => crate::orca_whirlpool::verify_log_row(emitter, line, token_mints, row),
-        Some(pb::Protocol::RaydiumAmmV4) => crate::raydium_amm_v4::verify_log_row(emitter, line, token_mints, row),
-        Some(pb::Protocol::RaydiumClmm) => crate::raydium_clmm::verify_log_row(emitter, line, token_mints, row),
-        Some(pb::Protocol::RaydiumCpmm) => crate::raydium_cpmm::verify_log_row(emitter, line, row),
-        _ => false,
+/// Dense ranks of `keys` (trace line, event index), or None when two rows
+/// share a key. Keys are distinct by construction: an instruction row's key is
+/// its event instruction's own `invoke` line, a log row's key is a program
+/// output line (`Program data:`/`Program log:`), never an `invoke` line, and
+/// rows at one line differ by event index. A tie would make the order the
+/// adapters' rather than the trace's, so it withholds every ordinal.
+pub(crate) fn execution_ordinals(keys: &[(u32, u32)]) -> Option<Vec<u32>> {
+    let mut order: Vec<usize> = (0..keys.len()).collect();
+    order.sort_unstable_by_key(|&index| keys[index]);
+    let distinct = order.windows(2).all(|pair| keys[pair[0]] != keys[pair[1]]);
+    debug_assert!(distinct, "execution order keys must be distinct");
+    if !distinct {
+        return None;
+    }
+    let mut ordinals = vec![0; keys.len()];
+    for (ordinal, index) in order.into_iter().enumerate() {
+        ordinals[index] = ordinal as u32;
+    }
+    Some(ordinals)
+}
+
+/// Rebuilds a log row from the proved invocation that wrote its evidence line.
+struct LogRowVerifier<'a> {
+    logs: &'a [String],
+    token_mints: crate::token_mints::TokenMintLookup,
+    /// OKX summaries rebuilt from each `SwapV3` invocation's own lines, by the
+    /// line completing them. Empty unless the transaction has an OKX log row.
+    okx_summaries: BTreeMap<u32, pb::Swap>,
+}
+
+impl<'a> LogRowVerifier<'a> {
+    fn new(
+        tx: &ConfirmedTransaction,
+        meta: &'a TransactionStatusMeta,
+        trace: &crate::native_outcome::Trace,
+        instructions: &BTreeMap<InstructionPosition, InstructionView>,
+        rows: &[ProjectedSwap],
+    ) -> Self {
+        let okx_rows = rows
+            .iter()
+            .any(|row| matches!(row.provenance, Provenance::Log { .. }) && row.swap.protocol == pb::Protocol::OkxDex);
+        Self {
+            logs: &meta.log_messages,
+            token_mints: crate::token_mints::TokenMintLookup::new(tx, meta),
+            okx_summaries: if okx_rows {
+                crate::okx::summaries_by_writer(instructions, &meta.log_messages, &trace.emitters)
+            } else {
+                BTreeMap::new()
+            },
+        }
+    }
+
+    /// True when `emitter`, the proved writer of line `log_index`, rebuilds
+    /// exactly `row` from its own instruction and evidence.
+    fn rebuilds(&self, emitter: &InstructionView, log_index: u32, row: &pb::Swap) -> bool {
+        let line = &self.logs[log_index as usize];
+        match row.protocol.as_known() {
+            Some(pb::Protocol::MeteoraAmm) => crate::meteora_amm::verify_log_row(emitter, line, &self.token_mints, row),
+            Some(pb::Protocol::OkxDex) => self.okx_summaries.get(&log_index) == Some(row),
+            Some(pb::Protocol::OrcaWhirlpool) => crate::orca_whirlpool::verify_log_row(emitter, line, &self.token_mints, row),
+            Some(pb::Protocol::RaydiumAmmV4) => crate::raydium_amm_v4::verify_log_row(emitter, line, &self.token_mints, row),
+            Some(pb::Protocol::RaydiumClmm) => crate::raydium_clmm::verify_log_row(emitter, line, &self.token_mints, row),
+            Some(pb::Protocol::RaydiumCpmm) => crate::raydium_cpmm::verify_log_row(emitter, line, row),
+            _ => false,
+        }
     }
 }
 
-fn aggregator_route(
-    invocation: InstructionPosition,
+/// The outermost Jupiter v4, Jupiter v6 or OKX invocation enclosing (or equal
+/// to) each traced invocation. One forward pass: positions iterate in walk
+/// order, where every parent precedes its children.
+fn aggregator_routes(
     trace: &crate::native_outcome::Trace,
     instructions: &BTreeMap<InstructionPosition, InstructionView>,
-) -> Option<InstructionPosition> {
-    let mut route = None;
-    let mut current = Some(invocation);
-    while let Some(position) = current {
-        let program = instructions.get(&position)?.program_id().0;
-        if program == &jupiter::v4::PROGRAM_ID || program == &jupiter::v6::PROGRAM_ID || program == &okx::v2::PROGRAM_ID {
-            route = Some(position);
+) -> BTreeMap<InstructionPosition, InstructionPosition> {
+    let mut routes = BTreeMap::new();
+    for (position, evidence) in &trace.evidence {
+        let inherited = evidence.parent.and_then(|parent| routes.get(&parent).copied());
+        let own = instructions.get(position).is_some_and(|instruction| {
+            let program = instruction.program_id().0;
+            program == &jupiter::v4::PROGRAM_ID || program == &jupiter::v6::PROGRAM_ID || program == &okx::v2::PROGRAM_ID
+        });
+        if let Some(route) = inherited.or(own.then_some(*position)) {
+            routes.insert(*position, route);
         }
-        current = trace.evidence.get(&position)?.parent;
     }
-    route
+    routes
 }
 
 pub(crate) fn instruction_positions(tx: &ConfirmedTransaction) -> Vec<InstructionPosition> {

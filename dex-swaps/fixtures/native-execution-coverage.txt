@@ -1,11 +1,23 @@
-PROTOCOL_JUPITER_V6: rows=89 log=0 attributed=0 verified=0 ordered=89 routed=89
-PROTOCOL_METEORA_AMM: rows=3 log=3 attributed=3 verified=0 ordered=3 routed=2
-PROTOCOL_METEORA_DAAM: rows=3 log=0 attributed=0 verified=0 ordered=3 routed=1
-PROTOCOL_METEORA_DLMM: rows=16 log=0 attributed=0 verified=16 ordered=16 routed=12
-PROTOCOL_ORCA_WHIRLPOOL: rows=32 log=32 attributed=32 verified=32 ordered=32 routed=7
-PROTOCOL_PUMPFUN: rows=97 log=0 attributed=0 verified=0 ordered=97 routed=1
-PROTOCOL_PUMPFUN_AMM: rows=436 log=0 attributed=0 verified=0 ordered=436 routed=5
-PROTOCOL_RAYDIUM_AMM_V4: rows=80 log=80 attributed=80 verified=80 ordered=80 routed=18
-PROTOCOL_RAYDIUM_CLMM: rows=49 log=49 attributed=49 verified=49 ordered=49 routed=3
-PROTOCOL_RAYDIUM_CPMM: rows=12 log=12 attributed=12 verified=12 ordered=12 routed=9
+# Per-protocol native evidence on the four pinned mainnet blocks, asserted by
+# native_execution_tests::real_blocks_attribute_log_rows_without_changing_legacy_output
+# (see native-projection.md). Lines starting with `#` are ignored.
+#   rows            decoded rows
+#   attributed      rows with a proved `invocation`: the writer of the row's evidence,
+#                   not proof that its pool, user and amounts belong together
+#   log             rows with `Provenance::Log`
+#   log_attributed  log rows with a proved `invocation`
+#   verified        rows with a `verified_context`, the only proof of that association
+#   ordered         rows with an `execution_ordinal` (their transaction's trace is proved;
+#                   the ordinal orders evidence lines only)
+#   routed          rows with an `aggregator_route`
+PROTOCOL_JUPITER_V6: rows=89 attributed=89 log=0 log_attributed=0 verified=0 ordered=89 routed=89
+PROTOCOL_METEORA_AMM: rows=3 attributed=3 log=3 log_attributed=3 verified=3 ordered=3 routed=2
+PROTOCOL_METEORA_DAAM: rows=3 attributed=3 log=0 log_attributed=0 verified=0 ordered=3 routed=1
+PROTOCOL_METEORA_DLMM: rows=16 attributed=16 log=0 log_attributed=0 verified=16 ordered=16 routed=12
+PROTOCOL_ORCA_WHIRLPOOL: rows=32 attributed=32 log=32 log_attributed=32 verified=32 ordered=32 routed=7
+PROTOCOL_PUMPFUN: rows=97 attributed=97 log=0 log_attributed=0 verified=0 ordered=97 routed=1
+PROTOCOL_PUMPFUN_AMM: rows=436 attributed=436 log=0 log_attributed=0 verified=0 ordered=436 routed=5
+PROTOCOL_RAYDIUM_AMM_V4: rows=80 attributed=80 log=80 log_attributed=80 verified=80 ordered=80 routed=18
+PROTOCOL_RAYDIUM_CLMM: rows=49 attributed=49 log=49 log_attributed=49 verified=49 ordered=49 routed=3
+PROTOCOL_RAYDIUM_CPMM: rows=12 attributed=12 log=12 log_attributed=12 verified=12 ordered=12 routed=9
 unordered transactions=0
