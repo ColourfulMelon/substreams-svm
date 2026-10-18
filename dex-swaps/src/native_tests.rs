@@ -241,7 +241,8 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
     // context. It fails without emitting an event, leaving the legacy FIFO stale.
     previous.accounts.fill(parent.program_id_index as u8);
     let program = substreams_solana::base58::encode(&row.swap.program_id);
-    for stale in [false, true] {
+    // The last variant's outer invocation fails, which revokes the event's success.
+    for (stale, failed) in [(false, false), (true, false), (false, true)] {
         let mut tx = original.clone();
         tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions = vec![source::CompiledInstruction {
             program_id_index: parent.program_id_index,
@@ -259,7 +260,11 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
             format!("Program {program} invoke [3]"),
             format!("Program {program} success"),
             format!("Program {program} success"),
-            format!("Program {program} success"),
+            if failed {
+                format!("Program {program} failed: caught error")
+            } else {
+                format!("Program {program} success")
+            },
         ]);
         let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![source::InnerInstructions { index: 0, instructions }];
@@ -269,8 +274,9 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
         let native = project(&block).unwrap();
         let rows = &native.transactions[0].swaps;
         assert_eq!(rows.len(), 1);
-        assert_eq!(rows[0].invocation_outcome, InvocationOutcome::Succeeded);
-        assert_eq!(rows[0].verified_context.is_some(), !stale);
+        let outcome = if failed { InvocationOutcome::Failed } else { InvocationOutcome::Succeeded };
+        assert_eq!(rows[0].invocation_outcome, outcome);
+        assert_eq!(rows[0].verified_context.is_some(), !stale && !failed);
         if stale {
             assert_eq!(rows[0].swap.amm_pool, row.swap.program_id);
             assert_ne!(rows[0].swap.amm_pool, row.swap.amm_pool);

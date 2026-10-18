@@ -61,7 +61,9 @@ pub struct ProjectedSwap {
     /// The swap instruction whose accounts, together with this row's own
     /// evidence, independently rebuild every row field, after proven success
     /// of that invocation and every ancestor. None means unverified, even
-    /// when the invocation succeeded.
+    /// when the invocation succeeded. It proves which instruction the fields
+    /// came from, not what they mean: a verified row keeps the adapter's own
+    /// field semantics.
     /// - Meteora DLMM instruction rows: the swap that made the event self-CPI,
     ///   which is the parent of `invocation`.
     /// - Orca Whirlpool, Raydium AMM v4/CLMM/CPMM and Meteora AMM log rows:
@@ -69,6 +71,9 @@ pub struct ProjectedSwap {
     ///   rebuild the row.
     /// - OKX summaries: `invocation` itself, when that `SwapV3` instruction and
     ///   only the lines it wrote itself complete this summary at this line.
+    ///   `output_amount` stays the last `SwapEvent`'s `amount_out`: the
+    ///   route's net output only for a linear route (one chain, one dex per
+    ///   hop), one leg's output for a split hop or parallel chains.
     /// - Every other protocol: always None.
     pub verified_context: Option<InstructionPosition>,
     /// The invocation that wrote this row's evidence, proved by an exact
@@ -82,16 +87,23 @@ pub struct ProjectedSwap {
     pub invocation: Option<InstructionPosition>,
     /// The outermost Jupiter v4, Jupiter v6 or OKX invocation enclosing (or
     /// equal to) `invocation`: the route the evidence writer ran in. Nested
-    /// aggregators share the outermost route, so one route can hold a summary
-    /// from each aggregator invocation inside it. None has two meanings: with
-    /// `invocation` Some, the row is proved to be outside every route; with
-    /// `invocation` None, route membership is unknown, not "unrouted".
+    /// aggregators share the outermost route, so one route can hold summaries
+    /// from several aggregators that describe the same hop. None has two
+    /// meanings: with `invocation` Some, the row is proved to be outside every
+    /// route; with `invocation` None, route membership is unknown, not
+    /// "unrouted".
     ///
     /// To count a routed trade once, group only rows whose `invocation` is
     /// Some by `(transaction_index, aggregator_route)`, and per route count
-    /// either its aggregator summaries or its venue legs, never both. Summaries
-    /// and legs do not correspond one to one (a route may have hops without a
-    /// decoded leg, or legs without a decoded summary), so choose per route.
+    /// exactly one of: its venue legs (`PoolExecution` rows), or its route
+    /// summaries. The route summaries are the Jupiter v4 or OKX summaries
+    /// whose `invocation` equals `aggregator_route` (written by the route
+    /// invocation itself) or, when there are none, the route's Jupiter v6
+    /// summaries, so a nested aggregator's summaries are never counted on top
+    /// of the route's own. Summaries and legs do not correspond one to one (a
+    /// route may have hops without a decoded leg, or legs without a decoded
+    /// summary), so choose per route. The crate README details the rule and
+    /// its one limit.
     pub aggregator_route: Option<InstructionPosition>,
     /// Rank of this row's evidence in the transaction's proved invocation
     /// trace, from 0 across instruction and log rows: an instruction row at its

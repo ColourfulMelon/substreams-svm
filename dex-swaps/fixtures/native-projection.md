@@ -40,6 +40,6 @@ attributed and every transaction had a proved order.
 
 No Jupiter v4 or OKX summary row is decoded on these blocks; their invocations
 appear only as routes enclosing venue rows. Summary attribution, OKX
-verification and route sharing with the venue leg are covered by synthetic
-fixtures that run through `project()` in `native_execution_tests`. These counts
-describe four blocks, not live coverage.
+verification, route sharing with the venue leg and the count-once rule on nested
+routes are covered by synthetic fixtures that run through `project()` in
+`native_execution_tests`. These counts describe four blocks, not live coverage.

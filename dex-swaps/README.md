@@ -150,6 +150,9 @@ original index in the unfiltered block. Every row adds:
 - `verified_context`: the swap instruction whose accounts, together with the
   row's own evidence, independently rebuild every row field, after proven
   success of that invocation and all its ancestors. `None` means unverified.
+  It proves which instruction a row's fields came from, not what they mean: a
+  verified row carries exactly the adapter's own fields, with their existing
+  semantics.
   - Meteora DLMM instruction rows: the swap that made the event self-CPI (the
     parent of `invocation`), when its pool, user and token accounts match the
     event's intrinsic pool/user.
@@ -159,21 +162,29 @@ original index in the unfiltered block. Every row adds:
     row exactly (for Orca, the hop matching the event's pool and direction).
   - OKX summaries: `invocation` itself, when that `SwapV3` instruction, run
     through the adapter with only the log lines it wrote itself, completes the
-    same summary on the same line.
+    same summary on the same line. The summary keeps the adapter's meaning:
+    `input_amount` is the instruction's `amount_in` and `output_amount` is the
+    last `SwapEvent`'s `amount_out`. That is the route's net output only for a
+    linear route (one chain, one dex per hop). For a hop split across dexes,
+    or for parallel chains, it is one leg's output, and the row is still
+    verified.
   - Every other protocol (including Jupiter v4/v6 summaries): always `None`.
 
   Legacy log adapters pair events with instructions by sequence or FIFO, so a
   missing, extra or undecodable call, or an event-shaped line written by
   another program, shifts the pairing. The check proves each pairing against
-  the invocation that actually wrote the event. A mispaired row is retained,
-  attributed to the writer of its line, and never verified.
+  the invocation that actually wrote the event. A mispaired row is retained
+  and never verified. Its `invocation` names the writer of its line only when
+  that writer runs the row's program (for example a sequence shift between
+  two calls of one program); a row built from a line that another program
+  wrote has `invocation == None`.
 - `aggregator_route`: the outermost Jupiter v4, Jupiter v6 or OKX invocation
   enclosing (or equal to) the row's `invocation`, i.e. the route the evidence
   writer ran in. Nested aggregators share the outermost route, so one route can
-  hold a summary from each aggregator invocation inside it. Rows are never
-  merged. `None` with a proved `invocation` means outside every route; `None`
-  with `invocation == None` means route membership is **unknown**, not
-  unrouted.
+  hold summaries from several aggregators that describe the same hop (see
+  below). Rows are never merged. `None` with a proved `invocation` means
+  outside every route; `None` with `invocation == None` means route membership
+  is **unknown**, not unrouted.
 - `execution_ordinal`: the rank of the row's evidence in the proved trace, from
   0, across instruction and log rows: an instruction row at its event
   instruction's `invoke` line, a log row at its own line, then by event index.
@@ -183,14 +194,33 @@ original index in the unfiltered block. Every row adds:
   transaction's trace is proved, and for none otherwise. It is not a stable
   identity: a decoder change that adds or drops a row renumbers the rest.
 
-**Counting a routed trade once.** Group only rows whose `invocation` is `Some`
-by `(transaction_index, aggregator_route)`. Within each route, count either its
-`AggregatorSummary` rows or its `PoolExecution` rows, never both, and choose
-per route: on the pinned blocks summaries and decoded legs do not correspond
-one to one (some routes have hops without a decoded leg, others legs without a
-decoded summary). Rows whose `invocation` is `None` have unknown route
-membership and cannot be deduplicated by route. Where a protocol has a
-verifier, require `verified_context` before trusting a row's fields.
+**Counting a routed trade once.** Use only rows whose `invocation` is `Some`,
+grouped by `(transaction_index, aggregator_route)`. For each route, count
+exactly one of these two sets, never both and never a mix:
+
+- its **legs**: the `PoolExecution` rows;
+- its **route summaries**: the Jupiter v4 or OKX summaries whose `invocation`
+  equals `aggregator_route` (lines written by the route invocation itself),
+  or, when the route has none, its Jupiter v6 summaries.
+
+Summaries of an aggregator nested inside the route describe the same hops
+again, so the rule never counts them on top of the route's own. With Jupiter
+v6 -> OKX `SwapV3` -> venue, the OKX summary is proved and even verified, but
+its `invocation` is the nested OKX call, not the route, so the route summaries
+are the Jupiter v6 ones. With OKX `SwapV3` -> Jupiter v6 -> venue they are the
+OKX summary alone. Jupiter v6 summaries are event self-CPI instruction rows, so
+their `invocation` is never the route itself; they are counted only in a route
+with no Jupiter v4 or OKX summary of its own, where they overlap no other
+counted summary. The fields cannot separate a Jupiter v6 route from another
+Jupiter v6 route that it invokes directly, the only way a program can re-enter
+itself; count legs if that matters.
+
+Choose the set per route: on the pinned blocks summaries and decoded legs do
+not correspond one to one (some routes have hops without a decoded leg, others
+legs without a decoded summary). Rows whose `invocation` is `None` have unknown
+route membership and cannot be deduplicated by route. Where a protocol has a
+verifier, require `verified_context` before trusting that a row's fields came
+from one instruction; it does not change what a field means (see OKX above).
 
 **Row identity.** A row is identified by its `provenance`: instruction position
 and event index, or log index and event index. Neither `invocation` (one
@@ -240,6 +270,13 @@ traces. Every log verifier (Orca, Raydium AMM v4, CLMM swaps and router hops,
 CPMM, Meteora AMM, OKX) has a positive fixture and stale-pairing fixtures
 (sequence shifts from undecodable, missing or extra calls; a router payer or
 stack-height mismatch; OKX forged, extra and non-`SwapV3` events) that must stay
-unverified; replacing any verifier with `true` fails a test. Jupiter v4 and OKX
-fixtures check that a summary is attributed to its aggregator invocation,
-shares its route with the venue leg and is ordered after it.
+unverified; replacing any verifier with `true` fails a test. Further stale
+pairings differ from the writer's own row in the pool, the user or the stack
+height alone, so each verifier must compare every field; an OKX summary must
+verify at the line that completes it; and a Meteora DLMM context must not
+verify under a failed outer invocation. Jupiter v4 and OKX fixtures check that a
+summary is attributed to its aggregator invocation, shares its route with the
+venue leg and is ordered after it. A nested Jupiter v6 -> OKX `SwapV3` -> Orca
+route and its reverse check the count-once rule, and split-hop and
+parallel-chain OKX routes pin that a verified summary keeps the last event's
+output.

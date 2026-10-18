@@ -860,6 +860,55 @@ fn okx_summary_shares_its_route_with_its_leg_and_verifies_against_its_own_lines(
     assert_verified(&rows, &[at(0, None)]);
 }
 
+/// OKX `SwapV3` with an explicit route shape: per parallel chain, its amount
+/// and the number of dexes in each hop (every dex Whirlpool, equal weights).
+fn okx_swap_shaped(base: u8, amount_in: u64, chains: &[(u64, &[usize])]) -> Call {
+    let mut data = okx::v2::instructions::SWAP_V3.to_vec();
+    for value in [amount_in, amount_in, amount_in] {
+        data.extend_from_slice(&value.to_le_bytes());
+    }
+    data.extend_from_slice(&(chains.len() as u32).to_le_bytes());
+    for (amount, _) in chains {
+        data.extend_from_slice(&amount.to_le_bytes());
+    }
+    data.extend_from_slice(&(chains.len() as u32).to_le_bytes());
+    for (_, hops) in chains {
+        data.extend_from_slice(&(hops.len() as u32).to_le_bytes());
+        for &dexes in hops.iter() {
+            data.extend_from_slice(&(dexes as u32).to_le_bytes());
+            data.extend(vec![2u8; dexes]);
+            data.extend_from_slice(&(dexes as u32).to_le_bytes());
+            data.extend(vec![(100 / dexes) as u8; dexes]);
+        }
+    }
+    data.extend_from_slice(&0u32.to_le_bytes());
+    data.extend_from_slice(&0u16.to_le_bytes());
+    data.extend_from_slice(&0u64.to_le_bytes());
+    Call::new(okx::v2::PROGRAM_ID, (0..8).map(|offset| key(base + offset)).collect(), data)
+}
+
+/// A verified OKX summary keeps the adapter's legacy field meanings: its
+/// output is the last `SwapEvent`'s `amount_out`, which is the route's net
+/// output only for a linear route. Verification proves the row was rebuilt
+/// from the instruction's own lines, not that the output is the route's.
+#[test]
+fn verified_okx_split_and_parallel_routes_keep_the_last_event_output() {
+    // One hop split 50/50 across two dexes: 100 in, 45 + 44 out.
+    let split = okx_swap_shaped(0x80, 100, &[(100, &[2])]).after(okx_event(50, 45)).after(okx_event(50, 44));
+    // Two parallel chains 60/40: 54 + 36 out.
+    let parallel = okx_swap_shaped(0x80, 100, &[(60, &[1]), (40, &[1])])
+        .after(okx_event(60, 54))
+        .after(okx_event(40, 36));
+    for (route, last_output) in [(split, 44), (parallel, 36)] {
+        let rows = project_rows(&block_with(vec![route]));
+        assert_eq!(rows.len(), 1);
+        assert_eq!((rows[0].swap.input_amount, rows[0].swap.output_amount), (100, last_output));
+        // Not a single-hop route, so no pool either.
+        assert!(rows[0].swap.amm_pool.is_empty());
+        assert_verified(&rows, &[at(0, None)]);
+    }
+}
+
 #[test]
 fn nested_aggregators_share_the_outermost_route() {
     // Jupiter v6 -> OKX (not SwapV3, so no OKX summary) -> Orca.
@@ -871,6 +920,64 @@ fn nested_aggregators_share_the_outermost_route() {
     assert_eq!(leg.invocation, Some(at(0, Some(1))));
     assert_eq!(leg.aggregator_route, Some(at(0, None)));
     assert_eq!(summary.aggregator_route, Some(at(0, None)));
+}
+
+/// The README's count-once rule for one route, from the published fields
+/// only: its route summaries and its venue legs. The route summaries are the
+/// Jupiter v4 or OKX summaries whose `invocation` is the route itself, or,
+/// when there are none, the route's Jupiter v6 summaries.
+fn count_once(rows: &[ProjectedSwap], route: InstructionPosition) -> (Vec<&ProjectedSwap>, Vec<&ProjectedSwap>) {
+    let in_route: Vec<_> = rows
+        .iter()
+        .filter(|row| row.invocation.is_some() && row.aggregator_route == Some(route))
+        .collect();
+    let summaries = |keep: &dyn Fn(&ProjectedSwap) -> bool| -> Vec<&ProjectedSwap> {
+        in_route
+            .iter()
+            .copied()
+            .filter(|row| row.kind == SwapKind::AggregatorSummary && keep(row))
+            .collect()
+    };
+    let mut route_summaries =
+        summaries(&|row| matches!(row.swap.protocol.as_known(), Some(pb::Protocol::JupiterV4 | pb::Protocol::OkxDex)) && row.invocation == Some(route));
+    if route_summaries.is_empty() {
+        route_summaries = summaries(&|row| row.swap.protocol == pb::Protocol::JupiterV6);
+    }
+    let legs = in_route.into_iter().filter(|row| row.kind == SwapKind::PoolExecution).collect();
+    (route_summaries, legs)
+}
+
+#[test]
+fn nested_aggregator_summaries_count_once_per_route() {
+    let leg = || orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
+    let okx_route = |child: Call| okx_preamble(okx_swap(0x80, 100, 1), 100, 0x50).child(child).after(okx_event(100, 90));
+    let protocols = |rows: &[&ProjectedSwap]| rows.iter().map(|row| row.swap.protocol.as_known().unwrap()).collect::<Vec<_>>();
+    let amounts = |rows: &[&ProjectedSwap]| rows.iter().map(|row| (row.swap.input_amount, row.swap.output_amount)).collect::<Vec<_>>();
+
+    // Jupiter v6 -> OKX SwapV3 -> Orca: one 100-unit trade, but two proved
+    // summaries (one per aggregator) in the one route.
+    let rows = project_rows(&block_with(vec![jupiter_route(okx_route(leg()))]));
+    assert_eq!(rows.len(), 3);
+    assert!(rows.iter().all(|row| row.aggregator_route == Some(at(0, None))));
+    let nested = by_protocol(&rows, pb::Protocol::OkxDex)[0];
+    // The nested summary is even verified: against the nested OKX call, which
+    // wrote it, and which is not the route.
+    assert_eq!((nested.invocation, nested.verified_context), (Some(at(0, Some(0))), Some(at(0, Some(0)))));
+    let (summaries, legs) = count_once(&rows, at(0, None));
+    assert_eq!(protocols(&summaries), [pb::Protocol::JupiterV6]);
+    assert_eq!(protocols(&legs), [pb::Protocol::OrcaWhirlpool]);
+    assert_eq!((amounts(&summaries), amounts(&legs)), (vec![(100, 90)], vec![(100, 90)]));
+
+    // OKX SwapV3 -> Jupiter v6 -> Orca: the OKX summary is the route's own,
+    // and the nested Jupiter v6 summary is left out.
+    let rows = project_rows(&block_with(vec![okx_route(jupiter_route(leg()))]));
+    assert_eq!(rows.len(), 3);
+    assert!(rows.iter().all(|row| row.aggregator_route == Some(at(0, None))));
+    let (summaries, legs) = count_once(&rows, at(0, None));
+    assert_eq!(protocols(&summaries), [pb::Protocol::OkxDex]);
+    assert_eq!((summaries[0].invocation, summaries[0].verified_context), (Some(at(0, None)), Some(at(0, None))));
+    assert_eq!(protocols(&legs), [pb::Protocol::OrcaWhirlpool]);
+    assert_eq!((amounts(&summaries), amounts(&legs)), (vec![(100, 90)], vec![(100, 90)]));
 }
 
 /// The OKX adapter completes the oldest queued `SwapV3` context on any
@@ -942,6 +1049,98 @@ fn okx_summaries_paired_with_another_instruction_are_never_verified() {
         (60, Some(at(0, None)), None)
     );
     assert_eq!(rows[0].aggregator_route, Some(at(0, None)));
+}
+
+// ---------------------------------------------------------------------------
+// One-field stale pairings: a verifier must compare every field it rebuilds,
+// so each stale row below differs from its writer's own swap in one field.
+// ---------------------------------------------------------------------------
+
+fn nested(call: Call) -> Call {
+    Call::new(OTHER_PROGRAM, vec![key(0x2f)], vec![1]).child(call)
+}
+
+/// For a sequence-paired venue: the first call writes `junk` (no or an
+/// undecodable event), so the second call's event (200 in) pairs with the
+/// first call. The writer then differs from the row in its pool only, its
+/// user only, or its stack height only.
+fn assert_each_instruction_field_is_compared(
+    project: impl Fn(Vec<Call>) -> Vec<ProjectedSwap>,
+    swap: impl Fn(u8, u8) -> Call,
+    junk: impl Fn(Call) -> Call,
+    event: impl Fn(Call, u8) -> Call,
+) {
+    let rows = project(vec![junk(swap(0x10, 0x70)), event(swap(0x11, 0x70), 0x70)]);
+    assert_stale(&rows, at(1, None), 0x70, 200);
+    let rows = project(vec![junk(swap(0x10, 0x70)), event(swap(0x10, 0x74), 0x74)]);
+    assert_stale(&rows, at(1, None), 0x70, 200);
+    let rows = project(vec![junk(swap(0x10, 0x70)), nested(event(swap(0x10, 0x70), 0x70))]);
+    assert_stale(&rows, at(1, Some(0)), 0x70, 200);
+}
+
+#[test]
+fn log_verifiers_compare_pool_user_and_stack_height_separately() {
+    let undecodable = |call: Call| call.after("Program data: AAAA".to_string());
+    assert_each_instruction_field_is_compared(
+        |calls| project_rows(&with_mints(block_with(calls), &VAULT_MINTS)),
+        |user, pool| amm_v4_swap(pool, user),
+        |call| call,
+        |call, _| call.before(ray_log(200, 180)),
+    );
+    assert_each_instruction_field_is_compared(
+        |calls| project_rows(&with_mints(block_with(calls), &VAULT_MINTS)),
+        clmm_swap,
+        undecodable,
+        |call, pool| call.after(clmm_event(pool, pool + 1, pool + 2, 200, 180)),
+    );
+    assert_each_instruction_field_is_compared(
+        |calls| project_rows(&block_with(calls)),
+        cpmm_swap,
+        undecodable,
+        |call, pool| call.after(cpmm_event(pool, 200, 180)),
+    );
+    assert_each_instruction_field_is_compared(
+        |calls| project_rows(&with_mints(block_with(calls), &[(0xd1, MINT_IN), (0xd2, MINT_OUT)])),
+        meteora_amm_swap,
+        undecodable,
+        |call, _| call.after(meteora_amm_event(200, 180)),
+    );
+    // Orca pairs by pool and direction, so only the user (pinned above) or the
+    // stack height can differ.
+    let rows = project_rows(&block_with(vec![
+        orca_swap(0x10, 0x50, true).after("Program data: AAAAAAAAAAA=".to_string()),
+        nested(orca_swap(0x10, 0x50, true).after(traded(0x50, true, 200, 180))),
+    ]));
+    assert_stale(&rows, at(1, Some(0)), 0x50, 200);
+}
+
+#[test]
+fn okx_verifier_compares_every_field_at_the_completing_line() {
+    let forged = |amount_in, amount_out| Call::new(OTHER_PROGRAM, vec![key(0x2f)], vec![9]).after(okx_event(amount_in, amount_out));
+    // Same payer and mints: the leaked summary differs from its writer's own
+    // summary at that line in the input amount only.
+    let rows = project_rows(&block_with(vec![
+        forged(1, 2),
+        okx_swap(0x80, 100, 1).after(okx_event(100, 200)),
+        okx_swap(0x80, 300, 1).after(okx_event(300, 400)),
+    ]));
+    let leaked = rows.iter().find(|row| row.swap.input_amount == 300).unwrap();
+    assert_eq!(
+        (leaked.swap.output_amount, leaked.invocation, leaked.verified_context),
+        (200, Some(at(1, None)), None)
+    );
+
+    // The leaked summary equals OKX#1's own summary, which completes at
+    // another line: a summary verifies only at the line that completes it.
+    let rows = project_rows(&block_with(vec![
+        okx_swap(0x80, 100, 1).after(okx_event(100, 150)).after(okx_event(150, 200)),
+        okx_swap(0x90, 300, 1).after(okx_event(300, 200)),
+    ]));
+    let leaked = rows.iter().find(|row| row.swap.user == key(0x90)).unwrap();
+    assert_eq!(
+        (leaked.swap.output_amount, leaked.invocation, leaked.verified_context),
+        (200, Some(at(0, None)), None)
+    );
 }
 
 #[test]
