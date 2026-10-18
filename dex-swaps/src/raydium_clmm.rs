@@ -170,6 +170,20 @@ fn build_from_router(ctx: &RouterContext, log: &LogSwap, token_mints: &TokenMint
     })
 }
 
+/// True when `emitter` (the invocation that wrote `log`) is the CLMM swap or
+/// router instruction that, with this exact event, rebuilds exactly `row`. A
+/// router hop is verified from its own event's pool, as the adapter builds it.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, token_mints: &TokenMintLookup, row: &pb::Swap) -> bool {
+    let (Some(pending), Some(log)) = (decode_instruction(emitter, Some(token_mints)), parse_log_data(log)) else {
+        return false;
+    };
+    let rebuilt = match pending {
+        Pending::Swap(instruction) => build_from_instruction(&instruction, &log),
+        Pending::Router(context) => build_from_router(&context, &log, token_mints),
+    };
+    rebuilt.as_ref() == Some(row)
+}
+
 fn decode_instruction(ix: &InstructionView, token_mints: Option<&TokenMintLookup>) -> Option<Pending> {
     let program_id = ix.program_id().0;
     if program_id != &raydium::clmm::v3::PROGRAM_ID {

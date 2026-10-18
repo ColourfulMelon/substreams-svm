@@ -38,29 +38,44 @@ impl State {
             .iter()
             .position(|instruction| instruction.whirlpool == event.whirlpool && instruction.a_to_b == event.a_to_b)?;
         let instruction = self.pending.remove(index);
-
-        // Legacy `Swap` / `TwoHopSwap` can have unresolved mints when the
-        // tx's pre/post token balances don't reference the relevant vault.
-        // Consume only this matching hop; unresolved mints must never cause
-        // another pool to receive its amounts.
-        let mint_a = instruction.mint_a?;
-        let mint_b = instruction.mint_b?;
-
-        let (input_mint, output_mint) = if instruction.a_to_b { (mint_a, mint_b) } else { (mint_b, mint_a) };
-
-        Some(pb::Swap {
-            protocol: pb::Protocol::OrcaWhirlpool.into(),
-            program_id: orca::whirlpool::PROGRAM_ID.to_vec(),
-            stack_height: instruction.stack_height,
-            amm: orca::whirlpool::PROGRAM_ID.to_vec(),
-            amm_pool: instruction.whirlpool.clone(),
-            user: instruction.user.clone(),
-            input_mint,
-            input_amount: event.input_amount,
-            output_mint,
-            output_amount: event.output_amount,
-        })
+        build(&instruction, &event)
     }
+}
+
+fn build(instruction: &InstructionSwap, event: &LogSwap) -> Option<pb::Swap> {
+    // Legacy `Swap` / `TwoHopSwap` can have unresolved mints when the
+    // tx's pre/post token balances don't reference the relevant vault.
+    // Consume only this matching hop; unresolved mints must never cause
+    // another pool to receive its amounts.
+    let mint_a = instruction.mint_a.clone()?;
+    let mint_b = instruction.mint_b.clone()?;
+
+    let (input_mint, output_mint) = if instruction.a_to_b { (mint_a, mint_b) } else { (mint_b, mint_a) };
+
+    Some(pb::Swap {
+        protocol: pb::Protocol::OrcaWhirlpool.into(),
+        program_id: orca::whirlpool::PROGRAM_ID.to_vec(),
+        stack_height: instruction.stack_height,
+        amm: orca::whirlpool::PROGRAM_ID.to_vec(),
+        amm_pool: instruction.whirlpool.clone(),
+        user: instruction.user.clone(),
+        input_mint,
+        input_amount: event.input_amount,
+        output_mint,
+        output_amount: event.output_amount,
+    })
+}
+
+/// True when `emitter` (the invocation that wrote `log`) is a whirlpool swap
+/// whose hop for the event's own pool and direction rebuilds exactly `row`.
+/// A FIFO pairing with another instruction's hop, or any differing field,
+/// is not verified.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, token_mints: &TokenMintLookup, row: &pb::Swap) -> bool {
+    let Some(event) = parse_log_data(log) else { return false };
+    decode_instructions(emitter, Some(token_mints))
+        .iter()
+        .filter(|hop| hop.whirlpool == event.whirlpool && hop.a_to_b == event.a_to_b)
+        .any(|hop| build(hop, &event).as_ref() == Some(row))
 }
 
 #[cfg_attr(test, derive(Clone))]

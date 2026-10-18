@@ -11,7 +11,11 @@
 //! - `input_mint` / `output_mint`: from the SwapV3 accounts (always known).
 //! - `input_amount`: from `SwapV3.args.amount_in` — the user-supplied amount.
 //! - `output_amount`: the last `SwapEvent.amount_out` observed for this
-//!   instruction (final hop's output for linear routes).
+//!   instruction. That is the route's final swap output when the route is
+//!   one chain whose last hop uses one dex (earlier hops may be split);
+//!   when the last hop is split across dexes, or for parallel chains, it is
+//!   only the last leg's output. It is the logged dex output, not adjusted
+//!   for any OKX commission or platform fee.
 //! - `amm_pool`: the route preamble's pool pubkey when the route is a single
 //!   hop. Multi-hop routes emit an empty `amm_pool` because no single
 //!   underlying pool represents a routed trade — per-pool detail is captured
@@ -21,12 +25,14 @@
 //! boundaries and reset any in-flight state, so multiple OKX swaps in the
 //! same tx cannot leak context across each other.
 
-use std::collections::VecDeque;
+use std::collections::{BTreeMap, VecDeque};
 
 use common::solana::{is_invoke, parse_program_id};
 use proto::pb::dex::swaps::v1 as pb;
 use substreams_solana::block_view::InstructionView;
 use substreams_solana_idls::okx;
+
+use crate::InstructionPosition;
 
 struct SwapContext {
     stack_height: u32,
@@ -189,6 +195,43 @@ impl State {
 
 fn is_okx_invoke(log: &str) -> bool {
     is_invoke(log) && parse_program_id(log).map_or(false, |id| id == okx::v2::PROGRAM_ID)
+}
+
+/// The summary each OKX `SwapV3` invocation rebuilds from its own instruction
+/// and only the log lines it wrote itself, keyed by the index of the line that
+/// completes it. `writers` names, for every original log line, the proved
+/// invocation that wrote it.
+///
+/// The transaction-wide adapter queues every `SwapV3` context and completes
+/// the oldest one on any OKX-shaped `SwapEvent` line, whoever wrote it, so a
+/// summary can carry another instruction's accounts, amounts or hop count.
+/// Here each invocation runs the same adapter with only its own context queued
+/// and only its own lines, so a rebuilt summary depends on no other
+/// instruction and no other writer. One pass over the lines in total.
+pub(crate) fn summaries_by_writer(
+    instructions: &BTreeMap<InstructionPosition, InstructionView>,
+    logs: &[String],
+    writers: &[Option<InstructionPosition>],
+) -> BTreeMap<u32, pb::Swap> {
+    let mut states: BTreeMap<InstructionPosition, State> = instructions
+        .iter()
+        .filter(|(_, instruction)| instruction.program_id().0 == &okx::v2::PROGRAM_ID)
+        .map(|(position, instruction)| {
+            let mut state = State::new();
+            state.handle_instruction(instruction);
+            (*position, state)
+        })
+        .collect();
+    let mut summaries = BTreeMap::new();
+    for (index, (log, writer)) in logs.iter().zip(writers).enumerate() {
+        let Some(state) = writer.as_ref().and_then(|writer| states.get_mut(writer)) else {
+            continue;
+        };
+        if let Some(summary) = state.handle_log(log) {
+            summaries.insert(index as u32, summary);
+        }
+    }
+    summaries
 }
 
 #[cfg(test)]

@@ -37,20 +37,35 @@ impl State {
         let event = parse_log_data(log_message)?;
         let instruction = self.pending.get(self.next_index)?;
         self.next_index += 1;
-
-        Some(pb::Swap {
-            protocol: pb::Protocol::MeteoraAmm.into(),
-            program_id: amm::PROGRAM_ID.to_vec(),
-            stack_height: instruction.stack_height,
-            amm: amm::PROGRAM_ID.to_vec(),
-            amm_pool: instruction.pool.clone(),
-            user: instruction.user.clone(),
-            input_mint: instruction.input_mint.clone(),
-            input_amount: event.in_amount,
-            output_mint: instruction.output_mint.clone(),
-            output_amount: event.out_amount,
-        })
+        Some(build(instruction, &event))
     }
+}
+
+fn build(instruction: &InstructionSwap, event: &SwapEvent) -> pb::Swap {
+    pb::Swap {
+        protocol: pb::Protocol::MeteoraAmm.into(),
+        program_id: amm::PROGRAM_ID.to_vec(),
+        stack_height: instruction.stack_height,
+        amm: amm::PROGRAM_ID.to_vec(),
+        amm_pool: instruction.pool.clone(),
+        user: instruction.user.clone(),
+        input_mint: instruction.input_mint.clone(),
+        input_amount: event.in_amount,
+        output_mint: instruction.output_mint.clone(),
+        output_amount: event.out_amount,
+    }
+}
+
+/// True when `emitter` (the invocation that wrote `log`) is the Meteora AMM
+/// swap instruction that, with this exact event, rebuilds exactly `row`. The
+/// legacy adapter pairs events with instructions by sequence, and an event
+/// line written by a child call also advances it; this checks the pairing
+/// against the proved invocation instead.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, token_mints: &TokenMintLookup, row: &pb::Swap) -> bool {
+    let (Some(instruction), Some(event)) = (decode_swap_instruction(emitter, token_mints), parse_log_data(log)) else {
+        return false;
+    };
+    &build(&instruction, &event) == row
 }
 
 struct InstructionSwap {

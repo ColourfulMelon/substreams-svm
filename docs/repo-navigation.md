@@ -70,10 +70,15 @@ one-off schema rewrites and hand-written Prost models must not be reused.
 ### Native DEX projection
 
 `dex-swaps::project(&Block)` validates complete blocks and adds original
-transaction/event-instruction or log provenance, aggregator classification and
-conservative invocation outcome evidence while sharing the existing protocol
-extraction. `dex-swaps/README.md` documents the limits and pending decoder fixes;
-`dex-swaps/fixtures/native-projection.md` records the unchanged-output baseline.
+transaction/event-instruction or log provenance, aggregator classification and,
+from an exact alignment of the instruction walk with the invocation logs, each
+row's evidence writer (`invocation`, its outcome and `aggregator_route`), a
+`verified_context` where the row can be rebuilt from its own instruction, and an
+`execution_ordinal`, while sharing the existing protocol extraction.
+`dex-swaps/README.md` documents these fields, their limits and the count-once
+rule; `dex-swaps/fixtures/native-projection.md` records the unchanged-output
+baseline, and `dex-swaps/fixtures/native-execution-coverage.txt` the
+per-protocol evidence counts on the pinned blocks.
 
 ### Work on sink schemas
 

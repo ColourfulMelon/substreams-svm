@@ -21,3 +21,26 @@ with proven instruction-event invocation success and matching immediate-parent
 context establish the evidence path on this block; they do not qualify all
 Solana swap coverage. A separate mutation test keeps a caught failed swap's stale
 FIFO row unchanged while leaving its context explicitly unverified.
+
+## Execution order and log-row attribution
+
+`native-execution-coverage.txt` is the per-protocol summary asserted by
+`native_execution_tests::real_blocks_attribute_log_rows_without_changing_legacy_output`
+over this block and the three other pinned blocks under
+`spl/transfers/tests/fixtures/` (349019252, 350000009, 350000010). The same test
+pins each block's encoded legacy `map_events` output SHA-256, captured from
+unchanged main `3760f70`. The file's `#` header defines its columns: total rows;
+rows with a proved `invocation`; log rows; log rows with a proved `invocation`;
+rows with a verified context; rows with an execution ordinal; rows inside an
+aggregator route. For a log row, `invocation` names the writer of its evidence
+line, not proof of association; only the verified column counts proven
+pool/user/amount association (DLMM instruction rows, and Orca, Raydium AMM
+v4/CLMM/CPMM and Meteora AMM log rows here). Every row on these blocks was
+attributed and every transaction had a proved order.
+
+No Jupiter v4 or OKX summary row is decoded on these blocks; their invocations
+appear only as routes enclosing venue rows. Summary attribution, OKX
+verification, route sharing with the venue leg and the count-once rule (on
+nested routes, and on an unverified OKX summary leaked into another route) are
+covered by synthetic fixtures that run through `project()` in
+`native_execution_tests`. These counts describe four blocks, not live coverage.
