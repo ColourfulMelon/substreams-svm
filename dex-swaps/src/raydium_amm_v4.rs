@@ -35,46 +35,60 @@ impl State {
         let log = parse_log_data(log_message)?;
         let instruction = self.pending.get(self.next_index)?;
         self.next_index += 1;
-
-        // The `swap_base_in` / `swap_base_out` instructions (V1 and V2) only
-        // carry the pool's *vaults* in their account list — not the mints.
-        // We resolved them in `handle_instruction` via `TokenMintLookup`. If
-        // the lookup missed (no matching pre/post token balance for that
-        // vault), skip emitting this row but keep the sequential alignment
-        // between pending instructions and logs intact for any subsequent V4
-        // swaps.
-        let coin_mint = instruction.coin_mint.clone()?;
-        let pc_mint = instruction.pc_mint.clone()?;
-
-        // Per canonical Raydium AMM v4 source (`math.rs::SwapDirection`):
-        //   PC2Coin = 1  (user gave pc, got coin → input=pc, output=coin)
-        //   Coin2PC = 2  (user gave coin, got pc → input=coin, output=pc)
-        // Pre-v0.5.0 the adapter had this inverted (`is_pc_to_coin = direction == 2`).
-        // The bug was masked because vaults — not real mints — were stored,
-        // so the swapped labels were equally "wrong" either way. Fixing the
-        // vault→mint resolution exposes the inversion, so we correct both
-        // here.
-        let (input_mint, output_mint) = if log.direction == 2 {
-            // Coin2PC
-            (coin_mint, pc_mint)
-        } else {
-            // PC2Coin (and any other value defaults to the same orientation)
-            (pc_mint, coin_mint)
-        };
-
-        Some(pb::Swap {
-            protocol: pb::Protocol::RaydiumAmmV4.into(),
-            program_id: raydium::amm::v4::PROGRAM_ID.to_vec(),
-            stack_height: instruction.stack_height,
-            amm: raydium::amm::v4::PROGRAM_ID.to_vec(),
-            amm_pool: instruction.amm.clone(),
-            user: instruction.user_source_owner.clone(),
-            input_mint,
-            input_amount: log.amount_in,
-            output_mint,
-            output_amount: log.amount_out,
-        })
+        build(instruction, &log)
     }
+}
+
+fn build(instruction: &InstructionSwap, log: &LogSwap) -> Option<pb::Swap> {
+    // The `swap_base_in` / `swap_base_out` instructions (V1 and V2) only
+    // carry the pool's *vaults* in their account list — not the mints.
+    // We resolved them in `handle_instruction` via `TokenMintLookup`. If
+    // the lookup missed (no matching pre/post token balance for that
+    // vault), skip emitting this row but keep the sequential alignment
+    // between pending instructions and logs intact for any subsequent V4
+    // swaps.
+    let coin_mint = instruction.coin_mint.clone()?;
+    let pc_mint = instruction.pc_mint.clone()?;
+
+    // Per canonical Raydium AMM v4 source (`math.rs::SwapDirection`):
+    //   PC2Coin = 1  (user gave pc, got coin → input=pc, output=coin)
+    //   Coin2PC = 2  (user gave coin, got pc → input=coin, output=pc)
+    // Pre-v0.5.0 the adapter had this inverted (`is_pc_to_coin = direction == 2`).
+    // The bug was masked because vaults — not real mints — were stored,
+    // so the swapped labels were equally "wrong" either way. Fixing the
+    // vault→mint resolution exposes the inversion, so we correct both
+    // here.
+    let (input_mint, output_mint) = if log.direction == 2 {
+        // Coin2PC
+        (coin_mint, pc_mint)
+    } else {
+        // PC2Coin (and any other value defaults to the same orientation)
+        (pc_mint, coin_mint)
+    };
+
+    Some(pb::Swap {
+        protocol: pb::Protocol::RaydiumAmmV4.into(),
+        program_id: raydium::amm::v4::PROGRAM_ID.to_vec(),
+        stack_height: instruction.stack_height,
+        amm: raydium::amm::v4::PROGRAM_ID.to_vec(),
+        amm_pool: instruction.amm.clone(),
+        user: instruction.user_source_owner.clone(),
+        input_mint,
+        input_amount: log.amount_in,
+        output_mint,
+        output_amount: log.amount_out,
+    })
+}
+
+/// True when `emitter` (the invocation that wrote `log`) is the AMM v4 swap
+/// instruction that, with this exact `ray_log`, rebuilds exactly `row`. The
+/// legacy adapter pairs logs with instructions by sequence; this checks the
+/// pairing against the proved invocation instead.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, token_mints: &TokenMintLookup, row: &pb::Swap) -> bool {
+    let (Some(instruction), Some(log)) = (decode_instruction(emitter, Some(token_mints)), parse_log_data(log)) else {
+        return false;
+    };
+    build(&instruction, &log).as_ref() == Some(row)
 }
 
 #[cfg_attr(test, derive(Clone))]

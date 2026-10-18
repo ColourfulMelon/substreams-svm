@@ -7,10 +7,28 @@ use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction
 pub(crate) struct Evidence {
     pub outcome: InvocationOutcome,
     pub parent: Option<InstructionPosition>,
+    /// Log index of this instruction's own `invoke [depth]` line. `None` only
+    /// for runtime/precompile instructions that never produce invocation logs.
+    pub invoke_log_index: Option<u32>,
 }
 
-pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPosition, Evidence>> {
+/// An exact alignment of the recorded instruction walk with the runtime
+/// invocation log grammar. Only produced when every invocation is matched.
+pub(crate) struct Trace {
+    pub evidence: BTreeMap<InstructionPosition, Evidence>,
+    /// For every original log index, the invocation executing when the line
+    /// was written (the innermost open invocation; for an outcome line, the
+    /// invocation it closes). `None` for lines outside every invocation.
+    pub emitters: Vec<Option<InstructionPosition>>,
+}
+
+pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<Trace> {
     let meta = tx.meta.as_option()?;
+    // The runtime stops recording after this marker, so later invocations and
+    // outcomes are unobservable even if the remaining lines happen to balance.
+    if meta.log_messages.iter().any(|log| log == "Log truncated") {
+        return None;
+    }
     let expected = instruction_positions(tx)
         .into_iter()
         .zip(tx.walk_instructions())
@@ -27,8 +45,13 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
     let mut stack: Vec<usize> = Vec::new();
     let mut parents: Vec<Option<usize>> = vec![None; expected.len()];
     let mut outcomes = vec![InvocationOutcome::Unknown; expected.len()];
-    for log in &meta.log_messages {
-        let Some((program, event)) = parse_log(log).ok()? else { continue };
+    let mut invoke_lines: Vec<Option<u32>> = vec![None; expected.len()];
+    let mut emitters: Vec<Option<usize>> = Vec::with_capacity(meta.log_messages.len());
+    for (log_index, log) in meta.log_messages.iter().enumerate() {
+        let Some((program, event)) = parse_log(log).ok()? else {
+            emitters.push(stack.last().copied());
+            continue;
+        };
         if let Event::Invoke(depth) = event {
             if depth as usize != stack.len() + 1 {
                 return None;
@@ -47,10 +70,13 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
                 return None;
             }
             parents[cursor] = stack.last().copied();
+            invoke_lines[cursor] = Some(u32::try_from(log_index).ok()?);
             stack.push(cursor);
+            emitters.push(Some(cursor));
             cursor += 1;
         } else {
             let index = stack.pop()?;
+            emitters.push(Some(index));
             if expected[index].1 != program {
                 return None;
             }
@@ -81,8 +107,8 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
             };
         }
     }
-    Some(
-        expected
+    Some(Trace {
+        evidence: expected
             .iter()
             .enumerate()
             .map(|(index, (position, _, _))| {
@@ -91,11 +117,13 @@ pub(crate) fn prove(tx: &ConfirmedTransaction) -> Option<BTreeMap<InstructionPos
                     Evidence {
                         outcome: outcomes[index],
                         parent: parents[index].map(|parent| expected[parent].0),
+                        invoke_log_index: invoke_lines[index],
                     },
                 )
             })
             .collect(),
-    )
+        emitters: emitters.into_iter().map(|index| index.map(|index| expected[index].0)).collect(),
+    })
 }
 
 #[derive(Clone, Copy)]
@@ -210,16 +238,46 @@ mod tests {
 
     #[test]
     fn successful_trace_proves_each_original_instruction() {
-        let result = prove(&transaction()).unwrap();
+        let result = prove(&transaction()).unwrap().evidence;
         assert_eq!(result.len(), 3);
         assert!(result.values().all(|outcome| outcome.outcome == InvocationOutcome::Succeeded));
+    }
+
+    #[test]
+    fn every_line_belongs_to_the_innermost_open_invocation() {
+        let mut tx = transaction();
+        // A data line written by `b` after its child `c` returned.
+        tx.meta.as_option_mut().unwrap().log_messages.insert(4, "Program data: AAAA".to_string());
+        let trace = prove(&tx).unwrap();
+        let a = InstructionPosition {
+            instruction_index: 0,
+            inner_instruction_index: None,
+        };
+        let b = InstructionPosition {
+            instruction_index: 0,
+            inner_instruction_index: Some(0),
+        };
+        let c = InstructionPosition {
+            instruction_index: 0,
+            inner_instruction_index: Some(1),
+        };
+        assert_eq!(trace.emitters, [Some(a), Some(b), Some(c), Some(c), Some(b), Some(b), Some(a)]);
+        assert_eq!(trace.evidence[&a].invoke_log_index, Some(0));
+        assert_eq!(trace.evidence[&c].invoke_log_index, Some(2));
+    }
+
+    #[test]
+    fn truncation_marker_rejects_an_otherwise_balanced_trace() {
+        let mut tx = transaction();
+        tx.meta.as_option_mut().unwrap().log_messages.push("Log truncated".to_string());
+        assert!(prove(&tx).is_none());
     }
 
     #[test]
     fn caught_parent_failure_revokes_preceding_successful_event() {
         let mut tx = transaction();
         tx.meta.as_option_mut().unwrap().log_messages[4] = format!("Program {} failed: caught inner call ended with success", base58::encode([2; 32]));
-        let result = prove(&tx).unwrap();
+        let result = prove(&tx).unwrap().evidence;
         assert_eq!(
             result[&InstructionPosition {
                 instruction_index: 0,

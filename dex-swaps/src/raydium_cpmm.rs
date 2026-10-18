@@ -34,20 +34,32 @@ impl State {
         let log = parse_log_data(log_message)?;
         let instruction = self.pending.get(self.next_index)?;
         self.next_index += 1;
-
-        Some(pb::Swap {
-            protocol: pb::Protocol::RaydiumCpmm.into(),
-            program_id: raydium::cpmm::PROGRAM_ID.to_vec(),
-            stack_height: instruction.stack_height,
-            amm: raydium::cpmm::PROGRAM_ID.to_vec(),
-            amm_pool: instruction.pool_state.clone(),
-            user: instruction.payer.clone(),
-            input_mint: log.input_mint.unwrap_or_else(|| instruction.input_token_mint.clone()),
-            input_amount: log.input_amount,
-            output_mint: log.output_mint.unwrap_or_else(|| instruction.output_token_mint.clone()),
-            output_amount: log.output_amount,
-        })
+        Some(build(instruction, log))
     }
+}
+
+fn build(instruction: &InstructionSwap, log: LogSwap) -> pb::Swap {
+    pb::Swap {
+        protocol: pb::Protocol::RaydiumCpmm.into(),
+        program_id: raydium::cpmm::PROGRAM_ID.to_vec(),
+        stack_height: instruction.stack_height,
+        amm: raydium::cpmm::PROGRAM_ID.to_vec(),
+        amm_pool: instruction.pool_state.clone(),
+        user: instruction.payer.clone(),
+        input_mint: log.input_mint.unwrap_or_else(|| instruction.input_token_mint.clone()),
+        input_amount: log.input_amount,
+        output_mint: log.output_mint.unwrap_or_else(|| instruction.output_token_mint.clone()),
+        output_amount: log.output_amount,
+    }
+}
+
+/// True when `emitter` (the invocation that wrote `log`) is the CPMM swap
+/// instruction that, with this exact event, rebuilds exactly `row`.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, row: &pb::Swap) -> bool {
+    let (Some(instruction), Some(log)) = (decode_cpmm_instruction(emitter), parse_log_data(log)) else {
+        return false;
+    };
+    &build(&instruction, log) == row
 }
 
 struct InstructionSwap {

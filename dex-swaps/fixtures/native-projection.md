@@ -21,3 +21,17 @@ with proven instruction-event invocation success and matching immediate-parent
 context establish the evidence path on this block; they do not qualify all
 Solana swap coverage. A separate mutation test keeps a caught failed swap's stale
 FIFO row unchanged while leaving its context explicitly unverified.
+
+## Execution order and log-row attribution
+
+`native-execution-coverage.txt` is the per-protocol summary asserted by
+`native_execution_tests::real_blocks_attribute_log_rows_without_changing_legacy_output`
+over this block and the three other pinned blocks under
+`spl/transfers/tests/fixtures/` (349019252, 350000009, 350000010). Columns:
+total rows; log rows; log rows attributed to a proved invocation; rows with a
+verified context (DLMM instruction rows, and Orca/Raydium AMM v4/CLMM/CPMM log
+rows); rows with an execution ordinal; rows inside an aggregator route. Every
+log row on these blocks was attributed and every transaction had a proved
+order. Jupiter v4 and OKX do not appear on these blocks; their summaries are
+covered by synthetic fixtures only. Meteora AMM log rows are attributed but have
+no context verifier. These counts describe four blocks, not live coverage.

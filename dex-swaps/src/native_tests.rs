@@ -200,7 +200,12 @@ fn native_context_rejects_stale_dlmm_fifo_after_caught_failure() {
     let (transaction, row) = projected
         .transactions
         .iter()
-        .find_map(|tx| tx.swaps.iter().find(|row| row.verified_context.is_some()).map(|row| (tx, row)))
+        .find_map(|tx| {
+            tx.swaps
+                .iter()
+                .find(|row| row.verified_context.is_some() && row.swap.protocol == pb::Protocol::MeteoraDlmm)
+                .map(|row| (tx, row))
+        })
         .unwrap();
     let original = &fixture.transactions[transaction.transaction_index as usize];
     fn instruction(tx: &source::ConfirmedTransaction, position: InstructionPosition) -> source::InnerInstruction {

@@ -185,6 +185,8 @@ fn process_transaction_with_provenance(tx: &ConfirmedTransaction, max_swaps: usi
 }
 
 #[cfg(test)]
+mod native_execution_tests;
+#[cfg(test)]
 mod native_tests;
 
 #[cfg(test)]

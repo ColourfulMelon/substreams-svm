@@ -101,8 +101,9 @@ the host process. Native logging uses the standard `log` facade. The default
 `map_events` remains callable in both feature modes with the same error type and
 output. `common` uses the same default feature for its database, `Clock` and scalar
 helpers; its pure Solana helpers remain available without it. The SDK-free IDL
-dependency is pinned to [substreams-solana-idls PR #148](https://github.com/pinax-network/substreams-solana-idls/pull/148);
-review and resolve that dependency before release.
+dependency is pinned to merged substreams-solana-idls `main`, which includes
+[#148](https://github.com/pinax-network/substreams-solana-idls/pull/148) and
+[#147](https://github.com/pinax-network/substreams-solana-idls/pull/147).
 
 `project(&substreams_solana::pb::sf::solana::r#type::v1::Block)` is callable from
 native Rust and returns a validated `Projection`. It borrows the existing decoded
@@ -121,34 +122,68 @@ original index in the unfiltered block. Every row adds:
 - `Provenance::Instruction` with the exact outer/inner **event instruction**
   position and an event index, or `Provenance::Log` with the original log index.
   An event instruction may be a self-CPI emitted by an earlier swap invocation.
-  A log-only row has no proven instruction identity; this API never invents it.
+  Log rows keep `Provenance::Log`; their proved invocation is reported separately
+  in `invocation`, and no instruction position is ever derived from a log offset.
+- `invocation`: the invocation that emitted the row's evidence. Every log line
+  is written by the innermost invocation open at that point of the runtime
+  trace, so when the recorded instruction walk and the invocation logs align
+  exactly (program ids, `invoke [depth]` versus stack heights, balanced
+  outcomes, no `Log truncated`), each line has exactly one writer. Instruction
+  rows report their event instruction. A log row is attributed only when the
+  writer's program is the row's `program_id`; otherwise, or when the trace is
+  missing, truncated, ambiguous or inconsistent, it is `None`.
 - `InvocationOutcome`: success is proven only when the recorded instructions,
   program invocation depths, and balanced outcome logs match exactly. A caught
   ancestor failure revokes an earlier successful event. Truncated, ambiguous, or
-  missing traces remain `Unknown`. This proves the event invocation outcome, not
-  correctness of the protocol adapter's pool/amount association.
-- `verified_context`: for DLMM only, the exact immediate parent swap instruction
-  when its pool, user and token accounts match the event's intrinsic pool/user
-  and every decoded row field. This additionally requires proven event/ancestor
-  success. Other protocols and unverified associations remain `None`. A stale
-  FIFO row after a caught failed swap is retained but is never marked verified.
+  missing traces remain `Unknown`. Log rows take the outcome of their attributed
+  `invocation`. This proves the event invocation outcome, not correctness of the
+  protocol adapter's pool/amount association.
+- `verified_context`: the swap instruction whose accounts and event fields
+  independently rebuild every row field, after proven success of that
+  invocation and all its ancestors. For DLMM instruction rows it is the exact
+  immediate parent swap of the event self-CPI, when its pool, user and token
+  accounts match the event's intrinsic pool/user. For Orca Whirlpool and Raydium
+  AMM v4, CLMM and CPMM log rows it is the attributed `invocation` itself, when
+  the adapter's own row builder, given that instruction and the row's evidence
+  line, reproduces the row exactly (for Orca, the hop matching the event's pool
+  and direction). Legacy log adapters pair events with instructions by sequence
+  or pool/direction FIFO; this check proves the pairing against the invocation
+  that actually wrote the event. A stale FIFO row is retained but never verified.
+  Other protocols and unverified associations remain `None`.
+- `aggregator_route`: the outermost Jupiter v4, Jupiter v6 or OKX invocation
+  enclosing (or equal to) the row's `invocation`. An aggregator summary and the
+  venue legs executed inside the same route share it, so a routed trade can be
+  counted once. Rows are never merged; `None` outside every aggregator route or
+  without a proved invocation.
+- `execution_ordinal`: the row's position in the transaction's execution order,
+  from 0, across instruction and log rows. Rows are ordered by where their
+  evidence appears in the proved trace: an instruction row at its event
+  instruction's `invoke` line, a log row at its own line, then by event index.
+  The ordinal follows evidence emission (an event self-CPI is written after the
+  swap's own token transfers). It is set for every row of a transaction or for
+  none: `None` when the trace cannot be proved.
 
 `Projection::into_legacy()` strips only the added evidence. For a complete valid
 block it yields the same row fields and order as `map_events`; the WASM wrapper
-keeps its existing output and filtering behavior. Existing adapter order is not
-global instruction execution order: instruction rows precede log-derived rows.
+keeps its existing output and filtering behavior. The `swaps` vector keeps the
+legacy adapter order (instruction rows, then log rows); sort by
+`execution_ordinal` for proved execution order.
 
-The native API does **not** repair or qualify existing decoder behavior. In
-particular, the pending temporary-account/current-layout fixes in #223 and the
-Orca event/pool association fix in #224 remain separate changes. SPL Token Swap's
-current output amount is the instruction minimum, not proven realized output.
-Consumers requiring execution association must additionally require a verified
-context, not just successful event invocation. The pinned full-block fixture
-includes five Meteora DLMM rows with both forms of evidence.
-That fixture is offline evidence, not broad protocol or live-provider coverage.
+The native API does **not** repair or qualify existing decoder behavior.
+SPL Token Swap's current output amount is the instruction minimum, not proven
+realized output. Consumers requiring execution association must additionally
+require a verified context, not just successful event invocation.
+[`fixtures/native-execution-coverage.txt`](fixtures/native-execution-coverage.txt)
+records per-protocol attribution, verification, ordering and routing counts on
+the four pinned mainnet blocks. Those fixtures are offline evidence, not broad
+protocol or live-provider coverage.
 
 Tests compare the native and WASM-wrapper body, including an encoded-output hash
 captured independently from unchanged main. They also cover original positions,
 aggregator classification, caught CPI failures, ambiguous/truncated invocation
 traces, exact runtime log grammar, failed-prior-swap FIFO association, malformed
-blocks, resource bounds, empty blocks, and missing time.
+blocks, resource bounds, empty blocks, and missing time. Execution fixtures cover
+interleaved instruction and log rows, repeated same-pool calls with a stale FIFO
+pairing, a multi-hop instruction, nested CPI inside an aggregator route, failed
+invocations and failed ancestors, an event line written by another program,
+and truncated, unbalanced, misaligned or height-less traces.
