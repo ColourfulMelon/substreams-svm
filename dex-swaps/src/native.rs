@@ -73,7 +73,9 @@ pub struct ProjectedSwap {
     ///   only the lines it wrote itself complete this summary at this line.
     ///   `output_amount` stays the last `SwapEvent`'s `amount_out`: the
     ///   route's net output only for a linear route (one chain, one dex per
-    ///   hop), one leg's output for a split hop or parallel chains.
+    ///   hop), one leg's output for a split hop or parallel chains. An
+    ///   unverified OKX summary may carry another `SwapV3`'s user, mints and
+    ///   `input_amount`, even one in another route.
     /// - Every other protocol: always None.
     pub verified_context: Option<InstructionPosition>,
     /// The invocation that wrote this row's evidence, proved by an exact
@@ -96,14 +98,17 @@ pub struct ProjectedSwap {
     /// To count a routed trade once, group only rows whose `invocation` is
     /// Some by `(transaction_index, aggregator_route)`, and per route count
     /// exactly one of: its venue legs (`PoolExecution` rows), or its route
-    /// summaries. The route summaries are the Jupiter v4 or OKX summaries
-    /// whose `invocation` equals `aggregator_route` (written by the route
-    /// invocation itself) or, when there are none, the route's Jupiter v6
-    /// summaries, so a nested aggregator's summaries are never counted on top
-    /// of the route's own. Summaries and legs do not correspond one to one (a
-    /// route may have hops without a decoded leg, or legs without a decoded
-    /// summary), so choose per route. The crate README details the rule and
-    /// its one limit.
+    /// summaries. The route summaries are the Jupiter v4 summaries whose
+    /// `invocation` equals `aggregator_route` and the OKX summaries whose
+    /// `verified_context` equals it (written, and for OKX also rebuilt, by the
+    /// route invocation itself) or, when there are none, the route's Jupiter
+    /// v6 summaries, so a nested aggregator's summaries are never counted on
+    /// top of the route's own. An unverified OKX summary is never a route
+    /// summary: it may carry another route's `SwapV3` fields. A route without
+    /// route summaries is counted by its legs. Summaries and legs do not
+    /// correspond one to one (a route may have hops without a decoded leg, or
+    /// legs without a decoded summary), so choose per route. The crate README
+    /// details the rule and its one limit.
     pub aggregator_route: Option<InstructionPosition>,
     /// Rank of this row's evidence in the transaction's proved invocation
     /// trace, from 0 across instruction and log rows: an instruction row at its

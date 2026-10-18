@@ -836,8 +836,12 @@ fn jupiter_v4_summary_shares_its_route_with_its_leg() {
         .after(jupiter_v4_event(100, 90));
     let rows = project_rows(&block_with(vec![route]));
     assert_eq!(rows.len(), 2);
-    // Jupiter v4 summaries have no context verifier.
+    // Jupiter v4 summaries have no context verifier, and need none to be the
+    // route's own summary.
     assert_eq!(assert_summary_follows_its_leg(&rows, pb::Protocol::JupiterV4).verified_context, None);
+    let (summaries, legs) = count_once(&rows, at(0, None));
+    assert_eq!((summaries.len(), summaries[0].swap.protocol.as_known()), (1, Some(pb::Protocol::JupiterV4)));
+    assert_eq!(amounts(&legs), [(100, 90)]);
 }
 
 #[test]
@@ -924,8 +928,9 @@ fn nested_aggregators_share_the_outermost_route() {
 
 /// The README's count-once rule for one route, from the published fields
 /// only: its route summaries and its venue legs. The route summaries are the
-/// Jupiter v4 or OKX summaries whose `invocation` is the route itself, or,
-/// when there are none, the route's Jupiter v6 summaries.
+/// Jupiter v4 summaries whose `invocation` is the route itself and the OKX
+/// summaries verified against it, or, when there are none, the route's
+/// Jupiter v6 summaries.
 fn count_once(rows: &[ProjectedSwap], route: InstructionPosition) -> (Vec<&ProjectedSwap>, Vec<&ProjectedSwap>) {
     let in_route: Vec<_> = rows
         .iter()
@@ -938,8 +943,12 @@ fn count_once(rows: &[ProjectedSwap], route: InstructionPosition) -> (Vec<&Proje
             .filter(|row| row.kind == SwapKind::AggregatorSummary && keep(row))
             .collect()
     };
-    let mut route_summaries =
-        summaries(&|row| matches!(row.swap.protocol.as_known(), Some(pb::Protocol::JupiterV4 | pb::Protocol::OkxDex)) && row.invocation == Some(route));
+    // An unverified OKX summary may carry another route's `SwapV3` fields.
+    let mut route_summaries = summaries(&|row| match row.swap.protocol.as_known() {
+        Some(pb::Protocol::JupiterV4) => row.invocation == Some(route),
+        Some(pb::Protocol::OkxDex) => row.verified_context == Some(route),
+        _ => false,
+    });
     if route_summaries.is_empty() {
         route_summaries = summaries(&|row| row.swap.protocol == pb::Protocol::JupiterV6);
     }
@@ -947,12 +956,27 @@ fn count_once(rows: &[ProjectedSwap], route: InstructionPosition) -> (Vec<&Proje
     (route_summaries, legs)
 }
 
+/// One valid per-route choice under the rule: the route summaries when there
+/// are any, else the legs (a route without route summaries is counted by its
+/// legs).
+fn counted(rows: &[ProjectedSwap], route: InstructionPosition) -> Vec<&ProjectedSwap> {
+    let (summaries, legs) = count_once(rows, route);
+    if summaries.is_empty() {
+        legs
+    } else {
+        summaries
+    }
+}
+
+fn amounts(rows: &[&ProjectedSwap]) -> Vec<(u64, u64)> {
+    rows.iter().map(|row| (row.swap.input_amount, row.swap.output_amount)).collect()
+}
+
 #[test]
 fn nested_aggregator_summaries_count_once_per_route() {
     let leg = || orca_swap(0x10, 0x50, true).after(traded(0x50, true, 100, 90));
     let okx_route = |child: Call| okx_preamble(okx_swap(0x80, 100, 1), 100, 0x50).child(child).after(okx_event(100, 90));
     let protocols = |rows: &[&ProjectedSwap]| rows.iter().map(|row| row.swap.protocol.as_known().unwrap()).collect::<Vec<_>>();
-    let amounts = |rows: &[&ProjectedSwap]| rows.iter().map(|row| (row.swap.input_amount, row.swap.output_amount)).collect::<Vec<_>>();
 
     // Jupiter v6 -> OKX SwapV3 -> Orca: one 100-unit trade, but two proved
     // summaries (one per aggregator) in the one route.
@@ -978,6 +1002,50 @@ fn nested_aggregator_summaries_count_once_per_route() {
     assert_eq!((summaries[0].invocation, summaries[0].verified_context), (Some(at(0, None)), Some(at(0, None))));
     assert_eq!(protocols(&legs), [pb::Protocol::OrcaWhirlpool]);
     assert_eq!((amounts(&summaries), amounts(&legs)), (vec![(100, 90)], vec![(100, 90)]));
+}
+
+/// An unverified OKX summary can name the route that wrote its line while
+/// carrying another route's `SwapV3`, so it is never a route summary.
+#[test]
+fn a_leaked_okx_summary_is_never_a_route_summary() {
+    let route = |base, amount_in, user, pool, amount_out| {
+        okx_preamble(okx_swap(base, amount_in, 1), amount_in, pool)
+            .child(orca_swap(user, pool, true).after(traded(pool, true, amount_in, amount_out)))
+            .after(okx_event(amount_in, amount_out))
+    };
+    // OKX#0 writes one more `SwapEvent` than its one-hop route has hops: the
+    // extra line completes OKX#1's queued `SwapV3` inside route 0, and OKX#1's
+    // own line then completes nothing.
+    let rows = project_rows(&block_with(vec![
+        route(0x80, 100, 0x10, 0x50, 90).after(okx_event(150, 200)),
+        route(0x90, 300, 0x11, 0x54, 280),
+    ]));
+    assert_eq!(rows.len(), 4);
+    let okx = by_protocol(&rows, pb::Protocol::OkxDex);
+    // Both summaries were written by route 0 itself.
+    assert!(okx
+        .iter()
+        .all(|row| (row.invocation, row.aggregator_route) == (Some(at(0, None)), Some(at(0, None)))));
+    let leaked = okx.iter().find(|row| row.swap.user == key(0x90)).unwrap();
+    assert_eq!((leaked.swap.input_amount, leaked.swap.output_amount, leaked.verified_context), (300, 200, None));
+
+    let (summaries, legs) = count_once(&rows, at(0, None));
+    assert_eq!(amounts(&summaries), [(100, 90)]);
+    assert_eq!(
+        (summaries[0].swap.user.as_slice(), summaries[0].verified_context),
+        (key(0x80).as_slice(), Some(at(0, None)))
+    );
+    assert_eq!(amounts(&legs), [(100, 90)]);
+    let (summaries, legs) = count_once(&rows, at(1, None));
+    assert!(summaries.is_empty());
+    assert_eq!(amounts(&legs), [(300, 280)]);
+    assert_eq!(legs[0].invocation, Some(at(1, Some(0))));
+
+    // Route 0 by its summary and route 1 by its leg: each trade once.
+    assert_eq!(
+        (amounts(&counted(&rows, at(0, None))), amounts(&counted(&rows, at(1, None)))),
+        (vec![(100, 90)], vec![(300, 280)])
+    );
 }
 
 /// The OKX adapter completes the oldest queued `SwapV3` context on any

@@ -167,7 +167,9 @@ original index in the unfiltered block. Every row adds:
     last `SwapEvent`'s `amount_out`. That is the route's net output only for a
     linear route (one chain, one dex per hop). For a hop split across dexes,
     or for parallel chains, it is one leg's output, and the row is still
-    verified.
+    verified. An unverified OKX summary may carry another `SwapV3`'s user,
+    mints and `input_amount`, even one in another route (see the count-once
+    rule below).
   - Every other protocol (including Jupiter v4/v6 summaries): always `None`.
 
   Legacy log adapters pair events with instructions by sequence or FIFO, so a
@@ -199,28 +201,50 @@ grouped by `(transaction_index, aggregator_route)`. For each route, count
 exactly one of these two sets, never both and never a mix:
 
 - its **legs**: the `PoolExecution` rows;
-- its **route summaries**: the Jupiter v4 or OKX summaries whose `invocation`
-  equals `aggregator_route` (lines written by the route invocation itself),
-  or, when the route has none, its Jupiter v6 summaries.
+- its **route summaries**: the Jupiter v4 summaries whose `invocation` equals
+  `aggregator_route` and the OKX summaries whose `verified_context` equals
+  `aggregator_route` (written, and for OKX also rebuilt, by the route
+  invocation itself), or, when the route has none of these, its Jupiter v6
+  summaries.
+
+A route without route summaries is counted by its legs.
+
+An OKX summary needs `verified_context`, not just `invocation`. The adapter
+completes the oldest pending `SwapV3` on any OKX `SwapEvent` line, so an
+unverified OKX summary can carry another route's `SwapV3` fields (user, mints,
+`input_amount`) while its `invocation` and `aggregator_route` name the route
+that wrote the line. When OKX#0 writes one more `SwapEvent` than its route has
+hops, that line completes OKX#1's summary inside route 0, and OKX#1's own line
+then completes nothing: route 0 holds its own verified summary and OKX#1's
+unverified one, and route 1 only its leg. Taken as a route summary, the
+unverified one would count route 0 as two trades, and OKX#1's trade a second
+time next to route 1's leg. Jupiter v4 and v6 summaries take their amounts and
+mints from one event written inside their route (for Jupiter v4, by the route
+itself), so they need no verifier for this.
 
 Summaries of an aggregator nested inside the route describe the same hops
 again, so the rule never counts them on top of the route's own. With Jupiter
 v6 -> OKX `SwapV3` -> venue, the OKX summary is proved and even verified, but
-its `invocation` is the nested OKX call, not the route, so the route summaries
-are the Jupiter v6 ones. With OKX `SwapV3` -> Jupiter v6 -> venue they are the
-OKX summary alone. Jupiter v6 summaries are event self-CPI instruction rows, so
-their `invocation` is never the route itself; they are counted only in a route
-with no Jupiter v4 or OKX summary of its own, where they overlap no other
-counted summary. The fields cannot separate a Jupiter v6 route from another
-Jupiter v6 route that it invokes directly, the only way a program can re-enter
-itself; count legs if that matters.
+against the nested OKX call, not the route, so the route summaries are the
+Jupiter v6 ones. With OKX `SwapV3` -> Jupiter v6 -> venue they are the OKX
+summary alone, or the Jupiter v6 summaries if the OKX summary is unverified.
+Jupiter v6 summaries are event self-CPI instruction rows, so their `invocation`
+is never the route itself; they are counted only in a route with no Jupiter v4
+or verified OKX summary of its own, where they overlap no other counted
+summary. The fields cannot separate a Jupiter v6 route from another Jupiter v6
+route that it invokes directly, the only way a program can re-enter itself;
+count legs if that matters.
 
 Choose the set per route: on the pinned blocks summaries and decoded legs do
 not correspond one to one (some routes have hops without a decoded leg, others
-legs without a decoded summary). Rows whose `invocation` is `None` have unknown
-route membership and cannot be deduplicated by route. Where a protocol has a
-verifier, require `verified_context` before trusting that a row's fields came
-from one instruction; it does not change what a field means (see OKX above).
+legs without a decoded summary). Different choices for different routes do not
+double count, because every row the rule counts for a route is evidence
+written inside it: a leg's event, a Jupiter summary's event, or an OKX summary
+rebuilt from the route's own instruction and lines. Rows whose `invocation` is
+`None` have unknown route membership and cannot be deduplicated by route. Where
+a protocol has a verifier, require `verified_context` before trusting that a
+row's fields came from one instruction; it does not change what a field means
+(see OKX above).
 
 **Row identity.** A row is identified by its `provenance`: instruction position
 and event index, or log index and event index. Neither `invocation` (one
@@ -277,6 +301,8 @@ verify at the line that completes it; and a Meteora DLMM context must not
 verify under a failed outer invocation. Jupiter v4 and OKX fixtures check that a
 summary is attributed to its aggregator invocation, shares its route with the
 venue leg and is ordered after it. A nested Jupiter v6 -> OKX `SwapV3` -> Orca
-route and its reverse check the count-once rule, and split-hop and
-parallel-chain OKX routes pin that a verified summary keeps the last event's
-output.
+route and its reverse check the count-once rule, as do two OKX routes whose
+first writes an extra `SwapEvent`: its leaked, unverified summary of the second
+route's `SwapV3` is no route summary, and the second route falls back to its
+leg. Split-hop and parallel-chain OKX routes pin that a verified summary keeps
+the last event's output.
