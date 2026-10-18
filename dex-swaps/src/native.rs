@@ -72,8 +72,9 @@ pub struct ProjectedSwap {
     /// - OKX summaries: `invocation` itself, when that `SwapV3` instruction and
     ///   only the lines it wrote itself complete this summary at this line.
     ///   `output_amount` stays the last `SwapEvent`'s `amount_out`: the
-    ///   route's net output only for a linear route (one chain, one dex per
-    ///   hop), one leg's output for a split hop or parallel chains. An
+    ///   route's final swap output when the route is one chain whose last hop
+    ///   uses one dex, otherwise one leg of the last hop or last chain; in
+    ///   both cases not adjusted for OKX commission or platform fees. An
     ///   unverified OKX summary may carry another `SwapV3`'s user, mints and
     ///   `input_amount`, even one in another route.
     /// - Every other protocol: always None.

@@ -11,8 +11,11 @@
 //! - `input_mint` / `output_mint`: from the SwapV3 accounts (always known).
 //! - `input_amount`: from `SwapV3.args.amount_in` — the user-supplied amount.
 //! - `output_amount`: the last `SwapEvent.amount_out` observed for this
-//!   instruction (final hop's output for linear routes; for a hop split
-//!   across dexes or for parallel chains, only the last leg's output).
+//!   instruction. That is the route's final swap output when the route is
+//!   one chain whose last hop uses one dex (earlier hops may be split);
+//!   when the last hop is split across dexes, or for parallel chains, it is
+//!   only the last leg's output. It is the logged dex output, not adjusted
+//!   for any OKX commission or platform fee.
 //! - `amm_pool`: the route preamble's pool pubkey when the route is a single
 //!   hop. Multi-hop routes emit an empty `amm_pool` because no single
 //!   underlying pool represents a routed trade — per-pool detail is captured

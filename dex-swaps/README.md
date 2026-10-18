@@ -164,10 +164,13 @@ original index in the unfiltered block. Every row adds:
     through the adapter with only the log lines it wrote itself, completes the
     same summary on the same line. The summary keeps the adapter's meaning:
     `input_amount` is the instruction's `amount_in` and `output_amount` is the
-    last `SwapEvent`'s `amount_out`. That is the route's net output only for a
-    linear route (one chain, one dex per hop). For a hop split across dexes,
-    or for parallel chains, it is one leg's output, and the row is still
-    verified. An unverified OKX summary may carry another `SwapV3`'s user,
+    last `SwapEvent`'s `amount_out`. That is the route's final swap output when
+    the route is one chain whose last hop uses one dex, even if an earlier hop
+    is split. When the last hop is split across dexes, or the route has
+    parallel chains, it is the output of one leg of the last hop or the last
+    chain, and the row is still verified. Either way it is the logged dex leg
+    output, not adjusted for any OKX commission or platform fee the
+    instruction carries. An unverified OKX summary may carry another `SwapV3`'s user,
     mints and `input_amount`, even one in another route (see the count-once
     rule below).
   - Every other protocol (including Jupiter v4/v6 summaries): always `None`.
@@ -295,9 +298,15 @@ CPMM, Meteora AMM, OKX) has a positive fixture and stale-pairing fixtures
 (sequence shifts from undecodable, missing or extra calls; a router payer or
 stack-height mismatch; OKX forged, extra and non-`SwapV3` events) that must stay
 unverified; replacing any verifier with `true` fails a test. Further stale
-pairings differ from the writer's own row in the pool, the user or the stack
-height alone, so each verifier must compare every field; an OKX summary must
-verify at the line that completes it; and a Meteora DLMM context must not
+pairings differ from the writer's own row in exactly one field the verifier
+takes from the instruction: the pool, the user, the stack height or the mints
+(opposite-direction round trips for CLMM `swap_v2`, CPMM and Meteora AMM; for
+OKX, a `SwapV3` that writes no event, so the next one's event completes its
+queued context). Each verifier must therefore compare each of those fields.
+Fields the paired row and the writer's rebuild both read from the same evidence
+line cannot differ and are not separately tested: the amounts, Orca's pool and
+mints (it pairs by them), CLMM router pools and mints, AMM v4 mints and the OKX
+pool. An OKX summary must verify at the line that completes it; and a Meteora DLMM context must not
 verify under a failed outer invocation. Jupiter v4 and OKX fixtures check that a
 summary is attributed to its aggregator invocation, shares its route with the
 venue leg and is ordered after it. A nested Jupiter v6 -> OKX `SwapV3` -> Orca

@@ -892,18 +892,25 @@ fn okx_swap_shaped(base: u8, amount_in: u64, chains: &[(u64, &[usize])]) -> Call
 }
 
 /// A verified OKX summary keeps the adapter's legacy field meanings: its
-/// output is the last `SwapEvent`'s `amount_out`, which is the route's net
-/// output only for a linear route. Verification proves the row was rebuilt
+/// output is the last `SwapEvent`'s `amount_out`. That is the route's final
+/// swap output only when the route is one chain whose last hop uses one dex;
+/// otherwise it is one leg's output. Verification proves the row was rebuilt
 /// from the instruction's own lines, not that the output is the route's.
 #[test]
 fn verified_okx_split_and_parallel_routes_keep_the_last_event_output() {
+    // One chain whose first hop splits across two dexes and whose last hop
+    // uses one: the last event is the route's final swap output.
+    let split_then_single = okx_swap_shaped(0x80, 100, &[(100, &[2, 1])])
+        .after(okx_event(50, 45))
+        .after(okx_event(50, 44))
+        .after(okx_event(89, 80));
     // One hop split 50/50 across two dexes: 100 in, 45 + 44 out.
     let split = okx_swap_shaped(0x80, 100, &[(100, &[2])]).after(okx_event(50, 45)).after(okx_event(50, 44));
     // Two parallel chains 60/40: 54 + 36 out.
     let parallel = okx_swap_shaped(0x80, 100, &[(60, &[1]), (40, &[1])])
         .after(okx_event(60, 54))
         .after(okx_event(40, 36));
-    for (route, last_output) in [(split, 44), (parallel, 36)] {
+    for (route, last_output) in [(split_then_single, 80), (split, 44), (parallel, 36)] {
         let rows = project_rows(&block_with(vec![route]));
         assert_eq!(rows.len(), 1);
         assert_eq!((rows[0].swap.input_amount, rows[0].swap.output_amount), (100, last_output));
@@ -1120,8 +1127,12 @@ fn okx_summaries_paired_with_another_instruction_are_never_verified() {
 }
 
 // ---------------------------------------------------------------------------
-// One-field stale pairings: a verifier must compare every field it rebuilds,
-// so each stale row below differs from its writer's own swap in one field.
+// One-field stale pairings: a verifier must compare every field it takes
+// from the instruction (pool, user, stack height and mints), so each stale
+// row below differs from its writer's own swap in one such field. Fields the
+// paired row and the writer's rebuild both read from the same evidence line
+// (the amounts; Orca's pool and mints, which it pairs by; CLMM router pools
+// and mints; AMM v4 mints; the OKX pool) cannot differ.
 // ---------------------------------------------------------------------------
 
 fn nested(call: Call) -> Call {
@@ -1182,8 +1193,85 @@ fn log_verifiers_compare_pool_user_and_stack_height_separately() {
     assert_stale(&rows, at(1, Some(0)), 0x50, 200);
 }
 
+/// `call` with each pair of account positions exchanged.
+fn swap_accounts(mut call: Call, pairs: &[(usize, usize)]) -> Call {
+    for &(a, b) in pairs {
+        call.accounts.swap(a, b);
+    }
+    call
+}
+
+/// For a venue that takes its mints from the instruction: the first call
+/// writes an undecodable event, so the second call's event (200 in) pairs with
+/// the first call. Both calls share the user, pool and stack height, but the
+/// second swaps the opposite way, so the writer differs from the row in its
+/// mints only.
+fn assert_mints_are_compared(rows: Vec<ProjectedSwap>) {
+    assert_stale(&rows, at(1, None), 0x70, 200);
+    assert_eq!(
+        (rows[0].swap.input_mint.as_slice(), rows[0].swap.output_mint.as_slice()),
+        (key(MINT_IN).as_slice(), key(MINT_OUT).as_slice())
+    );
+}
+
 #[test]
-fn okx_verifier_compares_every_field_at_the_completing_line() {
+fn log_verifiers_compare_mints_separately() {
+    let undecodable = || "Program data: AAAA".to_string();
+    // CLMM `swap_v2`: token accounts, vaults and vault mints exchanged.
+    let back = swap_accounts(clmm_swap(0x10, 0x70), &[(3, 4), (5, 6), (11, 12)]);
+    assert_mints_are_compared(project_rows(&with_mints(
+        block_with(vec![
+            clmm_swap(0x10, 0x70).after(undecodable()),
+            back.after(clmm_event(0x70, 0x71, 0x72, 200, 180)),
+        ]),
+        &VAULT_MINTS,
+    )));
+    // CPMM: token accounts, vaults and mints exchanged; v1 events carry no mints.
+    let back = swap_accounts(cpmm_swap(0x10, 0x70), &[(4, 5), (6, 7), (10, 11)]);
+    assert_mints_are_compared(project_rows(&block_with(vec![
+        cpmm_swap(0x10, 0x70).after(undecodable()),
+        back.after(cpmm_event(0x70, 200, 180)),
+    ])));
+    // Meteora AMM: the user's source and destination token accounts exchanged.
+    let back = swap_accounts(meteora_amm_swap(0x10, 0x70), &[(1, 2)]);
+    assert_mints_are_compared(project_rows(&with_mints(
+        block_with(vec![meteora_amm_swap(0x10, 0x70).after(undecodable()), back.after(meteora_amm_event(200, 180))]),
+        &[(0xd1, MINT_IN), (0xd2, MINT_OUT)],
+    )));
+}
+
+/// An OKX `SwapV3` that writes no `SwapEvent` leaves its context queued, so
+/// the next `SwapV3`'s own event completes it. That writer's own summary at
+/// the same line differs from the paired row exactly where the two
+/// instructions differ: here in the user, the mints or the stack height
+/// alone. Both read the pool from the writer's own route preamble.
+#[test]
+fn okx_verifier_compares_user_mints_and_stack_height_separately() {
+    let writer = |call: Call| okx_preamble(call, 100, 0x50).after(okx_event(100, 90));
+    let set = |mut call: Call, index: usize, byte: u8| {
+        call.accounts[index] = key(byte);
+        call
+    };
+    let user = writer(set(okx_swap(0x80, 100, 1), 0, 0x90));
+    let mints = writer(set(set(okx_swap(0x80, 100, 1), 3, 0x84), 4, 0x83));
+    let stack_height = nested(writer(okx_swap(0x80, 100, 1)));
+    for (second, position) in [(user, at(1, None)), (mints, at(1, None)), (stack_height, at(1, Some(0)))] {
+        let rows = project_rows(&block_with(vec![okx_swap(0x80, 100, 1), second]));
+        assert_eq!(rows.len(), 1);
+        let row = &rows[0];
+        // The first instruction's accounts with the writer's preamble and event.
+        assert_eq!(
+            (row.swap.user.as_slice(), row.swap.input_mint.as_slice(), row.swap.output_mint.as_slice()),
+            (key(0x80).as_slice(), key(0x83).as_slice(), key(0x84).as_slice())
+        );
+        assert_eq!((row.swap.input_amount, row.swap.output_amount, row.swap.stack_height), (100, 90, 0));
+        assert_eq!(row.swap.amm_pool, key(0x50).to_vec());
+        assert_eq!((row.invocation, row.verified_context), (Some(position), None));
+    }
+}
+
+#[test]
+fn okx_verifier_compares_the_input_amount_at_its_completing_line() {
     let forged = |amount_in, amount_out| Call::new(OTHER_PROGRAM, vec![key(0x2f)], vec![9]).after(okx_event(amount_in, amount_out));
     // Same payer and mints: the leaked summary differs from its writer's own
     // summary at that line in the input amount only.
