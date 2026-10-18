@@ -361,6 +361,113 @@ mod tests {
             assert!(prove(&tx).is_none(), "mutation {mutation}");
         }
     }
+
+    fn logs(tx: &mut pb::ConfirmedTransaction) -> &mut Vec<String> {
+        &mut tx.meta.as_option_mut().unwrap().log_messages
+    }
+
+    /// Append a top-level instruction of `program` that logs its invocation.
+    fn with_logged_instruction(mut tx: pb::ConfirmedTransaction, program: [u8; 32]) -> pb::ConfirmedTransaction {
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+        message.account_keys.push(program.to_vec());
+        message.instructions.push(pb::CompiledInstruction {
+            program_id_index: message.account_keys.len() as u32 - 1,
+            ..Default::default()
+        });
+        let key = base58::encode(program);
+        logs(&mut tx).extend([format!("Program {key} invoke [1]"), format!("Program {key} success")]);
+        tx
+    }
+
+    fn position(instruction_index: u32, inner_instruction_index: Option<u32>) -> InstructionPosition {
+        InstructionPosition {
+            instruction_index,
+            inner_instruction_index,
+        }
+    }
+
+    #[test]
+    fn invoke_depth_must_follow_the_open_invocation_stack() {
+        let (a, b, c, d) = (
+            base58::encode([1; 32]),
+            base58::encode([2; 32]),
+            base58::encode([3; 32]),
+            base58::encode([4; 32]),
+        );
+        // Control: top-level d logged after a closed proves, with each call
+        // under the invocation that was open when it was logged.
+        let evidence = prove(&with_logged_instruction(transaction(), [4; 32])).unwrap().evidence;
+        assert_eq!(evidence[&position(0, Some(1))].parent, Some(position(0, Some(0))));
+        assert_eq!(evidence[&position(1, None)].parent, None);
+        assert_eq!(evidence[&position(1, None)].outcome, InvocationOutcome::Succeeded);
+
+        // c is recorded at height 3 and logged at depth 3, but directly under
+        // a after b closed: the line's depth disagrees with the open stack, so
+        // accepting it would make a, not b, its parent.
+        let mut tx = transaction();
+        *logs(&mut tx) = vec![
+            format!("Program {a} invoke [1]"),
+            format!("Program {b} invoke [2]"),
+            format!("Program {b} success"),
+            format!("Program {c} invoke [3]"),
+            format!("Program {c} success"),
+            format!("Program {a} success"),
+        ];
+        assert!(prove(&tx).is_none(), "inner depth must follow the open stack");
+
+        // Top-level d logged at depth 1 inside a's invocation.
+        let mut tx = with_logged_instruction(transaction(), [4; 32]);
+        *logs(&mut tx) = vec![
+            format!("Program {a} invoke [1]"),
+            format!("Program {b} invoke [2]"),
+            format!("Program {c} invoke [3]"),
+            format!("Program {c} success"),
+            format!("Program {b} success"),
+            format!("Program {d} invoke [1]"),
+            format!("Program {d} success"),
+            format!("Program {a} success"),
+        ];
+        assert!(prove(&tx).is_none(), "a top-level instruction cannot run inside another");
+    }
+
+    #[test]
+    fn alignment_skips_only_top_level_precompiles_anywhere_in_the_sequence() {
+        // Control: a silent precompile between two logged instructions proves.
+        assert!(prove(&with_logged_instruction(with_silent_instruction(transaction(), ED25519), [4; 32])).is_some());
+
+        // A silent ComputeBudget before a logged instruction: alignment must
+        // not skip it to reach the next match (the trailing case is mutation 5
+        // of truncated_unknown_depth_and_misaligned_traces_never_prove_success).
+        let tx = with_logged_instruction(with_silent_instruction(transaction(), "ComputeBudget111111111111111111111111111111"), [4; 32]);
+        assert!(prove(&tx).is_none(), "only precompiles may be skipped mid-sequence");
+
+        // A silent precompile recorded as an inner instruction.
+        let mut tx = transaction();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+        message.account_keys.push(base58::decode(ED25519).unwrap());
+        let program_id_index = message.account_keys.len() as u32 - 1;
+        tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions.push(pb::InnerInstruction {
+            program_id_index,
+            stack_height: Some(2),
+            ..Default::default()
+        });
+        assert!(prove(&tx).is_none(), "only top-level precompiles run without logs");
+    }
+
+    #[test]
+    fn outcome_lines_close_their_own_program_and_malformed_lines_reject_the_trace() {
+        let (a, b) = (base58::encode([1; 32]), base58::encode([2; 32]));
+        // Outcome lines naming the wrong program for the frame they close.
+        let mut tx = transaction();
+        logs(&mut tx)[4] = format!("Program {a} success");
+        logs(&mut tx)[5] = format!("Program {b} success");
+        assert!(prove(&tx).is_none(), "an outcome line closes its own program");
+
+        // A malformed runtime line rejects the whole trace, not just itself.
+        let mut tx = transaction();
+        logs(&mut tx).insert(4, format!("Program {b} success extra"));
+        assert!(prove(&tx).is_none(), "malformed runtime grammar must reject the trace");
+    }
 }
 
 #[cfg(test)]
@@ -377,7 +484,7 @@ mod exact_log_tests {
     #[test]
     fn malformed_runtime_grammar_is_rejected() {
         let key = base58::encode([2; 32]);
-        for tail in ["invoke [2] extra", "invoke [02]", "invoke [0]", "success extra", "failed:"] {
+        for tail in ["invoke [2] extra", "invoke [02]", "invoke [0]", "success extra", "failed:", "failed: "] {
             assert!(parse_log(&format!("Program {key} {tail}")).is_err());
         }
         assert!(parse_log("Program log: Program fake success").unwrap().is_none());

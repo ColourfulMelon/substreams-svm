@@ -127,9 +127,12 @@ original index in the unfiltered block. Every row adds:
 - `invocation`: the invocation that wrote the row's evidence. Every log line is
   written by the innermost invocation open at that point of the runtime trace,
   so when the recorded instruction walk and the invocation logs align exactly
-  (program ids, `invoke [depth]` versus stack heights, every inner instruction
-  inside its own outer instruction, balanced outcomes, no `Log truncated`), each
-  line has exactly one writer. Instruction rows report their event instruction.
+  (program ids, `invoke [depth]` versus both the recorded stack height and the
+  open invocation stack, every inner instruction inside its own outer
+  instruction, no `invoke` line missing except for top-level signature
+  precompiles, balanced outcomes each closing its own program, no
+  `Log truncated`), each line has exactly one writer. Instruction rows report
+  their event instruction.
   A log row reports the writer of its evidence line, and only when that
   writer's program is the row's `program_id`; otherwise, or when the trace is
   missing, truncated, ambiguous or inconsistent, it is `None`. For log rows this
@@ -223,8 +226,11 @@ protocol or live-provider coverage.
 Tests compare the native and WASM-wrapper body, including encoded-output hashes
 of all four pinned blocks captured from unchanged main. They also cover original
 positions, aggregator classification, caught CPI failures, ambiguous/truncated
-invocation traces, exact runtime log grammar, failed-prior-swap FIFO
-association, malformed blocks, resource bounds, empty blocks, and missing time.
+invocation traces (including an invocation logged at a depth the open stack
+does not allow, a non-precompile instruction without its `invoke` line anywhere
+in the sequence, and an outcome line closing another program), exact runtime
+log grammar, failed-prior-swap FIFO association, malformed blocks, resource
+bounds, empty blocks, and missing time.
 Execution fixtures, all through `project()`, cover interleaved instruction and
 log rows, a multi-hop instruction, nested CPI inside an aggregator route, failed
 invocations and failed ancestors, event lines written by another program
