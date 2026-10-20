@@ -2,7 +2,8 @@
 //! are excluded even when they transfer both pool mints.
 //! Source: saber-hq/stable-swap@39d5d4e0e844a009c83d37a3ce63d219fdba0bff.
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ");
 
@@ -66,14 +67,14 @@ mod tests {
             let swaps = crate::process_transaction(tx.clone()).unwrap().swaps;
             let swaps: Vec<_> = swaps.iter().filter(|s| s.source_index == Some(source as u32)).collect();
             assert_eq!(swaps.len(), 1);
-            assert_eq!(swaps[0].protocol, Protocol::Saber as i32);
+            assert_eq!(swaps[0].protocol, Protocol::Saber);
             assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (input, output));
             assert!(swaps[0].transfer_verified);
             for mode in 0..21 {
                 let mut changed = tx.clone();
-                let (group, position) = changed.meta.as_ref().unwrap().inner_instructions.iter().enumerate()
+                let (group, position) = changed.meta.as_option().unwrap().inner_instructions.iter().enumerate()
                     .find_map(|(g, xs)| xs.instructions.iter().position(|x| x.data == native_data).map(|p| (g, p))).unwrap();
-                let meta = changed.meta.as_mut().unwrap();
+                let meta = changed.meta.as_option_mut().unwrap();
                 let calls = &mut meta.inner_instructions[group].instructions;
                 let a = calls[position].accounts.clone();
                 match mode {
@@ -96,7 +97,7 @@ mod tests {
                     16 => calls[position + 2].stack_height = Some(walk[source].stack_height() + 2),
                     17 => { let extra = calls[position + 1].clone(); calls.insert(position + 4, extra); }
                     18 => calls[position + 2].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
-                    19 => meta.err = Some(Default::default()),
+                    19 => meta.err = buffa::MessageField::some(Default::default()),
                     _ => meta.log_messages.iter_mut().filter(|s| **s == format!("Program {} success", substreams_solana::base58::encode(PROGRAM_ID)))
                         .for_each(|s| *s = format!("Program {} failed: rejected swap", substreams_solana::base58::encode(PROGRAM_ID))),
                 }

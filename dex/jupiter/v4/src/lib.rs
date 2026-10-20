@@ -13,7 +13,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 
 /// Process a transaction to extract Jupiter V4 instructions and events
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
     let instructions = process_logs(tx_meta);
     if instructions.is_empty() {
         return None;
@@ -21,7 +21,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -74,13 +74,16 @@ fn parse_log_instruction(log_message: &str, stack_height: u32) -> Option<pb::Ins
         Ok(jupiter::v4::events::JupiterV4Event::Swap(event)) => Some(pb::Instruction {
             program_id: jupiter::v4::PROGRAM_ID.to_vec(),
             stack_height,
-            instruction: Some(pb::instruction::Instruction::SwapEvent(pb::SwapEvent {
-                amm: event.amm.to_bytes().to_vec(),
-                input_mint: event.input_mint.to_bytes().to_vec(),
-                input_amount: event.input_amount,
-                output_mint: event.output_mint.to_bytes().to_vec(),
-                output_amount: event.output_amount,
-            })),
+            instruction: Some(pb::instruction::Instruction::SwapEvent(
+                pb::SwapEvent {
+                    amm: event.amm.to_bytes().to_vec(),
+                    input_mint: event.input_mint.to_bytes().to_vec(),
+                    input_amount: event.input_amount,
+                    output_mint: event.output_mint.to_bytes().to_vec(),
+                    output_amount: event.output_amount,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

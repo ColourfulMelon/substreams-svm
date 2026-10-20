@@ -26,7 +26,7 @@ impl State {
         let data = parse_program_data(log_message)?;
         match dumpfun::events::unpack_event(data.as_slice()) {
             Ok(dumpfun::events::DumpfunEvent::BuyTokenEvent(event)) => Some(pb::Swap {
-                protocol: pb::Protocol::Dumpfun as i32,
+                protocol: pb::Protocol::Dumpfun.into(),
                 program_id: dumpfun::PROGRAM_ID.to_vec(),
                 stack_height: 0,
                 amm: dumpfun::PROGRAM_ID.to_vec(),
@@ -43,7 +43,7 @@ impl State {
                 ..Default::default()
     }),
             Ok(dumpfun::events::DumpfunEvent::SellTokenEvent(event)) => Some(pb::Swap {
-                protocol: pb::Protocol::Dumpfun as i32,
+                protocol: pb::Protocol::Dumpfun.into(),
                 program_id: dumpfun::PROGRAM_ID.to_vec(),
                 stack_height: 0,
                 amm: dumpfun::PROGRAM_ID.to_vec(),

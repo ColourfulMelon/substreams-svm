@@ -54,12 +54,12 @@ fn legacy_batch_ledger(
     let accounts = ix.accounts();
     if program.0 != &token::PROGRAM_ID || data.first() != Some(&255)
         || !successful.contains(&index)
-        || tx.meta.as_ref()?.err.is_some() { return None; }
+        || tx.meta.as_option()?.err.is_set() { return None; }
     let mut cursor = 1usize;
     let mut account_cursor = 0usize;
     let mut children = Vec::new();
     let resolved = tx.resolved_accounts();
-    let meta = tx.meta.as_ref()?;
+    let meta = tx.meta.as_option()?;
     while cursor < data.len() {
         let count = usize::from(*data.get(cursor)?);
         let length = usize::from(*data.get(cursor + 1)?);
@@ -101,7 +101,7 @@ pub(crate) fn verify_with_fees(
     // A successful transaction may catch a failed CPI. Its completed inner
     // transfers roll back too, so require runtime success for all evidence
     // whenever the transaction contains a caught invocation failure.
-    let caught_failure = tx.meta.as_ref().is_some_and(|meta| {
+    let caught_failure = tx.meta.as_option().is_some_and(|meta| {
         meta.log_messages.iter().any(|log| {
             let mut words = log.split_whitespace();
             words.next() == Some("Program") && words.next().is_some() && words.next() == Some("failed:")
@@ -154,8 +154,8 @@ pub(crate) fn verify_with_fees(
                     || matches!(crate::pumpfun::unpack_trade_instruction(ix.data()), Ok(pumpfun::instructions::PumpFunInstruction::Sell(_)
                         | pumpfun::instructions::PumpFunInstruction::SellV2(_))))
                 || crate::native_venues::defituna_two_hop(ix).is_some()
-                || ix.program_id().0.as_slice() == substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") && ix.data().first() == Some(&17)
-                || ix.program_id().0.as_slice() == substreams_solana::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp")
+                || ix.program_id().0.as_slice() == substreams_solana_macro::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH") && ix.data().first() == Some(&17)
+                || ix.program_id().0.as_slice() == substreams_solana_macro::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp")
                     && ix.data().len() == 25 && ix.data()[24] == (48 ^ 58 ^ 3)
         }) {
         crate::logs::successful_invocations(tx)
@@ -348,10 +348,10 @@ pub(crate) fn verify_with_fees(
     let mut observed_start = HashSet::new();
     let mut observed_end = HashSet::new();
     let accounts = tx.resolved_accounts();
-    if let Some(meta) = &tx.meta {
+    if let Some(meta) = tx.meta.as_option() {
         for (balances, sign) in [(&meta.pre_token_balances, -1i128), (&meta.post_token_balances, 1)] {
             for balance in balances {
-                if let (Some(account), Some(amount)) = (accounts.get(balance.account_index as usize), balance.ui_token_amount.as_ref()) {
+                if let (Some(account), Some(amount)) = (accounts.get(balance.account_index as usize), balance.ui_token_amount.as_option()) {
                     if let Ok(value) = amount.amount.parse::<u64>() {
                         *deltas.entry((*account).clone()).or_default() += sign * i128::from(value);
                         observed_balances.insert((*account).clone());
@@ -483,7 +483,7 @@ pub(crate) fn verify_with_fees(
         || crate::omnipair::layout(ix).is_some() || crate::fraudsworth::layout(ix).is_some())
         && closes.iter().any(|(account,count)| *count==1 && initializations.get(account)==Some(&1) && !observed_balances.contains(account))
     {
-        if let Some(meta) = tx.meta.as_ref() {
+        if let Some(meta) = tx.meta.as_option() {
             let keys = tx.resolved_accounts();
             let mut native = HashMap::<Vec<u8>,i128>::new();
             let mut valid = true;
@@ -597,11 +597,11 @@ pub(crate) fn verify_with_fees(
             // pre-existing token balance. It is a lifecycle debit, never swap
             // proceeds. Bind its owner and prohibit later account accesses.
             if mint.as_slice()!=crate::SOL_MINT || !proven_closed.contains(address){return true;}
-            let Some(meta)=tx.meta.as_ref()else{return true;};
+            let Some(meta)=tx.meta.as_option()else{return true;};
             let resolved=tx.resolved_accounts();
             let Some(position)=resolved.iter().position(|key|*key==address)else{return true;};
             let Some(before)=meta.pre_token_balances.iter().find(|v|v.account_index as usize==position)else{return true;};
-            let Some(start)=before.ui_token_amount.as_ref().and_then(|v|v.amount.parse::<i128>().ok())else{return true;};
+            let Some(start)=before.ui_token_amount.as_option().and_then(|v|v.amount.parse::<i128>().ok())else{return true;};
             let Some((closed,close))=instructions.iter().enumerate().find(|(n,c)|c.program_id().0==&token::PROGRAM_ID
                 && c.data().as_slice()==[9] && c.accounts().len()==3 && c.accounts()[0].0==address
                 && successful_invocations.contains(&(*n as u32)))else{return true;};
@@ -979,7 +979,7 @@ pub(crate) fn verify_with_fees(
             let a = ix.accounts();
             let (input, output) = (&transfers[input_position], &transfers[output_position]);
             swaps.push(pb::Swap {
-                protocol: pb::Protocol::JupiterLend as i32,
+                protocol: pb::Protocol::JupiterLend.into(),
                 program_id: crate::jupiter_lend::PROGRAM_ID.to_vec(), amm: crate::jupiter_lend::PROGRAM_ID.to_vec(),
                 amm_pool: a[1].0.clone(), user: a[0].0.clone(),
                 stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
@@ -994,7 +994,7 @@ pub(crate) fn verify_with_fees(
             let a = ix.accounts();
             let (input, output) = (&transfers[input_position], &transfers[output_position]);
             swaps.push(pb::Swap {
-                protocol: pb::Protocol::Oasis as i32,
+                protocol: pb::Protocol::Oasis.into(),
                 program_id: crate::oasis::PROGRAM_ID.to_vec(), amm: crate::oasis::PROGRAM_ID.to_vec(),
                 amm_pool: a[1].0.clone(), user: a[8].0.clone(),
                 stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
@@ -1009,7 +1009,7 @@ pub(crate) fn verify_with_fees(
             let accounts = ix.accounts();
             let (input, output) = (&transfers[input_position], &transfers[output_position]);
             swaps.push(pb::Swap {
-                protocol: pb::Protocol::Mercurial as i32,
+                protocol: pb::Protocol::Mercurial.into(),
                 program_id: crate::mercurial::PROGRAM_ID.to_vec(),
                 amm: crate::mercurial::PROGRAM_ID.to_vec(),
                 amm_pool: accounts[0].0.clone(), user: accounts[3].0.clone(),
@@ -1026,7 +1026,7 @@ pub(crate) fn verify_with_fees(
             for hop in 0..2 {
                 let (input, output) = (&transfers[legs[hop]], &transfers[legs[hop + 1]]);
                 swaps.push(pb::Swap {
-                    protocol: pb::Protocol::Defituna as i32,
+                    protocol: pb::Protocol::Defituna.into(),
                     program_id: ix.program_id().0.clone(),
                     amm: ix.program_id().0.clone(),
                     amm_pool: accounts[hop].0.clone(),
@@ -1049,7 +1049,7 @@ pub(crate) fn verify_with_fees(
             let (input, output) = (&transfers[input_position], &transfers[output_position]);
             let a = ix.accounts();
             let native = pb::Swap {
-                protocol: pb::Protocol::MeteoraDaam as i32,
+                protocol: pb::Protocol::MeteoraDaam.into(),
                 program_id: ix.program_id().0.clone(),
                 amm: ix.program_id().0.clone(),
                 stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
@@ -1165,7 +1165,7 @@ pub(crate) fn verify_with_fees(
                         && t.depth == depth + 2
                         && accounts
                             .get(12)
-                            .is_some_and(|program| program.0.as_slice() == substreams_solana::b58!("vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV"))
+                            .is_some_and(|program| program.0.as_slice() == substreams_solana_macro::b58!("vo1tWgqZMjG61Z2T9qUaMYKqZ75CYzMuaZ2LZP1n7HV"))
                         && instructions[..t.index as usize]
                             .iter()
                             .rev()
@@ -1373,7 +1373,7 @@ pub(crate) fn verify_with_fees(
                     continue;
                 }
                 candidates.push(pb::Swap {
-                    protocol: layout.protocol as i32,
+                    protocol: (layout.protocol as i32).into(),
                     program_id: ix.program_id().0.clone(),
                     stack_height: depth,
                     amm: ix.program_id().0.clone(),
@@ -1507,7 +1507,7 @@ pub(crate) fn verify_with_fees(
                 continue;
             }
             let native = pb::Swap {
-                protocol: pb::Protocol::MeteoraDlmm as i32,
+                protocol: pb::Protocol::MeteoraDlmm.into(),
                 program_id: substreams_solana_idls::meteora::dlmm::PROGRAM_ID.to_vec(),
                 amm: substreams_solana_idls::meteora::dlmm::PROGRAM_ID.to_vec(),
                 stack_height: depth,
@@ -1750,7 +1750,7 @@ pub(crate) fn verify_with_fees(
                         || transfers.iter().any(|t| t.mint == crate::SOL_MINT
                             && [&t.source, &t.destination].iter().any(|a| *a == pool || *a == recipient))
                     { continue; }
-                    let Some(meta) = tx.meta.as_ref() else { continue };
+                    let Some(meta) = tx.meta.as_option() else { continue };
                     let resolved = tx.resolved_accounts();
                     let Some(pool_position) = resolved.iter().position(|a| *a == pool) else { continue };
                     let Some(recipient_position) = resolved.iter().position(|a| *a == recipient) else { continue };
@@ -1763,7 +1763,7 @@ pub(crate) fn verify_with_fees(
                     { continue; }
                     native_sol_multihop_receipts.insert(index as u32, (input.index, net, pool.clone()));
                     swaps.push(pb::Swap {
-                        protocol: pb::Protocol::Pumpfun as i32,
+                        protocol: pb::Protocol::Pumpfun.into(),
                         program_id: ix.program_id().0.clone(), amm: ix.program_id().0.clone(),
                         amm_pool: pool.clone(), user: accounts[user].0.clone(), stack_height: depth,
                         input_mint: input_mint.clone(), input_amount: input.amounts[0],
@@ -1790,7 +1790,7 @@ pub(crate) fn verify_with_fees(
                     group[2].0.clone(), accounts[user].0.clone(), input_mint.clone(), input.amounts[0],
                     output_mint.clone(), *output.amounts.iter().min().unwrap()));
                 swaps.push(pb::Swap {
-                    protocol: if is_curve { pb::Protocol::Pumpfun } else { pb::Protocol::PumpfunAmm } as i32,
+                    protocol: (if is_curve { pb::Protocol::Pumpfun } else { pb::Protocol::PumpfunAmm } as i32).into(),
                     program_id: ix.program_id().0.clone(),
                     amm: ix.program_id().0.clone(),
                     amm_pool: group[2].0.clone(),
@@ -1988,7 +1988,7 @@ pub(crate) fn verify_with_fees(
                 continue;
             }
             let native = pb::Swap {
-                protocol: pb::Protocol::JupiterRfq as i32,
+                protocol: pb::Protocol::JupiterRfq.into(),
                 program_id: ix.program_id().0.clone(),
                 amm: ix.program_id().0.clone(),
                 // Real maker identity; protocol explicitly marks an RFQ source.
@@ -2078,7 +2078,7 @@ pub(crate) fn verify_with_fees(
             // has no token identity or child accesses, and no native movement.
             let address = a[26].0;
             let balance = tx.resolved_accounts().iter().position(|key| *key == address).and_then(|p|
-                tx.meta.as_ref()?.pre_balances.get(p).zip(tx.meta.as_ref()?.post_balances.get(p)));
+                tx.meta.as_option()?.pre_balances.get(p).zip(tx.meta.as_option()?.post_balances.get(p)));
             if a[..26].iter().any(|key| key.0 == address) || mints.mint_for(address).is_some()
                 || balance.is_none_or(|(before, after)| before != after)
                 || instructions[index + 1..end].iter().any(|child| child.accounts().iter().any(|key| key.0 == address)) { continue; }
@@ -2090,7 +2090,7 @@ pub(crate) fn verify_with_fees(
         let base = base[0];
         let initialized_zero = initializations.get(a[source].0) == Some(&1) && !observed_start.contains(a[source].0)
             && tx.resolved_accounts().iter().position(|key| *key == a[source].0)
-                .and_then(|p| tx.meta.as_ref()?.pre_balances.get(p)).is_some_and(|balance| *balance == 0);
+                .and_then(|p| tx.meta.as_option()?.pre_balances.get(p)).is_some_and(|balance| *balance == 0);
         if !observed_start.contains(a[source].0) && !initialized_zero
             || !observed_end.contains(a[source].0) && !proven_closed.contains(a[source].0)
                 && !(initialized_zero && closes.get(a[source].0) == Some(&1))
@@ -2211,7 +2211,7 @@ pub(crate) fn verify_with_fees(
                 }
             }
         }
-        if let Some(meta) = tx.meta.as_ref() {
+        if let Some(meta) = tx.meta.as_option() {
             if let Some(payer) = resolved.first() { *native_changes.entry((*payer).clone()).or_default() -= i128::from(meta.fee); }
             // Source-bound Titanium Pump settlement: exact Atlas gain is swept
             // to its funding account and wrapped, with an early WSOL close and
@@ -2267,7 +2267,7 @@ pub(crate) fn verify_with_fees(
                     || titan_settlements.values().any(|settlement| settlement.close == position)
                     || closes.get(a[0].0) != Some(&1) || protected.contains(a[0].0)
                     || instructions.iter().enumerate().skip(position + 1).any(|(p, later)| later.accounts().iter().any(|key| key.0 == a[0].0)
-                        && !(later.is_root() && later.program_id().0.as_slice() == substreams_solana::b58!("D3og1Asnw7dPBcToJ3gQ2mRup728xsEn6Sg62mTm1enm")
+                        && !(later.is_root() && later.program_id().0.as_slice() == substreams_solana_macro::b58!("D3og1Asnw7dPBcToJ3gQ2mRup728xsEn6Sg62mTm1enm")
                             && later.data().as_slice() == [12, 0, 255] && later.accounts().len() == 3 && later.accounts()[2].0 == a[0].0
                             && later.accounts()[0].0 != a[0].0 && later.accounts()[1].0 != a[0].0
                             && successful_invocations.contains(&(p as u32)) && instructions.get(p + 1).is_none_or(|next| next.is_root())))
@@ -2359,7 +2359,7 @@ pub(crate) fn verify_with_fees(
             // pre-balance can only be credited to the declared seller wallet.
             for (position, close) in instructions.iter().enumerate() {
                 let a = close.accounts();
-                if !close.is_root() || close.program_id().0.as_slice() != substreams_solana::b58!("D3og1Asnw7dPBcToJ3gQ2mRup728xsEn6Sg62mTm1enm")
+                if !close.is_root() || close.program_id().0.as_slice() != substreams_solana_macro::b58!("D3og1Asnw7dPBcToJ3gQ2mRup728xsEn6Sg62mTm1enm")
                     || close.data().as_slice() != [12, 0, 255] || a.len() != 3 || a.iter().enumerate().any(|(p, key)| a[p + 1..].iter().any(|other| key.0 == other.0))
                     || protected.contains(a[1].0) || !successful_invocations.contains(&(position as u32))
                     || instructions.get(position + 1).is_some_and(|next| !next.is_root())
@@ -2608,7 +2608,7 @@ pub(crate) fn verify_with_fees(
             { continue; }
             t.amounts[0]
         } else { 0 };
-        let Some(meta) = tx.meta.as_ref() else { continue };
+        let Some(meta) = tx.meta.as_option() else { continue };
         let resolved = tx.resolved_accounts();
         let Some(position) = resolved.iter().position(|account| *account == a[5].0) else { continue };
         let Some(pool_delta) = meta.post_balances.get(position).zip(meta.pre_balances.get(position))
@@ -2626,7 +2626,7 @@ pub(crate) fn verify_with_fees(
     // Prefer a native event over its Jupiter wrapper, including when wrapper
     // amounts reflect a transfer fee. Never deduplicate by amount alone.
     let mut pending = std::mem::take(swaps);
-    pending.sort_by_key(|swap| matches!(swap.protocol, 4 | 5));
+    pending.sort_by_key(|swap| matches!(swap.protocol.to_i32(), 4 | 5));
     for mut swap in pending {
         let expected_source = swap.source_index;
         let expected_transfer = swap.source_transfer_index;
@@ -2682,7 +2682,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount, swap.output_amount) != (native.input_amount, native.output_amount)
                         || expected_transfer.is_some_and(|position| position != input.min(output).to_owned())
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = pb::Protocol::JupiterRfq as i32;
+                    swap.protocol = pb::Protocol::JupiterRfq.into();
                     swap.program_id = ix.program_id().0.clone();
                     evidence = Some(identity);
                     break 'candidate;
@@ -2747,7 +2747,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount)!=(gross,net)
                         || expected_transfer.is_some_and(|position|position!=input.index)
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                    swap.protocol=(layout.protocol as i32).into();evidence=Some(identity);break 'candidate;
                 }
                 if [crate::patch_bxlw::PATCH.as_slice(),crate::patch_bxlw::BXLW.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout) = crate::patch_bxlw::layout(ix) else { continue };
@@ -2761,7 +2761,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount) != (gross,net)
                         || expected_transfer.is_some_and(|position|position != input.index)
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                    swap.protocol = (layout.protocol as i32).into(); evidence = Some(identity); break 'candidate;
                 }
                 if ix.program_id().0.as_slice() == crate::m0_native_order::PROGRAM_ID {
                     let Some(layout) = crate::m0_native_order::layout(ix) else { continue };
@@ -2775,7 +2775,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount) != (gross,net)
                         || expected_transfer.is_some_and(|position|position != input.index)
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                    swap.protocol = (layout.protocol as i32).into(); evidence = Some(identity); break 'candidate;
                 }
                 if ix.program_id().0.as_slice() == crate::picon_dlmm::PROGRAM_ID {
                     let Some(layout) = crate::picon_dlmm::layout(ix) else { continue };
@@ -2790,7 +2790,7 @@ pub(crate) fn verify_with_fees(
                         || swap.output_mint != output.mint || (swap.input_amount,swap.output_amount) != (gross,net)
                         || expected_transfer.is_some_and(|position|position != input.index)
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32; evidence = Some(identity); break 'candidate;
+                    swap.protocol = (layout.protocol as i32).into(); evidence = Some(identity); break 'candidate;
                 }
                 if [crate::legacy_amm::ALDRIN.as_slice(),crate::legacy_amm::CROPPER.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout) = crate::legacy_amm::layout(ix) else { continue };
@@ -2805,7 +2805,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount) != (gross,net)
                         || expected_transfer.is_some_and(|position| position != input.index)
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32;
+                    swap.protocol = (layout.protocol as i32).into();
                     evidence = Some(identity); break 'candidate;
                 }
                 if ix.program_id().0.as_slice() == crate::hadron::PROGRAM_ID {
@@ -2852,7 +2852,7 @@ pub(crate) fn verify_with_fees(
                         || [users[1],vaults[1]].iter().any(|r|mints.mint_for(accounts[*r].0).as_deref()!=Some(output.mint.as_slice()))
                         || (swap.input_amount,swap.output_amount)!=(gross,net)
                         || expected_transfer.is_some_and(|position|position!=if layout.protocol==pb::Protocol::AnchorSwap{input.index.min(output.index)}else{input.index}) || native_evidence.contains(&identity){continue;}
-                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                    swap.protocol=(layout.protocol as i32).into();evidence=Some(identity);break 'candidate;
                 }
                 if [crate::anchor_markets::GHOSTY.as_slice(),crate::anchor_markets::MEMEFUN.as_slice(),crate::omnipair::PROGRAM_ID.as_slice(),crate::fraudsworth::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout)=crate::native_venues::layout(ix)else{continue;};
@@ -2866,7 +2866,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount)!=(layout.amount,net)
                         || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
                     {continue;}
-                    swap.protocol=layout.protocol as i32;
+                    swap.protocol=(layout.protocol as i32).into();
                     evidence=Some(identity);break 'candidate;
                 }
                 if [crate::jupiter_perps::PROGRAM_ID.as_slice(),crate::numeraire::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
@@ -2886,7 +2886,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount)!=(input.amounts[0],net)
                         || expected_transfer.is_some_and(|position|position!=input.index.min(output.index)) || native_evidence.contains(&identity)
                     {continue;}
-                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                    swap.protocol=(layout.protocol as i32).into();evidence=Some(identity);break 'candidate;
                 }
                 if [crate::futarchy::PROGRAM_ID.as_slice(),crate::guacswap::PROGRAM_ID.as_slice()].contains(&ix.program_id().0.as_slice()) {
                     let Some(layout)=crate::native_venues::layout(ix)else{continue;};
@@ -2903,7 +2903,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount,swap.output_amount)!=(input.amounts[0],net)
                         || expected_transfer.is_some_and(|position|position!=input.index) || native_evidence.contains(&identity)
                     {continue;}
-                    swap.protocol=layout.protocol as i32;evidence=Some(identity);break 'candidate;
+                    swap.protocol=(layout.protocol as i32).into();evidence=Some(identity);break 'candidate;
                 }
                 if ix.program_id().0.as_slice() == crate::quay::PROGRAM_ID {
                     let Some(layout) = crate::quay::layout(ix) else { continue };
@@ -2932,7 +2932,7 @@ pub(crate) fn verify_with_fees(
                     let identity = (index as u32, input.index, output.index);
                     if !input.net_verified || !output.net_verified || net == 0
                         || input.index != index as u32 + 1 || output.index != end - 1
-                        || swap.protocol != pb::Protocol::Riptide as i32
+                        || swap.protocol != pb::Protocol::Riptide
                         || swap.amm_pool != *accounts[layout.pool].0 || swap.user != *accounts[layout.authority].0
                         || swap.input_mint != input.mint || swap.output_mint != output.mint
                         || (swap.input_amount, swap.output_amount) != (input.amounts[0], net)
@@ -3051,7 +3051,7 @@ pub(crate) fn verify_with_fees(
                 if let Some(&(input_index, net, ref pool)) = native_sol_multihop_receipts.get(&(index as u32)).filter(|receipt| receipt.2 == swap.amm_pool) {
                     let input = transfers.iter().find(|t| t.index == input_index).unwrap();
                     let identity = (index as u32, input_index, input_index);
-                    if swap.protocol == pb::Protocol::Pumpfun as i32 && swap.amm_pool == *pool && swap.user == *accounts[3].0
+                    if swap.protocol == pb::Protocol::Pumpfun && swap.amm_pool == *pool && swap.user == *accounts[3].0
                         && swap.input_mint == input.mint && swap.output_mint == crate::SOL_MINT
                         && (swap.input_amount, swap.output_amount) == (input.amounts[0], net)
                         && !expected_transfer.is_some_and(|position| position != input_index)
@@ -3066,7 +3066,7 @@ pub(crate) fn verify_with_fees(
                     let Some(&(input_position, output_position)) = jupiter_lend_receipts.get(&(index as u32)) else { continue };
                     let (input, output) = (&transfers[input_position], &transfers[output_position]);
                     let identity = (index as u32, input.index, output.index);
-                    if swap.protocol == pb::Protocol::JupiterLend as i32 && swap.amm_pool == *accounts[1].0 && swap.user == *accounts[0].0
+                    if swap.protocol == pb::Protocol::JupiterLend && swap.amm_pool == *accounts[1].0 && swap.user == *accounts[0].0
                         && swap.input_mint == input.mint && swap.output_mint == output.mint
                         && (swap.input_amount, swap.output_amount) == (input.amounts[0], *output.amounts.iter().min().unwrap())
                         && !expected_transfer.is_some_and(|transfer| transfer != input.index)
@@ -3130,7 +3130,7 @@ pub(crate) fn verify_with_fees(
                 // directly, without a System CPI. Only accept its exact pool
                 // balance delta when this is the sole pool-bearing invocation
                 // and no ambiguous explicit SOL transfers touch that pool.
-                if swap.protocol == pb::Protocol::Pumpfun as i32
+                if swap.protocol == pb::Protocol::Pumpfun
                     && swap.output_mint == crate::SOL_MINT
                     && matches!(
                         crate::pumpfun::unpack_trade_instruction(ix.data()),
@@ -3175,7 +3175,7 @@ pub(crate) fn verify_with_fees(
                         .any(|t| t.mint == crate::SOL_MINT && (t.source == swap.amm_pool || t.destination == swap.amm_pool));
                     let pool_delta = tx.resolved_accounts().iter().position(|a| *a == &swap.amm_pool).and_then(|position| {
                         tx.meta
-                            .as_ref()
+                            .as_option()
                             .and_then(|meta| Some(i128::from(*meta.pre_balances.get(position)?) - i128::from(*meta.post_balances.get(position)?)))
                     });
                     // A bounded same-curve buy/sell pair has independently
@@ -3254,7 +3254,7 @@ pub(crate) fn verify_with_fees(
                                 .iter()
                                 .any(|t| t.mint == crate::SOL_MINT && (&t.source == recipient || &t.destination == recipient));
                             let position = tx.resolved_accounts().iter().position(|a| *a == recipient)?;
-                            let meta = tx.meta.as_ref()?;
+                            let meta = tx.meta.as_option()?;
                             let delta = i128::from(*meta.post_balances.get(position)?) - i128::from(*meta.pre_balances.get(position)?);
                             let recipient_credit = if recipient_calls == 1 { Some(amounts.buyback_fee) }
                                 else { v3_buyback_contributions.get(recipient)
@@ -3425,13 +3425,13 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
-                if [substreams_solana::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp").as_slice(),
-                    substreams_solana::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH").as_slice(),
-                    substreams_solana::b58!("goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE").as_slice(),
-                    substreams_solana::b58!("DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD").as_slice()].contains(&ix.program_id().0.as_slice())
+                if [substreams_solana_macro::b58!("9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp").as_slice(),
+                    substreams_solana_macro::b58!("TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH").as_slice(),
+                    substreams_solana_macro::b58!("goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE").as_slice(),
+                    substreams_solana_macro::b58!("DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD").as_slice()].contains(&ix.program_id().0.as_slice())
                     && crate::native_venues::layout(ix).is_none(){continue;}
-                if [substreams_solana::b58!("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C").as_slice(),
-                    substreams_solana::b58!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN").as_slice()].contains(&ix.program_id().0.as_slice())
+                if [substreams_solana_macro::b58!("CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C").as_slice(),
+                    substreams_solana_macro::b58!("dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN").as_slice()].contains(&ix.program_id().0.as_slice())
                     && crate::native_venues::layout(ix).is_none()
                 { continue; }
                 if crate::suffixed_anchor_swaps::applies(ix) {
@@ -3448,7 +3448,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount, swap.output_amount) != (input_amount, net)
                         || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32;
+                    swap.protocol = (layout.protocol as i32).into();
                     swap.program_id = ix.program_id().0.clone();
                     swap.amm = ix.program_id().0.clone();
                     evidence = Some(identity);
@@ -3468,7 +3468,7 @@ pub(crate) fn verify_with_fees(
                         || (swap.input_amount, swap.output_amount) != (input_amount, net)
                         || expected_transfer.is_some_and(|position| position != input.index.min(output.index))
                         || native_evidence.contains(&identity) { continue; }
-                    swap.protocol = layout.protocol as i32;
+                    swap.protocol = (layout.protocol as i32).into();
                     swap.program_id = ix.program_id().0.clone();
                     swap.amm = ix.program_id().0.clone();
                     evidence = Some(identity);
@@ -3516,7 +3516,7 @@ pub(crate) fn verify_with_fees(
                     evidence = Some(identity);
                     break 'candidate;
                 }
-                if ix.program_id().0.as_slice() == substreams_solana::b58!("FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X") {
+                if ix.program_id().0.as_slice() == substreams_solana_macro::b58!("FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X") {
                     let Some(layout) = crate::native_venues::layout(ix) else { continue };
                     let inputs: Vec<_> = scoped
                         .iter()
@@ -3621,11 +3621,11 @@ pub(crate) fn verify_with_fees(
                 // Dynamic AMM v1 logs report vault-share conversions, which can
                 // differ from the transferred atoms. Its explicit user accounts
                 // let us use exact CPI flows instead of rounding the event.
-                let user_accounts = if swap.protocol == pb::Protocol::MeteoraAmm as i32 {
+                let user_accounts = if swap.protocol == pb::Protocol::MeteoraAmm {
                     amm::accounts::get_swap_accounts(ix)
                         .ok()
                         .map(|a| (a.user_source_token.to_bytes().to_vec(), a.user_destination_token.to_bytes().to_vec()))
-                } else if swap.protocol == pb::Protocol::PumpfunAmm as i32 {
+                } else if swap.protocol == pb::Protocol::PumpfunAmm {
                     pumpswap::accounts::TradeTokenAccounts::try_from(ix).ok().and_then(|a| {
                         if swap.input_mint == a.quote_mint.to_bytes() && swap.output_mint == a.base_mint.to_bytes() {
                             Some((a.user_quote_token_account.to_bytes().to_vec(), a.user_base_token_account.to_bytes().to_vec()))
@@ -3635,7 +3635,7 @@ pub(crate) fn verify_with_fees(
                             None
                         }
                     })
-                } else if swap.protocol == pb::Protocol::Pumpfun as i32 {
+                } else if swap.protocol == pb::Protocol::Pumpfun {
                     use pumpfun::instructions::PumpFunInstruction::*;
                     let (base, quote) = match crate::pumpfun::unpack_trade_instruction(ix.data()) {
                         Ok(Buy(_) | BuyExactSolIn(_) | Sell(_)) => (5, 6),
@@ -3652,7 +3652,7 @@ pub(crate) fn verify_with_fees(
                             (quote.0.clone(), base.0.clone())
                         }
                     })
-                } else if swap.protocol == pb::Protocol::JupiterRfq as i32 {
+                } else if swap.protocol == pb::Protocol::JupiterRfq {
                     crate::rfq::layout(ix).map(|fill| (accounts[fill.input_source].0.clone(), accounts[fill.output_destination].0.clone()))
                 } else {
                     None
@@ -3700,7 +3700,7 @@ pub(crate) fn verify_with_fees(
                     for output in scoped.iter().filter(|t| {
                         t.mint == swap.output_mint
                             && (!t.fee_token || t.mint == crate::SOL_MINT || t.net_verified)
-                            && if matches!(swap.protocol, 4 | 5) {
+                            && if matches!(swap.protocol.to_i32(), 4 | 5) {
                                 t.amounts.contains(&swap.output_amount)
                             } else {
                                 t.amounts.iter().min() == Some(&swap.output_amount)
@@ -3710,10 +3710,10 @@ pub(crate) fn verify_with_fees(
                         if expected_transfer.is_some_and(|transfer| transfer != input.index.min(output.index)) {
                             continue;
                         }
-                        if !matches!(swap.protocol, 4 | 5) && native_evidence.contains(&identity) {
+                        if !matches!(swap.protocol.to_i32(), 4 | 5) && native_evidence.contains(&identity) {
                             continue;
                         }
-                        if matches!(swap.protocol, 4 | 5) {
+                        if matches!(swap.protocol.to_i32(), 4 | 5) {
                             let net = *output.amounts.iter().min().unwrap();
                             if swap.output_amount != net {
                                 let mut original = swap.clone();
@@ -3776,7 +3776,7 @@ mod tests {
             else {
                 assert_eq!(native.len(),1,"missing or duplicate {}:{}",f[0],source);
                 let s=native[0];
-                assert_eq!((s.protocol,s.input_amount,s.output_amount,s.source_transfer_index),
+                assert_eq!((s.protocol.to_i32(),s.input_amount,s.output_amount,s.source_transfer_index),
                     (f[2].parse().unwrap(),f[6].parse().unwrap(),f[8].parse().unwrap(),Some(f[9].parse().unwrap())));
                 for (value,expected) in [(&s.amm_pool,f[3]),(&s.user,f[4]),(&s.input_mint,f[5]),(&s.output_mint,f[7])] {
                     assert_eq!(base58::encode(value),expected);
@@ -3796,8 +3796,8 @@ mod tests {
                     let account_index=keys.iter().position(|key|**key==closed).unwrap();
                     let vault_index=keys.iter().position(|key|*key==walk[source as usize].accounts()[layout.vaults[1]].0).unwrap();
                     let mut position=0usize;
-                    let message=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap();
-                    let meta=wrong.meta.as_mut().unwrap();
+                    let message=wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+                    let meta=wrong.meta.as_option_mut().unwrap();
                     for (root,ix) in message.instructions.iter_mut().enumerate() {
                         for (data,a,n) in std::iter::once((&mut ix.data,&mut ix.accounts,position)).chain(
                             meta.inner_instructions.iter_mut().find(|g|g.index==root as u32).into_iter().flat_map(|g|g.instructions.iter_mut())
@@ -3830,7 +3830,7 @@ mod tests {
                             let log=meta.log_messages.iter_mut().find(|l|**l==format!("Program {program} success")).unwrap();
                             *log=format!("Program {program} failed: custom program error: 0x1");},
                         16 => {let b=meta.post_token_balances.iter_mut().find(|b|b.account_index as usize==vault_index).unwrap();
-                            let amount=b.ui_token_amount.as_mut().unwrap();amount.amount=(amount.amount.parse::<u64>().unwrap()+1).to_string();},
+                            let amount=b.ui_token_amount.as_option_mut().unwrap();amount.amount=(amount.amount.parse::<u64>().unwrap()+1).to_string();},
                         17 => meta.fee+=1,
                         _=>{},
                     }
@@ -3848,7 +3848,7 @@ mod tests {
                 for old in preserved.lines().filter(|r|r.split('\t').next()==Some(f[0])) {
                     let v:Vec<_>=old.split('\t').collect();let old_source:u32=v[1].parse().unwrap();
                     let s=decoded.swaps.iter().find(|s|s.source_index==Some(old_source)).unwrap();
-                    assert_eq!((s.protocol,s.input_amount,s.output_amount),(v[2].parse().unwrap(),v[5].parse().unwrap(),v[7].parse().unwrap()));
+                    assert_eq!((s.protocol.to_i32(),s.input_amount,s.output_amount),(v[2].parse().unwrap(),v[5].parse().unwrap(),v[7].parse().unwrap()));
                     assert_eq!((base58::encode(&s.amm_pool),base58::encode(&s.input_mint),base58::encode(&s.output_mint)),(v[3].into(),v[4].into(),v[6].into()));
                 }
             }
@@ -3860,7 +3860,7 @@ mod tests {
         let signature = "3NZVd5DcNKVvQbvCt923moutpM7vmmCuCvpMrW8XFTKqNFiB2YcuxnSBUW8cc2rQ44GZbtmc6v4WozzNFYMUVk8Q";
         let bytes = std::fs::read(format!("{}/fixtures/swap-coverage/riptide-native/{signature}.pb", env!("CARGO_MANIFEST_DIR"))).unwrap();
         let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
-        let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         let committed = crate::logs::successful_invocations(&tx);
         let ix = tx.walk_instructions().nth(10).unwrap();
         let ledger = legacy_batch_ledger(&tx, &ix, 10, &mints, &committed).unwrap();
@@ -3874,13 +3874,13 @@ mod tests {
         let result = crate::process_transaction(tx.clone()).unwrap();
         let riptide = result.swaps.iter().find(|s| s.source_index == Some(6)).unwrap();
         assert_eq!((riptide.protocol, riptide.source_transfer_index, riptide.input_amount, riptide.output_amount),
-            (pb::Protocol::Riptide as i32, Some(7), 2379629, 1543197));
+            (pb::Protocol::Riptide.into(), Some(7), 2379629, 1543197));
         assert!(!result.swaps.iter().any(|s| s.source_index == Some(10) || s.source_transfer_index == Some(10)));
-        let (g, p) = tx.meta.as_ref().unwrap().inner_instructions.iter().enumerate().find_map(|(g, group)|
+        let (g, p) = tx.meta.as_option().unwrap().inner_instructions.iter().enumerate().find_map(|(g, group)|
             group.instructions.iter().position(|c| c.data.first() == Some(&255)).map(|p| (g, p))).unwrap();
         for mode in 0..20 {
             let mut wrong = tx.clone();
-            let meta = wrong.meta.as_mut().unwrap();
+            let meta = wrong.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions[g].instructions;
             let source = calls[p].accounts[0] as u32;
             match mode {
@@ -3899,8 +3899,8 @@ mod tests {
                         else { b.program_id = base58::encode(token_2022::PROGRAM_ID); }
                     }
                 }
-                11 => calls[p].accounts[0] = tx.meta.as_ref().unwrap().inner_instructions[g].instructions[p - 2].accounts[0],
-                12 => meta.err = Some(Default::default()),
+                11 => calls[p].accounts[0] = tx.meta.as_option().unwrap().inner_instructions[g].instructions[p - 2].accounts[0],
+                12 => meta.err = buffa::MessageField::some(Default::default()),
                 13 => {},
                 14 => { meta.log_messages.truncate(32); meta.log_messages.push("Log truncated".into()); }
                 15 => meta.log_messages[38] = "Program FLiNTXPwppyoJabCoxc2uiiRygAHpmMXajiDXo2Ub1z failed: custom program error: 1".into(),
@@ -3911,7 +3911,7 @@ mod tests {
             }
             let mut successful = crate::logs::successful_invocations(&wrong);
             if mode == 13 { successful.remove(&10); }
-            let mints = TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
             let ix = wrong.walk_instructions().nth(10).unwrap();
             assert!(legacy_batch_ledger(&wrong, &ix, 10, &mints, &successful).is_none(), "invalid batch mode {mode}");
         }
@@ -3948,21 +3948,21 @@ mod tests {
             let call_data = call.data().clone();
             for mode in 0..6 {
                 let mut altered = tx.clone();
-                if mode == 1 { altered.meta.as_mut().unwrap().post_balances[pool] += 1; }
+                if mode == 1 { altered.meta.as_option_mut().unwrap().post_balances[pool] += 1; }
                 if mode == 2 || mode == 3 {
-                    let event = altered.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
+                    let event = altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|i| i.data.starts_with(&[228, 69, 165, 46, 81, 203, 154, 29, 189, 219, 127, 211, 78, 230, 97, 238])).unwrap();
                     let offset = if mode == 2 { 48 } else { 177 };
                     let old = u64::from_le_bytes(event.data[offset..offset + 8].try_into().unwrap());
                     event.data[offset..offset + 8].copy_from_slice(&(old + 1).to_le_bytes());
                 }
                 if mode == 4 || mode == 5 {
-                    let msg = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let msg = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                     if let Some(i) = msg.instructions.iter_mut().find(|i| i.data == call_data) {
                         if mode == 4 { i.accounts.swap(if legacy { 1 } else { 6 }, if legacy { 8 } else { 16 }); }
                         else { let n = u64::from_le_bytes(i.data[8..16].try_into().unwrap()); i.data[8..16].copy_from_slice(&(n + 1).to_le_bytes()); }
                     } else {
-                        let i = altered.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
+                        let i = altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                             .find(|i| i.data == call_data).unwrap();
                         if mode == 4 { i.accounts.swap(if legacy { 1 } else { 6 }, if legacy { 8 } else { 16 }); }
                         else { let n = u64::from_le_bytes(i.data[8..16].try_into().unwrap()); i.data[8..16].copy_from_slice(&(n + 1).to_le_bytes()); }
@@ -3970,7 +3970,7 @@ mod tests {
                 }
                 let mut pending = None;
                 let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
-                let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
+                let mints = TokenMintLookup::new(&altered, altered.meta.as_option().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true, |_, _| None);
                 let actual: Vec<_> = swaps.iter().filter(|s| s.source_index == Some(source)).collect();
                 if mode == 0 {
@@ -3998,29 +3998,29 @@ mod tests {
             let accumulator = tx.resolved_accounts().iter().position(|a| *a == accounts[19].0).unwrap();
             for mode in 0..6 {
                 let mut altered = tx.clone();
-                if mode == 1 { altered.meta.as_mut().unwrap().post_balances[accumulator] += 1; }
+                if mode == 1 { altered.meta.as_option_mut().unwrap().post_balances[accumulator] += 1; }
                 if mode == 2 {
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     let event = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|i| i.data.starts_with(&[228, 69, 165, 46, 81, 203, 154, 29, 189, 219, 127, 211, 78, 230, 97, 238])).unwrap();
                     event.data[283] ^= 1; // canonical cashback amount
                 }
                 if mode == 3 {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let i = logs.iter().position(|l| l.starts_with("Program return: pfee")).unwrap();
                     logs.insert(i, logs[i].clone());
                 }
                 if mode == 4 {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let i = logs.iter().position(|l| l.starts_with("Program return: pfee")).unwrap();
                     logs[i] = "Log truncated".into();
                 }
                 if mode == 5 {
-                    let msg = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let msg = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                     if let Some(call) = msg.instructions.iter_mut().find(|i| i.data.starts_with(&[93, 246, 130, 60, 231, 233, 64, 178])) {
                         call.accounts.swap(19, 16);
                     } else {
-                        let meta = altered.meta.as_mut().unwrap();
+                        let meta = altered.meta.as_option_mut().unwrap();
                         let call = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                             .find(|i| i.data.starts_with(&[93, 246, 130, 60, 231, 233, 64, 178])).unwrap();
                         call.accounts.swap(19, 16);
@@ -4028,9 +4028,9 @@ mod tests {
                 }
                 let mut pending = None;
                 let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
-                let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
+                let mints = TokenMintLookup::new(&altered, altered.meta.as_option().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true, |_, _| None);
-                let pump: Vec<_> = swaps.iter().filter(|s| s.protocol == pb::Protocol::Pumpfun as i32).collect();
+                let pump: Vec<_> = swaps.iter().filter(|s| s.protocol == pb::Protocol::Pumpfun).collect();
                 if mode == 0 {
                     assert_eq!(pump.len(), 1, "native cashback source {source}");
                     assert_eq!(pump[0].source_index, Some(source));
@@ -4067,19 +4067,19 @@ mod tests {
                     let resolved = tx.resolved_accounts();
                     let vault = resolved.iter().position(|a| *a == accounts[4].0).unwrap();
                     let pool = resolved.iter().position(|a| *a == accounts[3].0).unwrap();
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     // Prior donations increase physical balances without
                     // changing the native curve's virtual reserves. They must
                     // neither invent a migration offset nor change the prices.
                     for balance in meta.pre_token_balances.iter_mut().chain(&mut meta.post_token_balances)
                         .filter(|b| b.account_index as usize == vault) {
-                        let amount = balance.ui_token_amount.as_mut().unwrap();
+                        let amount = balance.ui_token_amount.as_option_mut().unwrap();
                         amount.amount = (amount.amount.parse::<u64>().unwrap() + 1_000_000_000).to_string();
                     }
                     meta.pre_balances[pool] += 1_000_000;
                     meta.post_balances[pool] += 1_000_000;
                 } else if mode == 1 || mode == 9 {
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     let event = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|ix| ix.data.get(8..16) == Some(pumpfun::events::TRADE.as_slice())).unwrap();
                     if mode == 1 { event.data[105..113].fill(0); }
@@ -4089,7 +4089,7 @@ mod tests {
                         event.data[113..121].copy_from_slice(&(input + 1).to_le_bytes());
                     }
                 } else if mode == 2 || mode == 3 {
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     let events: Vec<_> = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .filter(|ix| ix.data.get(8..16) == Some(pumpfun::events::TRADE.as_slice())).collect();
                     // Redistribute one lamport between committed event claims.
@@ -4102,34 +4102,34 @@ mod tests {
                         }
                     }
                 } else if mode == 4 {
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     let ix = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|ix| ix.data.starts_with(&[154, 237, 138, 92, 162, 2, 162, 187])).unwrap();
                     ix.data[8] = 0; // native curve flag is part of the typed CPI
                 } else if mode == 5 {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let i = logs.iter().position(|l| l.starts_with("Program return: pfee")).unwrap();
                     logs.insert(i, logs[i].clone());
                 } else if mode == 6 {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let i = logs.iter().position(|l| l.starts_with("Program return: pfee")).unwrap();
                     logs[i].push('A');
                 } else if mode == 7 {
-                    let meta = altered.meta.as_mut().unwrap();
+                    let meta = altered.meta.as_option_mut().unwrap();
                     let ix = meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|ix| ix.data.starts_with(&[154, 237, 138, 92, 162, 2, 162, 187])).unwrap();
                     ix.accounts.swap(0, 1);
                 } else if mode == 8 {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let i = logs.iter().position(|l| l.starts_with("Program return: pfee")).unwrap();
                     logs[i] = "Log truncated".into();
                 }
                 let mut pending = None;
                 let mut swaps: Vec<_> = altered.walk_instructions().enumerate().filter_map(|(index, ix)| crate::pumpfun::handle_instruction(&mut pending, &ix, index as u32)).collect();
-                let mints = TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
+                let mints = TokenMintLookup::new(&altered, altered.meta.as_option().unwrap());
                 verify_with_fees(&altered, &mints, &mut swaps, true,
                     |_, _| (mode != 11).then_some(crate::token_fees::TransferFee { basis_points: 0, maximum_fee: 0 }));
-                let pump: Vec<_> = swaps.iter().filter(|s| s.protocol == pb::Protocol::Pumpfun as i32).collect();
+                let pump: Vec<_> = swaps.iter().filter(|s| s.protocol == pb::Protocol::Pumpfun).collect();
                 if mode == 0 || mode == 10 || mode == 11 {
                     assert_eq!(pump.len(), expected.len(), "all independently settled original legs");
                     for ((s, net), source) in pump.iter().zip(expected).zip(&calls) {
@@ -4199,7 +4199,7 @@ mod tests {
             let leg = legs[0];
             assert_eq!(leg.source_transfer_index, Some(transfer_index));
             assert_eq!((leg.input_amount, leg.output_amount), (input_atoms, net_lamports));
-            assert_eq!(leg.protocol, pb::Protocol::Pumpfun as i32);
+            assert_eq!(leg.protocol, pb::Protocol::Pumpfun);
             assert_eq!(leg.stack_height, 3);
             assert!(leg.transfer_verified);
             assert!(!decoded.coverage_candidates.iter().any(|c| c.reason == "multihop_without_all_verified_pools"));
@@ -4211,12 +4211,12 @@ mod tests {
         let tx = substreams::proto::decode::<ConfirmedTransaction>(
             &include_bytes!("../fixtures/swap-coverage/pump-native-sol-multihop-sell-1.transaction.pb").to_vec(),
         ).unwrap();
-        let original = &tx.meta.as_ref().unwrap().inner_instructions.iter().find(|g| g.index == 1).unwrap().instructions;
+        let original = &tx.meta.as_option().unwrap().inner_instructions.iter().find(|g| g.index == 1).unwrap().instructions;
         let native = original[1].accounts.clone();
         let input = original[4].accounts.clone();
         for mode in 0..33 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 1).unwrap().instructions;
             match mode {
                 0 => calls[1].data[8] ^= 1,
@@ -4248,7 +4248,7 @@ mod tests {
                     let balances = if mode == 25 { &mut meta.pre_token_balances } else { &mut meta.post_token_balances };
                     let account = if mode == 25 { input[0] } else { input[2] };
                     let balance = balances.iter_mut().find(|b| b.account_index == u32::from(account)).unwrap();
-                    let amount = balance.ui_token_amount.as_mut().unwrap();
+                    let amount = balance.ui_token_amount.as_option_mut().unwrap();
                     amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
                 }
                 27 => calls[1].accounts[8] = native[9],
@@ -4276,7 +4276,7 @@ mod tests {
         let decoded = crate::process_transaction(tx.clone()).unwrap();
         assert_eq!(decoded.swaps.len(), 2);
         let first = &decoded.swaps[0];
-        assert_eq!((first.protocol, first.source_index, first.source_transfer_index), (pb::Protocol::Pumpfun as i32, Some(9), Some(10)));
+        assert_eq!((first.protocol, first.source_index, first.source_transfer_index), (pb::Protocol::Pumpfun.into(), Some(9), Some(10)));
         assert_eq!((first.input_amount, first.output_amount), (31_238_843, 896_182_574_050));
         assert_eq!(first.input_mint, crate::SOL_MINT);
         assert_eq!((decoded.swaps[1].input_amount, decoded.swaps[1].output_amount), (896_182_574_050, 3_898_557_180_441));
@@ -4284,7 +4284,7 @@ mod tests {
         assert!(!decoded.coverage_candidates.iter().any(|c| c.reason == "multihop_without_all_verified_pools"));
         for mode in 0..17 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
             let a = calls[1].accounts.clone();
             match mode {
@@ -4340,11 +4340,11 @@ mod tests {
             assert!(sell.transfer_verified);
             for mode in 0..11 {
                 let mut altered = tx.clone();
-                let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                let message = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                 let pump_program = message.instructions[2].program_id_index;
                 let create = message.instructions.iter_mut().find(|ix| ix.data.starts_with(&[3, 0, 0, 0])).unwrap();
                 let seller = create.accounts[0] as usize;
-                let meta = altered.meta.as_mut().unwrap();
+                let meta = altered.meta.as_option_mut().unwrap();
                 match mode {
                     0 => create.data[52] ^= 1,
                     1 => { create.data.pop(); }
@@ -4407,7 +4407,7 @@ mod tests {
         let token_program = base58::encode(token_2022::PROGRAM_ID);
         for mode in 0..33 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 2).unwrap().instructions;
             let a = calls[0].accounts.clone();
             match mode {
@@ -4455,7 +4455,7 @@ mod tests {
                 30 | 31 => {
                     let index = u32::from(a[if mode == 30 { 14 } else { 11 }]);
                     let balances = if mode == 30 { &mut meta.pre_token_balances } else { &mut meta.post_token_balances };
-                    let amount = balances.iter_mut().find(|balance| balance.account_index == index).unwrap().ui_token_amount.as_mut().unwrap();
+                    let amount = balances.iter_mut().find(|balance| balance.account_index == index).unwrap().ui_token_amount.as_option_mut().unwrap();
                     amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
                 }
                 32 => calls[0].accounts[5] = a[4],
@@ -4473,7 +4473,7 @@ mod tests {
             swap.source_index == Some(9) && swap.output_amount == 411_317_077));
         for mode in 0..8 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 3).unwrap().instructions;
             let close = calls[9].accounts.clone();
             match mode {
@@ -4495,8 +4495,8 @@ mod tests {
         ).unwrap();
         for mode in 0..10 {
             let mut altered = tx.clone();
-            let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
-            let meta = altered.meta.as_mut().unwrap();
+            let message = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let protocol_fee = meta.inner_instructions.iter().find(|group| group.index == 2).unwrap().instructions[0].accounts[6];
             let create = &mut meta.inner_instructions.iter_mut().find(|group| group.index == 1).unwrap().instructions[0];
             let source = create.accounts[1] as usize;
@@ -4537,7 +4537,7 @@ mod tests {
         let root_program = base58::encode(tx.walk_instructions().nth(2).unwrap().program_id().0);
         for mode in 0..37 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 2).unwrap().instructions;
             let sell = calls[8].accounts.clone();
             let buy = calls[20].accounts.clone();
@@ -4560,7 +4560,7 @@ mod tests {
                 15 => calls[8].data[8] ^= 1,
                 16..=19 => {
                     let account = match mode { 16 => sell[6], 17 => sell[9], 18 => buy[6], _ => buy[9] };
-                    let balance = meta.post_token_balances.iter_mut().find(|b| b.account_index == u32::from(account)).unwrap().ui_token_amount.as_mut().unwrap();
+                    let balance = meta.post_token_balances.iter_mut().find(|b| b.account_index == u32::from(account)).unwrap().ui_token_amount.as_option_mut().unwrap();
                     balance.amount = (balance.amount.parse::<u64>().unwrap() + 1).to_string();
                 }
                 20 => { let duplicate = calls[10].clone(); calls.insert(11, duplicate); }
@@ -4613,7 +4613,7 @@ mod tests {
         assert_eq!(decoded.swaps.iter().filter(|s| s.source_index == Some(8)).count(), 1);
         for mode in 0..14 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             let calls = &mut meta.inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
             let a = calls[0].accounts.clone();
             match mode {
@@ -4643,7 +4643,7 @@ mod tests {
         // known sell intent for investigation even when only one mint remains
         // visible and no event can prove proceeds.
         let mut opaque = tx;
-        let calls = &mut opaque.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
+        let calls = &mut opaque.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == 3).unwrap().instructions;
         calls[1].data.clear();
         calls[3].data.clear();
         let decoded = crate::process_transaction(opaque).unwrap();
@@ -4674,19 +4674,19 @@ mod tests {
             let position = tx.resolved_accounts().iter().position(|key| **key == destination).unwrap() as u32;
             let start = tx
                 .meta
-                .as_ref()
+                .as_option()
                 .unwrap()
                 .pre_token_balances
                 .iter()
                 .find(|balance| balance.account_index == position)
                 .unwrap()
                 .clone();
-            assert_eq!(start.ui_token_amount.as_ref().unwrap().amount, "0");
+            assert_eq!(start.ui_token_amount.as_option().unwrap().amount, "0");
             let decode = |transaction| crate::process_transaction(transaction).unwrap();
             let decoded = decode(tx.clone());
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(8)).collect();
             assert_eq!(swaps.len(), 1);
-            assert_eq!(swaps[0].protocol, pb::Protocol::MeteoraDbc as i32);
+            assert_eq!(swaps[0].protocol, pb::Protocol::MeteoraDbc);
             assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (expected_input, expected_output));
             assert!(swaps[0].transfer_verified);
             let burn_data = tx.walk_instructions().nth(21).unwrap().data().clone();
@@ -4697,17 +4697,17 @@ mod tests {
             let mut nonzero_start = tx.clone();
             nonzero_start
                 .meta
-                .as_mut()
+                .as_option_mut()
                 .unwrap()
                 .pre_token_balances
                 .iter_mut()
                 .find(|balance| balance.account_index == position)
                 .unwrap()
                 .ui_token_amount
-                .as_mut()
+                .as_option_mut()
                 .unwrap()
                 .amount = "100".into();
-            for group in &mut nonzero_start.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut nonzero_start.meta.as_option_mut().unwrap().inner_instructions {
                 for instruction in &mut group.instructions {
                     if instruction.data == burn_data {
                         instruction.data[1..9].copy_from_slice(&(expected_output + 100).to_le_bytes());
@@ -4724,18 +4724,18 @@ mod tests {
                 match mode {
                     0 => altered
                         .meta
-                        .as_mut()
+                        .as_option_mut()
                         .unwrap()
                         .pre_token_balances
                         .retain(|balance| balance.account_index != position),
-                    1 => altered.meta.as_mut().unwrap().post_token_balances.push(start.clone()),
+                    1 => altered.meta.as_option_mut().unwrap().post_token_balances.push(start.clone()),
                     2 => {
                         altered
                             .transaction
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .message
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .instructions
                             .iter_mut()
@@ -4744,7 +4744,7 @@ mod tests {
                             .data[0] = 5
                     }
                     3 => {
-                        let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                        let message = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                         let close = message
                             .instructions
                             .iter()
@@ -4754,7 +4754,7 @@ mod tests {
                         message.instructions.push(close);
                     }
                     4 => {
-                        for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                        for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                             for instruction in &mut group.instructions {
                                 if instruction.data == burn_data {
                                     instruction.data[1..9].copy_from_slice(&(expected_output + 1).to_le_bytes());
@@ -4765,24 +4765,24 @@ mod tests {
                     5 => {
                         altered
                             .meta
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .pre_token_balances
                             .iter_mut()
                             .find(|balance| balance.account_index == position)
                             .unwrap()
                             .ui_token_amount
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .amount = "100".into()
                     }
                     6 => {
                         let close = altered
                             .transaction
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .message
-                            .as_mut()
+                            .as_option_mut()
                             .unwrap()
                             .instructions
                             .iter_mut()
@@ -4800,7 +4800,7 @@ mod tests {
             // Model the same close through a CPI. Its enclosing invocation
             // must finish too; transaction success alone cannot prove a child.
             let mut cpi_close = tx.clone();
-            let message = cpi_close.transaction.as_mut().unwrap().message.as_mut().unwrap();
+            let message = cpi_close.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
             let close_root = message
                 .instructions
                 .iter()
@@ -4811,7 +4811,7 @@ mod tests {
             let wrapper_program = base58::encode(&message.account_keys[wrapper.program_id_index as usize]);
             let token_program = base58::encode(&message.account_keys[close.program_id_index as usize]);
             message.instructions[close_root] = wrapper;
-            let meta = cpi_close.meta.as_mut().unwrap();
+            let meta = cpi_close.meta.as_option_mut().unwrap();
             meta.inner_instructions.push(InnerInstructions {
                 index: close_root as u32,
                 instructions: vec![InnerInstruction {
@@ -4844,7 +4844,7 @@ mod tests {
             );
             for mode in 0..3 {
                 let mut altered = cpi_close.clone();
-                let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                 match mode {
                     0 => {
                         logs.truncate(logs.len() - 2);
@@ -4870,7 +4870,7 @@ mod tests {
     fn native_v3_sell_requires_both_pool_and_buyback_lamport_evidence() {
         let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/swap-coverage/25.transaction.pb").to_vec()).unwrap();
         let expected = crate::process_transaction(tx.clone()).unwrap();
-        let swap = expected.swaps.iter().find(|swap| swap.protocol == pb::Protocol::Pumpfun as i32).unwrap();
+        let swap = expected.swaps.iter().find(|swap| swap.protocol == pb::Protocol::Pumpfun).unwrap();
         assert_eq!(swap.output_amount, 47_690_764);
         assert_eq!(swap.source_transfer_index, Some(7));
         let ix = tx
@@ -4887,9 +4887,9 @@ mod tests {
         for account in [fee_recipient, pool] {
             let mut changed = tx.clone();
             let position = changed.resolved_accounts().iter().position(|key| **key == account).unwrap();
-            changed.meta.as_mut().unwrap().post_balances[position] += 1;
+            changed.meta.as_option_mut().unwrap().post_balances[position] += 1;
             let decoded = crate::process_transaction(changed).unwrap();
-            assert!(decoded.swaps.iter().all(|swap| swap.protocol != pb::Protocol::Pumpfun as i32));
+            assert!(decoded.swaps.iter().all(|swap| swap.protocol != pb::Protocol::Pumpfun));
         }
     }
 
@@ -4903,7 +4903,7 @@ mod tests {
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             assert_eq!(decoded.swaps.len(), 1, "{:?}", decoded.rejected_swaps);
             assert!(decoded.swaps[0].transfer_verified);
-            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             let mut swap = decoded.swaps[0].clone();
             swap.output_amount += 1;
             let mut swaps = vec![swap];
@@ -4929,7 +4929,7 @@ mod tests {
     #[test]
     fn changed_pool_mint_or_amount_never_becomes_a_verified_swap() {
         let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/aqua-orca-multihop.transaction.pb").to_vec()).unwrap();
-        let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         let decoded = crate::process_transaction(tx.clone()).unwrap();
         for field in 0..4 {
             let mut swap = decoded.swaps[2].clone();
@@ -4952,14 +4952,14 @@ mod tests {
     #[test]
     fn jupiter_wrapper_is_deduplicated_by_transfer_identity() {
         let tx = substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/aqua-orca-multihop.transaction.pb").to_vec()).unwrap();
-        let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         let native = crate::process_transaction(tx.clone()).unwrap().swaps[2].clone();
         let mut wrapper = native.clone();
-        wrapper.protocol = pb::Protocol::JupiterV6 as i32;
+        wrapper.protocol = pb::Protocol::JupiterV6.into();
         let mut swaps = vec![wrapper, native];
         let rejected = verify_and_deduplicate(&tx, &mints, &mut swaps, false);
         assert_eq!(swaps.len(), 1);
-        assert_eq!(swaps[0].protocol, pb::Protocol::OrcaWhirlpool as i32);
+        assert_eq!(swaps[0].protocol, pb::Protocol::OrcaWhirlpool);
         assert_eq!(rejected[0].verification_failure, "duplicate_native_cpi");
     }
 }

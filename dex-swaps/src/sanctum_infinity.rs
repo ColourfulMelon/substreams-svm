@@ -2,7 +2,8 @@
 //! redemption use the same dispatch but are excluded by the u32::MAX index.
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58,base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token;
 use std::collections::HashSet;
 pub(crate) const PROGRAM_ID:[u8;32]=b58!("5ocnV1qiCgaQR8Jb8xWnVbApfaygJ8tNoZfgPwsgx9kx");
@@ -39,7 +40,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
  if p.program_id().0!=a[price].0 || pd.len()!=17 || pd[0]!=0 || pd[1..9]!=d[19..27]
   || pa.len()!=2+a.len()-price-1 || pa[0].0!=a[1].0 || pa[1].0!=a[2].0
   || pa[2..].iter().zip(&a[price+1..]).any(|(x,y)|x.0!=y.0) || calls[2].data()[1..9]!=d[19..27]{return None;}
- let mut amounts=[0;2];let meta=tx.meta.as_ref()?;let keys=tx.resolved_accounts();
+ let mut amounts=[0;2];let meta=tx.meta.as_option()?;let keys=tx.resolved_accounts();
  for (n,c) in calls[5..7].iter().enumerate(){let ca=c.accounts();let cd=c.data();let mint=1+n;
   let roles=if n==0{[3,1,l.vaults[0],0]}else{[l.vaults[1],2,4,l.pool]};
   if c.program_id().0!=a[5+shift+n].0 || cd.len()!=10 || cd[0]!=12 || ca.len()!=4
@@ -50,7 +51,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
   let pre=meta.pre_token_balances.iter().find(|b|b.account_index as usize==pos)?;
   let post=meta.post_token_balances.iter().find(|b|b.account_index as usize==pos)?;
   for b in [pre,post]{if b.mint!=base58::encode(a[mint].0)||b.owner!=base58::encode(a[l.pool].0)
-   || b.program_id!=base58::encode(token::PROGRAM_ID)||b.ui_token_amount.as_ref()?.decimals!=u32::from(cd[9]){return None;}}
+   || b.program_id!=base58::encode(token::PROGRAM_ID)||b.ui_token_amount.as_option()?.decimals!=u32::from(cd[9]){return None;}}
   let mut change=0i128;
   for (index,t) in tx.walk_instructions().enumerate(){let ta=t.accounts();let td=t.data();
    if t.program_id().0.as_slice()!=token::PROGRAM_ID || !ta.iter().any(|k|k.0==vault){continue;}
@@ -63,7 +64,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
    };let atoms=i128::from(u64::from_le_bytes(td[1..9].try_into().ok()?));
    if from==vault{change-=atoms;}if to==vault{change+=atoms;}
   }
-  if post.ui_token_amount.as_ref()?.amount.parse::<i128>().ok()?-pre.ui_token_amount.as_ref()?.amount.parse::<i128>().ok()?!=change{return None;}
+  if post.ui_token_amount.as_option()?.amount.parse::<i128>().ok()?-pre.ui_token_amount.as_option()?.amount.parse::<i128>().ok()?!=change{return None;}
  }
  (amounts[0]==l.amount&&amounts[1]>0&&amounts[1]>=l.minimum_output).then_some((amounts[0],amounts[1]))
 }
@@ -80,19 +81,19 @@ mod tests {
    let tx=substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(format!("{}/fixtures/swap-coverage/sanctum-legacy27/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap()).unwrap();
    let walk:Vec<_>=tx.walk_instructions().collect();let native=walk[source as usize].data().clone();let first=walk[source as usize+6].data().clone();let keys=tx.resolved_accounts();let first_accounts:Vec<u8>=walk[source as usize+6].accounts().iter().map(|a|keys.iter().position(|k|*k==a.0).unwrap() as u8).collect();
    let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)&&s.amm==PROGRAM_ID).collect();assert_eq!(rows.len(),1);let row=rows[0];
-   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::SanctumInfinity as i32);assert_eq!(row.source_transfer_index,Some(source+6));assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[3].into(),f[4].into(),f[5].into(),f[6].parse().unwrap(),f[7].into(),f[8].parse().unwrap()));
-   let routed=|t:&ConfirmedTransaction|{let mut r=row.clone();r.protocol=Protocol::JupiterV4 as i32;let mut rows=vec![r];let mints=TokenMintLookup::new(t,t.meta.as_ref().unwrap());crate::quality::verify_with_fees(t,&mints,&mut rows,false,|_,_|None);rows};assert_eq!(routed(&tx).len(),1);
+   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::SanctumInfinity);assert_eq!(row.source_transfer_index,Some(source+6));assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[3].into(),f[4].into(),f[5].into(),f[6].parse().unwrap(),f[7].into(),f[8].parse().unwrap()));
+   let routed=|t:&ConfirmedTransaction|{let mut r=row.clone();r.protocol=Protocol::JupiterV4.into();let mut rows=vec![r];let mints=TokenMintLookup::new(t,t.meta.as_option().unwrap());crate::quality::verify_with_fees(t,&mints,&mut rows,false,|_,_|None);rows};assert_eq!(routed(&tx).len(),1);
    for mode in 0..30 {
     let mut wrong=tx.clone();
     if mode<20 {
-     let (data,accounts)=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().map(|x|(&mut x.data,&mut x.accounts)).chain(wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).map(|x|(&mut x.data,&mut x.accounts))).find(|(data,_)|**data==native).unwrap();
+     let (data,accounts)=wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().map(|x|(&mut x.data,&mut x.accounts)).chain(wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).map(|x|(&mut x.data,&mut x.accounts))).find(|(data,_)|**data==native).unwrap();
      let roles=accounts.clone();match mode {0=>data[0]=2,1=>data.push(0),2=>data[1]=0,3=>data[2]=0,4=>data[3..7].fill(255),5=>data[7..11].copy_from_slice(&native[3..7]),6=>data[19..27].fill(0),7=>data[19]^=1,8=>data[11..19].copy_from_slice(&(row.output_amount+1).to_le_bytes()),9=>{accounts.pop();},_=>{let role=[1,2,3,4,5,6,7,8,9,10][mode-10];accounts[role]=roles[0];}}
     } else if mode<27 {
-     let n=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==first&&x.accounts==first_accounts).unwrap();let a=n.accounts.clone();match mode {20=>n.data[1]^=1,21=>n.data[1..9].fill(0),22=>n.accounts[0]=a[1],23=>n.accounts[2]=a[0],24=>n.accounts[3]=a[0],25=>n.data[9]^=1,_=>n.stack_height=Some(99)}
+     let n=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==first&&x.accounts==first_accounts).unwrap();let a=n.accounts.clone();match mode {20=>n.data[1]^=1,21=>n.data[1..9].fill(0),22=>n.accounts[0]=a[1],23=>n.accounts[2]=a[0],24=>n.accounts[3]=a[0],25=>n.data[9]^=1,_=>n.stack_height=Some(99)}
     } else if mode==27 {
-     let b=wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.owner==f[3]&&b.mint==f[5]).unwrap();let a=b.ui_token_amount.as_mut().unwrap();a.amount=(a.amount.parse::<u64>().unwrap()+1).to_string();
-    } else if mode==28 {wrong.meta.as_mut().unwrap().log_messages.truncate(4);}
-    else {for l in &mut wrong.meta.as_mut().unwrap().log_messages {if *l==format!("Program {} success",base58::encode(PROGRAM_ID)){*l=l.replace("success","failed: mutation");}}}
+     let b=wrong.meta.as_option_mut().unwrap().post_token_balances.iter_mut().find(|b|b.owner==f[3]&&b.mint==f[5]).unwrap();let a=b.ui_token_amount.as_option_mut().unwrap();a.amount=(a.amount.parse::<u64>().unwrap()+1).to_string();
+    } else if mode==28 {wrong.meta.as_option_mut().unwrap().log_messages.truncate(4);}
+    else {for l in &mut wrong.meta.as_option_mut().unwrap().log_messages {if *l==format!("Program {} success",base58::encode(PROGRAM_ID)){*l=l.replace("success","failed: mutation");}}}
     assert!(crate::process_transaction(wrong.clone()).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source)||s.amm!=PROGRAM_ID)),"native {mode}");assert!(routed(&wrong).is_empty(),"routed {mode}");
    }count+=1;
   }assert_eq!(count,3);

@@ -13,15 +13,18 @@ pub fn unpack_mints(instruction: &InstructionView, program_id: &[u8], is_spl_tok
             mint_authority,
             freeze_authority,
         } => {
-            return Some(pb::instruction::Instruction::InitializeMint(pb::InitializeMint {
-                mint: instruction.accounts()[0].0.to_vec(),
-                mint_authority: mint_authority.to_bytes().to_vec(),
-                freeze_authority: match freeze_authority {
-                    COption::Some(key) => Some(key.to_bytes().to_vec()),
-                    COption::None => None,
-                },
-                decimals: decimals as u32,
-            }));
+            return Some(pb::instruction::Instruction::InitializeMint(
+                pb::InitializeMint {
+                    mint: instruction.accounts()[0].0.to_vec(),
+                    mint_authority: mint_authority.to_bytes().to_vec(),
+                    freeze_authority: match freeze_authority {
+                        COption::Some(key) => Some(key.to_bytes().to_vec()),
+                        COption::None => None,
+                    },
+                    decimals: decimals as u32,
+                }
+                .into(),
+            ));
         }
         // -- InitializeMint2 --
         TokenInstruction::InitializeMint2 {
@@ -29,15 +32,18 @@ pub fn unpack_mints(instruction: &InstructionView, program_id: &[u8], is_spl_tok
             mint_authority,
             freeze_authority,
         } => {
-            return Some(pb::instruction::Instruction::InitializeMint(pb::InitializeMint {
-                mint: instruction.accounts()[0].0.to_vec(),
-                mint_authority: mint_authority.to_bytes().to_vec(),
-                freeze_authority: match freeze_authority {
-                    COption::Some(key) => Some(key.to_bytes().to_vec()),
-                    COption::None => None,
-                },
-                decimals: decimals as u32,
-            }));
+            return Some(pb::instruction::Instruction::InitializeMint(
+                pb::InitializeMint {
+                    mint: instruction.accounts()[0].0.to_vec(),
+                    mint_authority: mint_authority.to_bytes().to_vec(),
+                    freeze_authority: match freeze_authority {
+                        COption::Some(key) => Some(key.to_bytes().to_vec()),
+                        COption::None => None,
+                    },
+                    decimals: decimals as u32,
+                }
+                .into(),
+            ));
         }
         _ => None,
     }

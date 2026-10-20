@@ -1,0 +1,25 @@
+[package]
+name = "spl-transfers"
+description = "Native, storage-independent SPL token transfer projection over complete Solana blocks"
+edition = { workspace = true }
+version = "0.1.0"
+license = { workspace = true }
+
+[lib]
+crate-type = ["rlib"]
+
+# No protobuf runtime and no Substreams runtime: callers hand in a borrowed
+# view of whichever `sf.solana.type.v1` model they decoded (see `block_view!`).
+[dependencies]
+bs58 = { workspace = true }
+
+[dev-dependencies]
+buffa = { version = "0.9.2", default-features = false, features = ["std"] }
+bytes = "1"
+flate2 = "1"
+# Deliberately package-local: the migrated workspace no longer needs Prost.
+prost = "0.13"
+# Keep the previous Prost model only for compatibility regressions. Neither
+# core model pulls the Substreams runtime into native tests.
+substreams-solana = { package = "substreams-solana-core", version = "=0.14.3" }
+substreams-solana-buffa = { package = "substreams-solana-core", version = "0.16.0" }

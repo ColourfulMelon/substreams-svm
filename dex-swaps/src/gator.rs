@@ -4,7 +4,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 pub(crate) const PROGRAM_ID: [u8;32] = b58!("gatorLx9aC1e5ZWAXscv5QRKiLXnLPLXjftVc81h1Hr");
 const CONFIG: [u8;32] = b58!("CKQdReQgzubcDznauYzDzJLmqU3NXPLPKjZh4RRDgKZN");
@@ -49,7 +50,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction, source:u32, ix:&InstructionVi
     // A temporary WSOL recipient can disappear before post-token balances.
     // Independently pin output against both persistent owned vault ledgers;
     // summing only this call would misattribute other swaps in the transaction.
-    let meta=tx.meta.as_ref()?;let resolved=tx.resolved_accounts();
+    let meta=tx.meta.as_option()?;let resolved=tx.resolved_accounts();
     for role in [4,5] {
         let address=a[role].0;let position=resolved.iter().position(|key|*key==address)?;
         let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==position)?;
@@ -73,8 +74,8 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction, source:u32, ix:&InstructionVi
             if ca[0].0==address { change=change.checked_sub(amount)?; }
             if destination==address { change=change.checked_add(amount)?; }
         }
-        let before=before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?;
-        let after=after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?;
+        let before=before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?;
+        let after=after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?;
         if i128::from(after)-i128::from(before)!=change { return None; }
     }
     (atoms[0]==l.amount && atoms[1]>0).then_some((atoms[0],atoms[1]))
@@ -101,12 +102,12 @@ mod tests {
    let first=f[8].parse::<u32>().unwrap();let input=walk[first as usize].data().clone();let output=walk[first as usize+1].data().clone();
    let decoded=crate::process_transaction_with_metadata(tx.clone(),None,|_,_|None,|_,_|None,lookup).unwrap();
    let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(rows.len(),1,"{}",f[0]);let s=rows[0];
-   assert!(s.transfer_verified);assert_eq!(s.protocol,Protocol::Gator as i32);assert_eq!(s.source_transfer_index,Some(first));
+   assert!(s.transfer_verified);assert_eq!(s.protocol,Protocol::Gator);assert_eq!(s.source_transfer_index,Some(first));
    assert_eq!((base58::encode(&s.amm_pool),base58::encode(&s.user),base58::encode(&s.input_mint),s.input_amount,base58::encode(&s.output_mint),s.output_amount),
     (f[2].to_owned(),f[3].to_owned(),f[4].to_owned(),f[5].parse().unwrap(),f[6].to_owned(),f[7].parse().unwrap()));
    if !shapes.insert((native.len(),a.len(),first-source,walk[first as usize].program_id().0==&token_2022::PROGRAM_ID,walk[first as usize+1].program_id().0==&token_2022::PROGRAM_ID)){continue;}
    for mode in 0..18 {
-    let mut wrong=tx.clone();let meta=wrong.meta.as_mut().unwrap();
+    let mut wrong=tx.clone();let meta=wrong.meta.as_option_mut().unwrap();
     if mode<9 {
      let n=meta.inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==native).unwrap();let a=n.accounts.clone();
      match mode{0=>*n.data.last_mut().unwrap()=2,1=>n.data.push(0),2=>n.data[0]^=1,3=>n.data[8]^=1,4=>n.accounts[3]=a[0],5=>n.accounts[1]=a[2],6=>n.accounts[4]=a[5],7=>n.accounts[6]=a[3],_=>n.accounts[11]=a[0]}
@@ -114,7 +115,7 @@ mod tests {
      let group=meta.inner_instructions.iter_mut().find(|g|g.instructions.windows(2).any(|w|w[0].data==input&&w[1].data==output)).unwrap();
      let offset=group.instructions.windows(2).position(|w|w[0].data==input&&w[1].data==output).unwrap();let n=&mut group.instructions[offset+usize::from(mode>=12)];let a=n.accounts.clone();
      match mode{9|12=>n.data[1]^=1,10|13=>n.accounts[2]=a[0],_=>n.stack_height=Some(99)}
-    }else if mode==15{meta.err=Some(Default::default());}
+    }else if mode==15{meta.err=buffa::MessageField::some(Default::default());}
     else if mode==16{meta.log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: test",base58::encode(PROGRAM_ID)));}
     else{meta.log_messages.clear();}
     assert!(crate::process_transaction_with_metadata(wrong,None,|_,_|None,|_,_|None,lookup).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"{} invalid Gator mode{mode}",f[0]);

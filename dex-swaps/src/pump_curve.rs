@@ -6,7 +6,7 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
 use substreams_solana_idls::pumpfun::bonding_curve as pumpfun;
 
-pub const FEE_PROGRAM: [u8; 32] = substreams_solana::b58!("pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ");
+pub const FEE_PROGRAM: [u8; 32] = substreams_solana_macro::b58!("pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ");
 
 /// Recover the only pre-trade SOL reserve compatible with the canonical
 /// post-reserve pair and exact token input. Constant-product floor rounding
@@ -53,7 +53,7 @@ pub(crate) fn fee_returns(tx: &ConfirmedTransaction) -> HashMap<u32, Fees> {
     let mut cursor = 0;
     let mut stack: Vec<(usize, Option<Fees>, usize)> = Vec::new();
     let mut returns = HashMap::new();
-    for log in tx.meta.as_ref().into_iter().flat_map(|meta| &meta.log_messages) {
+    for log in tx.meta.as_option().into_iter().flat_map(|meta| &meta.log_messages) {
         if log == "Log truncated" { break; }
         let words: Vec<_> = log.split_whitespace().collect();
         if words.first() != Some(&"Program") || words.len() < 3 { continue; }

@@ -156,7 +156,7 @@ pub(crate) fn candidates(tx: &ConfirmedTransaction, mints: &TokenMintLookup, swa
         // This is diagnostic coverage, never evidence for a financial price.
         let orderbook_swap = crate::manifest::market_index(ix).is_some()
             || crate::openbook::market_index(ix).is_some()
-            || program.as_slice() == substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
+            || program.as_slice() == substreams_solana_macro::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY")
                 && (matches!(data.first(), Some(0 | 1)) || (matches!(data.first(), Some(2 | 3)) && matches!(data.get(1), Some(1 | 2))));
         // Preserve newer Jupiter Lend account/payload shapes as raw evidence
         // even though only their nested output call carries the second mint.

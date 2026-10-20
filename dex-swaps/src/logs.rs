@@ -10,7 +10,7 @@ pub(crate) fn invocation_outcomes(tx: &substreams_solana::pb::sf::solana::r#type
     let mut stack: Vec<(String, Vec<u32>, bool)> = Vec::new();
     let mut outcomes = InvocationOutcomes::default();
     let mut truncated = false;
-    for log in tx.meta.as_ref().into_iter().flat_map(|meta| &meta.log_messages) {
+    for log in tx.meta.as_option().into_iter().flat_map(|meta| &meta.log_messages) {
         if log == "Log truncated" {
             // The collector can retain shorter messages after dropping a
             // larger one. Those later logs no longer prove a complete trace.
@@ -59,7 +59,7 @@ pub(crate) fn invocation_outcomes(tx: &substreams_solana::pb::sf::solana::r#type
             }
         }
     }
-    if truncated && tx.meta.as_ref().is_some_and(|meta| meta.err.is_none()) {
+    if truncated && tx.meta.as_option().is_some_and(|meta| meta.err.is_unset()) {
         if let Some((_, committed_children, true)) = stack.first() {
             // A successful transaction cannot roll back its root. Its already
             // completed children are final even if a later sibling exhausts
@@ -202,7 +202,7 @@ mod tests {
         for index in [36, 37, 38] { assert!(!outcome.completed.contains(&index)); }
         let mut partial_suffix = tx.clone();
         let pending = base58::encode(tx.walk_instructions().nth(36).unwrap().program_id().0);
-        partial_suffix.meta.as_mut().unwrap().log_messages.extend([
+        partial_suffix.meta.as_option_mut().unwrap().log_messages.extend([
             format!("Program {pending} success"),
             "Program log: short message after truncation".into(),
         ]);
@@ -213,9 +213,9 @@ mod tests {
         let root = tx.walk_instructions().take(33).filter(|ix| ix.is_root()).last().unwrap().program_id().0.clone();
         for mode in 0..7 {
             let mut altered = tx.clone();
-            let meta = altered.meta.as_mut().unwrap();
+            let meta = altered.meta.as_option_mut().unwrap();
             match mode {
-                0 => meta.err = Some(Default::default()),
+                0 => meta.err = buffa::MessageField::some(Default::default()),
                 1 => { meta.log_messages.pop(); }
                 2 => *meta.log_messages.last_mut().unwrap() = "Program log: Log truncated".into(),
                 3 => {

@@ -12,8 +12,8 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
 
     match unpack(data) {
         // CreateMetadataAccount V1 (disc 0)
-        Ok(TokenMetadataInstruction::CreateMetadataAccount(args)) => {
-            Some(pb::instruction::Instruction::CreateMetadataAccount(pb::CreateMetadataAccount {
+        Ok(TokenMetadataInstruction::CreateMetadataAccount(args)) => Some(pb::instruction::Instruction::CreateMetadataAccount(
+            pb::CreateMetadataAccount {
                 metadata: instruction.accounts().get(0)?.0.to_vec(),
                 mint: instruction.accounts().get(1)?.0.to_vec(),
                 mint_authority: instruction.accounts().get(2)?.0.to_vec(),
@@ -22,11 +22,12 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
                 name: trim_null(&args.data.name),
                 symbol: trim_null(&args.data.symbol),
                 uri: trim_null(&args.data.uri),
-            }))
-        }
+            }
+            .into(),
+        )),
         // CreateMetadataAccountV2 (disc 16)
-        Ok(TokenMetadataInstruction::CreateMetadataAccountV2(args)) => {
-            Some(pb::instruction::Instruction::CreateMetadataAccount(pb::CreateMetadataAccount {
+        Ok(TokenMetadataInstruction::CreateMetadataAccountV2(args)) => Some(pb::instruction::Instruction::CreateMetadataAccount(
+            pb::CreateMetadataAccount {
                 metadata: instruction.accounts().get(0)?.0.to_vec(),
                 mint: instruction.accounts().get(1)?.0.to_vec(),
                 mint_authority: instruction.accounts().get(2)?.0.to_vec(),
@@ -35,11 +36,12 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
                 name: trim_null(&args.data.name),
                 symbol: trim_null(&args.data.symbol),
                 uri: trim_null(&args.data.uri),
-            }))
-        }
+            }
+            .into(),
+        )),
         // CreateMetadataAccountV3 (disc 33)
-        Ok(TokenMetadataInstruction::CreateMetadataAccountV3(args)) => {
-            Some(pb::instruction::Instruction::CreateMetadataAccount(pb::CreateMetadataAccount {
+        Ok(TokenMetadataInstruction::CreateMetadataAccountV3(args)) => Some(pb::instruction::Instruction::CreateMetadataAccount(
+            pb::CreateMetadataAccount {
                 metadata: instruction.accounts().get(0)?.0.to_vec(),
                 mint: instruction.accounts().get(1)?.0.to_vec(),
                 mint_authority: instruction.accounts().get(2)?.0.to_vec(),
@@ -48,8 +50,9 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
                 name: trim_null(&args.data.name),
                 symbol: trim_null(&args.data.symbol),
                 uri: trim_null(&args.data.uri),
-            }))
-        }
+            }
+            .into(),
+        )),
         // UpdateMetadataAccount V1 (disc 1)
         Ok(TokenMetadataInstruction::UpdateMetadataAccount(args)) => {
             let (name, symbol, uri) = if let Some(data) = args.data {
@@ -57,13 +60,16 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
             } else {
                 (None, None, None)
             };
-            Some(pb::instruction::Instruction::UpdateMetadataAccount(pb::UpdateMetadataAccount {
-                metadata: instruction.accounts().get(0)?.0.to_vec(),
-                update_authority: instruction.accounts().get(1)?.0.to_vec(),
-                name,
-                symbol,
-                uri,
-            }))
+            Some(pb::instruction::Instruction::UpdateMetadataAccount(
+                pb::UpdateMetadataAccount {
+                    metadata: instruction.accounts().get(0)?.0.to_vec(),
+                    update_authority: instruction.accounts().get(1)?.0.to_vec(),
+                    name,
+                    symbol,
+                    uri,
+                }
+                .into(),
+            ))
         }
         // UpdateMetadataAccountV2 (disc 15)
         Ok(TokenMetadataInstruction::UpdateMetadataAccountV2(args)) => {
@@ -72,18 +78,21 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
             } else {
                 (None, None, None)
             };
-            Some(pb::instruction::Instruction::UpdateMetadataAccount(pb::UpdateMetadataAccount {
-                metadata: instruction.accounts().get(0)?.0.to_vec(),
-                update_authority: instruction.accounts().get(1)?.0.to_vec(),
-                name,
-                symbol,
-                uri,
-            }))
+            Some(pb::instruction::Instruction::UpdateMetadataAccount(
+                pb::UpdateMetadataAccount {
+                    metadata: instruction.accounts().get(0)?.0.to_vec(),
+                    update_authority: instruction.accounts().get(1)?.0.to_vec(),
+                    name,
+                    symbol,
+                    uri,
+                }
+                .into(),
+            ))
         }
         // CreateV1 (disc 42) — unified v1.13+ instruction
         // Accounts: metadata[0], master_edition[1], mint[2], authority[3], payer[4], update_authority[5]
-        Ok(TokenMetadataInstruction::Create(args)) => {
-            Some(pb::instruction::Instruction::CreateMetadataAccount(pb::CreateMetadataAccount {
+        Ok(TokenMetadataInstruction::Create(args)) => Some(pb::instruction::Instruction::CreateMetadataAccount(
+            pb::CreateMetadataAccount {
                 metadata: instruction.accounts().get(0)?.0.to_vec(),
                 mint: instruction.accounts().get(2)?.0.to_vec(),
                 mint_authority: instruction.accounts().get(3)?.0.to_vec(),
@@ -92,8 +101,9 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
                 name: trim_null(&args.name),
                 symbol: trim_null(&args.symbol),
                 uri: trim_null(&args.uri),
-            }))
-        }
+            }
+            .into(),
+        )),
         // UpdateV1 (disc 50) — unified v1.13+ instruction
         // Accounts: authority[0], delegate_record[1], token[2], mint[3], metadata[4]
         Ok(TokenMetadataInstruction::Update(args)) => {
@@ -102,13 +112,16 @@ pub fn unpack_metadata(instruction: &InstructionView) -> Option<pb::instruction:
             } else {
                 (None, None, None)
             };
-            Some(pb::instruction::Instruction::UpdateMetadataAccount(pb::UpdateMetadataAccount {
-                metadata: instruction.accounts().get(4)?.0.to_vec(),
-                update_authority: instruction.accounts().get(0)?.0.to_vec(),
-                name,
-                symbol,
-                uri,
-            }))
+            Some(pb::instruction::Instruction::UpdateMetadataAccount(
+                pb::UpdateMetadataAccount {
+                    metadata: instruction.accounts().get(4)?.0.to_vec(),
+                    update_authority: instruction.accounts().get(0)?.0.to_vec(),
+                    name,
+                    symbol,
+                    uri,
+                }
+                .into(),
+            ))
         }
         _ => None,
     }

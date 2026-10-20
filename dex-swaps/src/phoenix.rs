@@ -2,7 +2,8 @@
 //! 6ae54af5f07f4d0ae8430b08cbe81d10432cd34c. A fill is an exchange-ledger
 //! settlement, not necessarily an SPL transfer. Deposits and order sizes are
 //! never substituted for the matched amounts in the signed audit log.
-use substreams_solana::{b58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 
 pub const PROGRAM_ID: [u8; 32] = b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY");
 const LOG_AUTHORITY: [u8; 32] = b58!("7aDTsspkQNGKmrexAN7FLx9oxU3iPczSSvHNggyuqYkR");
@@ -504,7 +505,7 @@ mod tests {
             let rows: Vec<_> = normalized
                 .swaps
                 .iter()
-                .filter(|swap| swap.protocol == 50 && swap.source_index == Some(index as u32))
+                .filter(|swap| swap.protocol.to_i32() == 50 && swap.source_index == Some(index as u32))
                 .collect();
             assert_eq!(rows.len(), 1);
             assert!(rows[0].orderbook_fill_verified);
@@ -592,7 +593,7 @@ mod tests {
             data.extend(summary);
             vec![event(data)]
         };
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.log_messages = vec![format!("Program {} invoke [1]", base58::encode(PROGRAM_ID))];
         for _ in &children {
             meta.log_messages.push(format!("Program {} invoke [2]", base58::encode(PROGRAM_ID)));
@@ -611,7 +612,7 @@ mod tests {
         for side in [0, 1] {
             for chunks in [false, true] {
                 let (tx, market) = ledger_tx(side, chunks);
-                assert!(tx.meta.as_ref().unwrap().pre_token_balances.is_empty());
+                assert!(tx.meta.as_option().unwrap().pre_token_balances.is_empty());
                 let fill = decode_fill(&tx, 0, &market, Some(200)).unwrap();
                 assert_eq!((fill.input_amount, fill.output_amount), if side == 0 { (2030, 2000) } else { (2000, 1970) });
                 assert_eq!(fill.fee_quote_atoms, 30);
@@ -625,8 +626,8 @@ mod tests {
                 order.extend_from_slice(&[0, 0]);
                 order.extend_from_slice(&0u128.to_le_bytes());
                 order.extend_from_slice(&[1, 0, 0, 0]);
-                limit.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data = order;
-                for ix in &mut limit.meta.as_mut().unwrap().inner_instructions[0].instructions {
+                limit.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data = order;
+                for ix in &mut limit.meta.as_option_mut().unwrap().inner_instructions[0].instructions {
                     ix.data[2] = 3;
                 }
                 assert!(decode_fill(&limit, 0, &market, Some(200)).is_some());
@@ -638,7 +639,7 @@ mod tests {
     fn invalid_or_rolled_back_audit_logs_never_become_settlements() {
         for mode in 0..18 {
             let (mut tx, mut market) = ledger_tx(0, true);
-            let events = &mut tx.meta.as_mut().unwrap().inner_instructions[0].instructions;
+            let events = &mut tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions;
             match mode {
                 0 => events[0].accounts[0] = 4,
                 1 => events[0].data[2] = 3,
@@ -656,13 +657,13 @@ mod tests {
                 11 => events[0].data[135] |= 0x80,
                 12 => market.base_lot_atoms = u64::MAX,
                 13 => events[0].stack_height = Some(3),
-                14 => tx.meta.as_mut().unwrap().log_messages.pop().map(|_| ()).unwrap(),
+                14 => tx.meta.as_option_mut().unwrap().log_messages.pop().map(|_| ()).unwrap(),
                 15 => {
-                    *tx.meta.as_mut().unwrap().log_messages.last_mut().unwrap() =
+                    *tx.meta.as_option_mut().unwrap().log_messages.last_mut().unwrap() =
                         format!("Program {} failed: custom program error: 0x1", base58::encode(PROGRAM_ID))
                 }
-                16 => tx.meta.as_mut().unwrap().log_messages.clear(),
-                17 => tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[1] = 0,
+                16 => tx.meta.as_option_mut().unwrap().log_messages.clear(),
+                17 => tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[1] = 0,
                 _ => unreachable!(),
             }
             assert!(decode_fill(&tx, 0, &market, Some(200)).is_none(), "invalid mode {mode}");
@@ -700,7 +701,7 @@ mod tests {
             ],
             data,
         );
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.log_messages = vec![
             format!("Program {} invoke [1]", base58::encode(PROGRAM_ID)),
             format!("Program {} success", base58::encode(PROGRAM_ID)),
@@ -709,7 +710,7 @@ mod tests {
             meta.post_token_balances.push(TokenBalance {
                 account_index: index,
                 mint: base58::encode(mint),
-                ui_token_amount: Some(UiTokenAmount {
+                ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                     decimals: 6,
                     amount: "0".into(),
                     ..Default::default()
@@ -744,7 +745,7 @@ mod tests {
         .is_empty());
         let slot = SNAPSHOT_SLOT + 10;
         let mut ledger = ledger_tx(0, false).0;
-        for event in &mut ledger.meta.as_mut().unwrap().inner_instructions[0].instructions {
+        for event in &mut ledger.meta.as_option_mut().unwrap().inner_instructions[0].instructions {
             event.data[19..27].copy_from_slice(&slot.to_le_bytes());
         }
         let mut block = Block {
@@ -779,7 +780,7 @@ mod tests {
         assert!(!decoded.swaps[0].transfer_verified);
         assert!(decoded.coverage_candidates.is_empty());
         // A caught, rolled-back initialization never replaces a valid market.
-        *block.transactions[2].meta.as_mut().unwrap().log_messages.last_mut().unwrap() =
+        *block.transactions[2].meta.as_option_mut().unwrap().log_messages.last_mut().unwrap() =
             format!("Program {} failed: custom program error: 0x1", base58::encode(PROGRAM_ID));
         assert_eq!(updates(&block).iter().filter(|(_, key, _)| key.starts_with("m:")).count(), 1);
     }
@@ -789,7 +790,7 @@ mod tests {
         use crate::phoenix_metadata::{updates, SNAPSHOT_SLOT};
         use substreams_solana::pb::sf::solana::r#type::v1::Block;
         let mut init = initialize_tx(None);
-        init.meta.as_mut().unwrap().post_token_balances.clear();
+        init.meta.as_option_mut().unwrap().post_token_balances.clear();
         let changes = updates(&Block {
             slot: SNAPSHOT_SLOT + 10,
             parent_slot: SNAPSHOT_SLOT + 9,

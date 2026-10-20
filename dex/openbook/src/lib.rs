@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &openbook::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -46,22 +46,24 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
         Ok(openbook::instructions::OpenbookInstruction::PlaceOrder) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::PlaceOrder(pb::PlaceOrderInstruction {})),
+            instruction: Some(pb::instruction::Instruction::PlaceOrder(pb::PlaceOrderInstruction {}.into())),
         }),
         Ok(openbook::instructions::OpenbookInstruction::PlaceOrders) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::PlaceOrders(pb::PlaceOrdersInstruction {})),
+            instruction: Some(pb::instruction::Instruction::PlaceOrders(pb::PlaceOrdersInstruction {}.into())),
         }),
         Ok(openbook::instructions::OpenbookInstruction::PlaceTakeOrder) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::PlaceTakeOrder(pb::PlaceTakeOrderInstruction {})),
+            instruction: Some(pb::instruction::Instruction::PlaceTakeOrder(pb::PlaceTakeOrderInstruction {}.into())),
         }),
         Ok(openbook::instructions::OpenbookInstruction::CancelAllAndPlaceOrders) => Some(pb::Instruction {
             program_id: program_id.to_vec(),
             stack_height: ix.stack_height(),
-            instruction: Some(pb::instruction::Instruction::CancelAllAndPlaceOrders(pb::CancelAllAndPlaceOrdersInstruction {})),
+            instruction: Some(pb::instruction::Instruction::CancelAllAndPlaceOrders(
+                pb::CancelAllAndPlaceOrdersInstruction {}.into(),
+            )),
         }),
         _ => None,
     }
@@ -99,34 +101,40 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(openbook::events::OpenbookEvent::FillLog(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::FillLog(pb::FillLogEvent {
-                market: event.market.to_bytes().to_vec(),
-                taker_side: event.taker_side as u32,
-                maker_slot: event.maker_slot as u32,
-                maker_out: event.maker_out,
-                timestamp: event.timestamp,
-                seq_num: event.seq_num,
-                maker: event.maker.to_bytes().to_vec(),
-                maker_client_order_id: event.maker_client_order_id,
-                maker_fee: event.maker_fee,
-                maker_timestamp: event.maker_timestamp,
-                taker: event.taker.to_bytes().to_vec(),
-                taker_client_order_id: event.taker_client_order_id,
-                taker_fee_ceil: event.taker_fee_ceil,
-                price: event.price,
-                quantity: event.quantity,
-            })),
+            log: Some(pb::log::Log::FillLog(
+                pb::FillLogEvent {
+                    market: event.market.to_bytes().to_vec(),
+                    taker_side: event.taker_side as u32,
+                    maker_slot: event.maker_slot as u32,
+                    maker_out: event.maker_out,
+                    timestamp: event.timestamp,
+                    seq_num: event.seq_num,
+                    maker: event.maker.to_bytes().to_vec(),
+                    maker_client_order_id: event.maker_client_order_id,
+                    maker_fee: event.maker_fee,
+                    maker_timestamp: event.maker_timestamp,
+                    taker: event.taker.to_bytes().to_vec(),
+                    taker_client_order_id: event.taker_client_order_id,
+                    taker_fee_ceil: event.taker_fee_ceil,
+                    price: event.price,
+                    quantity: event.quantity,
+                }
+                .into(),
+            )),
         }),
         Ok(openbook::events::OpenbookEvent::TotalOrderFillEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::TotalOrderFill(pb::TotalOrderFillEvent {
-                side: event.side as u32,
-                taker: event.taker.to_bytes().to_vec(),
-                total_quantity_paid: event.total_quantity_paid,
-                total_quantity_received: event.total_quantity_received,
-                fees: event.fees,
-            })),
+            log: Some(pb::log::Log::TotalOrderFill(
+                pb::TotalOrderFillEvent {
+                    side: event.side as u32,
+                    taker: event.taker.to_bytes().to_vec(),
+                    total_quantity_paid: event.total_quantity_paid,
+                    total_quantity_received: event.total_quantity_received,
+                    fees: event.fees,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

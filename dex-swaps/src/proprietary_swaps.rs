@@ -4,7 +4,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const QUANTUM: [u8; 32] = b58!("QuaNtZsgYRe5Z9Bk4LZ4cTD9tbkVoyCNf1R2BN9bBDv");
@@ -247,13 +248,13 @@ mod tests {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
             let views: Vec<_> = tx.walk_instructions().collect();
             let ix = &views[source as usize];
-            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             let l = bound_layout(ix, &mints).unwrap();
             let a: Vec<_> = ix.accounts().iter().map(|a| a.0.clone()).collect();
             let program = ix.program_id().0.clone();
             let native_data = ix.data().clone();
             let depth = ix.stack_height();
-            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             assert!(settlement(
                 source,
                 ix,
@@ -285,7 +286,7 @@ mod tests {
             let found: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source) && s.amm == program).collect();
             assert_eq!(found.len(), 1);
             let s = found[0];
-            assert_eq!(s.protocol, l.protocol as i32);
+            assert_eq!(s.protocol.to_i32(), l.protocol as i32);
             assert_eq!(s.amm_pool, a[l.pool]);
             assert_eq!(s.user, a[0]);
             assert_eq!(s.input_mint, mints.mint_for(&a[l.users[0]]).unwrap());
@@ -298,7 +299,7 @@ mod tests {
                 let mut wrong = tx.clone();
                 let group = wrong
                     .meta
-                    .as_mut()
+                    .as_option_mut()
                     .unwrap()
                     .inner_instructions
                     .iter_mut()
@@ -331,7 +332,7 @@ mod tests {
                     16 => calls[position].accounts[l.pool] = native.accounts[0],
                     17 => {
                         let success = format!("Program {} success", substreams_solana::base58::encode(&program));
-                        let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                        let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                         let ordinal = views.iter().take(source as usize).filter(|prior| prior.program_id().0 == &program).count();
                         let end = logs.iter().enumerate().filter(|(_, line)| *line == &success).nth(ordinal).unwrap().0;
                         logs[end] = success.replace(" success", " failed: custom program error: 1");
@@ -352,7 +353,7 @@ mod tests {
                     .skip(source as usize + 1)
                     .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
                     .map_or(bad.len(), |(end, _)| end);
-                let mints = TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
+                let mints = TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
                 assert!(
                     !settlement(
                         source,

@@ -2,7 +2,8 @@
 //! accounts are forwarded only to the input Token-2022 transfer hook.
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58,base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token,token_2022};
 use std::collections::HashSet;
 pub(crate) const PROGRAM_ID:[u8;32]=b58!("5JsSAL3kJDUWD4ZveYXYZmgm1eVqueesTZVdAvtZg8cR");
@@ -34,10 +35,10 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
    if h.stack_height()!=depth+2||h.program_id().0!=a[13].0||ha.len()!=7||hd.len()!=16||hd[..8]!=[105,37,101,197,75,251,102,26]
     ||hd[8..16]!=d[1..9]||ha.iter().zip([from,m,to,auth,14,11,12]).any(|(k,r)|k.0!=a[r].0){return false;}
   }else if calls.get(*position+1).is_some_and(|c|c.stack_height()>depth+1){return false;}
-  let Some(meta)=tx.meta.as_ref()else{return false;};let keys=tx.resolved_accounts();let Some(vault)=keys.iter().position(|k|*k==a[l.vaults[n]].0)else{return false;};
+  let Some(meta)=tx.meta.as_option()else{return false;};let keys=tx.resolved_accounts();let Some(vault)=keys.iter().position(|k|*k==a[l.vaults[n]].0)else{return false;};
   let snapshots:Vec<_>=meta.pre_token_balances.iter().chain(&meta.post_token_balances).filter(|v|v.account_index as usize==vault).collect();
   if snapshots.is_empty()||snapshots.iter().any(|v|v.mint!=base58::encode(a[m].0)||v.owner!=base58::encode(a[1].0)
-   ||v.program_id!=base58::encode(a[p].0)||v.ui_token_amount.as_ref().is_none_or(|t|t.decimals!=u32::from(d[9]))){return false;}
+   ||v.program_id!=base58::encode(a[p].0)||v.ui_token_amount.as_option().is_none_or(|t|t.decimals!=u32::from(d[9]))){return false;}
   amounts[n]=u64::from_le_bytes(d[1..9].try_into().unwrap());
  }
  amounts[0]==l.amount&&amounts[1]>0&&amounts[1]>=l.minimum_output

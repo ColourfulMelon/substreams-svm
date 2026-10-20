@@ -77,14 +77,15 @@ pub(crate) mod test_fixture {
             acc_idx.push((i + 2) as u8); // shift past fee_payer (0) and program (1)
         }
         ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -94,9 +95,12 @@ pub(crate) mod test_fixture {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta::default()),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: buffa::MessageField::some(TransactionStatusMeta::default()).into(),
         }
     }
 }

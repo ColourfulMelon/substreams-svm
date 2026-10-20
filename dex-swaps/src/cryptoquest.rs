@@ -3,7 +3,8 @@
 use common::solana::parse_program_data;
 use proto::pb::dex::swaps::v1 as pb;
 use std::collections::HashMap;
-use substreams_solana::{b58, base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token;
 
 pub(crate) const PROGRAM_ID: [u8;32] = b58!("CQwWoJENUtKmwCMqnyGbEYkg41oxdat23kkNdJLvY7v9");
@@ -22,7 +23,7 @@ pub(crate) fn decode_fills(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
     // a token/foreign child cannot prove its parent's settlement.
     let mut events=HashMap::<usize,Vec<(usize,Vec<u8>)>>::new();
     let mut cursor=0usize;let mut stack=Vec::<usize>::new();
-    let Some(meta)=tx.meta.as_ref() else { return Vec::new(); };
+    let Some(meta)=tx.meta.as_option() else { return Vec::new(); };
     for (log_index,log) in meta.log_messages.iter().enumerate() {
         let w:Vec<_>=log.split_whitespace().collect();
         if w.first()==Some(&"Program") && w.get(2)==Some(&"invoke") {
@@ -76,7 +77,7 @@ pub(crate) fn decode_fills(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
                 let post=meta.post_token_balances.iter().filter(|b|b.account_index as usize==position).collect::<Vec<_>>();
                 if pre.len()!=1 || post.len()!=1 { return None; }
                 let before=pre[0];let after=post[0];let mint_key=base58::encode(a[mint].0);let owner_key=base58::encode(a[owner].0);
-                let b=before.ui_token_amount.as_ref()?;let p=after.ui_token_amount.as_ref()?;
+                let b=before.ui_token_amount.as_option()?;let p=after.ui_token_amount.as_option()?;
                 if before.mint!=mint_key || after.mint!=mint_key || before.owner!=owner_key || after.owner!=owner_key
                     || before.program_id!=base58::encode(token::PROGRAM_ID) || after.program_id!=before.program_id || b.decimals!=decimals || p.decimals!=decimals { return None; }
                 if target.insert(a[role].0.to_vec(),(a[mint].0.to_vec(),a[owner].0.to_vec(),decimals as u8,b.amount.parse().ok()?,p.amount.parse().ok()?,0)).is_some() { return None; }
@@ -105,7 +106,7 @@ pub(crate) fn decode_fills(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
         if !valid { continue; }
         // The event consistently names town9's buyer, including the House
         // maker when a seller invokes FillBid. Emit one buyer-perspective fill.
-        fills.push(pb::Swap {protocol:pb::Protocol::Cryptoquest as i32,program_id:PROGRAM_ID.to_vec(),amm:PROGRAM_ID.to_vec(),amm_pool:a[3].0.to_vec(),user:event[105..137].to_vec(),stack_height:depth,
+        fills.push(pb::Swap {protocol:pb::Protocol::Cryptoquest.into(),program_id:PROGRAM_ID.to_vec(),amm:PROGRAM_ID.to_vec(),amm_pool:a[3].0.to_vec(),user:event[105..137].to_vec(),stack_height:depth,
             input_mint:a[14].0.to_vec(),input_amount:gross,output_mint:a[8].0.to_vec(),output_amount:asset,
             source_index:Some(index as u32),source_log_index:Some(e.0 as u32),orderbook_fill_verified:true,..Default::default() });
     }
@@ -128,25 +129,25 @@ mod tests {
             for row in direct {
                 total+=1;let source=row.source_index.unwrap();let log=row.source_log_index.unwrap() as usize;
                 let walk:Vec<_>=tx.walk_instructions().collect();let native=walk[source as usize].data().clone();let roles=walk[source as usize].accounts();
-                let root_index=tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().position(|n|n.data==native).unwrap();
+                let root_index=tx.transaction.as_option().unwrap().message.as_option().unwrap().instructions.iter().position(|n|n.data==native).unwrap();
                 let expected=if file==1{(28_500_000_000,30_000_000)}else if source==2{(159_600_000_000,152_000_000)}else{(162_800_000_000,148_000_000)};
                 assert_eq!((row.input_amount,row.output_amount),expected);assert_eq!(row.user,roles[if file==1{4}else{1}].0.clone());
                 assert_eq!(row.amm_pool,roles[3].0.clone());assert_eq!(row.input_mint,QUEST);assert_eq!(row.output_mint,roles[8].0.clone());assert_eq!(row.source_transfer_index,None);assert!(row.orderbook_fill_verified);
-                assert_eq!(processed.swaps.iter().filter(|s|s.source_index==Some(source)&&s.protocol==pb::Protocol::Cryptoquest as i32).collect::<Vec<_>>(),vec![&row]);
+                assert_eq!(processed.swaps.iter().filter(|s|s.source_index==Some(source)&&s.protocol== pb::Protocol::Cryptoquest).collect::<Vec<_>>(),vec![&row]);
                 for mode in 0..38 {
                     let mut wrong=tx.clone();
                     if mode<11 {
-                        let n=&mut wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[root_index];let a=n.accounts.clone();
+                        let n=&mut wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[root_index];let a=n.accounts.clone();
                         match mode {0=>n.data[1]^=1,1=>n.data[0]=219,2=>n.data.push(0),3=>{n.accounts.pop();},4=>n.accounts[3]=a[5],5=>n.accounts[5]=a[9],6=>n.accounts[9]=a[5],7=>n.accounts[if file==1{4}else{1}]=a[0],8=>n.accounts[8]=a[14],9=>n.accounts[14]=a[8],_=>n.accounts[15]=a[16]}
                     } else if mode<22 {
-                        let logs=&mut wrong.meta.as_mut().unwrap().log_messages;let mut e=parse_program_data(&logs[log]).unwrap();
+                        let logs=&mut wrong.meta.as_option_mut().unwrap().log_messages;let mut e=parse_program_data(&logs[log]).unwrap();
                         match mode {11=>e[8]^=1,12=>e[9]^=1,13=>e[105]^=1,14=>e[137]^=1,15=>e[169]^=1,16=>e[177]^=1,17=>e[185]^=1,18=>e[193]^=1,19=>{e.pop();},20=>logs.insert(log,logs[log].clone()),_=>{let original=logs.remove(log);let child=logs.iter().position(|l|l==&format!("Program {} invoke [2]",base58::encode(token::PROGRAM_ID))).unwrap();logs.insert(child+1,original);}}
                         if mode<20{logs[log]=format!("Program data: {}",STANDARD.encode(e));}
                     } else if mode<31 {
-                        let n=&mut wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index as usize==root_index).unwrap().instructions[if mode<26{0}else if mode<28{1}else{2}];let a=n.accounts.clone();
+                        let n=&mut wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index as usize==root_index).unwrap().instructions[if mode<26{0}else if mode<28{1}else{2}];let a=n.accounts.clone();
                         match mode {22|26|28=>n.data[1]^=1,23=>n.accounts[1]=a[0],24|29=>n.accounts[2]=a[0],25=>n.data[9]=6,27=>n.accounts[1]=a[0],_=>n.stack_height=Some(99)}
                     } else {
-                        let meta=wrong.meta.as_mut().unwrap();match mode {31=>{let b=meta.post_token_balances[0].ui_token_amount.as_mut().unwrap();b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();},32=>meta.post_token_balances[0].owner=base58::encode([1;32]),33=>meta.err=Some(Default::default()),34=>meta.log_messages.clear(),35=>meta.log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: test",base58::encode(PROGRAM_ID))),36=>{let group=meta.inner_instructions.iter_mut().find(|g|g.index as usize==root_index).unwrap();group.instructions.push(group.instructions[2].clone());},_=>meta.pre_token_balances[0].ui_token_amount.as_mut().unwrap().decimals=8}
+                        let meta=wrong.meta.as_option_mut().unwrap();match mode {31=>{let b=meta.post_token_balances[0].ui_token_amount.as_option_mut().unwrap();b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();},32=>meta.post_token_balances[0].owner=base58::encode([1;32]),33=>meta.err=buffa::MessageField::some(Default::default()),34=>meta.log_messages.clear(),35=>meta.log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: test",base58::encode(PROGRAM_ID))),36=>{let group=meta.inner_instructions.iter_mut().find(|g|g.index as usize==root_index).unwrap();group.instructions.push(group.instructions[2].clone());},_=>meta.pre_token_balances[0].ui_token_amount.as_option_mut().unwrap().decimals=8}
                     }
                     assert!(decode_fills(&wrong).iter().all(|s|s.source_index!=Some(source)),"{signature} source{source} invalid mode{mode}");
                     assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"{signature} source{source} invalid mode{mode} fallback");

@@ -41,7 +41,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::Darklake as i32,
+            protocol: pb::Protocol::Darklake.into(),
             program_id: darklake::PROGRAM_ID.to_vec(),
             stack_height: 0,
             amm: darklake::PROGRAM_ID.to_vec(),
@@ -74,7 +74,7 @@ mod tests {
             .handle_log(&ParsedLog::new(SETTLE_LOG))
             .expect("Settle event should decode into a swap");
 
-        assert_eq!(swap.protocol, pb::Protocol::Darklake as i32);
+        assert_eq!(swap.protocol, pb::Protocol::Darklake);
         assert_eq!(swap.input_amount, 10_000_000);
         assert_eq!(swap.output_amount, 1_256_182);
         // direction=1 -> input = token_mint_x = wSOL (So11111111111111111111111111111111111111111)

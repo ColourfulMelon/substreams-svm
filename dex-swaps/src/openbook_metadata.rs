@@ -8,7 +8,7 @@ use substreams_solana_idls::spl::token;
 
 pub(crate) const SNAPSHOT_SLOT: u64 = 455779697;
 const SEED: &[u8; 283 * 880] = include_bytes!("../fixtures/openbook/market-registry-455779697.bin");
-const EVENT_AUTHORITY: [u8; 32] = substreams_solana::b58!("8rDvL1qM41mYVNYS6oKLfGXyBGov3jLtbELToxjSwShj");
+const EVENT_AUTHORITY: [u8; 32] = substreams_solana_macro::b58!("8rDvL1qM41mYVNYS6oKLfGXyBGov3jLtbELToxjSwShj");
 const EVENT_CPI: [u8; 8] = [228, 69, 165, 46, 81, 203, 154, 29];
 const METADATA: [u8; 8] = [209, 87, 212, 236, 164, 58, 60, 117];
 
@@ -20,7 +20,7 @@ fn initialization_header(index: usize, instructions: &[InstructionView], success
         || accounts.len() < 21
         || accounts[10].0.iter().any(|b| *b != 0)
         || accounts[11].0.as_slice() != token::PROGRAM_ID
-        || accounts[12].0.as_slice() != substreams_solana::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
+        || accounts[12].0.as_slice() != substreams_solana_macro::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
         || accounts[19].0.as_slice() != EVENT_AUTHORITY
         || accounts[20].0.as_slice() != PROGRAM_ID
     {
@@ -180,7 +180,7 @@ mod tests {
             key(608),
             [0; 32],
             token::PROGRAM_ID,
-            substreams_solana::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
+            substreams_solana_macro::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
             PROGRAM_ID,
             PROGRAM_ID,
             [32; 32],
@@ -210,7 +210,7 @@ mod tests {
         event.extend([9, 6]);
         event.extend(100i64.to_le_bytes());
         event.extend(10i64.to_le_bytes());
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![InnerInstruction {
@@ -241,7 +241,7 @@ mod tests {
         assert_eq!(rows.len(), 284);
         let program = Pubkey::new_from_array(PROGRAM_ID);
         let token = Pubkey::new_from_array(token::PROGRAM_ID);
-        let ata = Pubkey::new_from_array(substreams_solana::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"));
+        let ata = Pubkey::new_from_array(substreams_solana_macro::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"));
         for row in SEED.chunks_exact(880) {
             let address = Pubkey::try_from(&row[..32]).unwrap();
             let header = &row[32..];
@@ -288,17 +288,17 @@ mod tests {
         for variant in 0..9 {
             let mut wrong = tx.clone();
             match variant {
-                0 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions.clear(),
-                1 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].accounts[0] = 2,
-                2 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[16] ^= 1,
-                3 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[118] = 20,
-                4 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[126] ^= 1,
-                5 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[11] = 2,
-                6 => *wrong.meta.as_mut().unwrap().log_messages.last_mut().unwrap() = format!("Program {} failed: error", base58::encode(PROGRAM_ID)),
+                0 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions.clear(),
+                1 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].accounts[0] = 2,
+                2 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[16] ^= 1,
+                3 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[118] = 20,
+                4 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[126] ^= 1,
+                5 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].accounts[11] = 2,
+                6 => *wrong.meta.as_option_mut().unwrap().log_messages.last_mut().unwrap() = format!("Program {} failed: error", base58::encode(PROGRAM_ID)),
                 7 => {
-                    wrong.meta.as_mut().unwrap().log_messages.pop();
+                    wrong.meta.as_option_mut().unwrap().log_messages.pop();
                 }
-                _ => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0),
+                _ => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.push(0),
             }
             let mut invalid = block.clone();
             invalid.transactions = vec![wrong];
@@ -308,7 +308,7 @@ mod tests {
     #[test]
     fn closures_and_reinitializations_replace_metadata_at_exact_execution_ordinals() {
         let first = initialization();
-        let a = first.transaction.as_ref().unwrap().message.as_ref().unwrap().account_keys[2].clone();
+        let a = first.transaction.as_option().unwrap().message.as_option().unwrap().account_keys[2].clone();
         let address: [u8; 32] = a.try_into().unwrap();
         let mut close = crate::routed_pool::test_fixture::make_tx(
             PROGRAM_ID,
@@ -316,11 +316,11 @@ mod tests {
             CLOSE.to_vec(),
         );
         let program = base58::encode(PROGRAM_ID);
-        close.meta.as_mut().unwrap().log_messages = vec![format!("Program {program} invoke [1]"), format!("Program {program} success")];
+        close.meta.as_option_mut().unwrap().log_messages = vec![format!("Program {program} invoke [1]"), format!("Program {program} success")];
         let mut second = initialization();
-        let data = &mut second.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data;
+        let data = &mut second.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data;
         data[27..35].copy_from_slice(&20i64.to_le_bytes());
-        second.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[132..140].copy_from_slice(&20i64.to_le_bytes());
+        second.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[132..140].copy_from_slice(&20i64.to_le_bytes());
         let rows = updates(&Block {
             slot: SNAPSHOT_SLOT + 20,
             parent_slot: SNAPSHOT_SLOT + 19,

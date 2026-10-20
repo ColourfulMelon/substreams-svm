@@ -23,7 +23,7 @@ pub(crate) fn decode_logs(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
     let mut cursor = 0;
     let mut stack = Vec::<Frame>::new();
     let mut swaps = Vec::new();
-    for log in tx.meta.as_ref().into_iter().flat_map(|meta| &meta.log_messages) {
+    for log in tx.meta.as_option().into_iter().flat_map(|meta| &meta.log_messages) {
         let words: Vec<_> = log.split_whitespace().collect();
         if words.first() == Some(&"Program") && words.get(2) == Some(&"invoke") && words.len() == 4 {
             let Some(depth) = words[3]
@@ -118,7 +118,7 @@ pub(crate) fn decode_logs(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
             };
             swaps.push(pb::Swap {
                 program_id: jupiter::v4::PROGRAM_ID.to_vec(),
-                protocol: pb::Protocol::JupiterV4 as i32,
+                protocol: pb::Protocol::JupiterV4.into(),
                 amm,
                 amm_pool: source.as_ref().map_or_else(Vec::new, |(_, pool, _)| pool.clone()),
                 user: user.unwrap_or_default(),
@@ -185,7 +185,7 @@ mod tests {
     #[test]
     fn sponsored_route_uses_declared_authority_and_unknown_authority_is_unverified() {
         let mut tx = fixture("jupiter-v4-three-hop");
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let authority = message.account_keys[0].clone();
         message.account_keys.insert(0, vec![7; 32]);
         for ix in &mut message.instructions {
@@ -194,7 +194,7 @@ mod tests {
                 *account += 1;
             }
         }
-        for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+        for group in &mut tx.meta.as_option_mut().unwrap().inner_instructions {
             for ix in &mut group.instructions {
                 ix.program_id_index += 1;
                 for account in &mut ix.accounts {
@@ -206,7 +206,7 @@ mod tests {
         assert_eq!(swaps.len(), 3);
         assert!(swaps.iter().all(|swap| swap.user == authority && swap.source_index.is_some()));
         // This mutation checks the ABI authority, not financial CPI validation.
-        tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[2].data.pop();
+        tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[2].data.pop();
         let swaps = decode_logs(&tx);
         assert_eq!(swaps.len(), 3);
         assert!(swaps
@@ -217,7 +217,7 @@ mod tests {
     #[test]
     fn foreign_program_data_cannot_impersonate_a_route_event() {
         let mut tx = fixture("jupiter-v4-three-hop");
-        let logs = &mut tx.meta.as_mut().unwrap().log_messages;
+        let logs = &mut tx.meta.as_option_mut().unwrap().log_messages;
         let event = logs.iter().find(|log| log.starts_with("Program data: UWzjvs3QCsQ")).unwrap().clone();
         let index = logs
             .iter()
@@ -233,7 +233,7 @@ mod tests {
         let whirlpool = "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc";
         for failure in [true, false] {
             let mut tx = fixture("jupiter-v4-three-hop");
-            let logs = &mut tx.meta.as_mut().unwrap().log_messages;
+            let logs = &mut tx.meta.as_option_mut().unwrap().log_messages;
             let index = logs.iter().position(|log| log == &format!("Program {program} success")).unwrap();
             if failure {
                 logs[index] = format!("Program {program} failed: custom program error: 1");
@@ -243,7 +243,7 @@ mod tests {
             assert!(decode_logs(&tx).is_empty());
         }
         let mut tx = fixture("jupiter-v4-three-hop");
-        let logs = &mut tx.meta.as_mut().unwrap().log_messages;
+        let logs = &mut tx.meta.as_option_mut().unwrap().log_messages;
         let index = logs.iter().position(|log| log == &format!("Program {whirlpool} success")).unwrap();
         logs[index] = format!("Program {whirlpool} failed: custom program error: 1");
         let swaps = decode_logs(&tx);
@@ -253,7 +253,7 @@ mod tests {
         assert_eq!(swaps[2].source_index, Some(9));
         let mut tx = fixture("jupiter-v4-three-hop");
         tx.meta
-            .as_mut()
+            .as_option_mut()
             .unwrap()
             .log_messages
             .push("Program 11111111111111111111111111111111 invoke [1]".into());
@@ -263,7 +263,7 @@ mod tests {
     #[test]
     fn ambiguous_pending_calls_cannot_choose_the_latest_pool() {
         let mut tx = fixture("jupiter-v4-three-hop");
-        let logs = &mut tx.meta.as_mut().unwrap().log_messages;
+        let logs = &mut tx.meta.as_option_mut().unwrap().log_messages;
         let first = logs.iter().position(|log| log.starts_with("Program data: UWzjvs3QCsQ")).unwrap();
         let event = logs.remove(first);
         let second = logs.iter().position(|log| log.starts_with("Program data: UWzjvs3QCsQ")).unwrap();

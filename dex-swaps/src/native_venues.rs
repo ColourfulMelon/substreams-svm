@@ -2,7 +2,8 @@
 //! Amounts are taken from scoped user/vault CPIs in `quality`, never from a
 //! quoted minimum, router total, oracle update or whole-transaction delta.
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 
 pub(crate) const ORCA_V1: [u8; 32] = b58!("DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1");
 
@@ -977,7 +978,7 @@ mod tests {
             assert!(swaps[0].transfer_verified);
             for mode in 0..22 {
                 let mut changed = tx.clone();
-                let meta = changed.meta.as_mut().unwrap();
+                let meta = changed.meta.as_option_mut().unwrap();
                 let calls = &mut meta.inner_instructions[0].instructions;
                 let p = calls.iter().position(|x| x.data == native_data).unwrap();
                 let a = calls[p].accounts.clone();
@@ -997,7 +998,7 @@ mod tests {
                     17 => calls[p + 2].accounts[2] = a[0],
                     18 => calls[p + 2].stack_height = Some(4),
                     19 => { let extra = calls[p + 1].clone(); calls.insert(p + 3, extra); }
-                    20 => meta.err = Some(Default::default()),
+                    20 => meta.err = buffa::MessageField::some(Default::default()),
                     _ => calls[p + 2].data[1..9].copy_from_slice(&0u64.to_le_bytes()),
                 }
                 assert!(crate::process_transaction(changed).map_or(true, |d| d.swaps.iter().all(|s| s.source_index != Some(3))), "invalid padded SolFi {mode}");
@@ -1028,7 +1029,7 @@ mod tests {
             assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
             let swap = swaps[0];
             assert!(swap.transfer_verified);
-            assert_eq!(swap.protocol, if dlmm { Protocol::MeteoraDlmm } else { Protocol::MeteoraDaam } as i32);
+            assert_eq!(swap.protocol.to_i32(), if dlmm { Protocol::MeteoraDlmm } else { Protocol::MeteoraDaam } as i32);
             assert_eq!(base58::encode(&swap.amm_pool), f[2]);
             assert_eq!(base58::encode(&swap.user), f[3]);
             assert_eq!(base58::encode(&swap.input_mint), f[4]);
@@ -1040,7 +1041,7 @@ mod tests {
             if source.is_root() {
                 for mode in 0..7 {
                     let mut wrong = tx.clone();
-                    let ix = wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == data).unwrap();
+                    let ix = wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == data).unwrap();
                     match mode {
                         0 => ix.data[0] ^= 1,
                         1 => ix.data[8] ^= 1,
@@ -1057,7 +1058,7 @@ mod tests {
             }
             for mode in 0..20 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)|
                     group.instructions.iter().position(|ix| ix.data == data).map(|p| (g, p))).unwrap();
                 let calls = &mut meta.inner_instructions[g].instructions;
@@ -1084,7 +1085,7 @@ mod tests {
                     14 => calls[last].accounts[2] = a[0],
                     15 => calls[last].data[1..9].fill(0),
                     16 => calls[last].stack_height = Some(99),
-                    17 => meta.err = Some(Default::default()),
+                    17 => meta.err = buffa::MessageField::some(Default::default()),
                     18 => {
                         let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {program} success")).unwrap();
                         *success = format!("Program {program} failed: custom program error: 1");
@@ -1095,7 +1096,7 @@ mod tests {
                     "{} index {index} invalid swap2 {mode}", f[0]);
             }
             let mut canonical = tx.clone();
-            for group in &mut canonical.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut canonical.meta.as_option_mut().unwrap().inner_instructions {
                 for ix in &mut group.instructions { if ix.data == data { ix.data.truncate(if dlmm { 28 } else { 25 }); } }
             }
             let canonical = decode(canonical).unwrap();
@@ -1119,7 +1120,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(index)).collect();
             assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, if f[9] == "saber" { Protocol::Saber } else { Protocol::SolfiV2 } as i32);
+            assert_eq!(swap.protocol.to_i32(), if f[9] == "saber" { Protocol::Saber } else { Protocol::SolfiV2 } as i32);
             assert!(swap.transfer_verified);
             assert_eq!(base58::encode(&swap.amm_pool), f[2]);
             assert_eq!(base58::encode(&swap.user), f[3]);
@@ -1131,7 +1132,7 @@ mod tests {
             if native_data.len() != 153 && !(native_data.len() == 25 && native_data[18] == 1) { continue; }
             for mode in 0..22 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)|
                     group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))).unwrap();
                 let calls = &mut meta.inner_instructions[g].instructions;
@@ -1155,7 +1156,7 @@ mod tests {
                     15 => calls[p + 2].accounts[2] = a[0],
                     16 => calls[p + 2].stack_height = Some(99),
                     17 => { let extra = calls[p + 1].clone(); calls.insert(p + 3, extra); }
-                    18 => meta.err = Some(Default::default()),
+                    18 => meta.err = buffa::MessageField::some(Default::default()),
                     19 => {
                         let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {program} success")).unwrap();
                         *success = format!("Program {program} failed: custom program error: 1");
@@ -1169,7 +1170,7 @@ mod tests {
             if native_data.len() == 153 {
                 // Quote timestamps/signatures/flags never become settled price.
                 let mut changed = tx.clone();
-                for group in &mut changed.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut changed.meta.as_option_mut().unwrap().inner_instructions {
                     for ix in &mut group.instructions {
                         if ix.data == native_data { ix.data[9..].fill(255); }
                     }
@@ -1195,7 +1196,7 @@ mod tests {
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
             assert_eq!(swaps.len(), 1);
-            assert_eq!(swaps[0].protocol, Protocol::SplTokenSwap as i32);
+            assert_eq!(swaps[0].protocol, Protocol::SplTokenSwap);
             assert_eq!(swaps[0].amm, ORCA_V1);
             assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (input, output));
             assert_eq!(swaps[0].amm_pool, expected_pool);
@@ -1204,7 +1205,7 @@ mod tests {
             assert!(swaps[0].transfer_verified);
             for mode in 0..19 {
                 let mut altered = tx.clone();
-                let meta = altered.meta.as_mut().unwrap();
+                let meta = altered.meta.as_option_mut().unwrap();
                 let (group, position) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)| {
                     group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))
                 }).unwrap();
@@ -1277,7 +1278,7 @@ mod tests {
             input.extend_from_slice(&100u64.to_le_bytes());
             let mut output = vec![3];
             output.extend_from_slice(&200u64.to_le_bytes());
-            let meta = tx.meta.as_mut().unwrap();
+            let meta = tx.meta.as_option_mut().unwrap();
             meta.inner_instructions = vec![InnerInstructions {
                 index: 0,
                 instructions: vec![
@@ -1299,7 +1300,7 @@ mod tests {
                 meta.pre_token_balances.push(TokenBalance {
                     account_index: position + 2,
                     mint: base58::encode(mint),
-                    ui_token_amount: Some(UiTokenAmount {
+                    ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                         amount: "1000".into(),
                         decimals: 6,
                         ..Default::default()
@@ -1310,7 +1311,7 @@ mod tests {
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             assert_eq!(decoded.swaps.len(), 1);
             let swap = &decoded.swaps[0];
-            assert_eq!(swap.protocol, Protocol::RaydiumLaunchpad as i32);
+            assert_eq!(swap.protocol, Protocol::RaydiumLaunchpad);
             assert_eq!((swap.input_amount, swap.output_amount), (100, 200));
             assert_eq!(swap.amm_pool, accounts[4]);
             assert_eq!(swap.input_mint, accounts[if buy { 10 } else { 9 }]);
@@ -1318,14 +1319,14 @@ mod tests {
             for mode in 0..7 {
                 let mut wrong = tx.clone();
                 match mode {
-                    0 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].accounts[2] = 3,
-                    1 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[2] = 2,
-                    2 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[9] = 12,
-                    3 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[11] = 2,
-                    4 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[8..16]
+                    0 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].accounts[2] = 3,
+                    1 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[1].accounts[2] = 2,
+                    2 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].accounts[9] = 12,
+                    3 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].accounts[11] = 2,
+                    4 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[8..16]
                         .copy_from_slice(&(if exact_input { 99u64 } else { 201 }).to_le_bytes()),
-                    5 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0),
-                    6 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].stack_height = Some(3),
+                    5 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.push(0),
+                    6 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].stack_height = Some(3),
                     _ => unreachable!(),
                 }
                 assert!(
@@ -1357,7 +1358,7 @@ mod tests {
                 stack_height: Some(2),
             }
         };
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![
@@ -1371,7 +1372,7 @@ mod tests {
             meta.pre_token_balances.push(TokenBalance {
                 account_index: index,
                 mint: base58::encode(mint),
-                ui_token_amount: Some(UiTokenAmount {
+                ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                     amount: "1000".into(),
                     decimals: 6,
                     ..Default::default()
@@ -1385,27 +1386,27 @@ mod tests {
         assert_eq!(decoded.swaps[0].amm_pool, accounts[1]);
         assert!(decoded.swaps[0].transfer_verified);
         let mut no_fees = tx.clone();
-        no_fees.meta.as_mut().unwrap().inner_instructions[0].instructions.drain(1..3);
+        no_fees.meta.as_option_mut().unwrap().inner_instructions[0].instructions.drain(1..3);
         assert_eq!(crate::process_transaction(no_fees).unwrap().swaps[0].input_amount, 100);
         let mut aliased_fees = tx.clone();
-        aliased_fees.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[9] = 10;
-        aliased_fees.meta.as_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10;
+        aliased_fees.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].accounts[9] = 10;
+        aliased_fees.meta.as_option_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10;
         assert_eq!(crate::process_transaction(aliased_fees).unwrap().swaps[0].input_amount, 100);
         for mode in 0..10 {
             let mut wrong = tx.clone();
             match mode {
-                0 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[1] = 99,
-                1 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[1] = 9,
-                2 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[0] = 8,
-                3 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[3].accounts[2] = 7,
-                4 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10,
-                5 => wrong.meta.as_mut().unwrap().inner_instructions[0].instructions[1].data[1] = 98,
-                6 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[16] = 201,
-                7 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0),
-                8 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0]
+                0 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[1] = 99,
+                1 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[1].accounts[1] = 9,
+                2 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[1].accounts[0] = 8,
+                3 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[3].accounts[2] = 7,
+                4 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[2].accounts[1] = 10,
+                5 => wrong.meta.as_option_mut().unwrap().inner_instructions[0].instructions[1].data[1] = 98,
+                6 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[16] = 201,
+                7 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.push(0),
+                8 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0]
                     .accounts
                     .truncate(10),
-                9 => wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[..8]
+                9 => wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[..8]
                     .copy_from_slice(&[250, 23, 49, 134, 38, 84, 219, 125]),
                 _ => unreachable!(),
             }
@@ -1422,7 +1423,7 @@ mod tests {
             &include_bytes!("../fixtures/swap-coverage/onedex-aliased-fee-recipients.transaction.pb").to_vec(),
         ).unwrap();
         let decoded = crate::process_transaction(tx).unwrap();
-        let legs: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == Protocol::Onedex as i32).collect();
+        let legs: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == Protocol::Onedex).collect();
         // Independent original-RPC vault/user conservation proves both fees
         // use the same declared recipient. Fees belong to the gross input.
         assert_eq!(legs.len(), 1);
@@ -1436,7 +1437,7 @@ mod tests {
         assert!(leg.transfer_verified);
         // Independent finalized original proof restores the formerly missing
         // Omnipair fill; all four prior route legs remain intact.
-        let recovered = decoded.swaps.iter().find(|s| s.protocol == Protocol::Omnipair as i32).unwrap();
+        let recovered = decoded.swaps.iter().find(|s| s.protocol == Protocol::Omnipair).unwrap();
         assert_eq!((recovered.source_index, recovered.source_transfer_index), (Some(8), Some(10)));
         assert_eq!((recovered.input_amount, recovered.output_amount), (10_120_621, 1_753_261_255));
         assert_eq!(recovered.amm_pool, b58!("FBfmMETjo38mVnqXYjoTja5eooM8Zd6GXRcB3YaYxmMu"));
@@ -1469,7 +1470,7 @@ mod tests {
                 stack_height: Some(2),
             }
         };
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![transfer(200, vec![8, 6, 10]), transfer(95, vec![5, 7, 9]), transfer(5, vec![5, 12, 9])],
@@ -1478,7 +1479,7 @@ mod tests {
             meta.pre_token_balances.push(TokenBalance {
                 account_index: index,
                 mint: base58::encode(mint),
-                ui_token_amount: Some(UiTokenAmount {
+                ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                     amount: "1000".into(),
                     decimals: 6,
                     ..Default::default()
@@ -1492,15 +1493,15 @@ mod tests {
         assert_eq!(decoded.swaps[0].amm_pool, accounts[1]);
         assert!(decoded.swaps[0].transfer_verified);
         let mut wrong_amount = tx.clone();
-        wrong_amount.meta.as_mut().unwrap().inner_instructions[0].instructions[2].data[1] = 6;
+        wrong_amount.meta.as_option_mut().unwrap().inner_instructions[0].instructions[2].data[1] = 6;
         assert!(crate::process_transaction(wrong_amount).unwrap().swaps.is_empty());
         let mut undeclared_recipient = tx.clone();
-        undeclared_recipient.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0]
+        undeclared_recipient.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0]
             .accounts
             .truncate(10);
         assert!(crate::process_transaction(undeclared_recipient).unwrap().swaps.is_empty());
         let mut extra_debit = tx;
-        extra_debit.meta.as_mut().unwrap().inner_instructions[0]
+        extra_debit.meta.as_option_mut().unwrap().inner_instructions[0]
             .instructions
             .push(transfer(1, vec![5, 12, 9]));
         assert!(crate::process_transaction(extra_debit).unwrap().swaps.is_empty());
@@ -1653,7 +1654,7 @@ mod tests {
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
             assert_eq!(swaps.len(), 1);
-            assert_eq!(swaps[0].protocol, Protocol::Fluxbeam as i32);
+            assert_eq!(swaps[0].protocol, Protocol::Fluxbeam);
             assert_eq!((swaps[0].input_amount, swaps[0].output_amount), (input, output));
             assert_eq!(swaps[0].amm_pool, expected_pool);
             assert_eq!(swaps[0].user, expected_user);
@@ -1663,7 +1664,7 @@ mod tests {
             for mode in 0..13 {
                 let mut altered = tx.clone();
                 let mut changed = 0;
-                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                     for instruction in &mut group.instructions {
                         if instruction.data == native_data {
                             match mode {
@@ -1687,7 +1688,7 @@ mod tests {
             }
             let mut wrong_output_program = tx;
             let mut changed = 0;
-            for group in &mut wrong_output_program.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut wrong_output_program.meta.as_option_mut().unwrap().inner_instructions {
                 for instruction in &mut group.instructions {
                     if instruction.data == native_data {
                         instruction.accounts[12] = instruction.accounts[0];
@@ -1713,7 +1714,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(source)).collect();
             assert_eq!(swaps.len(), 1, "{}", fields[0]);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::Tesserav as i32);
+            assert_eq!(swap.protocol, Protocol::Tesserav);
             assert!(swap.transfer_verified);
             assert_eq!(base58::encode(&swap.amm_pool), fields[3]);
             assert_eq!(base58::encode(&swap.user), fields[4]);
@@ -1725,7 +1726,7 @@ mod tests {
             for mode in 0..19 {
                 let mut wrong = tx.clone();
                 let mut changed = 0;
-                for group in &mut wrong.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut wrong.meta.as_option_mut().unwrap().inner_instructions {
                     for ix in &mut group.instructions {
                         if ix.data != native_data { continue; }
                         match mode {
@@ -1750,7 +1751,7 @@ mod tests {
             }
             for failure in [false, true] {
                 let mut wrong = tx.clone();
-                let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                 let exit = logs.iter().position(|log| log == "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH success").unwrap();
                 if failure { logs[exit] = "Program TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH failed: custom program error: 1".into(); }
                 else { logs.truncate(exit); }
@@ -1773,7 +1774,7 @@ mod tests {
         let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(16)).collect();
         assert_eq!(swaps.len(), 1);
         let swap = swaps[0];
-        assert_eq!(swap.protocol, Protocol::Humidifi as i32);
+        assert_eq!(swap.protocol, Protocol::Humidifi);
         assert!(swap.transfer_verified);
         assert_eq!(swap.amm_pool, native_accounts[1]);
         assert_eq!(swap.user, native_accounts[0]);
@@ -1786,16 +1787,16 @@ mod tests {
         // causing the invocation scanner to run.
         let mut standalone = tx.clone();
         let resolved: Vec<_> = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect();
-        let message = standalone.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = standalone.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         message.account_keys = resolved;
         let original = tx.walk_instructions().nth(16).unwrap();
-        let group = tx.meta.as_ref().unwrap().inner_instructions.iter().find(|group| group.instructions.iter().any(|ix| ix.data == native_data)).unwrap();
+        let group = tx.meta.as_option().unwrap().inner_instructions.iter().find(|group| group.instructions.iter().any(|ix| ix.data == native_data)).unwrap();
         let position = group.instructions.iter().position(|ix| ix.data == native_data).unwrap();
         let native = &group.instructions[position];
         message.instructions = vec![substreams_solana::pb::sf::solana::r#type::v1::CompiledInstruction {
             program_id_index: native.program_id_index, accounts: native.accounts.clone(), data: native.data.clone(),
         }];
-        let meta = standalone.meta.as_mut().unwrap();
+        let meta = standalone.meta.as_option_mut().unwrap();
         meta.loaded_writable_addresses.clear();
         meta.loaded_readonly_addresses.clear();
         let mut transfers = group.instructions[position + 1..position + 3].to_vec();
@@ -1810,7 +1811,7 @@ mod tests {
                 (&mut meta.post_token_balances, (1_000_000_000i64 + delta) as u64)] {
                 balances.push(substreams_solana::pb::sf::solana::r#type::v1::TokenBalance {
                     account_index: u32::from(native.accounts[role]), mint: base58::encode(&native_accounts[mint]),
-                    ui_token_amount: Some(substreams_solana::pb::sf::solana::r#type::v1::UiTokenAmount {
+                    ui_token_amount: buffa::MessageField::some(substreams_solana::pb::sf::solana::r#type::v1::UiTokenAmount {
                         amount: amount.to_string(), decimals: if mint == 10 { 9 } else { 6 }, ..Default::default()
                     }), ..Default::default()
                 });
@@ -1827,7 +1828,7 @@ mod tests {
         assert!(direct.swaps[0].transfer_verified);
         for mode in 0..25 {
             let mut wrong = tx.clone();
-            let meta = wrong.meta.as_mut().unwrap();
+            let meta = wrong.meta.as_option_mut().unwrap();
             let group = meta.inner_instructions.iter_mut().find(|group| group.instructions.iter().any(|ix| ix.data == native_data)).unwrap();
             let position = group.instructions.iter().position(|ix| ix.data == native_data).unwrap();
             let accounts = group.instructions[position].accounts.clone();
@@ -1877,14 +1878,14 @@ mod tests {
                         "duplicate CPI in {}",
                         fields[0]
                     );
-                    if !(21..=33).contains(&swap.protocol) {
+                    if !(21..=33).contains(&swap.protocol.to_i32()) {
                         continue;
                     }
                     assert!(swap.transfer_verified);
                     protocols.insert(swap.protocol);
                     actual.push(format!(
                         "{}:{}:{}:{}:{}:{}:{}:{}",
-                        swap.protocol,
+                        swap.protocol.to_i32(),
                         swap.source_index.unwrap(),
                         base58::encode(&swap.amm_pool),
                         base58::encode(&swap.user),
@@ -1909,7 +1910,7 @@ mod tests {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
             assert_eq!(base58::encode(tx.hash()), f[1]);
             let decoded = crate::process_transaction(tx.clone()).unwrap();
-            let fills: Vec<_> = decoded.swaps.iter().filter(|x| x.protocol == Protocol::OpenbookV2 as i32).collect();
+            let fills: Vec<_> = decoded.swaps.iter().filter(|x| x.protocol == Protocol::OpenbookV2).collect();
             assert_eq!(fills.len(), 1, "{}", f[1]);
             let fill = fills[0];
             assert!(fill.transfer_verified && !fill.orderbook_fill_verified);
@@ -1921,7 +1922,7 @@ mod tests {
             // must not borrow matching amounts elsewhere in a routed transaction.
             for variant in 0..3 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let native = meta.inner_instructions.iter_mut().flat_map(|x| &mut x.instructions)
                     .find(|x| x.data.starts_with(&[3,44,71,3,26,199,203,85])).unwrap();
                 match variant {
@@ -1929,7 +1930,7 @@ mod tests {
                     1 => native.accounts[3] = native.accounts[0],
                     _ => native.accounts[13] = native.accounts[14],
                 }
-                assert!(crate::process_transaction(wrong).map_or(true, |x| x.swaps.iter().all(|s| s.protocol != Protocol::OpenbookV2 as i32)));
+                assert!(crate::process_transaction(wrong).map_or(true, |x| x.swaps.iter().all(|s| s.protocol != Protocol::OpenbookV2)));
             }
             count += 1;
         }
@@ -1972,7 +1973,7 @@ mod tests {
         if explicit_fee {
             receipt.extend_from_slice(&6u64.to_le_bytes());
         }
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![
@@ -2003,7 +2004,7 @@ mod tests {
                 balances.push(TokenBalance {
                     account_index: index,
                     mint: base58::encode(mint),
-                    ui_token_amount: Some(UiTokenAmount {
+                    ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                         amount: amount.to_string(),
                         ..Default::default()
                     }),
@@ -2022,7 +2023,7 @@ mod tests {
             assert_eq!((decoded.swaps[0].input_amount, decoded.swaps[0].output_amount), (100, 194));
         }
         let mut unknown_receipt = fee_fixture(false);
-        let meta = unknown_receipt.meta.as_mut().unwrap();
+        let meta = unknown_receipt.meta.as_option_mut().unwrap();
         meta.pre_token_balances.retain(|b| b.account_index != 5);
         meta.post_token_balances.retain(|b| b.account_index != 5);
         // Checked transfer proves the mint, but cannot prove an implicit fee
@@ -2035,7 +2036,7 @@ mod tests {
         use substreams_solana::pb::sf::solana::r#type::v1::InnerInstruction;
         for (explicit, fee) in [(false, 6u64), (true, 6), (true, 200)] {
             let mut tx = fee_fixture(explicit);
-            let meta = tx.meta.as_mut().unwrap();
+            let meta = tx.meta.as_option_mut().unwrap();
             if explicit {
                 meta.inner_instructions[0].instructions[1].data[11..19].copy_from_slice(&fee.to_le_bytes());
             }
@@ -2046,7 +2047,7 @@ mod tests {
                 .find(|balance| balance.account_index == 5)
                 .unwrap()
                 .ui_token_amount
-                .as_mut()
+                .as_option_mut()
                 .unwrap()
                 .amount = "209".into();
             meta.inner_instructions[0].instructions.push(InnerInstruction {
@@ -2062,14 +2063,14 @@ mod tests {
                 logs.extend([format!("Program {program} invoke [2]"), format!("Program {program} success")]);
             }
             logs.push(format!("Program {root} success"));
-            tx.meta.as_mut().unwrap().log_messages = logs;
+            tx.meta.as_option_mut().unwrap().log_messages = logs;
             let decoded = crate::process_transaction(tx).unwrap();
             assert_eq!(decoded.swaps.len(), 1);
             assert_eq!(decoded.swaps[0].output_amount, 200);
         }
         for field in 0..7 {
             let mut tx = fee_fixture(false);
-            let meta = tx.meta.as_mut().unwrap();
+            let meta = tx.meta.as_option_mut().unwrap();
             meta.pre_token_balances.retain(|balance| balance.account_index != 5);
             meta.post_token_balances.retain(|balance| balance.account_index != 5);
             let mut refund = InnerInstruction {
@@ -2111,7 +2112,7 @@ mod tests {
             if field != 6 {
                 logs.push(format!("Program {root} success"));
             }
-            tx.meta.as_mut().unwrap().log_messages = logs;
+            tx.meta.as_option_mut().unwrap().log_messages = logs;
             assert!(
                 crate::process_transaction(tx).map_or(true, |decoded| decoded.swaps.is_empty()),
                 "invalid refund {field}"
@@ -2123,7 +2124,7 @@ mod tests {
     fn caught_parent_failure_rolls_back_successful_transfer_evidence() {
         use substreams_solana::pb::sf::solana::r#type::v1::{CompiledInstruction, InnerInstruction};
         let mut tx = fee_fixture(true);
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let original = message.instructions[0].clone();
         let parent_index = message.account_keys.len() as u32;
         message.account_keys.push(vec![0xaa; 32]);
@@ -2132,7 +2133,7 @@ mod tests {
             accounts: original.accounts.clone(),
             data: vec![],
         };
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         for call in &mut meta.inner_instructions[0].instructions {
             call.stack_height = Some(3);
         }
@@ -2156,7 +2157,7 @@ mod tests {
             format!("Program {} failed: caught swap failure", programs[1]),
             format!("Program {} success", programs[0]),
         ];
-        tx.meta.as_mut().unwrap().log_messages = logs;
+        tx.meta.as_option_mut().unwrap().log_messages = logs;
         let outcomes = crate::logs::invocation_outcomes(&tx);
         assert_eq!(outcomes.completed, std::collections::HashSet::from([0]));
         assert_eq!(outcomes.rolled_back, std::collections::HashSet::from([1, 2, 3]));
@@ -2167,7 +2168,7 @@ mod tests {
     fn wrong_vault_authority_amount_depth_and_failed_transactions_emit_nothing() {
         for field in 0..9 {
             let mut tx = fee_fixture(true);
-            let meta = tx.meta.as_mut().unwrap();
+            let meta = tx.meta.as_option_mut().unwrap();
             match field {
                 0 => meta.inner_instructions[0].instructions[0].accounts[1] = 7,
                 1 => meta.inner_instructions[0].instructions[0].accounts[2] = 3,
@@ -2178,7 +2179,7 @@ mod tests {
                     meta.post_token_balances.clear();
                 }
                 5 => meta.inner_instructions[0].instructions[1].data[11..19].copy_from_slice(&201u64.to_le_bytes()),
-                6 => meta.err = Some(Default::default()),
+                6 => meta.err = buffa::MessageField::some(Default::default()),
                 7 => meta.inner_instructions[0].instructions[1].data[11..19].copy_from_slice(&200u64.to_le_bytes()),
                 _ => {
                     let duplicate = meta.inner_instructions[0].instructions[0].clone();
@@ -2217,7 +2218,7 @@ mod tests {
                 if !shapes.insert(shape) { continue; }
                 let a: Vec<_> = ix.accounts().iter().map(|a| a.0.clone()).collect();
                 let quote = pb::Swap {
-                    protocol: pb::Protocol::JupiterV6 as i32,
+                    protocol: pb::Protocol::JupiterV6.into(),
                     amm: ix.program_id().0.clone(),
                     amm_pool: base58::decode(f[2]).unwrap(), user: base58::decode(f[3]).unwrap(),
                     input_mint: base58::decode(f[4]).unwrap(), input_amount: f[5].parse().unwrap(),
@@ -2226,7 +2227,7 @@ mod tests {
                     ..Default::default()
                 };
                 let verify = |tx: &ConfirmedTransaction, quote: pb::Swap| {
-                    let mints = TokenMintLookup::new(tx, tx.meta.as_ref().unwrap());
+                    let mints = TokenMintLookup::new(tx, tx.meta.as_option().unwrap());
                     let mut candidates = vec![quote];
                     crate::quality::verify_with_fees(tx, &mints, &mut candidates, false, |mint, _| {
                         let raw = std::fs::read(format!("{}/fixtures/swap-coverage/{fixture}/fee-mints/{}.bin", env!("CARGO_MANIFEST_DIR"), base58::encode(mint))).ok()?;
@@ -2252,8 +2253,8 @@ mod tests {
                             _ => data[if dlmm { 28 } else { 19 }] ^= 1,
                         };
                         let mut cursor = 0u32;
-                        let groups = &mut wrong.meta.as_mut().unwrap().inner_instructions;
-                        for (root, call) in wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                        let groups = &mut wrong.meta.as_option_mut().unwrap().inner_instructions;
+                        for (root, call) in wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().enumerate() {
                             if cursor == index { change(&mut call.data); }
                             cursor += 1;
                             if let Some(group) = groups.iter_mut().find(|g| g.index == root as u32) {
@@ -2267,7 +2268,7 @@ mod tests {
                     if mode == 7 {
                         let program = base58::encode(ix.program_id().0);
                         let ordinal = tx.walk_instructions().take(index as usize).filter(|call| call.program_id().0 == ix.program_id().0).count();
-                        let log = wrong.meta.as_mut().unwrap().log_messages.iter_mut()
+                        let log = wrong.meta.as_option_mut().unwrap().log_messages.iter_mut()
                             .filter(|log| **log == format!("Program {program} success")).nth(ordinal).unwrap();
                         *log = format!("Program {program} failed: rolled back native swap");
                     }

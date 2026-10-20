@@ -5,7 +5,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("riptK81hDxhe5pW5jSzSM9iRA8azgEgLJ4dXkPtBS7j");
@@ -43,7 +44,7 @@ pub(crate) fn settlement(tx: &ConfirmedTransaction, source: u32, ix: &Instructio
     let Some(l) = layout(ix) else { return false };
     let a = ix.accounts();
     let resolved = tx.resolved_accounts();
-    let Some(meta) = tx.meta.as_ref() else { return false };
+    let Some(meta) = tx.meta.as_option() else { return false };
     let depth = if ix.is_root() { 1 } else { ix.stack_height() };
     if depth == 0 || calls.len() != 2 || !successful.contains(&source)
         || a.len() == 13 && (mints.mint_for(a[12].0).is_some()
@@ -74,7 +75,7 @@ pub(crate) fn settlement(tx: &ConfirmedTransaction, source: u32, ix: &Instructio
             .filter(|b| b.account_index as usize == vault).collect();
         if balances.is_empty() || balances.iter().any(|b| b.mint != base58::encode(a[2 + side].0)
             || b.owner != base58::encode(a[1].0) || b.program_id != base58::encode(a[8 + side].0)
-            || b.ui_token_amount.as_ref().is_none_or(|v| v.decimals != u32::from(cd[offset + 8])))
+            || b.ui_token_amount.as_option().is_none_or(|v| v.decimals != u32::from(cd[offset + 8])))
         { return false; }
         let amount = u64::from_le_bytes(cd[offset..offset + 8].try_into().unwrap());
         if amount == 0 || n == 0 && (if l.input_limit { amount > l.amount } else { amount != l.amount })
@@ -102,7 +103,7 @@ mod tests {
             assert_eq!(rows.len(), 1, "{} source {source}", f[0]);
             let s = rows[0];
             assert!(s.transfer_verified);
-            assert_eq!(s.protocol, Protocol::Riptide as i32);
+            assert_eq!(s.protocol, Protocol::Riptide);
             assert_eq!(base58::encode(&s.amm_pool), f[2]);
             assert_eq!(base58::encode(&s.user), f[3]);
             assert_eq!(base58::encode(&s.input_mint), f[4]);
@@ -121,8 +122,8 @@ mod tests {
             let (g, p) = {
                 let mut index = 0u32;
                 let mut location = None;
-                let groups = &tx.meta.as_ref().unwrap().inner_instructions;
-                for root in 0..tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.len() {
+                let groups = &tx.meta.as_option().unwrap().inner_instructions;
+                for root in 0..tx.transaction.as_option().unwrap().message.as_option().unwrap().instructions.len() {
                     index += 1;
                     if let Some((g, group)) = groups.iter().enumerate().find(|(_, group)| group.index as usize == root) {
                         for p in 0..group.instructions.len() {
@@ -137,7 +138,7 @@ mod tests {
             for mode in 0..34 {
                 if mode == 33 && a.len() == 12 { continue; }
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let calls = &mut meta.inner_instructions[g].instructions;
                 let roles = calls[p].accounts.clone();
                 match mode {
@@ -163,7 +164,7 @@ mod tests {
                     20 => calls[p + 2].stack_height = Some(99),
                     21 | 22 => { let c = &mut calls[p + 1 + usize::from(mode == 22)]; let decimals = if c.data[0] == 26 { 10 } else { 9 }; c.data[decimals] ^= 1; }
                     23 => { let extra = calls[p + 1].clone(); calls.insert(p + 3, extra); }
-                    24 => meta.err = Some(Default::default()),
+                    24 => meta.err = buffa::MessageField::some(Default::default()),
                     25 => {
                         let position = meta.log_messages.iter().enumerate().filter(|(_, l)| **l == format!("Program {} success", base58::encode(PROGRAM_ID))).nth(occurrence).unwrap().0;
                         meta.log_messages[position] = format!("Program {} failed: custom program error: 1", base58::encode(PROGRAM_ID));

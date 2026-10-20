@@ -16,17 +16,20 @@ message Transaction {
     repeated Instruction instructions = 6; // Instructions executed in this transaction.
     repeated TokenBalance pre_token_balances = 7; // Token balances before the transaction.
     repeated TokenBalance post_token_balances = 8; // Token balances after the transaction.
+    uint32 transaction_index = 9; // Original index of the transaction in the block, votes and failures included.
 }
 
 message Instruction {
     bytes program_id = 1;
     uint32 stack_height = 2;
     bool is_root = 3; // Indicates if this instruction is a root instruction.
+    uint32 instruction_index = 4; // Original index of the outer (top-level) instruction.
+    optional uint32 inner_instruction_index = 5; // Original index among the inner instructions of instruction_index; absent for an outer instruction.
     oneof instruction {
-        // Transfers
-        Transfer transfer = 10;
-        Transfer mint = 11;
-        Transfer burn = 12;
+        // Amount-moving operations, each with its explicit kind.
+        Transfer transfer = 10; // Transfer and TransferChecked
+        Transfer mint = 11; // MintTo and MintToChecked: no source
+        Transfer burn = 12; // Burn and BurnChecked: no destination
 
         // Permissions
         Approve approve = 13;
@@ -66,16 +69,15 @@ message TokenBalance {
 
 message Transfer {
   // -- authority --
-  bytes authority = 1;
-  repeated bytes multisig_authority = 2;
+  bytes authority = 1; // Owner, delegate or mint authority.
+  repeated bytes multisig_authority = 2; // Accounts after the authority.
 
   // -- event --
-  bytes source = 10;
-  bytes destination = 11;
-  uint64 amount = 12;
-  bytes mint = 13;
-  // SPL-2022
-  optional uint32 decimals = 14; // uint8
+  bytes source = 10; // Source token account; empty for mints.
+  bytes destination = 11; // Destination token account; empty for burns.
+  uint64 amount = 12; // Exact raw amount; zero amounts are kept.
+  optional bytes mint = 13; // Absent for unchecked Transfer, which does not name the mint.
+  optional uint32 decimals = 14; // uint8, from checked instructions only.
 }
 
 message InitializeMint {

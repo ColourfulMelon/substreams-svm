@@ -2,7 +2,7 @@
 //! which move when a previously missing swap or transaction becomes visible.
 use std::collections::HashMap;
 
-use prost::Message;
+use buffa::Message;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams::errors::Error;
 use substreams_solana::base58;
@@ -20,7 +20,7 @@ fn map_routed_updates(previous: pb::Events, repaired: pb::Events) -> Result<pb::
 #[substreams::handlers::map]
 fn map_previous_unassigned(mut previous: pb::Events) -> Result<pb::Events, Error> {
     for transaction in &mut previous.transactions {
-        transaction.swaps.retain(|swap| matches!(swap.protocol, 4 | 5) && swap.amm_pool.is_empty());
+        transaction.swaps.retain(|swap| matches!(swap.protocol.to_i32(), 4 | 5) && swap.amm_pool.is_empty());
     }
     previous.transactions.retain(|transaction| !transaction.swaps.is_empty());
     Ok(previous)
@@ -47,7 +47,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.source_burn_index = None;
             identity.burn_output_verified = false;
             identity.verification_failure.clear();
-            if matches!(identity.protocol, 4 | 5) {
+            if matches!(identity.protocol.to_i32(), 4 | 5) {
                 identity.amm_pool.clear();
             }
             existing
@@ -83,7 +83,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
             identity.source_burn_index = None;
             identity.burn_output_verified = false;
             identity.verification_failure.clear();
-            if matches!(identity.protocol, 4 | 5) {
+            if matches!(identity.protocol.to_i32(), 4 | 5) {
                 identity.amm_pool.clear();
             }
             let previous = existing.get_mut(&(transaction.signature.clone(), identity.encode_to_vec()));
@@ -91,7 +91,7 @@ fn classify_swaps(previous: pb::Events, repaired: pb::Events) -> Result<(pb::Eve
                 let index = swaps
                     .iter()
                     .position(|old| old.amm_pool == swap.amm_pool)
-                    .or_else(|| swaps.iter().position(|old| matches!(old.protocol, 4 | 5) && old.amm_pool.is_empty()));
+                    .or_else(|| swaps.iter().position(|old| matches!(old.protocol.to_i32(), 4 | 5) && old.amm_pool.is_empty()));
                 index.map(|index| swaps.swap_remove(index))
             });
             match matched {
@@ -176,7 +176,7 @@ mod tests {
     #[test]
     fn pool_enrichment_changes_location_without_recounting_swap() {
         let mut old = events(1, &[10]);
-        old.transactions[0].swaps[0].protocol = 5;
+        old.transactions[0].swaps[0].protocol = 5.into();
         let mut new = old.clone();
         new.transactions[0].swaps[0].amm_pool = vec![9; 32];
         let (added, routed) = classify_swaps(old, new).unwrap();
@@ -187,7 +187,7 @@ mod tests {
     #[test]
     fn refuses_nonempty_pool_reassignment() {
         let mut old = events(1, &[10]);
-        old.transactions[0].swaps[0].protocol = 5;
+        old.transactions[0].swaps[0].protocol = 5.into();
         old.transactions[0].swaps[0].amm_pool = vec![8; 32];
         let mut new = old.clone();
         new.transactions[0].swaps[0].amm_pool = vec![9; 32];

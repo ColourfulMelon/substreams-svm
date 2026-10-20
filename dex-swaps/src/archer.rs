@@ -5,7 +5,8 @@ use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::{HashMap, HashSet};
-use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("Archer8kgiavM61GyusMzaaS2ft5sALtNsD1HxkUPMhy");
@@ -61,7 +62,7 @@ pub(crate) fn fills(tx: &ConfirmedTransaction) -> HashMap<u32, Vec<u8>> {
     let mut stack: Vec<(String, Option<u32>, bool)> = Vec::new();
     let mut fills = HashMap::new();
     let mut duplicates = HashSet::new();
-    for log in tx.meta.as_ref().into_iter().flat_map(|m| &m.log_messages) {
+    for log in tx.meta.as_option().into_iter().flat_map(|m| &m.log_messages) {
         if log == "Log truncated" {
             break;
         }
@@ -238,7 +239,7 @@ mod tests {
             let ix = &views[source as usize];
             let native = ix.data().clone();
             let depth = ix.stack_height();
-            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             let event = fills(&tx).remove(&source).unwrap();
             assert_eq!(bound_layout(ix, &event).unwrap().amount, input);
             assert!(settlement(
@@ -254,7 +255,7 @@ mod tests {
                 if mode < 17 {
                     let group = altered
                         .meta
-                        .as_mut()
+                        .as_option_mut()
                         .unwrap()
                         .inner_instructions
                         .iter_mut()
@@ -289,7 +290,7 @@ mod tests {
                         _ => calls[p].accounts[9] = a[0],
                     }
                 } else {
-                    let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                     let n = logs
                         .iter()
                         .position(|l| l.starts_with("Program data: ") && STANDARD.decode(&l[14..]).is_ok_and(|b| b.starts_with(&FILL)))
@@ -348,7 +349,7 @@ mod tests {
                     let s = found[0];
                     assert_eq!((s.input_amount, s.output_amount), (input, output));
                     assert!(s.transfer_verified);
-                    assert_eq!(s.protocol, Protocol::Archer as i32);
+                    assert_eq!(s.protocol, Protocol::Archer);
                     assert_eq!(s.source_transfer_index, Some(source + 1));
                     assert_eq!(s.amm_pool, *ix.accounts()[1].0);
                     assert_eq!(s.user, *ix.accounts()[0].0);

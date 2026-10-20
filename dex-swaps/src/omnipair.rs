@@ -1,7 +1,8 @@
 //! Omnipair's program-owned SwapArgs, principal CPIs and SwapEvent.
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58,base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token,token_2022};
 use std::collections::HashSet;
 pub(crate) const PROGRAM_ID:[u8;32]=b58!("omnixgS8fnqHfCcTGKWj6JtKjzpJZ1Y5y9pyFkQDkYE");
@@ -23,7 +24,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
  for(n,c)in calls.iter().enumerate().filter(|(n,_)|*n==0||*n==3){let d=c.data();let ca=c.accounts();
   if c.program_id().0.as_slice()!=PROGRAM_ID||ca.len()!=1||ca[0].0.as_slice()!=EVENT_AUTHORITY
    ||d.len()!=if n==0{216}else{145}||d[..16]!=if n==0{[228,69,165,46,81,203,154,29,44,6,60,245,142,38,166,247]}else{[228,69,165,46,81,203,154,29,64,198,205,232,38,8,113,226]}{return false;}}
- let Some(meta)=tx.meta.as_ref()else{return false;};let keys=tx.resolved_accounts();let mut amounts=[0;2];
+ let Some(meta)=tx.meta.as_option()else{return false;};let keys=tx.resolved_accounts();let mut amounts=[0;2];
  for(n,c)in calls[1..3].iter().enumerate(){let ca=c.accounts();let d=c.data();let roles=if n==0{[5,7,3,9]}else{[4,8,6,0]};
   if ![token::PROGRAM_ID.as_slice(),token_2022::PROGRAM_ID.as_slice()].contains(&c.program_id().0.as_slice())
    ||ca.len()!=4||d.len()!=10||d[0]!=12||ca.iter().zip(roles).any(|(k,r)|k.0!=a[r].0)
@@ -31,7 +32,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
   let Some(vault)=keys.iter().position(|k|*k==a[l.vaults[n]].0)else{return false;};
   let snapshots:Vec<_>=meta.pre_token_balances.iter().chain(&meta.post_token_balances).filter(|b|b.account_index as usize==vault).collect();
   if snapshots.is_empty()||snapshots.iter().any(|b|b.mint!=base58::encode(a[7+n].0)||b.owner!=base58::encode(a[0].0)
-   ||b.program_id!=base58::encode(c.program_id().0)||b.ui_token_amount.as_ref().is_none_or(|v|v.decimals!=u32::from(d[9]))){return false;}
+   ||b.program_id!=base58::encode(c.program_id().0)||b.ui_token_amount.as_option().is_none_or(|v|v.decimals!=u32::from(d[9]))){return false;}
   amounts[n]=u64::from_le_bytes(d[1..9].try_into().unwrap());
  }
  let e=calls[3].data();

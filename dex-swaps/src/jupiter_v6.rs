@@ -71,7 +71,7 @@ pub(crate) fn decode_instruction(tx: &ConfirmedTransaction, index: usize, instru
                         && (ix.data()[8..16] == SWAP || ix.data()[8..16] == SWAPS)
                 })
                 .map_or(parent_index + 1, |(offset, _)| parent_index + offset + 2);
-            let caught_failure = tx.meta.as_ref().is_some_and(|meta| {
+            let caught_failure = tx.meta.as_option().is_some_and(|meta| {
                 meta.log_messages.iter().any(|log| {
                     let mut words = log.split_whitespace();
                     words.next() == Some("Program") && words.next().is_some() && words.next() == Some("failed:")
@@ -118,7 +118,7 @@ pub(crate) fn decode_instruction(tx: &ConfirmedTransaction, index: usize, instru
             *occurrence += 1;
             pb::Swap {
                 program_id: jupiter::v6::PROGRAM_ID.to_vec(),
-                protocol: pb::Protocol::JupiterV6 as i32,
+                protocol: pb::Protocol::JupiterV6.into(),
                 stack_height: depth,
                 amm: amm.to_vec(),
                 amm_pool: source.map_or_else(Vec::new, |(_, pool, _)| pool.clone()),
@@ -164,7 +164,7 @@ mod tests {
 
     fn route(pools: &[[u8; 32]], events: Vec<Vec<u8>>) -> ConfirmedTransaction {
         let mut tx = make_tx(jupiter::v6::PROGRAM_ID, &[[20; 32], [22; 32]], vec![229, 23, 203, 151, 122, 227, 173, 42]);
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         message.account_keys.push(pumpfun::amm::PROGRAM_ID.to_vec());
         let mut instructions = Vec::new();
         for pool in pools {
@@ -188,7 +188,7 @@ mod tests {
             data,
             stack_height: Some(2),
         }));
-        tx.meta.as_mut().unwrap().inner_instructions = vec![InnerInstructions { index: 0, instructions }];
+        tx.meta.as_option_mut().unwrap().inner_instructions = vec![InnerInstructions { index: 0, instructions }];
         tx
     }
 
@@ -252,18 +252,18 @@ mod tests {
             &[[9; 32], [10; 32]],
             vec![event(false, &[pumpfun::amm::PROGRAM_ID]), event(false, &[pumpfun::amm::PROGRAM_ID])],
         );
-        let first_event = tx.meta.as_mut().unwrap().inner_instructions[0].instructions.remove(2);
-        tx.meta.as_mut().unwrap().inner_instructions[0].instructions.insert(1, first_event);
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let first_event = tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions.remove(2);
+        tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions.insert(1, first_event);
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let route_ix = message.instructions[0].clone();
         message.instructions.push(route_ix);
-        let mut later_call = tx.meta.as_ref().unwrap().inner_instructions[0].instructions[0].clone();
+        let mut later_call = tx.meta.as_option().unwrap().inner_instructions[0].instructions[0].clone();
         let begin = message.account_keys.len();
         for account in [[15; 32], [2; 32], [3; 32], [4; 32], [5; 32], [6; 32]] {
             message.account_keys.push(account.to_vec());
         }
         later_call.accounts = (begin..begin + 6).map(|n| n as u8).collect();
-        tx.meta.as_mut().unwrap().inner_instructions.push(InnerInstructions {
+        tx.meta.as_option_mut().unwrap().inner_instructions.push(InnerInstructions {
             index: 1,
             instructions: vec![
                 later_call,
@@ -289,7 +289,7 @@ mod tests {
         let mut tx = route(&[[9; 32], [10; 32]], vec![event(true, &[pumpfun::amm::PROGRAM_ID])]);
         let jup = base58::encode(jupiter::v6::PROGRAM_ID);
         let pump = base58::encode(pumpfun::amm::PROGRAM_ID);
-        tx.meta.as_mut().unwrap().log_messages = vec![
+        tx.meta.as_option_mut().unwrap().log_messages = vec![
             format!("Program {jup} invoke [1]"),
             format!("Program {pump} invoke [2]"),
             format!("Program {pump} failed: custom program error: 1"),
@@ -305,7 +305,7 @@ mod tests {
             assert_eq!(swap.amm_pool, vec![10; 32]);
             assert_eq!(swap.source_index, Some(2));
         }
-        tx.meta.as_mut().unwrap().log_messages.pop();
+        tx.meta.as_option_mut().unwrap().log_messages.pop();
         let instructions: Vec<_> = tx.walk_instructions().collect();
         let swap = decode_instruction(&tx, 3, &instructions).pop().unwrap();
         assert!(swap.amm_pool.is_empty() && swap.source_index.is_none());

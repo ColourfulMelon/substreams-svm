@@ -2,7 +2,8 @@
 //! are excluded; committed checked-token receipts and native event must agree.
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token,token_2022};
 use std::collections::HashSet;
 use base64::Engine;
@@ -43,7 +44,7 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
  // Map the complete runtime frames to instruction sources, so a sibling event
  // cannot validate this swap. Invocation commitment is checked above.
  let walk:Vec<_>=tx.walk_instructions().collect();let mut cursor=0;let mut stack=Vec::new();let mut event=None;
- for log in &tx.meta.as_ref().unwrap().log_messages{
+ for log in &tx.meta.as_option().unwrap().log_messages{
   let parts:Vec<_>=log.split_whitespace().collect();
   if parts.len()==4&&parts[0]=="Program"&&parts[2]=="invoke"{
    let Ok(program)=substreams_solana::base58::decode(parts[1])else{return false;};
@@ -72,12 +73,12 @@ mod tests{
   let bytes=std::fs::read(format!("{}/fixtures/swap-coverage/custody-numeraire26/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();let source=f[1].parse::<u32>().unwrap();
   let walk:Vec<_>=tx.walk_instructions().collect();let native=walk[source as usize].data().clone();let input=walk[source as usize+1].data().clone();let output=walk[source as usize+2].data().clone();
   let decoded=crate::process_transaction(tx.clone()).unwrap();let swaps:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(swaps.len(),1);let s=swaps[0];
-  assert!(s.transfer_verified);assert_eq!(s.protocol,Protocol::Numeraire as i32);assert_eq!(base58::encode(&s.amm_pool),f[2]);assert_eq!(base58::encode(&s.user),f[3]);assert_eq!(base58::encode(&s.input_mint),f[4]);assert_eq!(base58::encode(&s.output_mint),f[6]);assert_eq!(s.input_amount,f[5].parse::<u64>().unwrap());assert_eq!(s.output_amount,f[7].parse::<u64>().unwrap());assert_eq!(s.source_transfer_index,Some(f[8].parse::<u32>().unwrap()));
-  for mode in 0..29{let mut wrong=tx.clone();let meta=wrong.meta.as_mut().unwrap();
+  assert!(s.transfer_verified);assert_eq!(s.protocol,Protocol::Numeraire);assert_eq!(base58::encode(&s.amm_pool),f[2]);assert_eq!(base58::encode(&s.user),f[3]);assert_eq!(base58::encode(&s.input_mint),f[4]);assert_eq!(base58::encode(&s.output_mint),f[6]);assert_eq!(s.input_amount,f[5].parse::<u64>().unwrap());assert_eq!(s.output_amount,f[7].parse::<u64>().unwrap());assert_eq!(s.source_transfer_index,Some(f[8].parse::<u32>().unwrap()));
+  for mode in 0..29{let mut wrong=tx.clone();let meta=wrong.meta.as_option_mut().unwrap();
    if mode<23{let target=if mode<13{&native}else if mode<18{&input}else{&output};let n=meta.inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==*target).unwrap();let a=n.accounts.clone();
     match mode{0=>n.data[0]^=1,1=>n.data.push(0),2=>n.data[8]=10,3=>n.data[9]=n.data[8],4=>n.data[10]^=1,5=>n.accounts[0]=a[8],6=>n.accounts[1]=a[2],7=>n.accounts[5]=a[6],8=>n.accounts[7]=a[0],9=>n.accounts[9]=a[0],10=>n.accounts[10]=a[0],11=>n.accounts[8]=a[0],12=>n.data[18..26].copy_from_slice(&(s.output_amount+1).to_le_bytes()),13|18=>n.data[1]^=1,14|19=>n.accounts[0]=a[2],15|20=>n.accounts[2]=a[0],16|21=>n.accounts[3]=a[0],_=>n.stack_height=Some(99)}
    }else if mode<27{let l=meta.log_messages.iter_mut().find(|l|l.starts_with("Program data: ")).unwrap();let mut e=base64::engine::general_purpose::STANDARD.decode(&l[14..]).unwrap();e[match mode{23=>8,24=>16,25=>32,_=>66}]^=1;*l=format!("Program data: {}",base64::engine::general_purpose::STANDARD.encode(e));}
-   else if mode==27{meta.err=Some(Default::default());}else{meta.log_messages.clear();}
+   else if mode==27{meta.err=buffa::MessageField::some(Default::default());}else{meta.log_messages.clear();}
    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"invalid Numeraire mode{mode}");
   }
  }
@@ -87,25 +88,25 @@ mod tests{
   for line in cases.lines(){let f:Vec<_>=line.split('\t').collect();let source=f[1].parse::<u32>().unwrap();
    let bytes=std::fs::read(format!("{}/fixtures/swap-coverage/wide-numeraire26/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
    let decoded=crate::process_transaction(tx.clone()).unwrap();let matches:Vec<_>=decoded.swaps.iter().filter(|row|row.source_index==Some(source)).collect();assert_eq!(matches.len(),1,"{}:{}",f[0],source);let row=matches[0];
-   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::Numeraire as i32);assert_eq!(row.source_transfer_index,Some(f[8].parse().unwrap()));
+   assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::Numeraire);assert_eq!(row.source_transfer_index,Some(f[8].parse().unwrap()));
    assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
    let walk:Vec<_>=tx.walk_instructions().collect();let native_accounts=walk[source as usize].accounts();let first=walk[source as usize+1].accounts();let output_first=first[0].0==native_accounts[6].0;
    if !output_first{continue;}reverse+=1;
-   let mints=TokenMintLookup::new(&tx,tx.meta.as_ref().unwrap());
-   for mode in 0..9{let mut routed=(*row).clone();routed.protocol=Protocol::JupiterV6 as i32;routed.source_index=None;routed.source_transfer_index=None;
+   let mints=TokenMintLookup::new(&tx,tx.meta.as_option().unwrap());
+   for mode in 0..9{let mut routed=(*row).clone();routed.protocol=Protocol::JupiterV6.into();routed.source_index=None;routed.source_transfer_index=None;
     match mode{0=>{},1=>routed.amm_pool=vec![0;32],2=>routed.user=vec![0;32],3=>routed.input_mint=vec![0;32],4=>routed.output_mint=vec![0;32],5=>routed.input_amount+=1,6=>routed.output_amount+=1,7=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source);},_=>{routed.source_index=Some(source);routed.source_transfer_index=Some(source+2);}}
     let mut candidates=vec![routed];crate::quality::verify_with_fees(&tx,&mints,&mut candidates,false,|_,_|None);
-    if mode==0{assert_eq!(candidates.len(),1,"routed native positive {}:{}",f[0],source);assert_eq!(candidates[0].protocol,Protocol::Numeraire as i32);assert_eq!(candidates[0].source_transfer_index,row.source_transfer_index);}
+    if mode==0{assert_eq!(candidates.len(),1,"routed native positive {}:{}",f[0],source);assert_eq!(candidates[0].protocol,Protocol::Numeraire);assert_eq!(candidates[0].source_transfer_index,row.source_transfer_index);}
     else{assert!(candidates.is_empty(),"{}:{} invalid routed mode{}",f[0],source,mode);}
    }
 
-   let mut positions=Vec::new();for (root,_)in tx.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().enumerate(){positions.push((root,None));if let Some((g,group))=tx.meta.as_ref().unwrap().inner_instructions.iter().enumerate().find(|(_,g)|g.index==root as u32){for (n,_)in group.instructions.iter().enumerate(){positions.push((root,Some((g,n))));}}}
+   let mut positions=Vec::new();for (root,_)in tx.transaction.as_option().unwrap().message.as_option().unwrap().instructions.iter().enumerate(){positions.push((root,None));if let Some((g,group))=tx.meta.as_option().unwrap().inner_instructions.iter().enumerate().find(|(_,g)|g.index==root as u32){for (n,_)in group.instructions.iter().enumerate(){positions.push((root,Some((g,n))));}}}
    for mode in 0..24 {let mut wrong=tx.clone();
-    if mode==22{wrong.meta.as_mut().unwrap().err=Some(Default::default());}
-    else if mode==23{wrong.meta.as_mut().unwrap().log_messages.clear();}
+    if mode==22{wrong.meta.as_option_mut().unwrap().err=buffa::MessageField::some(Default::default());}
+    else if mode==23{wrong.meta.as_option_mut().unwrap().log_messages.clear();}
     else{let target=source as usize+if mode<6{0}else{1+(mode-6)%2};let(root,inner)=positions[target];
-     if inner.is_none(){let call=&mut wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[root];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.accounts[2]=call.accounts[0]};}
-     else{let(g,n)=inner.unwrap();let call=&mut wrong.meta.as_mut().unwrap().inner_instructions[g].instructions[n];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.stack_height=Some(99)};}
+     if inner.is_none(){let call=&mut wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[root];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.accounts[2]=call.accounts[0]};}
+     else{let(g,n)=inner.unwrap();let call=&mut wrong.meta.as_option_mut().unwrap().inner_instructions[g].instructions[n];match mode%6{0=>call.data[0]^=1,1=>call.data.push(0),2=>call.accounts[0]=call.accounts[1],3=>call.accounts[1]=call.accounts[0],4=>{let n=if mode<6{10}else{1};call.data[n]^=1;},_=>call.stack_height=Some(99)};}
     }
     assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|row|row.source_index!=Some(source))),"{}:{} invalid mode{}",f[0],source,mode);
    }

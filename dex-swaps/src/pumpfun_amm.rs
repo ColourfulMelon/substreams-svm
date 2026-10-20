@@ -12,7 +12,7 @@ pub(crate) fn decode_boost_burns(tx:&substreams_solana::pb::sf::solana::r#type::
     use std::collections::HashMap;
     use substreams_solana_idls::spl::{token,token_2022};
     let prove=||->Option<Vec<BoostBurn>> {
-        let meta=tx.meta.as_ref()?;if meta.err.is_some(){return None;}
+        let meta=tx.meta.as_option()?;if meta.err.is_set(){return None;}
         let walk:Vec<_>=tx.walk_instructions().collect();let keys=tx.resolved_accounts();
         let committed=crate::logs::successful_invocations(tx);
         let mut native=HashMap::<Vec<u8>,i128>::new();let mut token_delta=HashMap::<Vec<u8>,i128>::new();
@@ -31,7 +31,7 @@ pub(crate) fn decode_boost_burns(tx:&substreams_solana::pb::sf::solana::r#type::
                     || [0,1,3,4,5,6,7,8].iter().enumerate().any(|(p,r)|[0,1,3,4,5,6,7,8][p+1..].iter().any(|q|a[*r].0==a[*q].0)) {return None;}
                 let authority=solana_pubkey::Pubkey::find_program_address(&[b"boost_vault",a[0].0],&solana_pubkey::Pubkey::new_from_array(pumpswap::PROGRAM_ID)).0.to_bytes();
                 let ata=solana_pubkey::Pubkey::find_program_address(&[&authority,&token::PROGRAM_ID,a[4].0],
-                    &solana_pubkey::Pubkey::new_from_array(substreams_solana::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"))).0.to_bytes();
+                    &solana_pubkey::Pubkey::new_from_array(substreams_solana_macro::b58!("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"))).0.to_bytes();
                 let event_authority=solana_pubkey::Pubkey::find_program_address(&[b"__event_authority"],&solana_pubkey::Pubkey::new_from_array(pumpswap::PROGRAM_ID)).0.to_bytes();
                 if a[7].0.as_slice()!=authority || a[8].0.as_slice()!=ata || a[11].0.as_slice()!=event_authority {return None;}
                 let end=walk.iter().enumerate().skip(source+1).find(|(_,x)|x.is_root()).map(|(i,_)|i).unwrap_or(walk.len());
@@ -69,7 +69,7 @@ pub(crate) fn decode_boost_burns(tx:&substreams_solana::pb::sf::solana::r#type::
                         || ca[0].0!=a[8].0 || ca[1].0!=a[1].0 || ca[2].0!=a[7].0 || u(e,208)?!=0 {return None;}
                 }
                 result.push(BoostBurn {burn_index:(source+2)as u32,swap:pb::Swap{
-                    protocol:pb::Protocol::PumpfunAmmBuyBurn as i32,program_id:pumpswap::PROGRAM_ID.to_vec(),amm:pumpswap::PROGRAM_ID.to_vec(),
+                    protocol:pb::Protocol::PumpfunAmmBuyBurn.into(),program_id:pumpswap::PROGRAM_ID.to_vec(),amm:pumpswap::PROGRAM_ID.to_vec(),
                     amm_pool:a[0].0.clone(),user:a[7].0.clone(),input_mint:a[4].0.clone(),output_mint:a[3].0.clone(),
                     input_amount:quote,output_amount:output,source_index:Some(source as u32),source_transfer_index:Some((source+1)as u32),
                     source_burn_index:Some((source+2)as u32),burn_output_verified:true,stack_height:1,..Default::default()
@@ -100,13 +100,13 @@ pub(crate) fn decode_boost_burns(tx:&substreams_solana::pb::sf::solana::r#type::
                     },
                     _=>return None,
                 }
-            } else if program.as_slice()!=substreams_solana::b58!("ComputeBudget111111111111111111111111111111") {return None;}
+            } else if program.as_slice()!=substreams_solana_macro::b58!("ComputeBudget111111111111111111111111111111") {return None;}
         }
         *native.entry(keys.first()?.to_vec()).or_default()-=i128::from(meta.fee);
         if keys.iter().enumerate().any(|(i,key)|meta.post_balances.get(i).zip(meta.pre_balances.get(i)).map(|(after,before)|i128::from(*after)-i128::from(*before))!=Some(native.get(*key).copied().unwrap_or(0))) {return None;}
         for (key,delta) in token_delta {
             let index=keys.iter().position(|k|**k==key)? as u32;
-            let balance=|rows:&[substreams_solana::pb::sf::solana::r#type::v1::TokenBalance]|rows.iter().find(|x|x.account_index==index).map(|x|x.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()).unwrap_or(Some(0));
+            let balance=|rows:&[substreams_solana::pb::sf::solana::r#type::v1::TokenBalance]|rows.iter().find(|x|x.account_index==index).map(|x|x.ui_token_amount.as_option()?.amount.parse::<u64>().ok()).unwrap_or(Some(0));
             if i128::from(balance(&meta.post_token_balances)?)-i128::from(balance(&meta.pre_token_balances)?)!=delta {return None;}
         }
         Some(result)
@@ -166,7 +166,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::PumpfunAmm as i32,
+        protocol: pb::Protocol::PumpfunAmm.into(),
         program_id: pumpswap::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         source_index: Some(trade.source_index),
@@ -385,7 +385,7 @@ mod tests {
             let quote=walk[source+1].data().clone();let burn=walk[source+2].data().clone();let buy_event=walk[source+3].data().clone();let event=walk[source+4].data().clone();
             let r=&rows[0].swap;
             assert_eq!((r.protocol,r.source_index,r.source_transfer_index,r.source_burn_index,r.amm_pool.clone(),r.user.clone(),r.input_mint.clone(),r.input_amount,r.output_mint.clone(),r.output_amount),
-                (pb::Protocol::PumpfunAmmBuyBurn as i32,Some(source as u32),Some((source+1)as u32),Some((source+2)as u32),a[0].0.clone(),a[7].0.clone(),a[4].0.clone(),u64::from_le_bytes(quote[1..9].try_into().unwrap()),a[3].0.clone(),u64::from_le_bytes(burn[1..9].try_into().unwrap())));
+                (pb::Protocol::PumpfunAmmBuyBurn.into(),Some(source as u32),Some((source+1)as u32),Some((source+2)as u32),a[0].0.clone(),a[7].0.clone(),a[4].0.clone(),u64::from_le_bytes(quote[1..9].try_into().unwrap()),a[3].0.clone(),u64::from_le_bytes(burn[1..9].try_into().unwrap())));
             assert!(r.burn_output_verified && !r.transfer_verified && !r.orderbook_fill_verified);
             let processed=crate::process_transaction(tx.clone()).expect("verified burn transaction");
             let published:Vec<_>=processed.swaps.iter().filter(|s|s.source_index==Some(source as u32)).collect();
@@ -394,20 +394,20 @@ mod tests {
             for mode in 0..29 {
                 let mut wrong=tx.clone();
                 if mode<5 {
-                    let root=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|x|x.data==native).unwrap();
+                    let root=wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|x|x.data==native).unwrap();
                     match mode {0=>root.data[8..16].copy_from_slice(&(r.input_amount-1).to_le_bytes()),1=>root.data[16..24].copy_from_slice(&(r.output_amount+1).to_le_bytes()),2=>root.data.push(0),3=>root.accounts[0]=root.accounts[1],_=>root.accounts[7]=root.accounts[1]}
                 } else if mode==23 {
                     let index=tx.resolved_accounts().iter().position(|k|*k==a[5].0).unwrap() as u32;
-                    wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index==index).unwrap().ui_token_amount.as_mut().unwrap().amount="1".into();
+                    wrong.meta.as_option_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index==index).unwrap().ui_token_amount.as_option_mut().unwrap().amount="1".into();
                 } else if mode==24 {
-                    wrong.meta.as_mut().unwrap().post_balances[0]+=1;
+                    wrong.meta.as_option_mut().unwrap().post_balances[0]+=1;
                 } else if mode==25 {
-                    let logs=&mut wrong.meta.as_mut().unwrap().log_messages;
+                    let logs=&mut wrong.meta.as_option_mut().unwrap().log_messages;
                     let index=logs.iter().rposition(|l|l==&format!("Program {} success",substreams_solana::base58::encode(&pumpswap::PROGRAM_ID))).unwrap();
                     logs[index]=format!("Program {} failed: custom program error: 1",substreams_solana::base58::encode(&pumpswap::PROGRAM_ID));
                 } else {
                     let data=if matches!(mode,6..=9){&quote}else if matches!(mode,5|10..=13){&burn}else if matches!(mode,14..=18|27){&buy_event}else{&event};
-                    let call=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|x|&x.data==data).unwrap();
+                    let call=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|x|&x.data==data).unwrap();
                     match mode {5=>call.program_id_index^=1,6=>call.data[1]^=1,7=>call.accounts[0]=call.accounts[2],8=>call.accounts[2]=call.accounts[0],9=>call.accounts[3]=call.accounts[2],
                         10=>call.data[1]^=1,11=>call.accounts[0]=call.accounts[1],12=>call.accounts[1]=call.accounts[0],13=>call.accounts[2]=call.accounts[1],
                         14=>call.data[24]^=1,15=>call.data[128]^=1,16=>call.data[160]^=1,17=>call.data[32]^=1,18=>call.data[401]^=1,
@@ -498,11 +498,11 @@ mod tests {
             }
             for mode in 0..9 {
                 let mut altered = tx.clone();
-                let meta = altered.meta.as_mut().unwrap();
-                let native_is_root = altered.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.iter().any(|ix| ix.data == native_data);
+                let meta = altered.meta.as_option_mut().unwrap();
+                let native_is_root = altered.transaction.as_option().unwrap().message.as_option().unwrap().instructions.iter().any(|ix| ix.data == native_data);
                 if mode < 3 {
                     let data = if native_is_root {
-                        &mut altered.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == native_data).unwrap().data
+                        &mut altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == native_data).unwrap().data
                     } else { &mut meta.inner_instructions.iter_mut().flat_map(|g| &mut g.instructions).find(|ix| ix.data == native_data).unwrap().data };
                     match mode {
                         0 => data[8] ^= 1,
@@ -543,7 +543,7 @@ mod tests {
             assert_eq!((swaps[0].source_transfer_index, swaps[0].input_amount, swaps[0].output_amount), (Some(first), input, output));
             for mode in 0..6 {
                 let mut altered = tx.clone();
-                let data = &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                let data = &mut altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                     .flat_map(|g| &mut g.instructions).find(|ix| ix.data == native_data).unwrap().data;
                 match mode {
                     0 => data[24] = 2,
@@ -597,7 +597,7 @@ mod tests {
         for &(bytes, source, first, input, output) in fixtures {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
             let decoded = crate::process_transaction(tx.clone()).unwrap();
-            let buys: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == pb::Protocol::PumpfunAmm as i32).collect();
+            let buys: Vec<_> = decoded.swaps.iter().filter(|s| s.protocol == pb::Protocol::PumpfunAmm).collect();
             assert_eq!(buys.len(), 2);
             let restored: Vec<_> = buys.iter().filter(|s| s.source_index == Some(source)).collect();
             assert_eq!(restored.len(), 1);
@@ -609,7 +609,7 @@ mod tests {
         // otherwise-identical native buy or accepted with another event's user.
         for mode in 0..5 {
             let mut altered = tx.clone();
-            let event = &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+            let event = &mut altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                 .flat_map(|g| &mut g.instructions).filter(|ix| ix.data.starts_with(&[0xe4,0x45,0xa5,0x2e,0x51,0xcb,0x9a,0x1d])).nth(1).unwrap();
             match mode {
                 0 => event.stack_height = Some(1),
@@ -660,15 +660,15 @@ mod tests {
             assert_eq!((sell.input_amount, sell.output_amount, sell.source_transfer_index), (input, output, Some(first)));
             assert_eq!((sell.amm_pool.clone(), sell.user.clone(), sell.input_mint.clone(), sell.output_mint.clone()),
                 (pool, user, input_mint, output_mint));
-            assert_eq!(sell.protocol, pb::Protocol::PumpfunAmm as i32);
+            assert_eq!(sell.protocol, pb::Protocol::PumpfunAmm);
             assert!(sell.transfer_verified);
             for mode in 0..6 {
                 let mut altered = tx.clone();
-                let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                let message = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                 let native = if let Some(position) = message.instructions.iter().position(|ix| ix.data == original_data) {
                     &mut message.instructions[position].data
                 } else {
-                    &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                    &mut altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                         .flat_map(|group| &mut group.instructions).find(|ix| ix.data == original_data).unwrap().data
                 };
                 match mode {
@@ -679,7 +679,7 @@ mod tests {
                     4 => native[0] ^= 1,
                     5 => {
                         let program = substreams_solana::base58::encode(pumpswap::PROGRAM_ID);
-                        for log in &mut altered.meta.as_mut().unwrap().log_messages {
+                        for log in &mut altered.meta.as_option_mut().unwrap().log_messages {
                             if log.as_str() == format!("Program {program} success") {
                                 *log = format!("Program {program} failed: custom program error: 0x1");
                             }
@@ -728,14 +728,15 @@ mod tests {
         data.extend_from_slice(&body);
 
         ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -745,9 +746,12 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta::default()),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: buffa::MessageField::some(TransactionStatusMeta::default()).into(),
         }
     }
 

@@ -59,7 +59,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::MeteoraDlmm as i32,
+        protocol: pb::Protocol::MeteoraDlmm.into(),
         program_id: dlmm::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: dlmm::PROGRAM_ID.to_vec(),
@@ -269,7 +269,7 @@ pub(crate) fn padded_swap2_settlement(source: u32, ix: &InstructionView, calls: 
     let depth = if ix.is_root() { 1 } else { ix.stack_height() };
     if ix.program_id().0 != &dlmm::PROGRAM_ID || !d.starts_with(&dlmm::instructions::SWAP2)
         || !matches!(d.len(), 32 | 34 | 56) || d[24..28] != [0, 0, 0, 0] || a.len() < 16
-        || a[13].0.as_slice() != substreams_solana::b58!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr")
+        || a[13].0.as_slice() != substreams_solana_macro::b58!("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr")
         || a[15].0 != &dlmm::PROGRAM_ID || !matches!(calls.len(), 4 | 5) || depth == 0
         || !successful.contains(&source)
         || calls.iter().enumerate().any(|(n, c)| c.is_root() || c.stack_height() != depth + 1 || !successful.contains(&(source + n as u32 + 1)))
@@ -343,19 +343,19 @@ mod tests {
             assert!(expected.transfer_verified);
             let verify_route = |transaction: &ConfirmedTransaction| {
                 let mut routed = expected.clone();
-                routed.protocol = pb::Protocol::JupiterV4 as i32;
+                routed.protocol = pb::Protocol::JupiterV4.into();
                 let mut candidates = vec![routed];
-                let mints = crate::token_mints::TokenMintLookup::new(transaction, transaction.meta.as_ref().unwrap());
+                let mints = crate::token_mints::TokenMintLookup::new(transaction, transaction.meta.as_option().unwrap());
                 crate::quality::verify_with_fees(transaction, &mints, &mut candidates, false, |_, _| None);
                 candidates
             };
             assert_eq!(verify_route(&tx).len(), 1, "routed native alias");
             for mode in 0..23 {
                 let mut changed = tx.clone();
-                let meta = changed.meta.as_mut().unwrap();
+                let meta = changed.meta.as_option_mut().unwrap();
                 if mode == 20 {
                     let balance = meta.post_token_balances.iter_mut().find(|b| b.mint == substreams_solana::base58::encode(&layout.token_y_mint) && b.owner == substreams_solana::base58::encode(&layout.user)).unwrap();
-                    let amount = balance.ui_token_amount.as_mut().unwrap();
+                    let amount = balance.ui_token_amount.as_option_mut().unwrap();
                     amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
                 } else if mode == 21 {
                     for log in &mut meta.log_messages {
@@ -448,7 +448,7 @@ mod tests {
                     .is_some_and(|(primary, _)| primary == output)).unwrap().data().clone();
             let decoded = crate::process_transaction(tx.clone()).unwrap();
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(source)
-                && s.protocol == pb::Protocol::MeteoraDlmm as i32).collect();
+                && s.protocol == pb::Protocol::MeteoraDlmm).collect();
             assert_eq!(swaps.len(), 1, "one physical swap, separately declared host payout: source={source} input={input} decoded={:?}", decoded.swaps);
             let swap = swaps[0];
             assert_eq!((swap.input_amount, swap.output_amount, swap.source_transfer_index), (input, output, Some(first)));
@@ -457,23 +457,23 @@ mod tests {
             for mode in 0..12 {
                 let mut altered = tx.clone();
                 if mode == 0 {
-                    let message = altered.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let message = altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                     if let Some(native) = message.instructions.iter_mut().find(|i| i.data == native_data) {
                         native.accounts[9] = native.program_id_index as u8;
                     } else {
-                        let native = altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                        let native = altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                             .flat_map(|group| &mut group.instructions).find(|i| i.data == native_data).unwrap();
                         native.accounts[9] = native.program_id_index as u8;
                     }
                 } else if mode == 11 {
                     let program = substreams_solana::base58::encode(dlmm::PROGRAM_ID);
-                    for log in &mut altered.meta.as_mut().unwrap().log_messages {
+                    for log in &mut altered.meta.as_option_mut().unwrap().log_messages {
                         if log.as_str() == format!("Program {program} success") {
                             *log = format!("Program {program} failed: custom program error: 0x1");
                         }
                     }
                 } else {
-                    let event = &mut altered.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                    let event = &mut altered.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                         .flat_map(|group| &mut group.instructions).find(|i| i.data == event_data).unwrap().data;
                     match mode {
                         1 => event[16 + 137] ^= 1,
@@ -490,7 +490,7 @@ mod tests {
                     }
                 }
                 assert!(crate::process_transaction(altered).map_or(true, |decoded| decoded.swaps.iter()
-                    .all(|s| s.source_index != Some(source) || s.protocol != pb::Protocol::MeteoraDlmm as i32)),
+                    .all(|s| s.source_index != Some(source) || s.protocol != pb::Protocol::MeteoraDlmm)),
                     "invalid host payout witness mutation {mode}");
             }
         }

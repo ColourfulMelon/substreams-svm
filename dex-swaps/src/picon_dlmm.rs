@@ -2,7 +2,8 @@
 //! Native events, exact principal roles and full vault ledgers must agree.
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token;
 use std::collections::HashSet;
 use base64::Engine;
@@ -40,7 +41,7 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
     }
     if amounts[0]==0 || amounts[1]==0 || l.exact_input&&(amounts[0]!=l.amount||amounts[1]<l.minimum_output)
         || !l.exact_input&&(amounts[0]>l.amount||amounts[1]!=l.minimum_output) { return None; }
-    let meta=tx.meta.as_ref()?;let keys=tx.resolved_accounts();
+    let meta=tx.meta.as_option()?;let keys=tx.resolved_accounts();
     for (role,mint) in [(6,2),(7,3)] {
         let address=a[role].0;let position=keys.iter().position(|key|*key==address)?;
         let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==position)?;
@@ -58,7 +59,7 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
             let amount=i128::from(u64::from_le_bytes(d[1..9].try_into().ok()?));
             if from==address { change=change.checked_sub(amount)?; }if to==address { change=change.checked_add(amount)?; }
         }
-        if i128::from(after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)!=change { return None; }
+        if i128::from(after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)!=change { return None; }
     }
     // Bind the log event to this exact native invocation, never a sibling.
     let walk:Vec<_>=tx.walk_instructions().collect();let mut cursor=0;let mut stack=Vec::new();let mut event=None;
@@ -99,28 +100,28 @@ mod tests {
                 let original_native=tx.walk_instructions().nth(source as usize).unwrap().data().clone();
                 if exact_out {
                     // ABI-derived variant, not an additional finalized original.
-                    let n=tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|n|n.data==original_native).unwrap();
+                    let n=tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|n|n.data==original_native).unwrap();
                     n.data[..8].copy_from_slice(&OUT);n.data[8..16].copy_from_slice(&f[7].parse::<u64>().unwrap().to_le_bytes());n.data[16..24].copy_from_slice(&f[5].parse::<u64>().unwrap().to_le_bytes());
-                    for l in &mut tx.meta.as_mut().unwrap().log_messages { if *l=="Program log: Instruction: SwapExactIn" {*l="Program log: Instruction: SwapExactOut".into();} }
+                    for l in &mut tx.meta.as_option_mut().unwrap().log_messages { if *l=="Program log: Instruction: SwapExactIn" {*l="Program log: Instruction: SwapExactOut".into();} }
                 }
                 let native=tx.walk_instructions().nth(source as usize).unwrap().data().clone();
                 let input=tx.walk_instructions().nth(source as usize+1).unwrap().data().clone();
                 let output=tx.walk_instructions().nth(source as usize+2).unwrap().data().clone();
                 let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();
                 assert_eq!(rows.len(),1,"{} derivedExactOut={exact_out}",f[0]);let row=rows[0];
-                assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::PiconDlmm as i32);assert_eq!(row.source_transfer_index,Some(source+1));
+                assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::PiconDlmm);assert_eq!(row.source_transfer_index,Some(source+1));
                 assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),
                     (f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
                 let verify_route=|transaction:&ConfirmedTransaction| {
-                    let mut candidate=row.clone();candidate.protocol=Protocol::JupiterV4 as i32;let mut candidates=vec![candidate];
-                    let mints=TokenMintLookup::new(transaction,transaction.meta.as_ref().unwrap());
+                    let mut candidate=row.clone();candidate.protocol=Protocol::JupiterV4.into();let mut candidates=vec![candidate];
+                    let mints=TokenMintLookup::new(transaction,transaction.meta.as_option().unwrap());
                     crate::quality::verify_with_fees(transaction,&mints,&mut candidates,false,|_,_|None);candidates
                 };
                 assert_eq!(verify_route(&tx).len(),1);
                 for mode in 0..37 {
                     let mut wrong=tx.clone();
                     if mode<15 {
-                        let n=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|n|n.data==native).unwrap();let a=n.accounts.clone();
+                        let n=wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|n|n.data==native).unwrap();let a=n.accounts.clone();
                         match mode {
                             0=>n.data[0]^=1,1=>n.data.push(0),
                             2=>n.data[8..16].copy_from_slice(&(if exact_out{row.output_amount+1}else{row.input_amount+1}).to_le_bytes()),
@@ -129,15 +130,15 @@ mod tests {
                             8=>n.accounts[1]=a[0],9=>n.accounts[2]=a[3],10=>n.accounts[4]=a[5],11=>n.accounts[6]=a[7],12=>n.accounts[7]=a[6],13=>n.accounts[8]=a[1],_=>n.accounts[9]=a[1],
                         }
                     } else if mode<29 {
-                        let n=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|n|n.data==if mode<22{input.clone()}else{output.clone()}).unwrap();let a=n.accounts.clone();
+                        let n=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|n|n.data==if mode<22{input.clone()}else{output.clone()}).unwrap();let a=n.accounts.clone();
                         match (mode-15)%7 {0=>n.data[1]^=1,1=>n.data[1..9].fill(0),2=>n.accounts[0]=a[1],3=>n.accounts[1]=a[0],4=>n.accounts[2]=a[0],5=>n.accounts[3]=a[2],_=>n.stack_height=Some(99)}
                     } else if mode<35 {
-                        let meta=wrong.meta.as_mut().unwrap();let log=meta.log_messages.iter_mut().find(|l|l.starts_with("Program data: ")&&base64::engine::general_purpose::STANDARD.decode(&l[14..]).is_ok_and(|e|e.starts_with(&[64,198,205,232,38,8,113,226]))).unwrap();
+                        let meta=wrong.meta.as_option_mut().unwrap();let log=meta.log_messages.iter_mut().find(|l|l.starts_with("Program data: ")&&base64::engine::general_purpose::STANDARD.decode(&l[14..]).is_ok_and(|e|e.starts_with(&[64,198,205,232,38,8,113,226]))).unwrap();
                         let mut e=base64::engine::general_purpose::STANDARD.decode(&log[14..]).unwrap();e[match mode{29=>8,30=>40,31=>49,32=>57,33=>65,_=>73}]^=1;*log=format!("Program data: {}",base64::engine::general_purpose::STANDARD.encode(e));
                     } else if mode==35 {
-                        let meta=wrong.meta.as_mut().unwrap();let pool=f[2];let b=meta.post_token_balances.iter_mut().find(|b|b.owner==pool&&b.mint==f[6]).unwrap();let amount=b.ui_token_amount.as_mut().unwrap();amount.amount=(amount.amount.parse::<u64>().unwrap()+1).to_string();
+                        let meta=wrong.meta.as_option_mut().unwrap();let pool=f[2];let b=meta.post_token_balances.iter_mut().find(|b|b.owner==pool&&b.mint==f[6]).unwrap();let amount=b.ui_token_amount.as_option_mut().unwrap();amount.amount=(amount.amount.parse::<u64>().unwrap()+1).to_string();
                     } else {
-                        wrong.meta.as_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(PROGRAM_ID)));
+                        wrong.meta.as_option_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(PROGRAM_ID)));
                     }
                     assert!(crate::process_transaction(wrong.clone()).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"native Picon mode{mode} derivedExactOut={exact_out}");
                     assert!(verify_route(&wrong).is_empty(),"routed Picon mode{mode} derivedExactOut={exact_out}");

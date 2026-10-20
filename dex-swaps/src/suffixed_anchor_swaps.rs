@@ -3,7 +3,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) fn applies(ix: &InstructionView) -> bool {
@@ -95,13 +96,13 @@ mod tests {
             let source_ix = tx.walk_instructions().nth(source as usize).unwrap();
             let source_data = source_ix.data().clone();
             let parsed = layout(&source_ix).unwrap();
-            let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let lookup = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             let calls: Vec<_> = tx.walk_instructions().skip(source as usize+1).take(if parsed.protocol == Protocol::MeteoraDbc { 4 } else { 2 }).collect();
             let successful: HashSet<u32> = (0..tx.walk_instructions().count() as u32).collect();
             assert!(settlement(source, &tx, &source_ix, &calls, &lookup, &successful).is_some(), "original native settlement {}", f[0]);
             let native = crate::process_transaction(tx.clone()).unwrap().swaps.into_iter()
                 .find(|x| x.source_index == Some(source)).unwrap_or_else(|| panic!("finalized padded Anchor swap swap {} source={source}", f[0]));
-            assert_eq!(native.protocol, parsed.protocol as i32);
+            assert_eq!(native.protocol.to_i32(), parsed.protocol as i32);
             for (actual, expected) in [(&native.program_id, f[3]), (&native.amm, f[3]), (&native.amm_pool, f[4]),
                 (&native.user, f[5]), (&native.input_mint, f[6]), (&native.output_mint, f[8])] {
                 assert_eq!(base58::encode(actual), expected);
@@ -125,11 +126,11 @@ mod tests {
                         12 => data[16..24].fill(255),
                         _ => unreachable!(),
                     };
-                    let message = wrong.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let message = wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                     if let Some(ix) = message.instructions.iter_mut().find(|x| x.data == source_data) {
                         modify(&mut ix.data, &mut ix.accounts);
                     } else {
-                        let ix = wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
+                        let ix = wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions)
                             .find(|x| x.data == source_data).unwrap();
                         modify(&mut ix.data, &mut ix.accounts);
                     }
@@ -138,12 +139,12 @@ mod tests {
                         let a = child.accounts();
                         a[0].0 == source_ix.accounts()[parsed.users[0]].0 && mode == 6 || child.accounts().get(2).is_some_and(|a| a.0 == source_ix.accounts()[parsed.users[1]].0) && mode != 6
                     }).unwrap() as u32;
-                    let roots = wrong.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.len();
+                    let roots = wrong.transaction.as_option().unwrap().message.as_option().unwrap().instructions.len();
                     let mut flat = 0;
                     let mut changed = false;
                     for root_position in 0..roots {
                         flat += 1;
-                        if let Some(group) = wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == root_position as u32) {
+                        if let Some(group) = wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == root_position as u32) {
                             for i in &mut group.instructions {
                                 if flat == target {
                                     if mode == 6 || mode == 13 { i.data[1] ^= 1; } else if mode == 7 { i.accounts.swap(0, 1); }
@@ -156,11 +157,11 @@ mod tests {
                     }
                     assert!(changed);
                 } else if mode == 14 {
-                    wrong.meta.as_mut().unwrap().post_token_balances.clear();
+                    wrong.meta.as_option_mut().unwrap().post_token_balances.clear();
                 } else if mode == 8 {
-                    wrong.meta.as_mut().unwrap().log_messages.clear();
+                    wrong.meta.as_option_mut().unwrap().log_messages.clear();
                 } else {
-                    let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                     let depth = if source_ix.is_root() { 1 } else { source_ix.stack_height() };
                     let ordinal = tx.walk_instructions().take(source as usize + 1).filter(|ix| ix.program_id().0 == source_ix.program_id().0
                         && (if ix.is_root() { 1 } else { ix.stack_height() }) == depth).count()-1;
@@ -171,8 +172,8 @@ mod tests {
                 }
                 assert!(!crate::process_transaction(wrong.clone()).unwrap().swaps.iter().any(|x| x.source_index == Some(source)),
                     "{} native mutation {mode}", f[0]);
-                let lookup = TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
-                let mut routed = native.clone(); routed.protocol = 5;
+                let lookup = TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
+                let mut routed = native.clone(); routed.protocol = 5.into();
                 routed.program_id = substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                 let mut rows = vec![routed];
                 crate::quality::verify_and_deduplicate(&wrong, &lookup, &mut rows, false);
@@ -184,11 +185,11 @@ mod tests {
                     for mode in 0..8 {
                         let target = source + 3 + event;
                         let mut wrong = tx.clone();
-                        let roots = wrong.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.len();
+                        let roots = wrong.transaction.as_option().unwrap().message.as_option().unwrap().instructions.len();
                         let mut flat = 0;
                         for root_position in 0..roots {
                             flat += 1;
-                            if let Some(group) = wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == root_position as u32) {
+                            if let Some(group) = wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g| g.index == root_position as u32) {
                                 for i in &mut group.instructions {
                                     if flat == target {
                                         let position = match mode { 0=>16,1=>82,2=>if event==0{106}else{123},3=>80,4=>8,5=>if event==0{154}else{99},6=>if event==0{98}else{107},_=>81 };
@@ -199,22 +200,22 @@ mod tests {
                             }
                         }
                         assert!(!crate::process_transaction(wrong.clone()).unwrap().swaps.iter().any(|x|x.source_index==Some(source)), "native DBC event{event} mutation{mode}");
-                        let lookup=TokenMintLookup::new(&wrong,wrong.meta.as_ref().unwrap());
-                        let mut routed=native.clone();routed.protocol=5;routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
+                        let lookup=TokenMintLookup::new(&wrong,wrong.meta.as_option().unwrap());
+                        let mut routed=native.clone();routed.protocol=5.into();routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                         let mut rows=vec![routed];crate::quality::verify_and_deduplicate(&wrong,&lookup,&mut rows,false);
                         assert!(rows.is_empty(), "routed DBC event{event} mutation{mode}");invalid+=2;
                     }
                 }
             }
-            let lookup = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let lookup = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             for mode in 0..3 {
-                let mut routed = native.clone(); routed.protocol = 5;
+                let mut routed = native.clone(); routed.protocol = 5.into();
                 routed.program_id = substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                 if mode == 1 { routed.user = source_ix.accounts()[parsed.pool].0.clone(); }
                 if mode == 2 { routed.amm_pool = source_ix.accounts()[parsed.users[0]].0.clone(); }
                 let mut rows = vec![routed];
                 crate::quality::verify_and_deduplicate(&tx, &lookup, &mut rows, false);
-                if mode == 0 { assert_eq!(rows.len(), 1); assert_eq!(rows[0].protocol, parsed.protocol as i32); }
+                if mode == 0 { assert_eq!(rows.len(), 1); assert_eq!(rows[0].protocol.to_i32(), parsed.protocol as i32); }
                 else { assert!(rows.is_empty()); invalid += 1; }
             }
         }

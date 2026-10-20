@@ -1,5 +1,6 @@
 use common::db::{common_key_v2, set_authority, set_clock, set_spl_token_instruction_v2, set_spl_token_transaction_v2};
 use proto::pb::solana::spl::token::v1 as pb;
+use substreams::buffa::Enumeration;
 use substreams::pb::substreams::Clock;
 use substreams_solana::base58;
 
@@ -123,7 +124,7 @@ fn handle_set_authority(
     let row = tables
         .create_row("set_authority", key)
         .set("account", base58::encode(&data.account))
-        .set("authority_type", data.authority_type().as_str_name())
+        .set("authority_type", data.authority_type.as_known().unwrap_or_default().proto_name())
         .set("new_authority_raw", new_authority_raw);
 
     set_authority(&data.authority, &data.multisig_authority, row);
@@ -241,4 +242,61 @@ fn handle_thaw_account(
     set_spl_token_instruction_v2(instruction, row);
     set_spl_token_transaction_v2(transaction, row);
     set_clock(clock, row);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use substreams::buffa::MessageField;
+    use substreams_database_change::{pb::sf::substreams::sink::database::v1::table_change::Operation, tables::Tables};
+
+    #[test]
+    fn set_authority_table_preserves_known_labels_and_unknown_default() {
+        let mut clock = Clock {
+            id: "block-55".into(),
+            number: 55,
+            timestamp: MessageField::some(Default::default()),
+        };
+        clock.timestamp.get_or_insert_default().seconds = 1_700_000_000;
+        for (authority_type, expected) in [
+            (1, "AUTHORITY_TYPE_MINT_TOKENS"),
+            (3, "AUTHORITY_TYPE_ACCOUNT_OWNER"),
+            (999, "AUTHORITY_TYPE_UNSPECIFIED"),
+        ] {
+            let events = pb::Events {
+                transactions: vec![pb::Transaction {
+                    signature: vec![7; 64],
+                    instructions: vec![pb::Instruction {
+                        instruction: Some(pb::instruction::Instruction::SetAuthority(
+                            pb::SetAuthority {
+                                account: vec![11; 32],
+                                authority_type: authority_type.into(),
+                                new_authority: Some(vec![22; 32]),
+                                authority: vec![33; 32],
+                                ..Default::default()
+                            }
+                            .into(),
+                        )),
+                        ..Default::default()
+                    }],
+                    ..Default::default()
+                }],
+            };
+            let mut tables = Tables::new();
+            process_events(&mut tables, &clock, &events);
+            let changes = tables.to_database_changes();
+            assert_eq!(changes.table_changes.len(), 1);
+            let row = &changes.table_changes[0];
+            assert_eq!(row.table, "set_authority");
+            assert_eq!(row.operation, Operation::Create);
+            let fields: std::collections::BTreeMap<_, _> = row.fields.iter().map(|field| (field.name.as_str(), field.value.as_str())).collect();
+            assert_eq!(fields["authority_type"], expected);
+            assert_eq!(fields["account"], base58::encode([11; 32]));
+            assert_eq!(fields["new_authority_raw"], base58::encode([22; 32]));
+            assert_eq!(fields["authority"], base58::encode([33; 32]));
+            assert_eq!(fields["signature"], base58::encode([7; 64]));
+            assert_eq!(fields["block_num"], "55");
+            assert_eq!(fields["timestamp"], "1700000000");
+        }
+    }
 }

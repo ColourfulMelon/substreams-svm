@@ -4,7 +4,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("HADRoNbLovyqhCsocfYQYB7QdfCAAinN9HTePvBCVDQ8");
@@ -97,7 +98,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.source_index == Some(index)).collect();
             assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::Hadron as i32);
+            assert_eq!(swap.protocol, Protocol::Hadron);
             assert!(swap.transfer_verified);
             assert_eq!(base58::encode(&swap.amm_pool), f[2]);
             assert_eq!(base58::encode(&swap.user), f[3]);
@@ -113,7 +114,7 @@ mod tests {
             if source.is_root() {
                 for mode in 0..14 {
                     let mut wrong = tx.clone();
-                    let ix = wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == native_data).unwrap();
+                    let ix = wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|ix| ix.data == native_data).unwrap();
                     let accounts = ix.accounts.clone();
                     match mode {
                         0 => ix.data[0] = 20,
@@ -138,7 +139,7 @@ mod tests {
             }
             for mode in 0..25 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, xs)|
                     xs.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))).unwrap();
                 let calls = &mut meta.inner_instructions[g].instructions;
@@ -169,7 +170,7 @@ mod tests {
                     19 => calls[output].data[1..9].fill(0),
                     20 => calls[output].stack_height = Some(source_depth + 2),
                     21 => { let extra = calls[input].clone(); calls.insert(output + 1, extra); }
-                    22 => meta.err = Some(Default::default()),
+                    22 => meta.err = buffa::MessageField::some(Default::default()),
                     23 => {
                         let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {} success", base58::encode(PROGRAM_ID))).unwrap();
                         *success = format!("Program {} failed: custom program error: 1", base58::encode(PROGRAM_ID));

@@ -35,7 +35,7 @@ pub(crate) fn handle_instruction(pending_trade: &mut Option<PendingTrade>, instr
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::RaydiumLaunchpad as i32,
+        protocol: pb::Protocol::RaydiumLaunchpad.into(),
         program_id: raydium::launchpad::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height(),
         amm: raydium::launchpad::PROGRAM_ID.to_vec(),
@@ -60,19 +60,39 @@ fn decode_trade_instruction(ix: &InstructionView) -> Option<PendingTrade> {
     let trade = match raydium::launchpad::instructions::unpack(ix.data()) {
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::BuyExactIn(_evt)) => {
             let accounts = raydium::launchpad::accounts::get_buy_exact_in_accounts(ix).ok()?;
-            Some((accounts.payer.to_bytes().to_vec(), accounts.pool_state.to_bytes().to_vec(), accounts.base_token_mint.to_bytes().to_vec(), accounts.quote_token_mint.to_bytes().to_vec()))
+            Some((
+                accounts.payer.to_bytes().to_vec(),
+                accounts.pool_state.to_bytes().to_vec(),
+                accounts.base_token_mint.to_bytes().to_vec(),
+                accounts.quote_token_mint.to_bytes().to_vec(),
+            ))
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::BuyExactOut(_evt)) => {
             let accounts = raydium::launchpad::accounts::get_buy_exact_out_accounts(ix).ok()?;
-            Some((accounts.payer.to_bytes().to_vec(), accounts.pool_state.to_bytes().to_vec(), accounts.base_token_mint.to_bytes().to_vec(), accounts.quote_token_mint.to_bytes().to_vec()))
+            Some((
+                accounts.payer.to_bytes().to_vec(),
+                accounts.pool_state.to_bytes().to_vec(),
+                accounts.base_token_mint.to_bytes().to_vec(),
+                accounts.quote_token_mint.to_bytes().to_vec(),
+            ))
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::SellExactIn(_evt)) => {
             let accounts = raydium::launchpad::accounts::get_sell_exact_in_accounts(ix).ok()?;
-            Some((accounts.payer.to_bytes().to_vec(), accounts.pool_state.to_bytes().to_vec(), accounts.base_token_mint.to_bytes().to_vec(), accounts.quote_token_mint.to_bytes().to_vec()))
+            Some((
+                accounts.payer.to_bytes().to_vec(),
+                accounts.pool_state.to_bytes().to_vec(),
+                accounts.base_token_mint.to_bytes().to_vec(),
+                accounts.quote_token_mint.to_bytes().to_vec(),
+            ))
         }
         Ok(raydium::launchpad::instructions::RaydiumLaunchpadInstruction::SellExactOut(_evt)) => {
             let accounts = raydium::launchpad::accounts::get_sell_exact_out_accounts(ix).ok()?;
-            Some((accounts.payer.to_bytes().to_vec(), accounts.pool_state.to_bytes().to_vec(), accounts.base_token_mint.to_bytes().to_vec(), accounts.quote_token_mint.to_bytes().to_vec()))
+            Some((
+                accounts.payer.to_bytes().to_vec(),
+                accounts.pool_state.to_bytes().to_vec(),
+                accounts.base_token_mint.to_bytes().to_vec(),
+                accounts.quote_token_mint.to_bytes().to_vec(),
+            ))
         }
         _ => None,
     }?;
@@ -87,18 +107,16 @@ fn decode_trade_instruction(ix: &InstructionView) -> Option<PendingTrade> {
 
 fn decode_trade_event(ix: &InstructionView) -> Option<TradeEvent> {
     let event = match raydium::launchpad::anchor_cpi_event::unpack(ix.data()) {
-        Ok(raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV1(event)) => {
-            Some((event.amount_in, event.amount_out, matches!(
-                event.trade_direction,
-                raydium::launchpad::anchor_cpi_event::TradeDirection::Buy
-            )))
-        }
-        Ok(raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV2(event)) => {
-            Some((event.amount_in, event.amount_out, matches!(
-                event.trade_direction,
-                raydium::launchpad::anchor_cpi_event::TradeDirection::Buy
-            )))
-        }
+        Ok(raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV1(event)) => Some((
+            event.amount_in,
+            event.amount_out,
+            matches!(event.trade_direction, raydium::launchpad::anchor_cpi_event::TradeDirection::Buy),
+        )),
+        Ok(raydium::launchpad::anchor_cpi_event::RaydiumLaunchpadAnchorCpiEvent::TradeEventV2(event)) => Some((
+            event.amount_in,
+            event.amount_out,
+            matches!(event.trade_direction, raydium::launchpad::anchor_cpi_event::TradeDirection::Buy),
+        )),
         _ => None,
     }?;
 

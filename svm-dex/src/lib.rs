@@ -1,26 +1,18 @@
 mod backfill;
 use std::io::Write;
-use prost::Message;
+use buffa::Message;
 use common::db::common_key_v2;
 use proto::pb::dex::swaps::v1 as pb;
 use substreams::{errors::Error, pb::substreams::Clock};
 use substreams_database_change::pb::sf::substreams::sink::database::v1::DatabaseChanges;
 use substreams_solana::base58;
 
-const DECODER_VERSION: &str = "v0.5.2-pluto.33";
+const DECODER_VERSION: &str = "v0.5.2-pluto.34";
 
-#[derive(Clone, PartialEq, Message)]
-pub struct GzipDatabaseChanges {
-    #[prost(uint32, tag = "1")]
-    pub version: u32,
-    #[prost(uint64, tag = "2")]
-    pub uncompressed_size: u64,
-    #[prost(bytes = "vec", tag = "3")]
-    pub gzip_data: Vec<u8>,
-}
+pub use proto::pb::pluto::sink::v1::GzipDatabaseChanges;
 
-fn protocol_slug(protocol: i32) -> &'static str {
-    match pb::Protocol::try_from(protocol).unwrap_or(pb::Protocol::Unspecified) {
+fn protocol_slug(protocol: buffa::EnumValue<pb::Protocol>) -> &'static str {
+    match protocol.as_known().unwrap_or(pb::Protocol::Unspecified) {
         pb::Protocol::Unspecified => "unspecified",
         pb::Protocol::Boop => "boop",
         pb::Protocol::Byreal => "byreal",
@@ -167,7 +159,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             None
         };
         for (ordinal, swap) in transaction.swaps.iter().enumerate() {
-            let burn_format = swap.protocol == pb::Protocol::PumpfunAmmBuyBurn as i32;
+            let burn_format = swap.protocol == pb::Protocol::PumpfunAmmBuyBurn;
             if burn_format != swap.burn_output_verified
                 || burn_format != swap.source_burn_index.is_some()
                 || burn_format && (swap.transfer_verified || swap.orderbook_fill_verified
@@ -250,7 +242,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
             // Pluto's patched ClickHouse sink restores block_hash from the
             // composite key, including keys outside the SQL sorting key.
             row.set("block_num", clock.number)
-                .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
+                .set("timestamp", clock.timestamp.as_option().expect("missing timestamp").seconds.to_string());
         }
     }
 
@@ -289,7 +281,7 @@ fn write_swaps(clock: Clock, swaps: pb::Events) -> Result<DatabaseChanges, Error
         );
     // block_num is already present in the composite primary key.
     row.set("block_hash", &clock.id)
-        .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
+        .set("timestamp", clock.timestamp.as_option().expect("missing timestamp").seconds.to_string());
 
     Ok(tables.to_database_changes())
 }
@@ -302,7 +294,7 @@ mod tests {
     #[test]
     fn gzip_output_round_trips_complete_block_and_financial_fields() {
         use std::io::Read;
-        let clock = Clock { number: 100, id: "finalized-block".into(), timestamp: Some(Default::default()) };
+        let clock = Clock { number: 100, id: "finalized-block".into(), timestamp: buffa::MessageField::some(Default::default()) };
         let events = pb::Events { parent_slot: 99, parent_hash: "parent".into(), transactions: vec![pb::Transaction {
             signature: vec![7; 64], fee: u64::MAX, compute_units_consumed: 90000,
             source_index: Some(12), swaps: vec![pb::Swap {
@@ -317,7 +309,7 @@ mod tests {
             let mut decoded = Vec::new();
             flate2::read::GzDecoder::new(compressed.gzip_data.as_slice()).read_to_end(&mut decoded).unwrap();
             assert_eq!(compressed.uncompressed_size, decoded.len() as u64);
-            let mut actual = DatabaseChanges::decode(decoded.as_slice()).unwrap();
+            let mut actual = DatabaseChanges::decode_from_slice(decoded.as_slice()).unwrap();
             for changes in [&mut expected, &mut actual] {
                 for row in &mut changes.table_changes { row.fields.sort_by(|a, b| a.name.cmp(&b.name)); }
             }
@@ -328,9 +320,9 @@ mod tests {
 
     #[test]
     fn buy_and_burn_preserves_destruction_provenance_and_rejects_mixed_receipts() {
-        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
+        let clock = Clock { number: 100, id: "block".into(), timestamp: buffa::MessageField::some(Default::default()) };
         let swap = pb::Swap {
-            protocol: pb::Protocol::PumpfunAmmBuyBurn as i32, source_index: Some(30),
+            protocol: pb::Protocol::PumpfunAmmBuyBurn.into(), source_index: Some(30),
             source_transfer_index: Some(31), source_burn_index: Some(32), burn_output_verified: true,
             input_amount: 100, output_amount: 200, ..Default::default()
         };
@@ -351,7 +343,7 @@ mod tests {
                 0 => swap.burn_output_verified = false,
                 1 => swap.source_burn_index = None,
                 2 => swap.source_burn_index = Some(33),
-                3 => swap.protocol = pb::Protocol::PumpfunAmm as i32,
+                3 => swap.protocol = pb::Protocol::PumpfunAmm.into(),
                 4 => swap.transfer_verified = true,
                 5 => swap.orderbook_fill_verified = true,
                 6 => swap.source_index = None,
@@ -372,7 +364,7 @@ mod tests {
         let clock = Clock {
             number: 100,
             id: "block".into(),
-            timestamp: Some(Default::default()),
+            timestamp: buffa::MessageField::some(Default::default()),
         };
         let swap = pb::Swap {
             source_index: Some(30),
@@ -423,7 +415,7 @@ mod tests {
         let clock = Clock {
             number: 100,
             id: "block".into(),
-            timestamp: Some(Default::default()),
+            timestamp: buffa::MessageField::some(Default::default()),
         };
         let signature = vec![7; 64];
         let changes = write_swaps(
@@ -433,7 +425,7 @@ mod tests {
                     signature: signature.clone(),
                     source_index: Some(17),
                     swaps: vec![pb::Swap {
-                        protocol: 50,
+                        protocol: 50.into(),
                         source_index: Some(30),
                         source_event_index: Some(34),
                         orderbook_fill_verified: true,
@@ -468,10 +460,10 @@ mod tests {
         let clock = Clock {
             number: 100,
             id: "block".into(),
-            timestamp: Some(Default::default()),
+            timestamp: buffa::MessageField::some(Default::default()),
         };
         let runtime = pb::Swap {
-            protocol: 51,
+            protocol: 51.into(),
             source_index: Some(30),
             source_log_index: Some(34),
             orderbook_fill_verified: true,
@@ -539,7 +531,7 @@ mod tests {
         let clock = Clock {
             number: 100,
             id: "block".into(),
-            timestamp: Some(Default::default()),
+            timestamp: buffa::MessageField::some(Default::default()),
         };
         assert_eq!(write_swaps(clock.clone(), pb::Events::default()).unwrap().table_changes[0].table, "blocks");
         let too_large = pb::Events {
@@ -554,7 +546,7 @@ mod tests {
 
     #[test]
     fn live_mapper_ignores_diagnostics_and_preserves_financial_rows() {
-        let clock = Clock { number: 100, id: "block".into(), timestamp: Some(Default::default()) };
+        let clock = Clock { number: 100, id: "block".into(), timestamp: buffa::MessageField::some(Default::default()) };
         let mut tx = pb::Transaction {
             source_index: Some(17), signature: vec![7; 64],
             swaps: vec![pb::Swap { input_amount: 100, output_amount: 200, ..Default::default() }],
@@ -605,10 +597,10 @@ mod tests {
             let tx = substreams::proto::decode::<ConfirmedTransaction>(&wire.to_vec()).unwrap();
             let mut transaction = dex_swaps::process_transaction(tx).unwrap();
             transaction.source_index = Some(17);
-            let fills: Vec<_> = transaction.swaps.iter().filter(|s| s.protocol == pb::Protocol::Cryptoquest as i32).cloned().collect();
+            let fills: Vec<_> = transaction.swaps.iter().filter(|s| s.protocol == pb::Protocol::Cryptoquest).cloned().collect();
             assert_eq!(fills.len(), *count);
             let signature = base58::encode(&transaction.signature);
-            let changes = write_swaps(Clock { number: *slot, id: "retained-finalized-block".into(), timestamp: Some(Default::default()) },
+            let changes = write_swaps(Clock { number: *slot, id: "retained-finalized-block".into(), timestamp: buffa::MessageField::some(Default::default()) },
                 pb::Events { transactions: vec![transaction], ..Default::default() }).unwrap();
             let financial: Vec<_> = changes.table_changes.iter().filter(|row| row.table == "swaps").collect();
             assert_eq!(financial.len(), *count);

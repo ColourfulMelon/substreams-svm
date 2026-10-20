@@ -1,6 +1,7 @@
 //! Jupiter Lend AMM's owned Anchor IDL, with liquidity settlement verified by
 //! the quality pass. A router's receipt is not evidence of a native price.
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("jupZ4m2GqUCJ5iueMfzQf8khFfH31d4XAQt3RzCT9Vd");
 pub(crate) const LIQUIDITY_PROGRAM: [u8; 32] = b58!("jupeiUmn818Jg1ekPURTpr4mFo29p46vygyykFJ3wZC");
@@ -135,7 +136,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.amm.as_slice() == PROGRAM_ID).collect();
             assert_eq!(swaps.len(), 1);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::JupiterLend as i32);
+            assert_eq!(swap.protocol, Protocol::JupiterLend);
             assert_eq!(swap.amm_pool, a[1]);
             assert_eq!(swap.user, a[0]);
             assert_eq!(swap.input_mint, a[7 + side]);
@@ -151,8 +152,8 @@ mod tests {
             for mode in 0..4 {
                 let mut shape = tx.clone();
                 let resolved: Vec<_> = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect();
-                shape.transaction.as_mut().unwrap().message.as_mut().unwrap().account_keys = resolved;
-                let meta = shape.meta.as_mut().unwrap();
+                shape.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().account_keys = resolved;
+                let meta = shape.meta.as_option_mut().unwrap();
                 meta.loaded_writable_addresses.clear();
                 meta.loaded_readonly_addresses.clear();
                 let group = meta
@@ -170,7 +171,7 @@ mod tests {
                         group.instructions[position].data[17..25].copy_from_slice(&input.to_le_bytes());
                     }
                     1 => {
-                        let keys = &mut shape.transaction.as_mut().unwrap().message.as_mut().unwrap().account_keys;
+                        let keys = &mut shape.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().account_keys;
                         let index = u8::try_from(keys.len()).unwrap();
                         keys.push(ASSOCIATED_TOKEN_PROGRAM.to_vec());
                         group.instructions[position].accounts.push(index);
@@ -199,11 +200,11 @@ mod tests {
             // Classic-only standalone calls must also run the success scanner.
             let mut direct = tx.clone();
             let resolved: Vec<_> = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect();
-            let message = direct.transaction.as_mut().unwrap().message.as_mut().unwrap();
+            let message = direct.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
             message.account_keys = resolved;
             let group = tx
                 .meta
-                .as_ref()
+                .as_option()
                 .unwrap()
                 .inner_instructions
                 .iter()
@@ -220,7 +221,7 @@ mod tests {
             for (offset, child) in calls.iter_mut().enumerate() {
                 child.stack_height = Some(if offset == 4 { 3 } else { 2 });
             }
-            let meta = direct.meta.as_mut().unwrap();
+            let meta = direct.meta.as_option_mut().unwrap();
             meta.loaded_writable_addresses.clear();
             meta.loaded_readonly_addresses.clear();
             meta.inner_instructions = vec![InnerInstructions { index: 0, instructions: calls }];
@@ -248,7 +249,7 @@ mod tests {
 
             for mode in 0..46 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let group = meta
                     .inner_instructions
                     .iter_mut()
@@ -469,7 +470,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.amm.as_slice() == PROGRAM_ID).collect();
             assert_eq!(swaps.len(), 1, "source {source}");
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::JupiterLend as i32);
+            assert_eq!(swap.protocol, Protocol::JupiterLend);
             assert_eq!(swap.amm_pool, a[1]);
             assert_eq!(swap.user, a[0]);
             assert_eq!(swap.input_mint, a[7 + side]);
@@ -481,7 +482,7 @@ mod tests {
             assert!(decoded.coverage_candidates.iter().all(|c| c.source_index != source));
             for mode in 0..20 {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let group = meta
                     .inner_instructions
                     .iter_mut()

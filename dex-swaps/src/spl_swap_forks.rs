@@ -4,7 +4,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const DOOAR: [u8; 32] = b58!("Dooar9JkhdZ7J3LHN3A7YCuoGRUggXhQaG4kijfLGU2j");
@@ -141,7 +142,7 @@ pub(crate) fn settlement(source_index: u32, tx: &ConfirmedTransaction, ix: &Inst
     let program = solana_pubkey::Pubkey::new_from_array(PENGUIN);
     if !(0u8..=255).rev().any(|bump| solana_pubkey::Pubkey::create_program_address(&[a[0].0, &[bump]], &program)
         .is_ok_and(|authority| authority.as_ref() == a[1].0)) || output_amount < layout.minimum_output { return false; }
-    let Some(meta) = tx.meta.as_ref() else { return false };
+    let Some(meta) = tx.meta.as_option() else { return false };
     let keys = tx.resolved_accounts();
     let mut roles = vec![4usize, 5, 8];
     if fees.len() == 2 { roles.push(base_accounts); }
@@ -173,8 +174,8 @@ pub(crate) fn settlement(source_index: u32, tx: &ConfirmedTransaction, ix: &Inst
                 _ => return false,
             }
         }
-        let Some(opening) = before.ui_token_amount.as_ref().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
-        let Some(closing) = after.ui_token_amount.as_ref().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
+        let Some(opening) = before.ui_token_amount.as_option().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
+        let Some(closing) = after.ui_token_amount.as_option().and_then(|v| v.amount.parse::<u64>().ok()) else { return false };
         if i128::from(closing) - i128::from(opening) != change { return false; }
     }
     true
@@ -279,7 +280,7 @@ mod tests {
                 .skip(source as usize + 1)
                 .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
                 .map_or(instructions.len(), |(end, _)| end);
-            let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             let success = crate::logs::successful_invocations(&tx);
             assert!(settlement(source, &tx, original, &instructions[source as usize + 1..end], &mints, &success));
             let native_data = original.data().clone();
@@ -309,7 +310,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|s| s.amm == program && s.source_index == Some(source)).collect();
             assert_eq!(swaps.len(), 1);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::SplTokenSwap as i32);
+            assert_eq!(swap.protocol, Protocol::SplTokenSwap);
             assert_eq!(swap.amm_pool, a[0]);
             assert_eq!(swap.user, a[2]);
             assert_eq!(swap.input_mint, mints.mint_for(&a[3]).unwrap());
@@ -322,7 +323,7 @@ mod tests {
                 let mut wrong = tx.clone();
                 let group = wrong
                     .meta
-                    .as_mut()
+                    .as_option_mut()
                     .unwrap()
                     .inner_instructions
                     .iter_mut()
@@ -359,7 +360,7 @@ mod tests {
                     17 => calls[position].accounts[if extended { 13 } else { 9 }] = native.accounts[0],
                     18 => {
                         let success = format!("Program {} success", substreams_solana::base58::encode(&program));
-                        let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                        let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                         let ordinal = tx.walk_instructions().take(source as usize).filter(|ix| ix.program_id().0 == &program).count();
                         let end = logs.iter().enumerate().filter(|(_, line)| *line == &success).nth(ordinal).unwrap().0;
                         logs[end] = success.replace(" success", " failed: custom program error: 1");
@@ -374,7 +375,7 @@ mod tests {
                     .skip(source as usize + 1)
                     .find(|(_, child)| child.is_root() || child.stack_height() <= depth)
                     .map_or(views.len(), |(end, _)| end);
-                let mints = TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
+                let mints = TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
                 assert!(
                     !settlement(
                         source,
@@ -398,12 +399,12 @@ mod tests {
             let tx=substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(format!("{}/fixtures/swap-coverage/penguin-native27/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap()).unwrap();
             let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)&&s.amm==PENGUIN).collect();
             assert_eq!(rows.len(),1,"{}",f[0]);let row=rows[0];count+=1;
-            assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::SplTokenSwap as i32);assert_eq!(row.source_transfer_index,Some(source+1));
+            assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::SplTokenSwap);assert_eq!(row.source_transfer_index,Some(source+1));
             assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),
                 (f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
             let verify_route=|transaction:&ConfirmedTransaction| {
-                let mut candidate=row.clone();candidate.protocol=Protocol::JupiterV4 as i32;let mut candidates=vec![candidate];
-                let mints=TokenMintLookup::new(transaction,transaction.meta.as_ref().unwrap());
+                let mut candidate=row.clone();candidate.protocol=Protocol::JupiterV4.into();let mut candidates=vec![candidate];
+                let mints=TokenMintLookup::new(transaction,transaction.meta.as_option().unwrap());
                 crate::quality::verify_with_fees(transaction,&mints,&mut candidates,false,|_,_|None);candidates
             };
             assert_eq!(verify_route(&tx).len(),1);
@@ -411,7 +412,7 @@ mod tests {
             for mode in 0..33 {
                 let mut wrong=tx.clone();
                 if mode<29 || mode==31 {
-                    let g=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|n|n.data==native)).unwrap();
+                    let g=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|n|n.data==native)).unwrap();
                     let p=g.instructions.iter().position(|n|n.data==native).unwrap();let a=g.instructions[p].accounts.clone();let n=&mut g.instructions;
                     match mode {
                         0=>n[p].data[0]=2,1=>n[p].data.push(0),2=>n[p].data[1..9].copy_from_slice(&(row.input_amount-1).to_le_bytes()),
@@ -428,10 +429,10 @@ mod tests {
                 } else if mode<32 {
                     let native_ix=tx.walk_instructions().nth(source as usize).unwrap();let roles=native_ix.accounts();let keys=tx.resolved_accounts();
                     let account=keys.iter().position(|k|*k==roles[if mode==29{5}else{8}].0).unwrap();
-                    let b=wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index as usize==account).unwrap().ui_token_amount.as_mut().unwrap();
+                    let b=wrong.meta.as_option_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index as usize==account).unwrap().ui_token_amount.as_option_mut().unwrap();
                     b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();
                 } else {
-                    wrong.meta.as_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PENGUIN))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(PENGUIN)));
+                    wrong.meta.as_option_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PENGUIN))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(PENGUIN)));
                 }
                 assert!(crate::process_transaction(wrong.clone()).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source)||s.amm!=PENGUIN)),"native Penguin mode{mode}");
                 assert!(verify_route(&wrong).is_empty(),"routed Penguin mode{mode}");

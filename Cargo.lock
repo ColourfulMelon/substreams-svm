@@ -58,9 +58,9 @@ dependencies = [
 
 [[package]]
 name = "aho-corasick"
-version = "1.1.3"
+version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e60d3430d3a69478ad0993f19238d2df97c507009a52b3c10addcd7f6bcb916"
+checksum = "c982642fa9e8606056828ee9a8505737230110bb1099153c79efe865c59d12ba"
 dependencies = [
  "memchr",
 ]
@@ -71,7 +71,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -111,17 +111,6 @@ name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
-
-[[package]]
-name = "bigdecimal"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6773ddc0eafc0e509fb60e48dff7f450f8e674a0686ae8605e8d9901bd5eefa"
-dependencies = [
- "num-bigint",
- "num-integer",
- "num-traits",
-]
 
 [[package]]
 name = "bigdecimal"
@@ -167,6 +156,12 @@ dependencies = [
 
 [[package]]
 name = "bitflags"
+version = "1.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
+
+[[package]]
+name = "bitflags"
 version = "2.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2261d10cca569e4643e526d8dc2e62e433cc8aba21ab764233731f8d369bf394"
@@ -209,7 +204,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
 ]
 
@@ -219,7 +214,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -308,6 +303,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "buffa"
+version = "0.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a92f2f5df67a9d5ccfc65237bfc954c56328aee40a04a9b92381ecba370be246"
+dependencies = [
+ "base64 0.22.1",
+ "bytes",
+ "foldhash",
+ "hashbrown 0.15.5",
+ "once_cell",
+ "rustversion",
+ "serde",
+ "serde_json",
+ "smoothutf8",
+ "thiserror 2.0.16",
+]
+
+[[package]]
+name = "buffa-types"
+version = "0.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b15b05c8418f1e200e406e5b19df97400dffa833e2450e4392c506896cbc97ac"
+dependencies = [
+ "buffa",
+ "bytes",
+ "jiff",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.16",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -329,7 +356,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -403,12 +430,12 @@ name = "common"
 version = "0.0.0"
 dependencies = [
  "base64 0.22.1",
- "prost",
- "prost-types",
+ "buffa",
+ "buffa-types",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
- "substreams-solana",
+ "substreams-solana-core 0.16.0",
 ]
 
 [[package]]
@@ -516,9 +543,40 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
+]
+
+[[package]]
+name = "defmt"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e4a0795ac740cb54d7b3775c9c17345f6aaecf884c01733b39d6017738e0e3e1"
+dependencies = [
+ "bitflags 1.3.2",
+ "defmt-macros",
+]
+
+[[package]]
+name = "defmt-macros"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "840bb056bd99c495c9188198a258ab787c79f306d864db3e6e8451442d6d8366"
+dependencies = [
+ "defmt-parser",
+ "proc-macro2",
+ "quote",
+ "syn 3.0.9",
+]
+
+[[package]]
+name = "defmt-parser"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "71958f69fb2de856c5dd51ac9377e986ca1aa5919f931bf5395a807277f889a0"
+dependencies = [
+ "thiserror 2.0.16",
 ]
 
 [[package]]
@@ -531,15 +589,22 @@ checksum = "6e5c37193a1db1d8ed868c03ec7b152175f26160a5b740e5e484143877e0adf0"
 name = "dex-swaps"
 version = "0.0.0"
 dependencies = [
+ "anyhow",
  "base64 0.22.1",
  "borsh 1.5.7",
+ "buffa",
  "common",
+ "flate2",
+ "log",
  "proto",
+ "sha2 0.10.9",
  "solana-program",
  "solana-pubkey",
- "substreams 0.7.3",
- "substreams-solana",
+ "spl-transfers",
+ "substreams",
+ "substreams-solana-core 0.16.0",
  "substreams-solana-idls",
+ "substreams-solana-macro",
 ]
 
 [[package]]
@@ -548,7 +613,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -579,7 +644,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -590,7 +655,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -619,9 +684,9 @@ dependencies = [
 
 [[package]]
 name = "fastrand"
-version = "2.3.0"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
+checksum = "da7c62ceae207dd37ea5b845da6a0696c799f85e97da1ab5b7910be3c1c80223"
 
 [[package]]
 name = "feature-probe"
@@ -679,6 +744,7 @@ checksum = "6e634e2e0ebac1ee034020da1ca582e17ffe4e0f5e985823721e168928136dcb"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
+ "zlib-rs",
 ]
 
 [[package]]
@@ -686,6 +752,12 @@ name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
+
+[[package]]
+name = "foldhash"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
 
 [[package]]
 name = "generic-array"
@@ -723,14 +795,14 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.3.3"
+version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26145e563e54f2cadc477553f1ec5ee650b00862f0a58bcd12cbdc5f0ea2d2f4"
+checksum = "899def5c37c4fd7b2664648c28120ecec138e4d395b459e5ca34f9cce2dd77fd"
 dependencies = [
  "cfg-if",
  "libc",
  "r-efi",
- "wasi 0.14.5+wasi-0.2.4",
+ "wasip2",
 ]
 
 [[package]]
@@ -739,7 +811,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -758,6 +830,10 @@ name = "hashbrown"
 version = "0.15.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
+dependencies = [
+ "foldhash",
+ "serde",
+]
 
 [[package]]
 name = "heaven"
@@ -765,7 +841,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -832,6 +908,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
+name = "jiff"
+version = "0.2.38"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b2b005715dcbeb0089a3c0dab99f2ff1cc3b2525323552703d648585d342a383"
+dependencies = [
+ "defmt",
+ "jiff-core",
+ "jiff-static",
+ "log",
+ "portable-atomic",
+ "portable-atomic-util",
+ "serde_core",
+]
+
+[[package]]
+name = "jiff-core"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5e52fe76043ccecc9005d2305ebaadf7d7fc0cc89ca6baa10a94d6bc68c7128c"
+dependencies = [
+ "defmt",
+ "log",
+]
+
+[[package]]
+name = "jiff-static"
+version = "0.2.38"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2cc9817253cf7c7ee4684451bd327e88d6f3658014e54a29198625590650695c"
+dependencies = [
+ "jiff-core",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.106",
+]
+
+[[package]]
 name = "js-sys"
 version = "0.3.78"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -847,7 +960,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -858,7 +971,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -942,7 +1055,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -975,7 +1088,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -986,7 +1099,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -997,7 +1110,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1035,7 +1148,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1046,7 +1159,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1057,7 +1170,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1068,7 +1181,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1089,7 +1202,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1121,7 +1234,7 @@ dependencies = [
  "common",
  "proto",
  "solana-program",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-program-instructions",
 ]
@@ -1134,7 +1247,7 @@ dependencies = [
  "common",
  "proto",
  "solana-program",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-program-instructions",
 ]
@@ -1147,7 +1260,7 @@ dependencies = [
  "common",
  "proto",
  "solana-program",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-program-instructions",
 ]
@@ -1230,7 +1343,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1241,7 +1354,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1252,7 +1365,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1275,7 +1388,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1286,7 +1399,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1306,7 +1419,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1409,7 +1522,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1420,7 +1533,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1435,6 +1548,21 @@ dependencies = [
  "cpufeatures",
  "opaque-debug",
  "universal-hash",
+]
+
+[[package]]
+name = "portable-atomic"
+version = "1.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05c8b63e8d9609db387f0324918f81d68fe27748f084ef092fb35954d0539a85"
+
+[[package]]
+name = "portable-atomic-util"
+version = "0.2.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "10ab3eb7f3becc3a1cbc4f2c6f20267996cfc1a6467a873763411b136a122715"
+dependencies = [
+ "portable-atomic",
 ]
 
 [[package]]
@@ -1539,8 +1667,8 @@ dependencies = [
 name = "proto"
 version = "0.0.0"
 dependencies = [
- "prost",
- "prost-types",
+ "buffa",
+ "buffa-types",
 ]
 
 [[package]]
@@ -1549,7 +1677,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1560,7 +1688,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1666,7 +1794,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1677,7 +1805,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1688,7 +1816,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1699,7 +1827,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1710,14 +1838,14 @@ version = "0.5.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5407465600fb0548f1442edf71dd20683c6ed326200ace4b1ef0763521bb3b77"
 dependencies = [
- "bitflags",
+ "bitflags 2.9.4",
 ]
 
 [[package]]
 name = "regex"
-version = "1.11.2"
+version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23d7fd106d8c02486a8d64e778353d1cffe08ce79ac2e82f540c86d0facf6912"
+checksum = "f020237b6c8eed93db2e2cb53c00c60a8e1bc73da7d073199a1180401450218d"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -1727,9 +1855,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.10"
+version = "0.4.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b9458fa0bfeeac22b5ca447c63aaf45f28439a709ccd244698632f9aa6394d6"
+checksum = "ad8553b9b26413251cbf30e620595c7a41b3887f03da04579c0e6b0d6a06b4b2"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -1738,9 +1866,9 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.8.6"
+version = "0.8.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caf4aa5b0f434c91fe5c7f1ecb6a5ece2130b02ad2a590589dda5146df959001"
+checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "rustc_version"
@@ -1757,7 +1885,7 @@ version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cd15f8a2c5551a84d56efdc1cd049089e409ac19a3072d5037a17fd70719ff3e"
 dependencies = [
- "bitflags",
+ "bitflags 2.9.4",
  "errno",
  "libc",
  "linux-raw-sys",
@@ -1782,7 +1910,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1793,7 +1921,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1867,7 +1995,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -1919,10 +2047,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3a219298ac11a56ea9a6d2120044824d6f01aeb034955e7af7bc16858527deea"
 
 [[package]]
+name = "simdutf8"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
+
+[[package]]
 name = "smallvec"
 version = "1.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+
+[[package]]
+name = "smoothutf8"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b4ec95892483d6d94284caccfddb9b77111a4dcac33ed25d624248def0fa5f1"
+dependencies = [
+ "simdutf8",
+]
 
 [[package]]
 name = "solana-account"
@@ -2193,7 +2336,7 @@ version = "2.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e0e85a6fad5c2d0c4f5b91d34b8ca47118fc593af706e523cdbedf846a954f57"
 dependencies = [
- "bitflags",
+ "bitflags 2.9.4",
  "solana-account-info",
  "solana-instruction",
  "solana-program-error",
@@ -2811,7 +2954,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -2822,7 +2965,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -2889,7 +3032,7 @@ version = "0.0.0"
 dependencies = [
  "proto",
  "spl-token-common",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
 ]
 
@@ -2899,7 +3042,7 @@ version = "0.0.0"
 dependencies = [
  "proto",
  "spl-token-common",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
 ]
 
@@ -2907,10 +3050,13 @@ dependencies = [
 name = "spl-token-common"
 version = "0.0.0"
 dependencies = [
+ "buffa",
  "common",
+ "flate2",
  "proto",
  "spl-token-metadata-interface",
- "substreams 0.7.3",
+ "spl-transfers",
+ "substreams",
  "substreams-solana",
  "substreams-solana-program-instructions",
 ]
@@ -2921,7 +3067,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
 ]
 
@@ -2952,7 +3098,33 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
+ "substreams-solana",
+]
+
+[[package]]
+name = "spl-transfers"
+version = "0.1.0"
+dependencies = [
+ "bs58 0.5.1",
+ "buffa",
+ "bytes",
+ "flate2",
+ "prost",
+ "substreams-solana-core 0.14.3",
+ "substreams-solana-core 0.16.0",
+]
+
+[[package]]
+name = "spl-transfers-substreams"
+version = "0.1.0"
+dependencies = [
+ "buffa",
+ "flate2",
+ "proto",
+ "sha2 0.10.9",
+ "spl-transfers",
+ "substreams",
  "substreams-solana",
 ]
 
@@ -2980,19 +3152,22 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
 
 [[package]]
 name = "substreams"
-version = "0.6.2"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "571864dde50a7879ab53d75253a9660768749b3e10fe610ab732d2e5b3a5c078"
+checksum = "c2191a986c9f1177ae5eb9b6f8881e0615fee7ccf84f0c0438c4a2d10bac85b5"
 dependencies = [
  "anyhow",
- "bigdecimal 0.3.1",
+ "bigdecimal",
+ "buffa",
+ "buffa-types",
+ "bytes",
  "hex",
  "hex-literal",
  "num-bigint",
@@ -3001,64 +3176,26 @@ dependencies = [
  "pad",
  "pest",
  "pest_derive",
- "prost",
- "prost-build",
- "prost-types",
- "substreams-macro 0.6.2",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "substreams"
-version = "0.7.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "237c36dcd8e85d408b5e0c321a01f39c61e81290575896d76c29d522c08f1a39"
-dependencies = [
- "anyhow",
- "bigdecimal 0.4.10",
- "hex",
- "hex-literal",
- "num-bigint",
- "num-integer",
- "num-traits",
- "pad",
- "pest",
- "pest_derive",
- "prost",
- "prost-build",
- "prost-types",
- "substreams-macro 0.7.3",
+ "substreams-macro",
  "thiserror 1.0.69",
 ]
 
 [[package]]
 name = "substreams-database-change"
-version = "4.0.0"
+version = "5.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "895bc4163afc8b3599aba8416500ac5ea392df2f0f09b9e955332b3779cf80a9"
+checksum = "6ec5a27f1f98c269685f7112ece4c04c8596e91dee461d60ef0f018b58915c6c"
 dependencies = [
- "prost",
- "prost-types",
- "substreams 0.7.3",
+ "buffa",
+ "buffa-types",
+ "substreams",
 ]
 
 [[package]]
 name = "substreams-macro"
-version = "0.6.2"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d11da9c47f7ebcf4b218eca649a5f5b9b3c2f25a66ffb80858ef785ca5ca5e7"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "substreams-macro"
-version = "0.7.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d7bfbb0312ace6c30b7074e472177d378b0e60c6a0319b1387aaa757385ebba"
+checksum = "7d473bf3565300988e84da91727d9b3a1626509983b9aa767ffba16fb22f3a22"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3068,22 +3205,19 @@ dependencies = [
 
 [[package]]
 name = "substreams-solana"
-version = "0.14.2"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9cbc996d518d0293db7749b534c189f0e2f02beebe1ccdc794efeaa5922c2598"
+checksum = "97a91c5170f59aa32eb0ee72b96076e9a9da1d5d3921df01a171934f0b75f9b5"
 dependencies = [
- "anyhow",
- "num_enum",
- "substreams 0.6.2",
- "substreams-solana-core",
+ "substreams-solana-core 0.16.0",
  "substreams-solana-macro",
 ]
 
 [[package]]
 name = "substreams-solana-core"
-version = "0.14.2"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "978172a3ea534b72c15b7cf60f90c992a2b28528707c33f086adcbd62c317ef9"
+checksum = "2c8f004f8c264cf7a2d14efd0e1fbb7da8af865a8f19edd8044904d1637e3e8a"
 dependencies = [
  "bs58 0.4.0",
  "prost",
@@ -3092,25 +3226,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "substreams-solana-core"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc8a0bc9df137cea6398f6474760e62b3a842f82755452a0709bf7ee668b2238"
+dependencies = [
+ "bs58 0.4.0",
+ "buffa",
+ "buffa-types",
+]
+
+[[package]]
 name = "substreams-solana-idls"
-version = "1.4.0"
-source = "git+https://github.com/ColourfulMelon/substreams-solana-idls?rev=785533d59d0b258500cbbce60890fe58b8c14405#785533d59d0b258500cbbce60890fe58b8c14405"
+version = "2.0.0"
+source = "git+https://github.com/ColourfulMelon/substreams-solana-idls?rev=8a11a11e898ebb1d448102f969725cd34c543361#8a11a11e898ebb1d448102f969725cd34c543361"
 dependencies = [
  "base64 0.22.1",
  "borsh 1.5.7",
  "mpl-token-metadata",
  "sha2 0.10.9",
  "solana-program",
- "substreams 0.6.2",
- "substreams-solana",
+ "substreams-solana-core 0.16.0",
+ "substreams-solana-macro",
  "thiserror 2.0.16",
 ]
 
 [[package]]
 name = "substreams-solana-macro"
-version = "0.14.2"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bcfc2c094a426c1b487a0ee5392c4e55abcc5fc4ff6150bacc3d0d928c092b3d"
+checksum = "02aad9a01bcd2e45debef56480e8f377757547c55e7d92e5c83b68710403ee12"
 dependencies = [
  "bs58 0.4.0",
 ]
@@ -3118,12 +3263,10 @@ dependencies = [
 [[package]]
 name = "substreams-solana-program-instructions"
 version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d22b01f186a12baeab6e12ffe5fd834733f236a1d34ad68b7420047a0f7d0a7"
+source = "git+https://github.com/DenisCarriere/substreams-solana-program-instructions?rev=10b5b8d402b350b015c8f15af6ff3cac2b44729c#10b5b8d402b350b015c8f15af6ff3cac2b44729c"
 dependencies = [
  "anyhow",
  "num_enum",
- "substreams 0.7.3",
 ]
 
 [[package]]
@@ -3138,7 +3281,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3149,7 +3292,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3158,13 +3301,13 @@ dependencies = [
 name = "svm-dex"
 version = "0.0.0"
 dependencies = [
+ "buffa",
  "common",
  "dex-swaps",
  "flate2",
  "num_enum",
- "prost",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3175,7 +3318,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3186,7 +3329,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3197,7 +3340,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3207,8 +3350,10 @@ name = "svm-transfers"
 version = "0.0.0"
 dependencies = [
  "common",
+ "flate2",
  "proto",
- "substreams 0.7.3",
+ "spl-token-common",
+ "substreams",
  "substreams-database-change",
  "substreams-solana",
 ]
@@ -3236,13 +3381,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "tempfile"
-version = "3.22.0"
+name = "syn"
+version = "3.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "84fa4d11fadde498443cca10fd3ac23c951f0dc59e080e9f4b93d4df4e4eea53"
+checksum = "d78c8dee4c7bf0e14673097256fed6142ce9d3b85a408189d07482442145823b"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
+name = "tempfile"
+version = "3.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2d31c77bdf42a745371d260a26ca7163f1e0924b64afa0b688e61b5a9fa02f16"
 dependencies = [
  "fastrand",
- "getrandom 0.3.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix",
  "windows-sys",
@@ -3254,7 +3410,7 @@ version = "0.0.0"
 dependencies = [
  "common",
  "proto",
- "substreams 0.7.3",
+ "substreams",
  "substreams-solana",
  "substreams-solana-idls",
 ]
@@ -3415,19 +3571,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ccf3ec651a847eb01de73ccad15eb7d99f80485de043efb2f370cd654f4ea44b"
 
 [[package]]
-name = "wasi"
-version = "0.14.5+wasi-0.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4494f6290a82f5fe584817a676a34b9d6763e8d9d18204009fb31dceca98fd4"
-dependencies = [
- "wasip2",
-]
-
-[[package]]
 name = "wasip2"
-version = "1.0.0+wasi-0.2.4"
+version = "1.0.4+wasi-0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03fa2761397e5bd52002cd7e73110c71af2109aca4e521a9f40473fe685b0a24"
+checksum = "b67efb37e106e55ce722a510d6b5f9c17f083e5fc79afc2badeb12cc313d9487"
 dependencies = [
  "wit-bindgen",
 ]
@@ -3503,15 +3650,15 @@ dependencies = [
 
 [[package]]
 name = "windows-link"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45e46c0661abb7180e7b9c281db115305d49ca1709ab8242adf09666d2173c65"
+checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
 
 [[package]]
 name = "windows-sys"
-version = "0.61.0"
+version = "0.61.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e201184e40b2ede64bc2ea34968b28e33622acdbbf37104f0e4a33f7abe657aa"
+checksum = "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc"
 dependencies = [
  "windows-link",
 ]
@@ -3591,9 +3738,9 @@ dependencies = [
 
 [[package]]
 name = "wit-bindgen"
-version = "0.45.1"
+version = "0.57.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c573471f125075647d03df72e026074b7203790d41351cd6edc96f46bcccd36"
+checksum = "1ebf944e87a7c253233ad6766e082e3cd714b5d03812acc24c318f549614536e"
 
 [[package]]
 name = "zerocopy"
@@ -3634,3 +3781,9 @@ dependencies = [
  "quote",
  "syn 2.0.106",
 ]
+
+[[package]]
+name = "zlib-rs"
+version = "0.6.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b268e58e7c693d7c271f93ffc4ba3b380412554231c85bf61ca7af91042a4112"

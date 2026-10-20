@@ -12,7 +12,7 @@ use substreams_solana::base58;
 use crate::{to_global_sequence, Address, Hash};
 
 pub fn common_key(clock: &Clock, execution_index: u64) -> [(&'static str, String); 4] {
-    let seconds = clock.timestamp.as_ref().expect("clock.timestamp is required").seconds;
+    let seconds = clock.timestamp.as_option().expect("clock.timestamp is required").seconds;
     [
         ("timestamp", seconds.to_string()),
         ("block_num", clock.number.to_string()),
@@ -27,6 +27,18 @@ pub fn common_key_v2(clock: &Clock, transaction_index: usize, instruction_index:
         ("block_hash", clock.id.to_string()),
         ("transaction_index", transaction_index.to_string()),
         ("instruction_index", instruction_index.to_string()),
+    ]
+}
+
+/// Primary key from original positions. `inner_instruction_index` is 0 for an
+/// outer instruction, else 1 + the position among the inner instructions of
+/// `instruction_index`, so the key orders rows in execution order.
+pub fn instruction_key(clock: &Clock, transaction_index: u32, instruction_index: u32, inner_instruction_index: Option<u32>) -> [(&'static str, String); 4] {
+    [
+        ("block_hash", clock.id.to_string()),
+        ("transaction_index", transaction_index.to_string()),
+        ("instruction_index", instruction_index.to_string()),
+        ("inner_instruction_index", inner_instruction_index.map_or(0, |index| index + 1).to_string()),
     ]
 }
 
@@ -125,7 +137,7 @@ pub fn set_native_token_instruction_v2(instruction: &native::Instruction, row: &
 pub fn set_clock(clock: &Clock, row: &mut Row) {
     row.set("block_num", clock.number.to_string())
         .set("block_hash", &clock.id)
-        .set("timestamp", clock.timestamp.as_ref().expect("missing timestamp").seconds.to_string());
+        .set("timestamp", clock.timestamp.as_option().expect("missing timestamp").seconds.to_string());
 }
 
 // TO-DO: handle multisig authority

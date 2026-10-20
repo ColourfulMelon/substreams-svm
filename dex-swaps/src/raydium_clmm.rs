@@ -141,7 +141,7 @@ fn build_from_instruction(instruction: &InstructionSwap, log: &LogSwap) -> Optio
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::RaydiumClmm as i32,
+        protocol: pb::Protocol::RaydiumClmm.into(),
         program_id: raydium::clmm::v3::PROGRAM_ID.to_vec(),
         stack_height: instruction.stack_height,
         amm: raydium::clmm::v3::PROGRAM_ID.to_vec(),
@@ -173,7 +173,7 @@ fn build_from_router(ctx: &RouterContext, log: &LogSwap, token_mints: &TokenMint
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::RaydiumClmm as i32,
+        protocol: pb::Protocol::RaydiumClmm.into(),
         program_id: raydium::clmm::v3::PROGRAM_ID.to_vec(),
         stack_height: ctx.stack_height,
         amm: raydium::clmm::v3::PROGRAM_ID.to_vec(),
@@ -185,6 +185,20 @@ fn build_from_router(ctx: &RouterContext, log: &LogSwap, token_mints: &TokenMint
         output_amount,
         ..Default::default()
     })
+}
+
+/// True when `emitter` (the invocation that wrote `log`) is the CLMM swap or
+/// router instruction that, with this exact event, rebuilds exactly `row`. A
+/// router hop is verified from its own event's pool, as the adapter builds it.
+pub(crate) fn verify_log_row(emitter: &InstructionView, log: &str, token_mints: &TokenMintLookup, row: &pb::Swap) -> bool {
+    let (Some(pending), Some(log)) = (decode_instruction(emitter, Some(token_mints)), parse_log_data(log)) else {
+        return false;
+    };
+    let rebuilt = match pending {
+        Pending::Swap(instruction) => build_from_instruction(&instruction, &log),
+        Pending::Router(context) => build_from_router(&context, &log, token_mints),
+    };
+    rebuilt.as_ref() == Some(row)
 }
 
 fn decode_instruction(ix: &InstructionView, token_mints: Option<&TokenMintLookup>) -> Option<Pending> {
@@ -265,8 +279,7 @@ mod tests {
     use super::*;
     use substreams_solana::base58;
     use substreams_solana::pb::sf::solana::r#type::v1::{
-        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance,
-        Transaction, TransactionStatusMeta, UiTokenAmount,
+        CompiledInstruction, ConfirmedTransaction, Message, MessageHeader, TokenBalance, Transaction, TransactionStatusMeta, UiTokenAmount,
     };
 
     /// Raydium CLMM v3 SWAP instruction discriminator.
@@ -311,12 +324,7 @@ mod tests {
         make_tx_with_body(disc, accounts, token_balances, true)
     }
 
-    fn make_tx_with_body(
-        disc: [u8; 8],
-        accounts: &[[u8; 32]],
-        token_balances: &[(u32, [u8; 32])],
-        is_base_input: bool,
-    ) -> ConfirmedTransaction {
+    fn make_tx_with_body(disc: [u8; 8], accounts: &[[u8; 32]], token_balances: &[(u32, [u8; 32])], is_base_input: bool) -> ConfirmedTransaction {
         let fee_payer = [0xfe; 32];
         let program = raydium::clmm::v3::PROGRAM_ID;
         let mut keys: Vec<Vec<u8>> = vec![fee_payer.to_vec(), program.to_vec()];
@@ -335,19 +343,20 @@ mod tests {
                 mint: base58::encode(mint),
                 owner: "".to_string(),
                 program_id: "".to_string(),
-                ui_token_amount: Some(UiTokenAmount::default()),
+                ui_token_amount: buffa::MessageField::some(UiTokenAmount::default()).into(),
             })
             .collect();
 
         ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -357,19 +366,23 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta {
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: buffa::MessageField::some(TransactionStatusMeta {
                 pre_token_balances,
                 ..Default::default()
-            }),
+            })
+            .into(),
         }
     }
 
     #[test]
     fn missing_instruction_and_duplicate_events_cannot_shift_pools() {
         let tx = make_tx(SWAP_DISC, &(1..=10).map(|i| [i; 32]).collect::<Vec<_>>(), &[]);
-        let mints = TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         let mut state = State::new();
         state.pending.push(Pending::Swap(InstructionSwap {
             stack_height: 1, payer: vec![1;32], pool_state: vec![3;32],
@@ -426,18 +439,34 @@ mod tests {
             ],
             token_balances,
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
         let swap = expect_swap(decode_instruction(&ix, Some(&mints)).expect("decoder should yield Pending::Swap"));
-        assert_eq!(swap.input_mint.as_deref(), Some(input_mint.as_slice()), "input_mint must be the resolved mint, not the vault account");
-        assert_eq!(swap.output_mint.as_deref(), Some(output_mint.as_slice()), "output_mint must be the resolved mint, not the vault account");
+        assert_eq!(
+            swap.input_mint.as_deref(),
+            Some(input_mint.as_slice()),
+            "input_mint must be the resolved mint, not the vault account"
+        );
+        assert_eq!(
+            swap.output_mint.as_deref(),
+            Some(output_mint.as_slice()),
+            "output_mint must be the resolved mint, not the vault account"
+        );
         assert_eq!(swap.pool_state, pool.to_vec());
 
         // Sanity: confirm the vault addresses themselves are NOT what we surface.
-        assert_ne!(swap.input_mint.as_deref(), Some(input_vault.as_slice()), "regression: vault leaked into mint slot");
-        assert_ne!(swap.output_mint.as_deref(), Some(output_vault.as_slice()), "regression: vault leaked into mint slot");
+        assert_ne!(
+            swap.input_mint.as_deref(),
+            Some(input_vault.as_slice()),
+            "regression: vault leaked into mint slot"
+        );
+        assert_ne!(
+            swap.output_mint.as_deref(),
+            Some(output_vault.as_slice()),
+            "regression: vault leaked into mint slot"
+        );
     }
 
     #[test]
@@ -454,13 +483,12 @@ mod tests {
 
         for is_base_input in [true, false] {
             let tx = make_tx_with_body(SWAP_DISC, &accounts, token_balances, is_base_input);
-            let meta = tx.meta.as_ref().unwrap();
+            let meta = tx.meta.as_option().unwrap();
             let mints = TokenMintLookup::new(&tx, meta);
             let ix = tx.walk_instructions().next().unwrap();
 
             let swap = expect_swap(
-                decode_instruction(&ix, Some(&mints))
-                    .unwrap_or_else(|| panic!("decoder should yield Pending::Swap (is_base_input={})", is_base_input)),
+                decode_instruction(&ix, Some(&mints)).unwrap_or_else(|| panic!("decoder should yield Pending::Swap (is_base_input={})", is_base_input)),
             );
             assert_eq!(swap.input_mint.as_deref(), Some(input_mint.as_slice()), "is_base_input={}", is_base_input);
             assert_eq!(swap.output_mint.as_deref(), Some(output_mint.as_slice()), "is_base_input={}", is_base_input);
@@ -475,7 +503,7 @@ mod tests {
         // responsible for skipping the emit when mints are unresolved.
         let accounts: Vec<[u8; 32]> = (0u8..10).map(|i| [i + 1; 32]).collect();
         let tx = make_tx(SWAP_DISC, &accounts, &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -540,8 +568,10 @@ mod tests {
                 .cloned()
                 .expect("second placeholder must still be reachable"),
         );
-        assert!(second.input_mint.is_some() && second.output_mint.is_some(),
-            "second swap with resolved mints would have been misattributed if the alignment was broken");
+        assert!(
+            second.input_mint.is_some() && second.output_mint.is_some(),
+            "second swap with resolved mints would have been misattributed if the alignment was broken"
+        );
     }
 
     #[test]
@@ -599,7 +629,7 @@ mod tests {
             ],
             &[],
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -661,14 +691,15 @@ mod tests {
         data.extend_from_slice(&0u64.to_le_bytes());
 
         ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -678,9 +709,12 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta::default()),
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: buffa::MessageField::some(TransactionStatusMeta::default()).into(),
         }
     }
 
@@ -694,7 +728,7 @@ mod tests {
         let memo_program = [0x06; 32];
         let tx = make_router_tx(&[payer, input_token_acct, input_token_mint, token_program, token_program_2022, memo_program]);
         let ix = tx.walk_instructions().next().unwrap();
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
 
         let router = expect_router(decode_instruction(&ix, Some(&mints)).expect("SwapRouterBaseIn should decode"));
@@ -775,20 +809,21 @@ mod tests {
                     mint: base58::encode(&mint),
                     owner: "".to_string(),
                     program_id: "".to_string(),
-                    ui_token_amount: Some(UiTokenAmount::default()),
+                    ui_token_amount: buffa::MessageField::some(UiTokenAmount::default()).into(),
                 }
             })
             .collect();
 
         let tx = ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
-                    }),
+                    })
+                    .into(),
                     account_keys: keys,
                     recent_blockhash: vec![0u8; 32],
                     instructions: vec![CompiledInstruction {
@@ -798,15 +833,19 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
-                }),
-            }),
-            meta: Some(TransactionStatusMeta {
+                    ..Default::default()
+                })
+                .into(),
+            })
+            .into(),
+            meta: buffa::MessageField::some(TransactionStatusMeta {
                 pre_token_balances,
                 ..Default::default()
-            }),
+            })
+            .into(),
         };
 
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
 
         let mut state = State::new();
@@ -833,7 +872,11 @@ mod tests {
         assert_eq!(swaps[0].output_amount, 999_000);
 
         assert_eq!(swaps[1].amm_pool, pool_hop2.to_vec());
-        assert_eq!(swaps[1].input_mint, mint_in2.to_vec(), "zero_for_one=false flips token_0/token_1 → token_1 is input");
+        assert_eq!(
+            swaps[1].input_mint,
+            mint_in2.to_vec(),
+            "zero_for_one=false flips token_0/token_1 → token_1 is input"
+        );
         assert_eq!(swaps[1].output_mint, mint_out2.to_vec());
         assert_eq!(swaps[1].input_amount, 999_000);
         assert_eq!(swaps[1].output_amount, 998_500);
@@ -868,7 +911,7 @@ mod tests {
         // so next_index stays at 0.
         let exit_log = make_success_log();
         let tx = make_tx(SWAP_DISC, &[[0u8; 32]; 10], &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         assert!(state.handle_log(&ParsedLog::new(&exit_log), &mints).is_none());
         assert_eq!(state.next_index, 0, "current invariant: 0-event Router placeholder stays put on Exit");

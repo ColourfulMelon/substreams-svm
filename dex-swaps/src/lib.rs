@@ -284,7 +284,7 @@ pub fn process_transaction_with_metadata(
     if !tx.is_successful() {
         return None;
     }
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
     let mut swaps = Vec::new();
     let mut boop_state = boop::State::new();
     let mut byreal_state = byreal::State::new();
@@ -414,7 +414,7 @@ pub fn process_transaction_with_metadata(
             continue;
         }
         swaps.push(pb::Swap {
-            protocol: pb::Protocol::Phoenix as i32,
+            protocol: pb::Protocol::Phoenix.into(),
             program_id: phoenix::PROGRAM_ID.to_vec(),
             stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
             amm: phoenix::PROGRAM_ID.to_vec(),
@@ -446,7 +446,7 @@ pub fn process_transaction_with_metadata(
         };
         for fill in fills {
             swaps.push(pb::Swap {
-                protocol: pb::Protocol::OpenbookV2 as i32,
+                protocol: pb::Protocol::OpenbookV2.into(),
                 program_id: openbook::PROGRAM_ID.to_vec(),
                 stack_height: if ix.is_root() { 1 } else { ix.stack_height() },
                 amm: openbook::PROGRAM_ID.to_vec(),
@@ -474,12 +474,12 @@ pub fn process_transaction_with_metadata(
     let coverage_transaction = if coverage_candidates.is_empty() {
         Vec::new()
     } else {
-        substreams::proto::encode(&tx).expect("transaction encoding")
+        substreams::proto::encode(&tx)
     };
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -524,7 +524,7 @@ mod tests {
             .iter()
             .position(|key| key.as_slice() == substreams_solana_idls::solfi::v2::PROGRAM_ID)
             .unwrap() as u32;
-        for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+        for group in &mut tx.meta.as_option_mut().unwrap().inner_instructions {
             for instruction in &mut group.instructions {
                 if instruction.program_id_index == program_index {
                     instruction.data[0] = 255;
@@ -543,7 +543,7 @@ mod tests {
         let decoded = process_transaction(tx.clone()).unwrap();
         assert!(decoded.coverage_candidates.iter().all(|candidate| candidate.source_index != 8));
         let partial: Vec<_> = decoded.swaps.into_iter().filter(|swap| swap.source_index != Some(12)).collect();
-        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         assert!(coverage::candidates(&tx, &mints, &partial)
             .iter()
             .any(|candidate| candidate.source_index == 8 && candidate.reason == "multihop_without_all_verified_pools"));
@@ -561,7 +561,7 @@ mod tests {
             let decoded = process_transaction(tx.clone()).unwrap();
             assert_eq!(decoded.swaps.len(), 1);
             let swap = &decoded.swaps[0];
-            assert_eq!(swap.protocol, pb::Protocol::OrcaWhirlpool as i32);
+            assert_eq!(swap.protocol, pb::Protocol::OrcaWhirlpool);
             assert_eq!(swap.source_index, Some(source));
             assert_eq!(swap.source_transfer_index, Some(source + 1));
             assert_eq!((swap.input_amount, swap.output_amount), (input, output));
@@ -575,7 +575,7 @@ mod tests {
             assert!(decoded.coverage_candidates.iter().all(|candidate| candidate.source_index != source));
             for mode in 0..9 {
                 let mut changed = tx.clone();
-                let ix = changed.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut()
+                let ix = changed.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut()
                     .find(|ix| ix.data.len() == 46 && ix.data[..8] == [43, 4, 237, 11, 26, 201, 30, 98]).unwrap();
                 match mode {
                     0 => ix.data[45] = 1,
@@ -587,7 +587,7 @@ mod tests {
                     6 => ix.accounts[3] = ix.accounts[4],
                     7 => ix.accounts[8] = ix.accounts[10],
                     8 => {
-                        let meta = changed.meta.as_mut().unwrap();
+                        let meta = changed.meta.as_option_mut().unwrap();
                         for log in &mut meta.log_messages {
                             if log == "Program whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc success" {
                                 *log = "Program whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc failed: custom program error: 0x1".to_string();
@@ -618,7 +618,7 @@ mod tests {
             assert_eq!(swap.source_transfer_index, Some(transfer));
             assert!(swap.transfer_verified);
         }
-        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+        let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
         for hop in 0..2 {
             assert!(coverage::candidates(&tx, &mints, &decoded.swaps[hop..hop + 1])
                 .iter()
@@ -627,7 +627,7 @@ mod tests {
         for mode in 0..15 {
             let mut altered = tx.clone();
             let native_data = tx.walk_instructions().nth(3).unwrap().data().to_vec();
-            for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                 for ix in &mut group.instructions {
                     if ix.data == native_data {
                         match mode {
@@ -648,10 +648,10 @@ mod tests {
                 }
             }
             if mode == 9 {
-                altered.meta.as_mut().unwrap().log_messages.clear();
+                altered.meta.as_option_mut().unwrap().log_messages.clear();
             }
             if mode == 10 {
-                let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+                let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
                 let end = logs
                     .iter()
                     .rposition(|log| log == "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 success")
@@ -659,7 +659,7 @@ mod tests {
                 logs.truncate(end);
             }
             if mode == 11 {
-                for log in &mut altered.meta.as_mut().unwrap().log_messages {
+                for log in &mut altered.meta.as_option_mut().unwrap().log_messages {
                     if log == "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 success" {
                         *log = "Program fUSioN9YKKSa3CUC2YUc4tPkHJ5Y6XW1yz8y6F7qWz9 failed: custom program error: 1".into();
                     }
@@ -670,7 +670,7 @@ mod tests {
                 let token_program = substreams_solana_idls::spl::token::PROGRAM_ID;
                 let group = altered
                     .meta
-                    .as_mut()
+                    .as_option_mut()
                     .unwrap()
                     .inner_instructions
                     .iter_mut()
@@ -696,7 +696,7 @@ mod tests {
         }
         let mut exact_out = tx;
         let native_data = exact_out.walk_instructions().nth(3).unwrap().data().to_vec();
-        for group in &mut exact_out.meta.as_mut().unwrap().inner_instructions {
+        for group in &mut exact_out.meta.as_option_mut().unwrap().inner_instructions {
             for ix in &mut group.instructions {
                 if ix.data == native_data {
                     ix.data[24] = 0;
@@ -713,7 +713,7 @@ mod tests {
         let tx =
             substreams::proto::decode::<ConfirmedTransaction>(&include_bytes!("../fixtures/token-fees/stabble-dlmm-shared-output.transaction.pb").to_vec())
                 .unwrap();
-        let mint = substreams_solana::b58!("8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS");
+        let mint = substreams_solana_macro::b58!("8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS");
         let bytes = include_bytes!("../fixtures/token-fees/stabble-shared-output-mint.bin");
         let (schedule, initialized) = token_fees::owned_mint(&substreams_solana_idls::spl::token_2022::PROGRAM_ID, bytes).unwrap();
         assert!(initialized);
@@ -744,7 +744,7 @@ mod tests {
         ] {
             let legs: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(source)).collect();
             assert_eq!(legs.len(), 1);
-            assert_eq!(legs[0].protocol, protocol as i32);
+            assert_eq!(legs[0].protocol.to_i32(), protocol as i32);
             assert_eq!((legs[0].input_amount, legs[0].output_amount), (input, output));
             assert_eq!(legs[0].output_mint, mint);
             assert!(legs[0].transfer_verified);
@@ -759,7 +759,7 @@ mod tests {
         assert!(decoded.swaps.iter().all(|swap| swap.source_index != Some(7) && swap.source_index != Some(13)));
         let native_data = tx.walk_instructions().nth(7).unwrap().data().to_vec();
         let mut undeclared_vault = tx;
-        for group in &mut undeclared_vault.meta.as_mut().unwrap().inner_instructions {
+        for group in &mut undeclared_vault.meta.as_option_mut().unwrap().inner_instructions {
             for instruction in &mut group.instructions {
                 if instruction.data == native_data {
                     instruction.accounts[12] = instruction.accounts[13];
@@ -789,7 +789,7 @@ mod tests {
             let legs: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(child)).cloned().collect();
             assert_eq!(legs.len(), hops);
             assert!(legs.iter().all(|swap| swap.transfer_verified));
-            let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = token_mints::TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             assert!(coverage::candidates(&tx, &mints, &legs).iter().all(|candidate| candidate.source_index != parent));
             if hops == 2 {
                 let mut repeated_identity = legs.clone();
@@ -800,7 +800,7 @@ mod tests {
             let parent_data = tx.walk_instructions().nth(parent as usize).unwrap().data().to_vec();
             for malformed in 0..3 {
                 let mut altered = tx.clone();
-                for instruction in &mut altered.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions {
+                for instruction in &mut altered.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions {
                     if instruction.data == parent_data {
                         match malformed {
                             0 => { instruction.data.pop(); }
@@ -809,7 +809,7 @@ mod tests {
                         }
                     }
                 }
-                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                     for instruction in &mut group.instructions {
                         if instruction.data == parent_data {
                             match malformed {
@@ -820,7 +820,7 @@ mod tests {
                         }
                     }
                 }
-                let mints = token_mints::TokenMintLookup::new(&altered, altered.meta.as_ref().unwrap());
+                let mints = token_mints::TokenMintLookup::new(&altered, altered.meta.as_option().unwrap());
                 assert!(coverage::candidates(&altered, &mints, &legs).iter().any(|candidate| candidate.source_index == parent));
             }
             for invalid in 0..7 {
@@ -842,7 +842,7 @@ mod tests {
 
     #[test]
     fn phoenix_swaps_without_wallet_transfers_remain_replayable() {
-        let program = substreams_solana::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY");
+        let program = substreams_solana_macro::b58!("PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY");
         for fixture in [
             include_bytes!("../fixtures/phoenix-immediate-1.transaction.pb").as_slice(),
             include_bytes!("../fixtures/phoenix-immediate-2.transaction.pb").as_slice(),
@@ -852,7 +852,7 @@ mod tests {
                 let mut tx = tx.clone();
                 if without_transfers {
                     let programs = tx.resolved_accounts().iter().map(|a| (*a).clone()).collect::<Vec<_>>();
-                    for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+                    for group in &mut tx.meta.as_option_mut().unwrap().inner_instructions {
                         group.instructions.retain(|ix| programs[ix.program_id_index as usize].as_slice() == program);
                     }
                 }
@@ -891,7 +891,7 @@ mod tests {
                     assert!(swap.transfer_verified);
                     format!(
                         "{}:{}:{}:{}:{}:{}:{}:{}",
-                        swap.protocol,
+                        swap.protocol.to_i32(),
                         swap.source_index.unwrap(),
                         base58::encode(&swap.amm_pool),
                         base58::encode(&swap.user),
@@ -928,8 +928,8 @@ mod tests {
                 if mode>0 {
                     let mut changed=data[..24].to_vec();
                     match mode {1=>{},2=>changed.push(2),3=>changed.extend([0,0]),4=>{changed.resize(32,0);changed[31]=1;},5=>{changed.resize(41,0);changed[40]=1;},6=>{changed[8..16].copy_from_slice(&(f[2].parse::<u64>().unwrap()+1).to_le_bytes());},7=>{changed[16..24].copy_from_slice(&(f[3].parse::<u64>().unwrap()+1).to_le_bytes());},8=>{changed.pop();},_=>changed[0]^=1,}
-                    let groups=&mut tx.meta.as_mut().unwrap().inner_instructions;let mut index=0u32;
-                    for (root,ix) in tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                    let groups=&mut tx.meta.as_option_mut().unwrap().inner_instructions;let mut index=0u32;
+                    for (root,ix) in tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().enumerate() {
                         if index==source {ix.data=changed.clone();}index+=1;
                         if let Some(group)=groups.iter_mut().find(|g|g.index==root as u32) {
                             for child in &mut group.instructions {if index==source {child.data=changed.clone();}index+=1;}
@@ -944,7 +944,7 @@ mod tests {
                 let found:Vec<_>=decoded.as_ref().map(|t|t.swaps.iter().filter(|s|s.source_index==Some(source)).collect()).unwrap_or_default();
                 if mode>1 {assert!(found.is_empty(),"{} source{source} mutation{mode}",f[0]);continue;}
                 assert_eq!(found.len(),1,"{} source{source} mode{mode}",f[0]);let swap=found[0];
-                assert_eq!(swap.protocol,pb::Protocol::MeteoraDaam as i32);
+                assert_eq!(swap.protocol,pb::Protocol::MeteoraDaam);
                 assert_eq!((swap.input_amount,swap.output_amount),(f[2].parse::<u64>().unwrap(),f[3].parse::<u64>().unwrap()));
                 assert_eq!(base58::encode(&swap.amm_pool),f[4]);assert_eq!(base58::encode(&swap.user),f[5]);
                 assert_eq!(base58::encode(&swap.input_mint),f[6]);assert_eq!(base58::encode(&swap.output_mint),f[7]);

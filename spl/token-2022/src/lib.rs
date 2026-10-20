@@ -9,7 +9,5 @@ fn is_spl_token_program(program_id: &[u8]) -> bool {
 
 #[substreams::handlers::map]
 fn map_events(block: Block) -> Result<pb::Events, Error> {
-    Ok(pb::Events {
-        transactions: block.transactions_owned().filter_map(|tx| spl_token_common::process_transaction(tx, is_spl_token_program)).collect(),
-    })
+    spl_token_common::process_block(&block, is_spl_token_program)
 }

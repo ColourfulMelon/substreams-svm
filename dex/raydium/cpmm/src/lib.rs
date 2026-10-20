@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &raydium::cpmm::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -48,25 +48,29 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::SwapBaseInput(pb::SwapBaseInputInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        amm_config: accounts.amm_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        input_token_account: accounts.input_token_account.to_bytes().to_vec(),
-                        output_token_account: accounts.output_token_account.to_bytes().to_vec(),
-                        input_vault: accounts.input_vault.to_bytes().to_vec(),
-                        output_vault: accounts.output_vault.to_bytes().to_vec(),
-                        input_token_program: accounts.input_token_program.to_bytes().to_vec(),
-                        output_token_program: accounts.output_token_program.to_bytes().to_vec(),
-                        input_token_mint: accounts.input_token_mint.to_bytes().to_vec(),
-                        output_token_mint: accounts.output_token_mint.to_bytes().to_vec(),
-                        observation_state: accounts.observation_state.to_bytes().to_vec(),
-                    }),
-                    amount_in: event.amount_in,
-                    minimum_amount_out: event.minimum_amount_out,
-                })),
+                instruction: Some(pb::instruction::Instruction::SwapBaseInput(
+                    pb::SwapBaseInputInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            amm_config: accounts.amm_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            input_token_account: accounts.input_token_account.to_bytes().to_vec(),
+                            output_token_account: accounts.output_token_account.to_bytes().to_vec(),
+                            input_vault: accounts.input_vault.to_bytes().to_vec(),
+                            output_vault: accounts.output_vault.to_bytes().to_vec(),
+                            input_token_program: accounts.input_token_program.to_bytes().to_vec(),
+                            output_token_program: accounts.output_token_program.to_bytes().to_vec(),
+                            input_token_mint: accounts.input_token_mint.to_bytes().to_vec(),
+                            output_token_mint: accounts.output_token_mint.to_bytes().to_vec(),
+                            observation_state: accounts.observation_state.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount_in: event.amount_in,
+                        minimum_amount_out: event.minimum_amount_out,
+                    }
+                    .into(),
+                )),
             })
         }
         Ok(raydium::cpmm::instructions::RaydiumCpmmInstruction::SwapBaseOutput(event)) => {
@@ -74,25 +78,29 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::SwapBaseOutput(pb::SwapBaseOutputInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        authority: accounts.authority.to_bytes().to_vec(),
-                        amm_config: accounts.amm_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        input_token_account: accounts.input_token_account.to_bytes().to_vec(),
-                        output_token_account: accounts.output_token_account.to_bytes().to_vec(),
-                        input_vault: accounts.input_vault.to_bytes().to_vec(),
-                        output_vault: accounts.output_vault.to_bytes().to_vec(),
-                        input_token_program: accounts.input_token_program.to_bytes().to_vec(),
-                        output_token_program: accounts.output_token_program.to_bytes().to_vec(),
-                        input_token_mint: accounts.input_token_mint.to_bytes().to_vec(),
-                        output_token_mint: accounts.output_token_mint.to_bytes().to_vec(),
-                        observation_state: accounts.observation_state.to_bytes().to_vec(),
-                    }),
-                    max_amount_in: event.max_amount_in,
-                    amount_out: event.amount_out,
-                })),
+                instruction: Some(pb::instruction::Instruction::SwapBaseOutput(
+                    pb::SwapBaseOutputInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            authority: accounts.authority.to_bytes().to_vec(),
+                            amm_config: accounts.amm_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            input_token_account: accounts.input_token_account.to_bytes().to_vec(),
+                            output_token_account: accounts.output_token_account.to_bytes().to_vec(),
+                            input_vault: accounts.input_vault.to_bytes().to_vec(),
+                            output_vault: accounts.output_vault.to_bytes().to_vec(),
+                            input_token_program: accounts.input_token_program.to_bytes().to_vec(),
+                            output_token_program: accounts.output_token_program.to_bytes().to_vec(),
+                            input_token_mint: accounts.input_token_mint.to_bytes().to_vec(),
+                            output_token_mint: accounts.output_token_mint.to_bytes().to_vec(),
+                            observation_state: accounts.observation_state.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        max_amount_in: event.max_amount_in,
+                        amount_out: event.amount_out,
+                    }
+                    .into(),
+                )),
             })
         }
         _ => None,
@@ -131,55 +139,64 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(raydium::cpmm::events::RaydiumCpmmEvent::SwapEventV1(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Swap(pb::SwapEvent {
-                pool_id: event.pool_id.to_bytes().to_vec(),
-                input_vault_before: event.input_vault_before,
-                output_vault_before: event.output_vault_before,
-                input_amount: event.input_amount,
-                output_amount: event.output_amount,
-                input_transfer_fee: event.input_transfer_fee,
-                output_transfer_fee: event.output_transfer_fee,
-                base_input: event.base_input,
-                input_mint: None,
-                output_mint: None,
-                trade_fee: None,
-                creator_fee: None,
-                creator_fee_on_input: None,
-            })),
+            log: Some(pb::log::Log::Swap(
+                pb::SwapEvent {
+                    pool_id: event.pool_id.to_bytes().to_vec(),
+                    input_vault_before: event.input_vault_before,
+                    output_vault_before: event.output_vault_before,
+                    input_amount: event.input_amount,
+                    output_amount: event.output_amount,
+                    input_transfer_fee: event.input_transfer_fee,
+                    output_transfer_fee: event.output_transfer_fee,
+                    base_input: event.base_input,
+                    input_mint: None,
+                    output_mint: None,
+                    trade_fee: None,
+                    creator_fee: None,
+                    creator_fee_on_input: None,
+                }
+                .into(),
+            )),
         }),
         Ok(raydium::cpmm::events::RaydiumCpmmEvent::SwapEventV2(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Swap(pb::SwapEvent {
-                pool_id: event.pool_id.to_bytes().to_vec(),
-                input_vault_before: event.input_vault_before,
-                output_vault_before: event.output_vault_before,
-                input_amount: event.input_amount,
-                output_amount: event.output_amount,
-                input_transfer_fee: event.input_transfer_fee,
-                output_transfer_fee: event.output_transfer_fee,
-                base_input: event.base_input,
-                input_mint: Some(event.input_mint.to_bytes().to_vec()),
-                output_mint: Some(event.output_mint.to_bytes().to_vec()),
-                trade_fee: Some(event.trade_fee),
-                creator_fee: Some(event.creator_fee),
-                creator_fee_on_input: Some(event.creator_fee_on_input),
-            })),
+            log: Some(pb::log::Log::Swap(
+                pb::SwapEvent {
+                    pool_id: event.pool_id.to_bytes().to_vec(),
+                    input_vault_before: event.input_vault_before,
+                    output_vault_before: event.output_vault_before,
+                    input_amount: event.input_amount,
+                    output_amount: event.output_amount,
+                    input_transfer_fee: event.input_transfer_fee,
+                    output_transfer_fee: event.output_transfer_fee,
+                    base_input: event.base_input,
+                    input_mint: Some(event.input_mint.to_bytes().to_vec()),
+                    output_mint: Some(event.output_mint.to_bytes().to_vec()),
+                    trade_fee: Some(event.trade_fee),
+                    creator_fee: Some(event.creator_fee),
+                    creator_fee_on_input: Some(event.creator_fee_on_input),
+                }
+                .into(),
+            )),
         }),
         Ok(raydium::cpmm::events::RaydiumCpmmEvent::LpChangeEvent(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::LpChange(pb::LpChangeEvent {
-                pool_id: event.pool_id.to_bytes().to_vec(),
-                lp_amount_before: event.lp_amount_before,
-                token_0_vault_before: event.token_0_vault_before,
-                token_1_vault_before: event.token_1_vault_before,
-                token_0_amount: event.token_0_amount,
-                token_1_amount: event.token_1_amount,
-                token_0_transfer_fee: event.token_0_transfer_fee,
-                token_1_transfer_fee: event.token_1_transfer_fee,
-                change_type: event.change_type as u32,
-            })),
+            log: Some(pb::log::Log::LpChange(
+                pb::LpChangeEvent {
+                    pool_id: event.pool_id.to_bytes().to_vec(),
+                    lp_amount_before: event.lp_amount_before,
+                    token_0_vault_before: event.token_0_vault_before,
+                    token_1_vault_before: event.token_1_vault_before,
+                    token_0_amount: event.token_0_amount,
+                    token_1_amount: event.token_1_amount,
+                    token_0_transfer_fee: event.token_0_transfer_fee,
+                    token_1_transfer_fee: event.token_1_transfer_fee,
+                    change_type: event.change_type as u32,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

@@ -26,7 +26,7 @@ impl State {
         let data = parse_program_data(log_message)?;
         match boop::events::unpack_event(data.as_slice()) {
             Ok(boop::events::BoopEvent::TokenBoughtEvent(event)) => Some(pb::Swap {
-                protocol: pb::Protocol::Boop as i32,
+                protocol: pb::Protocol::Boop.into(),
                 program_id: boop::PROGRAM_ID.to_vec(),
                 stack_height: 0,
                 amm: boop::PROGRAM_ID.to_vec(),
@@ -43,7 +43,7 @@ impl State {
                 ..Default::default()
     }),
             Ok(boop::events::BoopEvent::TokenSoldEvent(event)) => Some(pb::Swap {
-                protocol: pb::Protocol::Boop as i32,
+                protocol: pb::Protocol::Boop.into(),
                 program_id: boop::PROGRAM_ID.to_vec(),
                 stack_height: 0,
                 amm: boop::PROGRAM_ID.to_vec(),

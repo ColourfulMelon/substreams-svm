@@ -3,7 +3,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const ALDRIN: [u8; 32] = b58!("AMM55ShdkoGRB5jVYPjWziwk8m5MpwyDgsMWHaMSQWH6");
@@ -60,7 +61,7 @@ pub(crate) fn settlement(source: u32, tx: &ConfirmedTransaction, ix: &Instructio
     if principal[0]>l.amount { return None; }
     // Bind the physical receipts to all committed movements of the persistent
     // vaults/fee account, including native-output accounts the user later closes.
-    let meta=tx.meta.as_ref()?; let resolved=tx.resolved_accounts();
+    let meta=tx.meta.as_option()?; let resolved=tx.resolved_accounts();
     for role in [l.vaults[0],l.vaults[1],fee_role] {
         let address=a[role].0; let position=resolved.iter().position(|key|*key==address)?;
         let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==position)?;
@@ -82,7 +83,7 @@ pub(crate) fn settlement(source: u32, tx: &ConfirmedTransaction, ix: &Instructio
             let amount=i128::from(u64::from_le_bytes(d[1..9].try_into().ok()?));
             if ca[0].0==address {change=change.checked_sub(amount)?;} if ca[1].0==address {change=change.checked_add(amount)?;}
         }
-        if i128::from(after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)!=change {return None;}
+        if i128::from(after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)!=change {return None;}
     }
     Some((principal[0],principal[1]))
 }
@@ -96,14 +97,14 @@ mod tests {
   for line in include_str!("../fixtures/swap-coverage/legacy-amm27/cases.tsv").lines() {
    let f:Vec<_>=line.split('\t').collect();let source=f[1].parse::<u32>().unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&std::fs::read(format!("{}/fixtures/swap-coverage/legacy-amm27/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap()).unwrap();
    let walk:Vec<_>=tx.walk_instructions().collect();let native=walk[source as usize].data().clone();let input=walk[source as usize+1].data().clone();let fee=walk[source as usize+2].data().clone();let output=walk[source as usize+3].data().clone();let crop=f[8]=="cropper";let amount=f[5].parse::<u64>().unwrap();let proceeds=f[7].parse::<u64>().unwrap();
-   let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(rows.len(),1,"{}",f[0]);let row=rows[0];assert!(row.transfer_verified);assert_eq!(row.protocol,if crop {Protocol::Cropper}else{Protocol::AldrinV1} as i32);assert_eq!(row.source_transfer_index,Some(source+1));assert_eq!((substreams_solana::base58::encode(&row.amm_pool),substreams_solana::base58::encode(&row.user),substreams_solana::base58::encode(&row.input_mint),row.input_amount,substreams_solana::base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),amount,f[6].into(),proceeds));
+   let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(rows.len(),1,"{}",f[0]);let row=rows[0];assert!(row.transfer_verified);assert_eq!(row.protocol.to_i32(),if crop {Protocol::Cropper}else{Protocol::AldrinV1} as i32);assert_eq!(row.source_transfer_index,Some(source+1));assert_eq!((substreams_solana::base58::encode(&row.amm_pool),substreams_solana::base58::encode(&row.user),substreams_solana::base58::encode(&row.input_mint),row.input_amount,substreams_solana::base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),amount,f[6].into(),proceeds));
    for mode in 0..36 {let mut bad=tx.clone();
-    if mode<14 {let ix=bad.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==native).unwrap();let a=ix.accounts.clone();let offset=if crop {1}else{8};match mode {0=>ix.data[0]^=1,1=>ix.data.push(0),2=>ix.data[offset..offset+8].copy_from_slice(&(amount-1).to_le_bytes()),3=>ix.data[offset+8..offset+16].copy_from_slice(&(proceeds+1).to_le_bytes()),4=>ix.accounts[1]=a[0],5=>ix.accounts[0]=a[1],6=>ix.accounts[if crop {2}else{6}]=a[1],7=>ix.accounts[if crop {4}else{7}]=a[if crop {7}else{8}],8=>ix.accounts[if crop {5}else{3}]=a[if crop {6}else{4}],9=>ix.accounts[if crop {9}else{5}]=a[if crop {5}else{3}],10=>ix.accounts[if crop {8}else{2}]=a[if crop {4}else{7}],11=>ix.accounts[if crop {10}else{9}]=a[0],12=>{ix.accounts.pop();},_=>if crop {ix.data[0]=2}else{ix.data[24]=2}}}
-    else if mode<32 {let position=(mode-14)/6;let target=[&input,&fee,&output][position];let ix=bad.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|&x.data==target).unwrap();let a=ix.accounts.clone();match (mode-14)%6 {0=>{let v=u64::from_le_bytes(ix.data[1..9].try_into().unwrap())+1;ix.data[1..9].copy_from_slice(&v.to_le_bytes());},1=>ix.data[1..9].fill(0),2=>ix.accounts[0]=a[1],3=>ix.accounts[1]=a[0],4=>ix.accounts[2]=a[0],_=>ix.stack_height=Some(99)}}
-    else if mode==32 {bad.meta.as_mut().unwrap().log_messages.clear();}
-    else if mode==33 {bad.meta.as_mut().unwrap().err=Some(Default::default());}
-    else if mode==34 {bad.meta.as_mut().unwrap().post_token_balances.clear();}
-    else {let output_vault=tx.resolved_accounts().iter().position(|a|*a==walk[source as usize+3].accounts()[0].0).unwrap() as u32;let b=bad.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|x|x.account_index==output_vault).unwrap();let v=b.ui_token_amount.as_mut().unwrap();v.amount=(v.amount.parse::<u64>().unwrap()+1).to_string();}
+    if mode<14 {let ix=bad.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==native).unwrap();let a=ix.accounts.clone();let offset=if crop {1}else{8};match mode {0=>ix.data[0]^=1,1=>ix.data.push(0),2=>ix.data[offset..offset+8].copy_from_slice(&(amount-1).to_le_bytes()),3=>ix.data[offset+8..offset+16].copy_from_slice(&(proceeds+1).to_le_bytes()),4=>ix.accounts[1]=a[0],5=>ix.accounts[0]=a[1],6=>ix.accounts[if crop {2}else{6}]=a[1],7=>ix.accounts[if crop {4}else{7}]=a[if crop {7}else{8}],8=>ix.accounts[if crop {5}else{3}]=a[if crop {6}else{4}],9=>ix.accounts[if crop {9}else{5}]=a[if crop {5}else{3}],10=>ix.accounts[if crop {8}else{2}]=a[if crop {4}else{7}],11=>ix.accounts[if crop {10}else{9}]=a[0],12=>{ix.accounts.pop();},_=>if crop {ix.data[0]=2}else{ix.data[24]=2}}}
+    else if mode<32 {let position=(mode-14)/6;let target=[&input,&fee,&output][position];let ix=bad.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|&x.data==target).unwrap();let a=ix.accounts.clone();match (mode-14)%6 {0=>{let v=u64::from_le_bytes(ix.data[1..9].try_into().unwrap())+1;ix.data[1..9].copy_from_slice(&v.to_le_bytes());},1=>ix.data[1..9].fill(0),2=>ix.accounts[0]=a[1],3=>ix.accounts[1]=a[0],4=>ix.accounts[2]=a[0],_=>ix.stack_height=Some(99)}}
+    else if mode==32 {bad.meta.as_option_mut().unwrap().log_messages.clear();}
+    else if mode==33 {bad.meta.as_option_mut().unwrap().err=buffa::MessageField::some(Default::default());}
+    else if mode==34 {bad.meta.as_option_mut().unwrap().post_token_balances.clear();}
+    else {let output_vault=tx.resolved_accounts().iter().position(|a|*a==walk[source as usize+3].accounts()[0].0).unwrap() as u32;let b=bad.meta.as_option_mut().unwrap().post_token_balances.iter_mut().find(|x|x.account_index==output_vault).unwrap();let v=b.ui_token_amount.as_option_mut().unwrap();v.amount=(v.amount.parse::<u64>().unwrap()+1).to_string();}
     assert!(crate::process_transaction(bad).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"{} mode{}",f[0],mode);
    }
    count+=1;

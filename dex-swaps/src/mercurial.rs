@@ -1,6 +1,7 @@
 //! Mercurial's documented N-coin Exchange ABI. Pool vaults form a declared
 //! array; user source/destination follow it, rather than fixed two-coin roles.
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky");
 
@@ -72,7 +73,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(index)).collect();
             assert_eq!(swaps.len(), 1);
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::Mercurial as i32);
+            assert_eq!(swap.protocol, Protocol::Mercurial);
             assert_eq!(swap.amm, PROGRAM_ID);
             assert_eq!(base58::encode(&swap.amm_pool), "UST3iPxDFwUUiToMyLF7DYqSP9uaoz7Mzs2LxRYxVJG");
             assert_eq!(base58::encode(&swap.user), "BJcxXxr2mSr71SVJaqvHHmdxHUrYRvC4sct1wMNZxirK");
@@ -83,7 +84,7 @@ mod tests {
             assert!(swap.transfer_verified);
             for mode in 0..25 {
                 let mut altered = tx.clone();
-                let meta = altered.meta.as_mut().unwrap();
+                let meta = altered.meta.as_option_mut().unwrap();
                 let (group, position) = meta
                     .inner_instructions
                     .iter()

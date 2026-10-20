@@ -41,7 +41,7 @@ pub(crate) fn handle_instruction(pending: &mut VecDeque<PendingSwap>, instructio
     };
 
     Some(pb::Swap {
-        protocol: pb::Protocol::MeteoraDaam as i32,
+        protocol: pb::Protocol::MeteoraDaam.into(),
         program_id: daam::PROGRAM_ID.to_vec(),
         stack_height: swap.stack_height,
         amm: daam::PROGRAM_ID.to_vec(),
@@ -182,8 +182,8 @@ mod tests {
             let event=walk.iter().enumerate().skip(source as usize+1).take_while(|(_,ix)| !ix.is_root() && ix.stack_height()>if native.is_root(){1}else{native.stack_height()})
                 .find(|(_,ix)|ix.program_id().0==native.program_id().0&&ix.data().len()==196).unwrap().0 as u32;
             for mode in 0..10 {
-                let mut changed=tx.clone();let groups=&mut changed.meta.as_mut().unwrap().inner_instructions;let mut position=0u32;
-                for (root,ix) in changed.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                let mut changed=tx.clone();let groups=&mut changed.meta.as_option_mut().unwrap().inner_instructions;let mut position=0u32;
+                for (root,ix) in changed.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().enumerate() {
                     if position==source {if mode==0{ix.accounts[1]=ix.accounts[8];}else if mode==1{ix.accounts[8]=ix.accounts[1];}}
                     position+=1;
                     if let Some(group)=groups.iter_mut().find(|g|g.index==root as u32) {
@@ -225,9 +225,9 @@ mod tests {
             for fabricated_event in [false, true] {
                 let mut changed = tx.clone();
                 if fabricated_event {
-                    let meta = changed.meta.as_mut().unwrap();
+                    let meta = changed.meta.as_option_mut().unwrap();
                     if damm {
-                        let roots = changed.transaction.as_ref().unwrap().message.as_ref().unwrap().instructions.len();
+                        let roots = changed.transaction.as_option().unwrap().message.as_option().unwrap().instructions.len();
                         let mut position = 0usize;
                         for root in 0..roots {
                             position += 1;

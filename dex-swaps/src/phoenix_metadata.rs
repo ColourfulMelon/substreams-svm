@@ -42,7 +42,7 @@ pub(crate) fn updates(block: &Block) -> Vec<(u64, String, Vec<u8>)> {
         {
             continue;
         }
-        let Some(meta) = &tx.meta else {
+        let Some(meta) = tx.meta.as_option() else {
             continue;
         };
         let mut decimals = BTreeMap::new();
@@ -51,7 +51,7 @@ pub(crate) fn updates(block: &Block) -> Vec<(u64, String, Vec<u8>)> {
             if !balance.program_id.is_empty() && balance.program_id != "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" {
                 continue;
             }
-            let Some(amount) = &balance.ui_token_amount else {
+            let Some(amount) = balance.ui_token_amount.as_option() else {
                 continue;
             };
             if amount.decimals > 19 || base58::decode(&balance.mint).map_or(true, |mint| mint.len() != 32) {
@@ -88,7 +88,7 @@ pub(crate) fn updates(block: &Block) -> Vec<(u64, String, Vec<u8>)> {
             if accounts.len() != 10
                 || !matches!(data.len(), 84 | 88)
                 || accounts[0].0.as_slice() != PROGRAM_ID
-                || accounts[1].0.as_slice() != substreams_solana::b58!("7aDTsspkQNGKmrexAN7FLx9oxU3iPczSSvHNggyuqYkR")
+                || accounts[1].0.as_slice() != substreams_solana_macro::b58!("7aDTsspkQNGKmrexAN7FLx9oxU3iPczSSvHNggyuqYkR")
                 || accounts[8].0.iter().any(|byte| *byte != 0)
                 || accounts[9].0.as_slice() != substreams_solana_idls::spl::token::PROGRAM_ID
             {

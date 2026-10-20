@@ -65,7 +65,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::RaydiumAmmV4 as i32,
+            protocol: pb::Protocol::RaydiumAmmV4.into(),
             program_id: raydium::amm::v4::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: raydium::amm::v4::PROGRAM_ID.to_vec(),
@@ -226,15 +226,15 @@ mod tests {
                 mint: base58::encode(mint),
                 owner: "".to_string(),
                 program_id: "".to_string(),
-                ui_token_amount: Some(UiTokenAmount::default()),
+                ui_token_amount: buffa::MessageField::some(UiTokenAmount::default()),
             })
             .collect();
 
         ConfirmedTransaction {
-            transaction: Some(Transaction {
+            transaction: buffa::MessageField::some(Transaction {
                 signatures: vec![vec![0u8; 64]],
-                message: Some(Message {
-                    header: Some(MessageHeader {
+                message: buffa::MessageField::some(Message {
+                    header: buffa::MessageField::some(MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
                         num_readonly_unsigned_accounts: 0,
@@ -248,9 +248,10 @@ mod tests {
                     }],
                     versioned: false,
                     address_table_lookups: vec![],
+                    ..Default::default()
                 }),
             }),
-            meta: Some(TransactionStatusMeta {
+            meta: buffa::MessageField::some(TransactionStatusMeta {
                 pre_token_balances,
                 ..Default::default()
             }),
@@ -297,7 +298,7 @@ mod tests {
         let pc_mint = [0xbb; 32];
 
         let tx = make_tx(&accounts, &[(coin_key_idx as u32, coin_mint), (pc_key_idx as u32, pc_mint)]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -342,7 +343,7 @@ mod tests {
         let pc_mint = [0xbb; 32];
 
         let tx = make_tx(&accounts, &[(coin_key_idx as u32, coin_mint), (pc_key_idx as u32, pc_mint)]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -378,7 +379,7 @@ mod tests {
             token_balances,
             swap_body_v2(),
         );
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 
@@ -399,7 +400,7 @@ mod tests {
         // No pre/post token balances → mint_for misses for both vaults.
         let (accounts, _, _) = make_post_fork_accounts();
         let tx = make_tx(&accounts, &[]);
-        let meta = tx.meta.as_ref().unwrap();
+        let meta = tx.meta.as_option().unwrap();
         let mints = TokenMintLookup::new(&tx, meta);
         let ix = tx.walk_instructions().next().unwrap();
 

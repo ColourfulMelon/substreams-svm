@@ -1,6 +1,7 @@
 //! JupiterZ Order Engine fills, pinned to its published production contract.
 //! The market identity is the actual maker account, not an invented AMM pool.
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("61DFfeTKM7trxYcPQCM78bJ794ddZprZpAwAnLiwTpYH");
@@ -233,7 +234,7 @@ mod tests {
                 children.push(native(200, 1, 0));
             }
         }
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: children,
@@ -251,7 +252,7 @@ mod tests {
                     balances.push(TokenBalance {
                         account_index: position as u32 + 2,
                         mint: base58::encode(mint),
-                        ui_token_amount: Some(UiTokenAmount {
+                        ui_token_amount: buffa::MessageField::some(UiTokenAmount {
                             amount: amount.to_string(),
                             decimals: 6,
                             ..Default::default()
@@ -272,7 +273,7 @@ mod tests {
                 let decoded = crate::process_transaction(tx).unwrap();
                 assert_eq!(decoded.swaps.len(), 1, "missing native path {present:?}");
                 let swap = &decoded.swaps[0];
-                assert_eq!(swap.protocol, 49);
+                assert_eq!(swap.protocol.to_i32(), 49);
                 assert_eq!((swap.input_amount, swap.output_amount), (100, 200));
                 assert_eq!(swap.amm_pool, vec![2; 32]);
                 assert_eq!(swap.user, vec![1; 32]);
@@ -289,19 +290,19 @@ mod tests {
             assert_eq!((swap.input_amount, swap.output_amount), (100, 200));
             if checked[1] {
                 let mut missing = tx.clone();
-                missing.meta.as_mut().unwrap().pre_token_balances.clear();
-                missing.meta.as_mut().unwrap().post_token_balances.clear();
+                missing.meta.as_option_mut().unwrap().pre_token_balances.clear();
+                missing.meta.as_option_mut().unwrap().post_token_balances.clear();
                 assert!(crate::process_transaction(missing).unwrap().swaps.is_empty());
                 let mut fee = tx;
                 fee.meta
-                    .as_mut()
+                    .as_option_mut()
                     .unwrap()
                     .post_token_balances
                     .iter_mut()
                     .find(|balance| balance.account_index == 6)
                     .unwrap()
                     .ui_token_amount
-                    .as_mut()
+                    .as_option_mut()
                     .unwrap()
                     .amount = "194".into();
                 let swap = crate::process_transaction(fee).unwrap().swaps.pop().unwrap();
@@ -324,18 +325,18 @@ mod tests {
                 unwrapped.clone()
             };
             match mode {
-                0 => tx.meta.as_mut().unwrap().inner_instructions[0].instructions[0].data[1] = 99,
-                1 => tx.meta.as_mut().unwrap().inner_instructions[0].instructions[1].accounts[2] = 2,
-                2 => tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.truncate(31),
-                3 => tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[0] = 0,
+                0 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[0].data[1] = 99,
+                1 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[1].accounts[2] = 2,
+                2 => tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.truncate(31),
+                3 => tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[0] = 0,
                 4 => {
-                    tx.meta.as_mut().unwrap().inner_instructions[0].instructions.remove(1);
+                    tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions.remove(1);
                 }
                 5 => {
-                    tx.meta.as_mut().unwrap().inner_instructions[0].instructions.remove(4);
+                    tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions.remove(4);
                 }
-                6 => tx.meta.as_mut().unwrap().inner_instructions[0].instructions[4].accounts[1] = 2,
-                7 => tx.meta.as_mut().unwrap().inner_instructions[0].instructions[2].data[1] = 9,
+                6 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[4].accounts[1] = 2,
+                7 => tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions[2].data[1] = 9,
                 _ => unreachable!(),
             }
             assert!(
@@ -362,7 +363,7 @@ mod tests {
             let parsed = layout(&source_ix).unwrap();
             let native = crate::process_transaction(tx.clone()).unwrap().swaps.into_iter()
                 .find(|x| x.source_index == Some(source)).expect("finalized RFQ native price");
-            assert_eq!(native.protocol, 49);
+            assert_eq!(native.protocol.to_i32(), 49);
             assert_eq!(base58::encode(&native.program_id), f[3]);
             assert_eq!(base58::encode(&native.amm), f[3]);
             assert_eq!(base58::encode(&native.amm_pool), f[4]);
@@ -397,30 +398,30 @@ mod tests {
                         }
                         _ => unreachable!(),
                     };
-                    let message = wrong.transaction.as_mut().unwrap().message.as_mut().unwrap();
+                    let message = wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
                     if let Some(ix) = message.instructions.iter_mut().find(|x| x.data == source_data) {
                         modify(&mut ix.data, &mut ix.accounts);
                     } else {
-                        let ix = wrong.meta.as_mut().unwrap().inner_instructions.iter_mut()
+                        let ix = wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut()
                             .flat_map(|g| &mut g.instructions).find(|x| x.data == source_data).unwrap();
                         modify(&mut ix.data, &mut ix.accounts);
                     }
                 } else if mode == 4 || mode == 5 {
-                    let calls = &mut wrong.meta.as_mut().unwrap().inner_instructions;
+                    let calls = &mut wrong.meta.as_option_mut().unwrap().inner_instructions;
                     let i = calls.iter_mut().flat_map(|g| &mut g.instructions)
                         .find(|x| x.data.len() >= 9 && matches!(x.data[0], 3 | 12)
                             && u64::from_le_bytes(x.data[1..9].try_into().unwrap()) == native.output_amount).unwrap();
                     if mode == 4 { i.data[1] ^= 1; } else { i.accounts.swap(0, 1); }
                 } else if mode == 6 {
-                    wrong.meta.as_mut().unwrap().log_messages.clear();
+                    wrong.meta.as_option_mut().unwrap().log_messages.clear();
                 } else if mode == 7 {
-                    let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                     let end = logs.iter().rposition(|x| x == &format!("Program {} success", f[3])).unwrap();
                     logs[end] = format!("Program {} failed: custom program error: 1", f[3]);
                 } else if mode == 8 {
-                    wrong.meta.as_mut().unwrap().post_token_balances.clear();
+                    wrong.meta.as_option_mut().unwrap().post_token_balances.clear();
                 } else {
-                    let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                     let child_depth = if source_ix.is_root() { 2 } else { source_ix.stack_height() + 1 };
                     let end = logs.iter().rposition(|x| x.ends_with(&format!("invoke [{child_depth}]"))).unwrap();
                     logs.truncate(end + 1);
@@ -430,9 +431,9 @@ mod tests {
                 assert!(!rows.iter().any(|x| x.source_index == Some(source)), "RFQ {} native mutation {mode}", f[0]);
                 // A Jupiter event with authentic amounts must never bypass a
                 // malformed/failed native receipt, even without expansion.
-                let mints = crate::token_mints::TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
+                let mints = crate::token_mints::TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
                 let mut routed = native.clone();
-                routed.protocol = 5;
+                routed.protocol = 5.into();
                 routed.program_id = substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                 let mut rows = vec![routed];
                 crate::quality::verify_and_deduplicate(&wrong, &mints, &mut rows, false);
@@ -442,7 +443,7 @@ mod tests {
             if f[0] == "3NSsTj15VzsyerzXesFxuaKr6n6ZRPVtXegdyLFpwhTmkSBskueEzmciNR5Pxy3ZWvaeSx1xMfW2b9dnFSy1dkmY" {
                 for mode in 0..3 {
                     let mut wrong = tx.clone();
-                    for child in wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions) {
+                    for child in wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g| &mut g.instructions) {
                         if child.data.as_slice() == [17] {
                             if mode == 0 { child.data[0] = 21; }
                             if mode == 1 { child.data.push(0); }
@@ -450,8 +451,8 @@ mod tests {
                         }
                     }
                     assert!(!crate::process_transaction(wrong.clone()).unwrap().swaps.iter().any(|x| x.source_index == Some(source)), "unsynchronized native credit {mode}");
-                    let lookup = crate::token_mints::TokenMintLookup::new(&wrong, wrong.meta.as_ref().unwrap());
-                    let mut routed = native.clone(); routed.protocol = 5;
+                    let lookup = crate::token_mints::TokenMintLookup::new(&wrong, wrong.meta.as_option().unwrap());
+                    let mut routed = native.clone(); routed.protocol = 5.into();
                     routed.program_id = substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                     let mut rows = vec![routed];
                     crate::quality::verify_and_deduplicate(&wrong, &lookup, &mut rows, false);
@@ -461,10 +462,10 @@ mod tests {
             }
             // Successful wrappers normalize to the same native maker/principal
             // identity, and cannot substitute a different user or maker.
-            let mints = crate::token_mints::TokenMintLookup::new(&tx, tx.meta.as_ref().unwrap());
+            let mints = crate::token_mints::TokenMintLookup::new(&tx, tx.meta.as_option().unwrap());
             for mode in 0..3 {
                 let mut routed = native.clone();
-                routed.protocol = 5;
+                routed.protocol = 5.into();
                 routed.program_id = substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();
                 if mode == 1 { routed.user = a[1].0.clone(); }
                 if mode == 2 { routed.amm_pool = a[0].0.clone(); }
@@ -472,7 +473,7 @@ mod tests {
                 crate::quality::verify_and_deduplicate(&tx, &mints, &mut rows, false);
                 if mode == 0 {
                     assert_eq!(rows.len(), 1);
-                    assert_eq!(rows[0].protocol, 49);
+                    assert_eq!(rows[0].protocol.to_i32(), 49);
                     assert_eq!(rows[0].program_id, native.program_id);
                 } else { assert!(rows.is_empty()); rejected += 1; }
             }

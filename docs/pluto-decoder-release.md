@@ -1,5 +1,33 @@
 # Pluto DEX decoder release
 
+`v0.5.2-pluto.34` moves the pricing decoder from `pluto.33` to Substreams 0.8
+(Buffa) by merging upstream `main` at `e78c2ff1`. It pins the IDL fork at
+`8a11a11e898ebb1d448102f969725cd34c543361`, which applies the Pump.fun V2/V3 and
+Orca/DLMM fixes to the upstream Buffa IDL line. Decoding logic is unchanged from
+`pluto.33`. Upstream's native projection layer and its Orca event re-pairing
+(`0dd04b85`) are not adopted, so legacy output stays identical. The frozen
+metadata binary and all six metadata module hashes are unchanged; only
+`map_events` and `db_out` change hash. The SQL schema is unchanged.
+
+All 233 core tests pass with default and production features, along with the
+whole workspace. Over 60 finalized mainnet blocks in two windows, the
+decompressed `db_out` changes match `pluto.33` row for row, including keys and
+ordinals, apart from the `decoder_version` value.
+
+`substreams` is now a default feature of `dex-swaps`, so production builds
+enable it explicitly:
+
+```sh
+cargo test -p dex-swaps -p svm-dex --locked --no-default-features --features dex-swaps/substreams
+cargo build -p dex-swaps -p svm-dex --locked --no-default-features --features dex-swaps/substreams \
+  --target wasm32-unknown-unknown --release
+```
+
+Fetch and verify the pinned metadata binary as described under pluto.13, then
+pack with Substreams CLI 1.18.2 in the order shown for pluto.27.
+
+## Previous release: pluto.32
+
 `v0.5.2-pluto.32` parses each transaction log header once and shares it across
 protocol handlers. Financial decoding, gzip output, SQL schemas and the four-stage
 graph are preserved. Frozen metadata bytes and all six retained store hashes

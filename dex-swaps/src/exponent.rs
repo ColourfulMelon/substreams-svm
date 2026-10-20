@@ -3,7 +3,8 @@
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 pub(crate) const PROGRAM_ID:[u8;32]=b58!("XPC1MM4dYACDfykNuXYZ5una2DsMDWL24CrYubCvarC");
 const SY_PROGRAM:[u8;32]=b58!("XP1BRLn8eCYSygrd8er5P4GKdzqKbC3DLoSsS5UYVZy");
 pub(crate) fn layout(ix:&InstructionView)->Option<Layout>{let a=ix.accounts();let d=ix.data();
@@ -37,7 +38,7 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
   ||u64::from_le_bytes(e[146..154].try_into().ok()?)!=amounts[0]||u64::from_le_bytes(e[154..162].try_into().ok()?)!=amounts[2]
   ||u64::from_le_bytes(e[170..178].try_into().ok()?)!=amounts[3]||u64::from_le_bytes(calls[3].data()[1..9].try_into().ok()?)!=amounts[1]
   ||amounts[1]!=amounts[2].checked_add(amounts[3])?||amounts[0]!=l.amount||amounts[2]==0||amounts[2]<l.minimum_output{return None;}
-    let meta=tx.meta.as_ref()?;let resolved=tx.resolved_accounts();
+    let meta=tx.meta.as_option()?;let resolved=tx.resolved_accounts();
     for role in [5,6] {
         let address=a[role].0;let position=resolved.iter().position(|key|*key==address)?;
         let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==position)?;
@@ -66,8 +67,8 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
             if ca[0].0==address { change=change.checked_sub(amount)?; }
             if destination==address { change=change.checked_add(amount)?; }
         }
-        let before=before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?;
-        let after=after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?;
+        let before=before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?;
+        let after=after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?;
         if i128::from(after)-i128::from(before)!=change { return None; }
     }
  Some((amounts[0],amounts[2]))
@@ -80,14 +81,14 @@ mod tests {
  fn finalized_exponent_trade_binds_native_principals_inventory_and_fee() {
   let f:Vec<_>=include_str!("../fixtures/swap-coverage/exponent-native26/cases.tsv").trim().split('\t').collect();let source=f[1].parse::<u32>().unwrap();
   let bytes=std::fs::read(format!("{}/fixtures/swap-coverage/exponent-native26/{}.pb",env!("CARGO_MANIFEST_DIR"),f[0])).unwrap();let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes).unwrap();
-  let ws:Vec<_>=tx.walk_instructions().collect();let ms=TokenMintLookup::new(&tx,tx.meta.as_ref().unwrap());let success=(0..ws.len() as u32).collect();assert_eq!(settlement(source,&tx,&ws[source as usize],&ws[source as usize+1..source as usize+9],&ms,&success),Some((3131244803017,2632427523953)),"direct native helper");let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(rows.len(),1);let row=rows[0];assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::Exponent as i32);assert_eq!(row.source_transfer_index,Some(source+3));
+  let ws:Vec<_>=tx.walk_instructions().collect();let ms=TokenMintLookup::new(&tx,tx.meta.as_option().unwrap());let success=(0..ws.len() as u32).collect();assert_eq!(settlement(source,&tx,&ws[source as usize],&ws[source as usize+1..source as usize+9],&ms,&success),Some((3131244803017,2632427523953)),"direct native helper");let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();assert_eq!(rows.len(),1);let row=rows[0];assert!(row.transfer_verified);assert_eq!(row.protocol,Protocol::Exponent);assert_eq!(row.source_transfer_index,Some(source+3));
   assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),(f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));assert!(decoded.swaps.iter().all(|s|s.source_index!=Some(11)));
   let walk:Vec<_>=tx.walk_instructions().collect();let native=walk[source as usize].data().clone();
   for mode in 0..42 {let mut wrong=tx.clone();
-   if mode<15 {let n=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==native).unwrap();let a=n.accounts.clone();match mode {0=>n.data[0]=4,1=>n.data.push(0),2=>n.data[9]=1,3=>n.data[10]=0,4=>n.data[19]=1,5=>n.data[1..9].copy_from_slice(&(row.input_amount+1).to_le_bytes()),6=>n.data[11..19].copy_from_slice(&(row.output_amount+1).to_le_bytes()),7=>n.accounts[1]=a[0],8=>n.accounts[3]=a[4],9=>n.accounts[5]=a[6],10=>n.accounts[12]=a[0],11=>n.accounts[9]=a[8],12=>n.accounts[15]=a[24],13=>n.accounts[24]=a[15],_=>{n.accounts.pop();}}}
-   else if mode<37 {let target=match mode {15..=17=>source+1,18..=20=>source+2,21..=24=>source+3,25..=27=>source+4,28..=30=>source+5,31..=33=>source+6,34..=36=>source+7,_=>unreachable!()};let root_at=walk[..target as usize].iter().rposition(|x|x.is_root()).unwrap();let root=walk[..=root_at].iter().filter(|x|x.is_root()).count()-1;let within=target as usize-root_at-1;let n=&mut wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index==root as u32).unwrap().instructions[within];let kind=match mode {15..=17=>mode-15,18..=20=>mode-18,21..=24=>mode-21,25..=27=>mode-25,28..=30=>mode-28,31..=33=>mode-31,_=>mode-34};match kind {0=>{if n.data.len()==9{let amount=u64::from_le_bytes(n.data[1..9].try_into().unwrap())+1;n.data[1..9].copy_from_slice(&amount.to_le_bytes());}else{n.data[0]^=1;}},1=>n.accounts[0]=n.accounts[1],2=>n.stack_height=Some(99),_=>n.data.push(0)}}
-   else if mode<40 {let target=source+8;let root_at=walk[..target as usize].iter().rposition(|x|x.is_root()).unwrap();let root=walk[..=root_at].iter().filter(|x|x.is_root()).count()-1;let within=target as usize-root_at-1;let n=&mut wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index==root as u32).unwrap().instructions[within];let pos=[48,154,170][(mode-37)as usize];n.data[pos]^=1;}
-   else if mode==40 {wrong.meta.as_mut().unwrap().log_messages.clear();}else{wrong.meta.as_mut().unwrap().post_token_balances.clear();}
+   if mode<15 {let n=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|g.instructions.iter_mut()).find(|x|x.data==native).unwrap();let a=n.accounts.clone();match mode {0=>n.data[0]=4,1=>n.data.push(0),2=>n.data[9]=1,3=>n.data[10]=0,4=>n.data[19]=1,5=>n.data[1..9].copy_from_slice(&(row.input_amount+1).to_le_bytes()),6=>n.data[11..19].copy_from_slice(&(row.output_amount+1).to_le_bytes()),7=>n.accounts[1]=a[0],8=>n.accounts[3]=a[4],9=>n.accounts[5]=a[6],10=>n.accounts[12]=a[0],11=>n.accounts[9]=a[8],12=>n.accounts[15]=a[24],13=>n.accounts[24]=a[15],_=>{n.accounts.pop();}}}
+   else if mode<37 {let target=match mode {15..=17=>source+1,18..=20=>source+2,21..=24=>source+3,25..=27=>source+4,28..=30=>source+5,31..=33=>source+6,34..=36=>source+7,_=>unreachable!()};let root_at=walk[..target as usize].iter().rposition(|x|x.is_root()).unwrap();let root=walk[..=root_at].iter().filter(|x|x.is_root()).count()-1;let within=target as usize-root_at-1;let n=&mut wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index==root as u32).unwrap().instructions[within];let kind=match mode {15..=17=>mode-15,18..=20=>mode-18,21..=24=>mode-21,25..=27=>mode-25,28..=30=>mode-28,31..=33=>mode-31,_=>mode-34};match kind {0=>{if n.data.len()==9{let amount=u64::from_le_bytes(n.data[1..9].try_into().unwrap())+1;n.data[1..9].copy_from_slice(&amount.to_le_bytes());}else{n.data[0]^=1;}},1=>n.accounts[0]=n.accounts[1],2=>n.stack_height=Some(99),_=>n.data.push(0)}}
+   else if mode<40 {let target=source+8;let root_at=walk[..target as usize].iter().rposition(|x|x.is_root()).unwrap();let root=walk[..=root_at].iter().filter(|x|x.is_root()).count()-1;let within=target as usize-root_at-1;let n=&mut wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.index==root as u32).unwrap().instructions[within];let pos=[48,154,170][(mode-37)as usize];n.data[pos]^=1;}
+   else if mode==40 {wrong.meta.as_option_mut().unwrap().log_messages.clear();}else{wrong.meta.as_option_mut().unwrap().post_token_balances.clear();}
    assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"Exponent mode{mode}");
   }
  }

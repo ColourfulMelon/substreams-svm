@@ -1,7 +1,8 @@
 //! OpenBook v1.7 completed taker fills. Order limits remain lots; only the
 //! program's scoped, successful runtime events establish ledger token atoms.
 use common::solana::parse_program_data;
-use substreams_solana::{b58, base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token;
 
 pub const PROGRAM_ID: [u8; 32] = b58!("opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb");
@@ -285,7 +286,7 @@ pub fn decode_fills(tx: &ConfirmedTransaction, index: usize, market: &Market) ->
     let mut stack = Vec::<(String, Option<usize>)>::new();
     let mut summaries = Vec::new();
     let mut closed = false;
-    for (log_index, log) in tx.meta.as_ref()?.log_messages.iter().enumerate() {
+    for (log_index, log) in tx.meta.as_option()?.log_messages.iter().enumerate() {
         let words: Vec<_> = log.split_whitespace().collect();
         if words.first() == Some(&"Program") && words.get(2) == Some(&"invoke") && words.len() == 4 {
             let depth: u32 = words[3].strip_prefix('[')?.strip_suffix(']')?.parse().ok()?;
@@ -431,7 +432,7 @@ mod tests {
             ];
         }
         let mut tx = crate::routed_pool::test_fixture::make_tx(PROGRAM_ID, &a, data);
-        let logs = &mut tx.meta.as_mut().unwrap().log_messages;
+        let logs = &mut tx.meta.as_option_mut().unwrap().log_messages;
         logs.push(format!("Program {} invoke [1]", base58::encode(PROGRAM_ID)));
         for (side, paid, received, fees) in fills {
             let mut event = TOTAL.to_vec();
@@ -456,7 +457,7 @@ mod tests {
                 assert_eq!(fills.len(), 1);
                 assert_eq!((fills[0].input_amount, fills[0].output_amount), (paid, received));
                 assert_eq!(fills[0].input_mint, if side == 0 { m.quote_mint } else { m.base_mint });
-                assert!(tx.meta.as_ref().unwrap().inner_instructions.is_empty());
+                assert!(tx.meta.as_option().unwrap().inner_instructions.is_empty());
                 let missing = crate::process_transaction(tx.clone()).unwrap();
                 assert!(missing.swaps.is_empty());
                 assert_eq!(missing.coverage_candidates.len(), 1);
@@ -474,7 +475,7 @@ mod tests {
                 .unwrap();
                 assert_eq!(normalized.swaps.len(), 1);
                 let swap = &normalized.swaps[0];
-                assert_eq!(swap.protocol, 51);
+                assert_eq!(swap.protocol.to_i32(), 51);
                 assert!(swap.orderbook_fill_verified && !swap.transfer_verified);
                 assert_eq!(swap.source_log_index, Some(1));
                 assert!(swap.source_transfer_index.is_none() && swap.source_event_index.is_none());
@@ -502,7 +503,7 @@ mod tests {
             assert_eq!(fills.len(), 3);
             assert_eq!(fills.iter().map(|x| x.log_index).collect::<Vec<_>>(), vec![1, 2, 3]);
             let mut malformed = tx.clone();
-            malformed.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[9..13].copy_from_slice(&u32::MAX.to_le_bytes());
+            malformed.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[9..13].copy_from_slice(&u32::MAX.to_le_bytes());
             assert!(decode_fills(&malformed, 0, &m).is_none());
         }
     }
@@ -544,7 +545,7 @@ mod tests {
         use substreams_solana::pb::sf::solana::r#type::v1::{InnerInstruction, InnerInstructions};
         let m = market();
         let mut tx = transaction(&m, packet(PLACE, 0), false, &[(0, 601, 200, 1)]);
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let native = message.instructions[0].clone();
         let wrapper_index = message.account_keys.len() as u32;
         message.account_keys.push(vec![90; 32]);
@@ -552,7 +553,7 @@ mod tests {
         message.instructions[0].data.clear();
         let wrapper = base58::encode([90; 32]);
         let program = base58::encode(PROGRAM_ID);
-        let meta = tx.meta.as_mut().unwrap();
+        let meta = tx.meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![InnerInstruction {
@@ -568,23 +569,23 @@ mod tests {
         assert_eq!(decode_fills(&tx, 1, &m).unwrap()[0].log_index, 2);
         // A completed descendant is rolled back when its ancestor fails.
         let mut failed = tx.clone();
-        *failed.meta.as_mut().unwrap().log_messages.last_mut().unwrap() = format!("Program {wrapper} failed: error");
+        *failed.meta.as_option_mut().unwrap().log_messages.last_mut().unwrap() = format!("Program {wrapper} failed: error");
         assert!(decode_fills(&failed, 1, &m).is_none());
         let mut truncated = tx.clone();
-        truncated.meta.as_mut().unwrap().log_messages.pop();
+        truncated.meta.as_option_mut().unwrap().log_messages.pop();
         assert!(decode_fills(&truncated, 1, &m).is_none());
         // Truncation of a later independent call cannot invalidate this fill.
         let mut later = tx.clone();
-        let message = later.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = later.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         message.instructions.push(message.instructions[0].clone());
-        later.meta.as_mut().unwrap().log_messages.push(format!("Program {wrapper} invoke [1]"));
+        later.meta.as_option_mut().unwrap().log_messages.push(format!("Program {wrapper} invoke [1]"));
         assert_eq!(decode_fills(&later, 1, &m).unwrap().len(), 1);
         // A child can print identical event bytes, but it is not OpenBook.
         let mut foreign = tx;
-        let message = foreign.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = foreign.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let foreign_index = message.account_keys.len() as u32;
         message.account_keys.push(vec![91; 32]);
-        let meta = foreign.meta.as_mut().unwrap();
+        let meta = foreign.meta.as_option_mut().unwrap();
         meta.inner_instructions[0].instructions.push(InnerInstruction {
             program_id_index: foreign_index,
             stack_height: Some(3),
@@ -604,30 +605,30 @@ mod tests {
             let mut wrong = tx.clone();
             match variant {
                 0 => {
-                    wrong.meta.as_mut().unwrap().log_messages.pop();
+                    wrong.meta.as_option_mut().unwrap().log_messages.pop();
                 }
                 1 => {
-                    *wrong.meta.as_mut().unwrap().log_messages.last_mut().unwrap() =
+                    *wrong.meta.as_option_mut().unwrap().log_messages.last_mut().unwrap() =
                         format!("Program {} failed: custom program error", base58::encode(PROGRAM_ID));
                 }
                 2 => {
-                    wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].accounts[4] = 2;
+                    wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].accounts[4] = 2;
                 }
                 3 => {
-                    wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0);
+                    wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.push(0);
                 }
                 4 => {
-                    wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[41] = 2;
+                    wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[41] = 2;
                 }
                 5 => {
-                    wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[51] = 0;
+                    wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[51] = 0;
                 }
                 6 => {
-                    let logs = &mut wrong.meta.as_mut().unwrap().log_messages;
+                    let logs = &mut wrong.meta.as_option_mut().unwrap().log_messages;
                     logs[1].push_str("AA==");
                 }
                 _ => {
-                    wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data[17..25].copy_from_slice(&1i64.to_le_bytes());
+                    wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data[17..25].copy_from_slice(&1i64.to_le_bytes());
                 }
             }
             assert!(decode_fills(&wrong, 0, &m).is_none(), "variant {variant}");

@@ -5,7 +5,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token_2022;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("Tri3NG4HkZ6DddYPKoX2ehgkqFtDuej9Aspw5BmvSo4");
@@ -117,7 +118,7 @@ mod tests {
             assert_eq!(swaps.len(), 1, "{} index {index}", f[0]);
             let s = swaps[0];
             assert!(s.transfer_verified);
-            assert_eq!(s.protocol, Protocol::Triangle as i32);
+            assert_eq!(s.protocol, Protocol::Triangle);
             assert_eq!(base58::encode(&s.amm_pool), f[2]);
             assert_eq!(base58::encode(&s.user), f[3]);
             assert_eq!(base58::encode(&s.input_mint), f[4]);
@@ -131,7 +132,7 @@ mod tests {
             if !shapes.insert((native_data[2], native_data[3], conversion)) { continue; }
             for mode in 0..if conversion { 38 } else { 28 } {
                 let mut wrong = tx.clone();
-                let meta = wrong.meta.as_mut().unwrap();
+                let meta = wrong.meta.as_option_mut().unwrap();
                 let (g, p) = meta.inner_instructions.iter().enumerate().find_map(|(g, group)|
                     group.instructions.iter().position(|ix| ix.data == native_data).map(|p| (g, p))).unwrap();
                 let calls = &mut meta.inner_instructions[g].instructions;
@@ -162,7 +163,7 @@ mod tests {
                     21 => calls[last].data[1..9].fill(0),
                     22 => calls[last].stack_height = Some(99),
                     23 => { let extra = calls[p + 1].clone(); calls.insert(last + 1, extra); }
-                    24 => meta.err = Some(Default::default()),
+                    24 => meta.err = buffa::MessageField::some(Default::default()),
                     25 => {
                         let success = meta.log_messages.iter_mut().find(|log| **log == format!("Program {} success", base58::encode(PROGRAM_ID))).unwrap();
                         *success = format!("Program {} failed: custom program error: 1", base58::encode(PROGRAM_ID));
@@ -171,7 +172,7 @@ mod tests {
                     27 => {
                         let destination = a[if native_data[3] == 1 { 2 } else { 3 }] as u32;
                         if let Some(balance) = meta.post_token_balances.iter_mut().find(|b| b.account_index == destination) {
-                            let amount = balance.ui_token_amount.as_mut().unwrap();
+                            let amount = balance.ui_token_amount.as_option_mut().unwrap();
                             amount.amount = (amount.amount.parse::<u64>().unwrap() + 1).to_string();
                         } else {
                             meta.pre_token_balances.clear();
@@ -196,7 +197,7 @@ mod tests {
                 // The deployed handler accepts these priority selectors. They
                 // choose execution policy, never the settled financial atoms.
                 let mut changed = tx.clone();
-                for group in &mut changed.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut changed.meta.as_option_mut().unwrap().inner_instructions {
                     for ix in &mut group.instructions {
                         if ix.data == native_data { ix.data[12] = priority; }
                     }

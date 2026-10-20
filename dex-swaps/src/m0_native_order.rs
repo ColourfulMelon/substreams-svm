@@ -3,7 +3,8 @@
 use crate::{native_venues::Layout,token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58,block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{block_view::InstructionView,pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token,token_2022};
 pub(crate) const PROGRAM_ID:[u8;32]=b58!("MzLoYnJ6sF6eeejs4vV95TNmXqS3W4cAtLGKkjT4ZrK");
 const FILL:[u8;8]=[219,161,238,151,122,148,159,211];
@@ -44,7 +45,7 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
  }
  let e=calls[2].data();if e[48..80]!=a[0].0[..]||u128::from_le_bytes(e[80..96].try_into().ok()?)!=u128::from(l.minimum_output)
   ||u128::from_le_bytes(e[96..112].try_into().ok()?)!=u128::from(l.amount){return None;}
- let meta=tx.meta.as_ref()?;if meta.err.is_some(){return None;}let keys=tx.resolved_accounts();let walk:Vec<_>=tx.walk_instructions().collect();
+ let meta=tx.meta.as_option()?;if meta.err.is_set(){return None;}let keys=tx.resolved_accounts();let walk:Vec<_>=tx.walk_instructions().collect();
  for(role,mint,owner,prog)in[(3,2,0,6),(5,2,4,6),(12,10,9,13),(11,10,0,13)]{
   let key=a[role].0;let pos=keys.iter().position(|k|*k==key)?;let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==pos)?;
   let after=meta.post_token_balances.iter().find(|b|b.account_index as usize==pos);
@@ -65,9 +66,9 @@ pub(crate) fn settlement(source:u32,tx:&ConfirmedTransaction,ix:&InstructionView
     ||checked&&ca[1].0!=a[mint].0{return None;}
    let amount=i128::from(u64::from_le_bytes(b[1..9].try_into().ok()?));if from==key{change=change.checked_sub(amount)?;}if to==key{change=change.checked_add(amount)?;}
   }
-  let post=if let Some(after)=after{if closed{return None;}after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?}
+  let post=if let Some(after)=after{if closed{return None;}after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?}
    else{if !closed||*meta.post_balances.get(pos)?!=0{return None;}0};
-  if i128::from(post)-i128::from(before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)!=change{return None;}
+  if i128::from(post)-i128::from(before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)!=change{return None;}
  }
  Some((l.amount,l.minimum_output))
 }
@@ -80,14 +81,14 @@ mod tests{
   let tx=substreams::proto::decode::<ConfirmedTransaction>(&bytes.to_vec()).unwrap();
   let decode=|tx|crate::process_transaction(tx).unwrap().swaps.into_iter().filter(|s|s.source_index==Some(0)).collect::<Vec<_>>();
   let original=decode(tx.clone());assert_eq!(original.len(),1);let swap=&original[0];
-  assert_eq!(swap.protocol,Protocol::M0NativeOrder as i32);assert!(swap.transfer_verified);
+  assert_eq!(swap.protocol,Protocol::M0NativeOrder);assert!(swap.transfer_verified);
   assert_eq!(swap.source_transfer_index,Some(1));assert_eq!((swap.input_amount,swap.output_amount),(22_400_000,22_400_000));
   for(value,expected)in[(&swap.amm_pool,"7HQEka4bqKR9egKZnd26nLPQPButjCGAPXDNomcJojya"),(&swap.user,"8mZpjtSkD1FnkvHcue21hb4HB7oGTwK3vD2ntP1D5Z95"),
    (&swap.input_mint,"dawn7ZUF7h7anFuEsDdAU1Y3HYwikwqNMAENZsQJdNL"),(&swap.output_mint,"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")]{assert_eq!(substreams_solana::base58::encode(value),expected);}
   for mode in 0..27{
    let mut wrong=tx.clone();
    if mode<16{
-    let ix=&mut wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0];
+    let ix=&mut wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0];
     match mode{
      0=>ix.data[0]^=1,1=>ix.data[40]=2,2=>ix.data[82]^=1,3=>ix.data[266]^=1,
      4=>ix.data[170]^=1,5=>ix.data[186]^=1,6=>ix.data[234]^=1,7=>ix.data[274]^=1,
@@ -96,7 +97,7 @@ mod tests{
      14=>{ix.data.pop();},_=>ix.accounts.swap(4,0),
     }
    }else if mode<=22{
-    let inner=&mut wrong.meta.as_mut().unwrap().inner_instructions;
+    let inner=&mut wrong.meta.as_option_mut().unwrap().inner_instructions;
     let group=inner.iter_mut().find(|g|g.index==0).unwrap();
     match mode{
      16=>group.instructions[0].data[1]^=1,17=>group.instructions[1].data[1]^=1,
@@ -104,15 +105,15 @@ mod tests{
      20=>group.instructions[3].data[16]^=1,21=>group.instructions[0].accounts.swap(0,2),
      _=>group.instructions[2].accounts[0]=group.instructions[0].accounts[0],
     }
-   }else if mode==23{wrong.meta.as_mut().unwrap().log_messages.clear();}
-   else if mode==24{wrong.meta.as_mut().unwrap().post_token_balances[0].ui_token_amount.as_mut().unwrap().amount="1".into();}
-   else if mode==25{wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[1].data[8]^=1;}
-   else{let meta=wrong.meta.as_mut().unwrap();let keys=tx.resolved_accounts();let pos=keys.iter().position(|k|substreams_solana::base58::encode(k)=="HSxJu1BBWJtQMA7maAb5eB7EFaXZ2fPDZULc6RL8yhkW").unwrap();meta.post_balances[pos]=1;}
+   }else if mode==23{wrong.meta.as_option_mut().unwrap().log_messages.clear();}
+   else if mode==24{wrong.meta.as_option_mut().unwrap().post_token_balances[0].ui_token_amount.as_option_mut().unwrap().amount="1".into();}
+   else if mode==25{wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[1].data[8]^=1;}
+   else{let meta=wrong.meta.as_option_mut().unwrap();let keys=tx.resolved_accounts();let pos=keys.iter().position(|k|substreams_solana::base58::encode(k)=="HSxJu1BBWJtQMA7maAb5eB7EFaXZ2fPDZULc6RL8yhkW").unwrap();meta.post_balances[pos]=1;}
    assert!(decode(wrong.clone()).is_empty(),"malformed native order {mode}");
-   let mints=TokenMintLookup::new(&wrong,wrong.meta.as_ref().unwrap());let mut routed=swap.clone();routed.protocol=5;routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();let mut rows=vec![routed];
+   let mints=TokenMintLookup::new(&wrong,wrong.meta.as_option().unwrap());let mut routed=swap.clone();routed.protocol=5.into();routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();let mut rows=vec![routed];
    crate::quality::verify_and_deduplicate(&wrong,&mints,&mut rows,false);assert!(rows.is_empty(),"malformed routed order {mode}");
   }
-  let lookup=TokenMintLookup::new(&tx,tx.meta.as_ref().unwrap());let mut routed=swap.clone();routed.protocol=5;routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();let mut rows=vec![routed];
+  let lookup=TokenMintLookup::new(&tx,tx.meta.as_option().unwrap());let mut routed=swap.clone();routed.protocol=5.into();routed.program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();let mut rows=vec![routed];
   crate::quality::verify_and_deduplicate(&tx,&lookup,&mut rows,false);let mut expected=original;expected[0].program_id=substreams_solana_idls::jupiter::v6::PROGRAM_ID.to_vec();assert_eq!(rows,expected);
  }
 }

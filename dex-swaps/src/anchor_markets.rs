@@ -4,7 +4,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::{token, token_2022};
 
 pub(crate) const GHOSTY: [u8;32] = b58!("ghosty4ZU1Qk1HN7Ymz4pZ15QfspzJZgSYFkdKN6ZLK");
@@ -39,7 +40,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
     let ghost=l.protocol==Protocol::Ghosty;
     let mint_roles=if ghost{[2,3]}else if ix.data()[24]==1{[7,6]}else{[6,7]};
     let program_roles=if ghost{[14,15]}else if ix.data()[24]==1{[9,8]}else{[8,9]};
-    let Some(meta)=tx.meta.as_ref()else{return false;};let resolved=tx.resolved_accounts();
+    let Some(meta)=tx.meta.as_option()else{return false;};let resolved=tx.resolved_accounts();
     for(n,c)in calls.iter().enumerate(){
         let ca=c.accounts();let cd=c.data();let mint=mint_roles[n];
         let (from,to,authority)=if n==0{(l.users[0],l.vaults[0],l.authority)}else{(l.vaults[1],l.users[1],l.pool)};
@@ -53,7 +54,7 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
             .filter(|b|b.account_index as usize==vault).collect();
         if snapshots.is_empty() || snapshots.iter().any(|b|b.mint!=base58::encode(a[mint].0)
             || b.owner!=base58::encode(a[l.pool].0) || b.program_id!=base58::encode(a[program_roles[n]].0)
-            || b.ui_token_amount.as_ref().is_none_or(|v|v.decimals!=u32::from(cd[9]))){return false;}
+            || b.ui_token_amount.as_option().is_none_or(|v|v.decimals!=u32::from(cd[9]))){return false;}
         let amount=u64::from_le_bytes(cd[1..9].try_into().unwrap());
         if amount==0 || n==0&&amount!=l.amount || n==1&&amount<l.minimum_output{return false;}
     }
@@ -79,12 +80,12 @@ mod tests {
                 let output_index=tx.walk_instructions().enumerate().skip(source as usize+1).find(|(_,c)|c.data().first()==Some(&12) && c.accounts().len()>=4 && c.accounts()[0].0==native.accounts()[l.vaults[1]].0 && c.accounts()[2].0==native.accounts()[l.users[1]].0).unwrap().0 as u32;
                 let minimum_offset=match l.protocol{Protocol::DrFraudsworth=>17,Protocol::SanctumInfinity=>11,_=>16};
                 let amount_offset=if l.protocol==Protocol::SanctumInfinity{19}else{8};
-                if mode==9 {let position=changed.resolved_accounts().iter().position(|k|**k==vault).unwrap();changed.meta.as_mut().unwrap().post_token_balances.retain(|b|b.account_index as usize!=position);}
-                if mode==10 {changed.meta.as_mut().unwrap().log_messages.retain(|l|l!=&format!("Program {} success",base58::encode(native.program_id().0)));}
-                if mode==11 {let index=changed.resolved_accounts().iter().position(|k|**k==vault).unwrap();for b in changed.meta.as_mut().unwrap().pre_token_balances.iter_mut(){if b.account_index as usize==index {b.owner=base58::encode(native.accounts()[l.authority].0);}}}
+                if mode==9 {let position=changed.resolved_accounts().iter().position(|k|**k==vault).unwrap();changed.meta.as_option_mut().unwrap().post_token_balances.retain(|b|b.account_index as usize!=position);}
+                if mode==10 {changed.meta.as_option_mut().unwrap().log_messages.retain(|l|l!=&format!("Program {} success",base58::encode(native.program_id().0)));}
+                if mode==11 {let index=changed.resolved_accounts().iter().position(|k|**k==vault).unwrap();for b in changed.meta.as_option_mut().unwrap().pre_token_balances.iter_mut(){if b.account_index as usize==index {b.owner=base58::encode(native.accounts()[l.authority].0);}}}
                 let mut index=0u32;
-                let meta=changed.meta.as_mut().unwrap();
-                for(root,ix)in changed.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate(){
+                let meta=changed.meta.as_option_mut().unwrap();
+                for(root,ix)in changed.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().enumerate(){
                     if index==source {alter(&mut ix.data,&mut ix.accounts,mode,false,f[8],minimum_offset,amount_offset);}index+=1;
                     if let Some(group)=meta.inner_instructions.iter_mut().find(|g|g.index==root as u32){for child in &mut group.instructions{
                         if index==source||index==output_index {alter(&mut child.data,&mut child.accounts,mode,index==output_index,f[8],minimum_offset,amount_offset);}index+=1;
@@ -97,7 +98,7 @@ mod tests {
                 });
                 let rows:Vec<_>=result.as_ref().map_or(Vec::new(),|t|t.swaps.iter().filter(|s|s.source_index==Some(source)).collect());
                 if mode==0 {
-                    assert_eq!(rows.len(),1,"{}",f[0]);let s=rows[0];assert_eq!(s.protocol,f[2].parse::<i32>().unwrap());
+                    assert_eq!(rows.len(),1,"{}",f[0]);let s=rows[0];assert_eq!(s.protocol.to_i32(),f[2].parse::<i32>().unwrap());
                     assert_eq!(base58::encode(&s.amm_pool),f[3]);assert_eq!(base58::encode(&s.user),f[4]);
                     assert_eq!(base58::encode(&s.input_mint),f[5]);assert_eq!(s.input_amount,f[6].parse::<u64>().unwrap());
                     assert_eq!(base58::encode(&s.output_mint),f[7]);assert_eq!(s.output_amount,f[8].parse::<u64>().unwrap());assert!(s.transfer_verified);

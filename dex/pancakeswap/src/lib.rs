@@ -15,7 +15,7 @@ fn map_events(block: Block) -> Result<pb::Events, Error> {
 }
 
 fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
-    let tx_meta = tx.meta.as_ref()?;
+    let tx_meta = tx.meta.as_option()?;
 
     let instructions: Vec<pb::Instruction> = tx.walk_instructions().filter_map(|iview| process_instruction(&iview)).collect();
     let logs = process_logs(tx_meta, &pancakeswap::PROGRAM_ID.to_vec());
@@ -26,7 +26,7 @@ fn process_transaction(tx: ConfirmedTransaction) -> Option<pb::Transaction> {
 
     Some(pb::Transaction {
         fee: tx_meta.fee,
-        compute_units_consumed: tx_meta.compute_units_consumed(),
+        compute_units_consumed: tx_meta.compute_units_consumed.unwrap_or_default(),
         signature: tx.hash().to_vec(),
         fee_payer: get_fee_payer(&tx).unwrap_or_default(),
         signers: get_signers(&tx).unwrap_or_default(),
@@ -48,24 +48,28 @@ fn process_instruction(ix: &InstructionView) -> Option<pb::Instruction> {
             Some(pb::Instruction {
                 program_id: program_id.to_vec(),
                 stack_height: ix.stack_height(),
-                instruction: Some(pb::instruction::Instruction::Swap(pb::SwapInstruction {
-                    accounts: Some(pb::SwapAccounts {
-                        payer: accounts.payer.to_bytes().to_vec(),
-                        amm_config: accounts.amm_config.to_bytes().to_vec(),
-                        pool_state: accounts.pool_state.to_bytes().to_vec(),
-                        input_token_account: accounts.input_token_account.to_bytes().to_vec(),
-                        output_token_account: accounts.output_token_account.to_bytes().to_vec(),
-                        input_vault: accounts.input_vault.to_bytes().to_vec(),
-                        output_vault: accounts.output_vault.to_bytes().to_vec(),
-                        observation_state: accounts.observation_state.to_bytes().to_vec(),
-                        token_program: accounts.token_program.to_bytes().to_vec(),
-                        tick_array: accounts.tick_array.to_bytes().to_vec(),
-                    }),
-                    amount: event.amount,
-                    other_amount_threshold: event.other_amount_threshold,
-                    sqrt_price_limit_x64: event.sqrt_price_limit_x64.to_string(),
-                    is_base_input: event.is_base_input,
-                })),
+                instruction: Some(pb::instruction::Instruction::Swap(
+                    pb::SwapInstruction {
+                        accounts: Some(pb::SwapAccounts {
+                            payer: accounts.payer.to_bytes().to_vec(),
+                            amm_config: accounts.amm_config.to_bytes().to_vec(),
+                            pool_state: accounts.pool_state.to_bytes().to_vec(),
+                            input_token_account: accounts.input_token_account.to_bytes().to_vec(),
+                            output_token_account: accounts.output_token_account.to_bytes().to_vec(),
+                            input_vault: accounts.input_vault.to_bytes().to_vec(),
+                            output_vault: accounts.output_vault.to_bytes().to_vec(),
+                            observation_state: accounts.observation_state.to_bytes().to_vec(),
+                            token_program: accounts.token_program.to_bytes().to_vec(),
+                            tick_array: accounts.tick_array.to_bytes().to_vec(),
+                        })
+                        .into(),
+                        amount: event.amount,
+                        other_amount_threshold: event.other_amount_threshold,
+                        sqrt_price_limit_x64: event.sqrt_price_limit_x64.to_string(),
+                        is_base_input: event.is_base_input,
+                    }
+                    .into(),
+                )),
             })
         }
         _ => None,
@@ -104,20 +108,23 @@ fn parse_log_data(log_message: &str, program_id_bytes: &[u8], invoke_depth: u32)
         Ok(pancakeswap::events::PancakeSwapEvent::Swap(event)) => Some(pb::Log {
             program_id: program_id_bytes.to_vec(),
             invoke_depth,
-            log: Some(pb::log::Log::Swap(pb::SwapEvent {
-                pool_state: event.pool_state.to_bytes().to_vec(),
-                sender: event.sender.to_bytes().to_vec(),
-                token_account_0: event.token_account_0.to_bytes().to_vec(),
-                token_account_1: event.token_account_1.to_bytes().to_vec(),
-                amount_0: event.amount_0,
-                transfer_fee_0: event.transfer_fee_0,
-                amount_1: event.amount_1,
-                transfer_fee_1: event.transfer_fee_1,
-                zero_for_one: event.zero_for_one,
-                sqrt_price_x64: event.sqrt_price_x64.to_string(),
-                liquidity: event.liquidity.to_string(),
-                tick: event.tick,
-            })),
+            log: Some(pb::log::Log::Swap(
+                pb::SwapEvent {
+                    pool_state: event.pool_state.to_bytes().to_vec(),
+                    sender: event.sender.to_bytes().to_vec(),
+                    token_account_0: event.token_account_0.to_bytes().to_vec(),
+                    token_account_1: event.token_account_1.to_bytes().to_vec(),
+                    amount_0: event.amount_0,
+                    transfer_fee_0: event.transfer_fee_0,
+                    amount_1: event.amount_1,
+                    transfer_fee_1: event.transfer_fee_1,
+                    zero_for_one: event.zero_for_one,
+                    sqrt_price_x64: event.sqrt_price_x64.to_string(),
+                    liquidity: event.liquidity.to_string(),
+                    tick: event.tick,
+                }
+                .into(),
+            )),
         }),
         _ => None,
     }

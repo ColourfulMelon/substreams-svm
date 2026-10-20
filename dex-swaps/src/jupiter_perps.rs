@@ -2,7 +2,8 @@
 //! Position changes are excluded. Token-ledger input is the actual committed debit.
 use crate::native_venues::Layout;
 use proto::pb::dex::swaps::v1::Protocol;
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 use std::collections::HashSet;
 pub(crate) const PROGRAM_ID: [u8;32] = b58!("PERPHjGBqRHArX4DySjwM6UJHiR3sWAatqfdBS2qQJu");
 const TRANSFER_AUTHORITY: [u8;32] = b58!("AVzP2GeRmqGphJsMxWoqjpUifPpCret7LqWhD8NWQK49");
@@ -67,19 +68,19 @@ mod tests{
    let expected=(f[5].parse::<u64>().unwrap(),f[7].parse::<u64>().unwrap());
    assert_eq!(settlement(source,ix,&walk[source as usize+1..source as usize+4],&crate::logs::successful_invocations(&tx)),Some(expected));
    let decoded=crate::process_transaction(tx.clone()).unwrap();let swaps:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)).collect();
-   assert_eq!(swaps.len(),1,"{}",f[0]);let s=swaps[0];assert_eq!(s.protocol,Protocol::JupiterPerps as i32);assert!(s.transfer_verified);
+   assert_eq!(swaps.len(),1,"{}",f[0]);let s=swaps[0];assert_eq!(s.protocol,Protocol::JupiterPerps);assert!(s.transfer_verified);
    assert_eq!((s.input_amount,s.output_amount),expected);assert_eq!(base58::encode(&s.amm_pool),f[2]);assert_eq!(base58::encode(&s.user),f[3]);assert_eq!(base58::encode(&s.input_mint),f[4]);assert_eq!(base58::encode(&s.output_mint),f[6]);assert_eq!(s.source_transfer_index,Some(f[8].parse::<u32>().unwrap()));
    if !shapes.insert((native[..8].to_vec(),f[4].to_owned())){continue;}
    let input=walk[source as usize+1].data().clone();let output=walk[source as usize+2].data().clone();let event=walk[source as usize+3].data().clone();
    for mode in 0..30{
     let mut wrong=tx.clone();
-    if mode<12{let n=wrong.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().find(|x|x.data==native).unwrap();let a=n.accounts.clone();
+    if mode<12{let n=wrong.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().find(|x|x.data==native).unwrap();let a=n.accounts.clone();
      match mode{0=>n.data[0]^=1,1=>n.data.push(0),2=>{n.data.pop();},3=>{if n.data.len()==16{n.data[8..16].copy_from_slice(&(expected.1+1).to_le_bytes());}else{n.data[8]^=1;}},4=>n.accounts[3]=a[0],5=>n.accounts[5]=a[0],6=>n.accounts[6]=a[9],7=>n.accounts[8]=a[11],8=>n.accounts[9]=a[6],9=>n.accounts[11]=a[8],10=>n.accounts[a.len()-2]=a[0],_=>n.accounts[a.len()-1]=a[0]}
-    }else if mode<27{let target=if mode<17{&input}else if mode<22{&output}else{&event};let n=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|x|x.data==event)).unwrap().instructions.iter_mut().find(|x|x.data==*target).unwrap();
+    }else if mode<27{let target=if mode<17{&input}else if mode<22{&output}else{&event};let n=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|x|x.data==event)).unwrap().instructions.iter_mut().find(|x|x.data==*target).unwrap();
      match mode{12|17=>n.data[1]^=1,13|18=>n.accounts[0]=n.accounts[1],14|19=>n.accounts[1]=n.accounts[0],15|20=>n.accounts[2]=n.accounts[0],16|21=>n.stack_height=Some(99),22=>n.data[80]^=1,23=>n.data[112]^=1,24=>n.data[136]^=1,25=>n.data[152]^=1,_=>n.data[184]^=1}
-    }else if mode==27{wrong.meta.as_mut().unwrap().err=Some(Default::default());}
-    else if mode==28{wrong.meta.as_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: test",base58::encode(PROGRAM_ID)));}
-    else{wrong.meta.as_mut().unwrap().log_messages.clear();}
+    }else if mode==27{wrong.meta.as_option_mut().unwrap().err=buffa::MessageField::some(Default::default());}
+    else if mode==28{wrong.meta.as_option_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: test",base58::encode(PROGRAM_ID)));}
+    else{wrong.meta.as_option_mut().unwrap().log_messages.clear();}
     assert!(crate::process_transaction(wrong).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source))),"shape {:?} rejected mode{mode}",&native[..8]);
    }
   }

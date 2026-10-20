@@ -2,7 +2,8 @@
 //! committed, instruction-scoped FillLog supplies the actual ledger amounts.
 use common::solana::parse_program_data;
 use proto::pb::dex::swaps::v1 as pb;
-use substreams_solana::{b58, base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms");
 const FILL: [u8; 8] = [58, 230, 242, 3, 75, 113, 4, 169];
@@ -68,7 +69,7 @@ pub(crate) fn decode_fills(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
     let mut cursor = 0;
     let mut stack = Vec::<(String, usize)>::new();
     let mut fills = Vec::new();
-    for (log_index, log) in tx.meta.as_ref().into_iter().flat_map(|meta| &meta.log_messages).enumerate() {
+    for (log_index, log) in tx.meta.as_option().into_iter().flat_map(|meta| &meta.log_messages).enumerate() {
         let words: Vec<_> = log.split_whitespace().collect();
         if words.first() == Some(&"Program") && words.get(2) == Some(&"invoke") && words.len() == 4 {
             let Some(depth) = words[3].strip_prefix('[').and_then(|x| x.strip_suffix(']')).and_then(|x| x.parse::<u32>().ok()) else {
@@ -133,7 +134,7 @@ pub(crate) fn decode_fills(tx: &ConfirmedTransaction) -> Vec<pb::Swap> {
                 (&data[104..136], base, &data[136..168], quote)
             };
             fills.push(pb::Swap {
-                protocol: pb::Protocol::Manifest as i32,
+                protocol: pb::Protocol::Manifest.into(),
                 program_id: PROGRAM_ID.to_vec(),
                 amm: PROGRAM_ID.to_vec(),
                 amm_pool: data[8..40].to_vec(),
@@ -193,7 +194,7 @@ mod tests {
     fn ledger_fills_keep_exact_taker_amounts_direction_and_runtime_identity() {
         let mut tx = make_tx(PROGRAM_ID, &[[1; 32], [9; 32], [0; 32]], batch(&[0, 1]));
         let program = base58::encode(PROGRAM_ID);
-        tx.meta.as_mut().unwrap().log_messages = vec![
+        tx.meta.as_option_mut().unwrap().log_messages = vec![
             format!("Program {program} invoke [1]"),
             format!("Program data: {}", STANDARD.encode(fill(false, 13))),
             format!("Program data: {}", STANDARD.encode(fill(true, 14))),
@@ -214,14 +215,14 @@ mod tests {
         let mut unrelated_incomplete_trace = tx.clone();
         unrelated_incomplete_trace
             .meta
-            .as_mut()
+            .as_option_mut()
             .unwrap()
             .log_messages
             .push("Program 11111111111111111111111111111111 invoke [2]".into());
         assert_eq!(decode_fills(&unrelated_incomplete_trace), decoded.swaps);
         for mode in 0..10 {
             let mut altered = tx.clone();
-            let logs = &mut altered.meta.as_mut().unwrap().log_messages;
+            let logs = &mut altered.meta.as_option_mut().unwrap().log_messages;
             let mut data = fill(false, 13);
             match mode {
                 0 => {
@@ -247,7 +248,7 @@ mod tests {
             }
             assert!(decode_fills(&altered).is_empty(), "mode {mode}");
         }
-        tx.meta.as_mut().unwrap().log_messages = vec![format!("Program {program} invoke [1]"), format!("Program {program} success")];
+        tx.meta.as_option_mut().unwrap().log_messages = vec![format!("Program {program} invoke [1]"), format!("Program {program} success")];
         let decoded = crate::process_transaction(tx).unwrap();
         assert!(decoded.swaps.is_empty());
         assert_eq!(decoded.coverage_candidates[0].reason, "orderbook_swap_requires_fill_accounting");
@@ -258,8 +259,8 @@ mod tests {
         let mut tx = make_tx(PROGRAM_ID, &[[1; 32], [9; 32], [0; 32]], batch(&[0]));
         let program = base58::encode(PROGRAM_ID);
         let child = base58::encode([7; 32]);
-        tx.transaction.as_mut().unwrap().message.as_mut().unwrap().account_keys.push(vec![7; 32]);
-        tx.meta.as_mut().unwrap().inner_instructions = vec![InnerInstructions {
+        tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().account_keys.push(vec![7; 32]);
+        tx.meta.as_option_mut().unwrap().inner_instructions = vec![InnerInstructions {
             index: 0,
             instructions: vec![InnerInstruction {
                 program_id_index: 5,
@@ -268,7 +269,7 @@ mod tests {
                 stack_height: Some(2),
             }],
         }];
-        tx.meta.as_mut().unwrap().log_messages = vec![
+        tx.meta.as_option_mut().unwrap().log_messages = vec![
             format!("Program {program} invoke [1]"),
             format!("Program {child} invoke [2]"),
             format!("Program data: {}", STANDARD.encode(fill(false, 13))),
@@ -277,11 +278,11 @@ mod tests {
         ];
         assert!(decode_fills(&tx).is_empty());
         let outer = base58::encode([8; 32]);
-        let message = tx.transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         message.account_keys.push(vec![8; 32]);
         message.instructions[0].program_id_index = 6;
         message.instructions[0].data.clear();
-        tx.meta.as_mut().unwrap().inner_instructions[0].instructions = vec![
+        tx.meta.as_option_mut().unwrap().inner_instructions[0].instructions = vec![
             InnerInstruction {
                 program_id_index: 5,
                 accounts: vec![],
@@ -295,7 +296,7 @@ mod tests {
                 stack_height: Some(3),
             },
         ];
-        tx.meta.as_mut().unwrap().log_messages = vec![
+        tx.meta.as_option_mut().unwrap().log_messages = vec![
             format!("Program {outer} invoke [1]"),
             format!("Program {child} invoke [2]"),
             format!("Program {program} invoke [3]"),
@@ -305,7 +306,7 @@ mod tests {
             format!("Program {outer} success"),
         ];
         assert!(decode_fills(&tx).is_empty());
-        tx.meta.as_mut().unwrap().log_messages[5] = format!("Program {child} success");
+        tx.meta.as_option_mut().unwrap().log_messages[5] = format!("Program {child} success");
         assert_eq!(decode_fills(&tx).len(), 1);
     }
 

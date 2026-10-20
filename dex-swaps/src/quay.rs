@@ -5,7 +5,8 @@
 use crate::{native_venues::Layout, token_mints::TokenMintLookup};
 use proto::pb::dex::swaps::v1::Protocol;
 use std::collections::HashSet;
-use substreams_solana::{b58, base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana::{base58, block_view::InstructionView, pb::sf::solana::r#type::v1::ConfirmedTransaction};
+use substreams_solana_macro::b58;
 use substreams_solana_idls::spl::token;
 
 pub(crate) const PROGRAM_ID: [u8;32] = b58!("QUayE6nexQWYNZAEqfN8FxoNwQDSu3CAzT2qq9J1ArG");
@@ -43,13 +44,13 @@ pub(crate) fn settlement(tx:&ConfirmedTransaction,source:u32,ix:&InstructionView
         // Physical vault snapshots independently bind mint, Token program,
         // vault authority and checked decimals to the principal receipt.
         let resolved=tx.resolved_accounts();
-        let Some(meta)=tx.meta.as_ref() else {return false;};
+        let Some(meta)=tx.meta.as_option() else {return false;};
         let Some(vault)=resolved.iter().position(|key| *key==a[if n==0 {l.vaults[0]} else {l.vaults[1]}].0) else {return false;};
         let snapshots:Vec<_>=meta.pre_token_balances.iter().chain(&meta.post_token_balances)
             .filter(|b| b.account_index as usize==vault).collect();
         if snapshots.is_empty() || snapshots.iter().any(|b| b.mint!=base58::encode(a[mint].0)
             || b.owner!=base58::encode(a[2].0) || b.program_id!=base58::encode(token::PROGRAM_ID)
-            || b.ui_token_amount.as_ref().is_none_or(|v|v.decimals!=u32::from(cd[9])))
+            || b.ui_token_amount.as_option().is_none_or(|v|v.decimals!=u32::from(cd[9])))
         {return false;}
         let amount=u64::from_le_bytes(cd[1..9].try_into().unwrap());
         if amount==0 || n==0 && amount!=l.amount || n==1 && amount<l.minimum_output {return false;}
@@ -77,7 +78,7 @@ mod tests {
             let input=f[2].parse::<u64>().unwrap();let output=f[3].parse::<u64>().unwrap();
             let mut matched=0;
             for swap in crate::process_transaction(tx.clone()).unwrap().swaps.iter().filter(|s|s.source_index==Some(source)) {
-                assert_eq!(swap.protocol,Protocol::Quay as i32);
+                assert_eq!(swap.protocol,Protocol::Quay);
                 assert_eq!((swap.input_amount,swap.output_amount),(input,output));
                 assert_eq!(base58::encode(&swap.amm_pool),f[4]);assert_eq!(base58::encode(&swap.user),f[5]);
                 assert_eq!(base58::encode(&swap.input_mint),f[6]);assert_eq!(base58::encode(&swap.output_mint),f[7]);
@@ -102,8 +103,8 @@ mod tests {
             for mode in 0..31 {
                 let mut tx=original.clone();
                 for (target,position) in [(source,0),(source+1,1),(source+2,2)] {
-                    let mut index=0u32;let groups=&mut tx.meta.as_mut().unwrap().inner_instructions;
-                    for (root,ix) in tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions.iter_mut().enumerate() {
+                    let mut index=0u32;let groups=&mut tx.meta.as_option_mut().unwrap().inner_instructions;
+                    for (root,ix) in tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions.iter_mut().enumerate() {
                         if index==target { mutate(&mut ix.data,&mut ix.accounts,position,mode,f[2],f[3]); }
                         index+=1;
                         if let Some(group)=groups.iter_mut().find(|g|g.index==root as u32) {
@@ -116,13 +117,13 @@ mod tests {
                 }
                 if mode>=26 && mode<=29 {
                     let vault=tx.resolved_accounts().iter().position(|a|*a==&native_accounts[4]).unwrap();
-                    let meta=tx.meta.as_mut().unwrap();
+                    let meta=tx.meta.as_option_mut().unwrap();
                     for snapshot in meta.pre_token_balances.iter_mut().chain(&mut meta.post_token_balances) {
                         if snapshot.account_index as usize!=vault {continue;}
-                        match mode {26=>snapshot.mint=base58::encode(&native_accounts[10]),27=>snapshot.owner=base58::encode(&native_accounts[8]),28=>snapshot.program_id=base58::encode(PROGRAM_ID),_=>snapshot.ui_token_amount.as_mut().unwrap().decimals+=1,}
+                        match mode {26=>snapshot.mint=base58::encode(&native_accounts[10]),27=>snapshot.owner=base58::encode(&native_accounts[8]),28=>snapshot.program_id=base58::encode(PROGRAM_ID),_=>snapshot.ui_token_amount.as_option_mut().unwrap().decimals+=1,}
                     }
                 }
-                if mode==30 {tx.meta.as_mut().unwrap().log_messages.retain(|l|l!=&format!("Program {} success",base58::encode(PROGRAM_ID)));}
+                if mode==30 {tx.meta.as_option_mut().unwrap().log_messages.retain(|l|l!=&format!("Program {} success",base58::encode(PROGRAM_ID)));}
                 assert!(crate::process_transaction(tx).map_or(true,|t|t.swaps.iter().all(|s|s.source_index!=Some(source))),"direction {} mutation {mode}",native.data()[17]);
             }
         }

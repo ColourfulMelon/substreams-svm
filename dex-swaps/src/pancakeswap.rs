@@ -45,7 +45,7 @@ impl State {
         };
 
         Some(pb::Swap {
-            protocol: pb::Protocol::Pancakeswap as i32,
+            protocol: pb::Protocol::Pancakeswap.into(),
             program_id: pancakeswap::PROGRAM_ID.to_vec(),
             stack_height: instruction.stack_height,
             amm: pancakeswap::PROGRAM_ID.to_vec(),
@@ -168,7 +168,7 @@ pub(crate) fn legacy_settlement(source:u32,tx:&substreams_solana::pb::sf::solana
     let specified=u64::from_le_bytes(ix.data()[8..16].try_into().ok()?);
     if amounts[0]==0 || amounts[1]==0 || amounts[0]>l.amount || amounts[1]<l.minimum_output
         || !l.exact_input&&amounts[1]!=specified || l.exact_input&&ix.data()[24..40].iter().all(|b|*b==0)&&amounts[0]!=specified {return None;}
-    let meta=tx.meta.as_ref()?;let keys=tx.resolved_accounts();
+    let meta=tx.meta.as_option()?;let keys=tx.resolved_accounts();
     for (role,mint) in [(5,&input_mint),(6,&output_mint)] {
         let address=a[role].0;let position=keys.iter().position(|key|*key==address)?;
         let before=meta.pre_token_balances.iter().find(|b|b.account_index as usize==position)?;
@@ -186,7 +186,7 @@ pub(crate) fn legacy_settlement(source:u32,tx:&substreams_solana::pb::sf::solana
             if from!=address&&to!=address || mints.mint_for(from).as_deref()!=Some(mint.as_slice()) || mints.mint_for(to).as_deref()!=Some(mint.as_slice()) || checked&&ca[1].0.as_slice()!=mint.as_slice() {return None;}
             let amount=i128::from(u64::from_le_bytes(d[1..9].try_into().ok()?));if from==address{change-=amount;}if to==address{change+=amount;}
         }
-        if i128::from(after.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_ref()?.amount.parse::<u64>().ok()?)!=change {return None;}
+        if i128::from(after.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)-i128::from(before.ui_token_amount.as_option()?.amount.parse::<u64>().ok()?)!=change {return None;}
     }
     let walk:Vec<_>=tx.walk_instructions().collect();let mut cursor=0;let mut stack=Vec::new();let mut event=None;
     for log in &meta.log_messages {
@@ -225,17 +225,17 @@ mod tests {
                 let mut tx=original.clone();let original_data=tx.walk_instructions().nth(source as usize).unwrap().data().clone();
                 if derived_out {
                     // ABI-derived exact-output shape, not another finalized original.
-                    let n=tx.meta.as_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|n|n.data==original_data).unwrap();
+                    let n=tx.meta.as_option_mut().unwrap().inner_instructions.iter_mut().flat_map(|g|&mut g.instructions).find(|n|n.data==original_data).unwrap();
                     n.data[8..16].copy_from_slice(&f[7].parse::<u64>().unwrap().to_le_bytes());n.data[16..24].copy_from_slice(&f[5].parse::<u64>().unwrap().to_le_bytes());n.data[40]=0;
                 }
                 let decoded=crate::process_transaction(tx.clone()).unwrap();let rows:Vec<_>=decoded.swaps.iter().filter(|s|s.source_index==Some(source)&&s.amm==pancakeswap::PROGRAM_ID).collect();
                 assert_eq!(rows.len(),1,"{} derivedOut={derived_out}",f[0]);let row=rows[0];
-                assert!(row.transfer_verified);assert_eq!(row.protocol,pb::Protocol::Pancakeswap as i32);assert_eq!(row.source_transfer_index,Some(source+1));
+                assert!(row.transfer_verified);assert_eq!(row.protocol,pb::Protocol::Pancakeswap);assert_eq!(row.source_transfer_index,Some(source+1));
                 assert_eq!((base58::encode(&row.amm_pool),base58::encode(&row.user),base58::encode(&row.input_mint),row.input_amount,base58::encode(&row.output_mint),row.output_amount),
                     (f[2].into(),f[3].into(),f[4].into(),f[5].parse().unwrap(),f[6].into(),f[7].parse().unwrap()));
                 let verify_route=|transaction:&ConfirmedTransaction| {
-                    let mut candidate=row.clone();candidate.protocol=pb::Protocol::JupiterV4 as i32;let mut candidates=vec![candidate];
-                    let mints=TokenMintLookup::new(transaction,transaction.meta.as_ref().unwrap());
+                    let mut candidate=row.clone();candidate.protocol=pb::Protocol::JupiterV4.into();let mut candidates=vec![candidate];
+                    let mints=TokenMintLookup::new(transaction,transaction.meta.as_option().unwrap());
                     crate::quality::verify_with_fees(transaction,&mints,&mut candidates,false,|_,_|None);candidates
                 };
                 assert_eq!(verify_route(&tx).len(),1);
@@ -243,7 +243,7 @@ mod tests {
                 for mode in 0..37 {
                     let mut wrong=tx.clone();
                     if mode<24 || mode==36 {
-                        let g=wrong.meta.as_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|n|n.data==native)).unwrap();
+                        let g=wrong.meta.as_option_mut().unwrap().inner_instructions.iter_mut().find(|g|g.instructions.iter().any(|n|n.data==native)).unwrap();
                         let p=g.instructions.iter().position(|n|n.data==native).unwrap();let a=g.instructions[p].accounts.clone();let n=&mut g.instructions;
                         match mode {
                             0=>n[p].data[0]^=1,1=>n[p].data.push(0),
@@ -256,15 +256,15 @@ mod tests {
                             _=>n[p+2].program_id_index=u32::from(a[0]),
                         }
                     } else if mode<34 {
-                        let log=wrong.meta.as_mut().unwrap().log_messages.iter_mut().find(|l|l.starts_with("Program data: ")&&base64::engine::general_purpose::STANDARD.decode(&l[14..]).is_ok_and(|e|e.len()==205&&e.starts_with(&[64,198,205,232,38,8,113,226])&&e[8..40]==row.amm_pool)).unwrap();
+                        let log=wrong.meta.as_option_mut().unwrap().log_messages.iter_mut().find(|l|l.starts_with("Program data: ")&&base64::engine::general_purpose::STANDARD.decode(&l[14..]).is_ok_and(|e|e.len()==205&&e.starts_with(&[64,198,205,232,38,8,113,226])&&e[8..40]==row.amm_pool)).unwrap();
                         let mut e=base64::engine::general_purpose::STANDARD.decode(&log[14..]).unwrap();
                         if mode==33{e.push(0);}else{e[match mode{24=>8,25=>40,26=>72,27=>104,28=>136,29=>152,30=>144,31=>160,_=>168}]^=1;}
                         *log=format!("Program data: {}",base64::engine::general_purpose::STANDARD.encode(e));
                     } else if mode==34 {
                         let native_ix=tx.walk_instructions().nth(source as usize).unwrap();let a=native_ix.accounts();let k=tx.resolved_accounts();let position=k.iter().position(|key|*key==a[6].0).unwrap();
-                        let b=wrong.meta.as_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index as usize==position).unwrap().ui_token_amount.as_mut().unwrap();b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();
+                        let b=wrong.meta.as_option_mut().unwrap().post_token_balances.iter_mut().find(|b|b.account_index as usize==position).unwrap().ui_token_amount.as_option_mut().unwrap();b.amount=(b.amount.parse::<u64>().unwrap()+1).to_string();
                     } else {
-                        wrong.meta.as_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(pancakeswap::PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(pancakeswap::PROGRAM_ID)));
+                        wrong.meta.as_option_mut().unwrap().log_messages.iter_mut().filter(|l|**l==format!("Program {} success",base58::encode(pancakeswap::PROGRAM_ID))).for_each(|l|*l=format!("Program {} failed: mutation",base58::encode(pancakeswap::PROGRAM_ID)));
                     }
                     assert!(crate::process_transaction(wrong.clone()).map_or(true,|d|d.swaps.iter().all(|s|s.source_index!=Some(source)||s.amm!=pancakeswap::PROGRAM_ID)),"native Pancake mode{mode} derivedOut={derived_out}");
                     assert!(verify_route(&wrong).is_empty(),"routed Pancake mode{mode} derivedOut={derived_out}");

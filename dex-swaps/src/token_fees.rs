@@ -779,7 +779,7 @@ mod tests {
             assert_eq!(decoded.swaps.len(), baseline_count + expected.len());
             for (index, net) in expected {
                 let swap = decoded.swaps.iter().find(|swap| swap.source_index == Some(index)).unwrap();
-                assert_eq!(swap.protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDlmm as i32);
+                assert_eq!(swap.protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDlmm);
                 assert_eq!(swap.output_mint, dew);
                 assert_eq!(swap.output_amount, net);
                 assert!(swap.transfer_verified);
@@ -812,7 +812,7 @@ mod tests {
                 "incorrect metadata must disagree with the finalized receipt ledger"
             );
             let mut truncated = tx.clone();
-            truncated.meta.as_mut().unwrap().log_messages.clear();
+            truncated.meta.as_option_mut().unwrap().log_messages.clear();
             let unproven = crate::process_transaction_with_metadata(
                 truncated,
                 None,
@@ -886,8 +886,8 @@ mod tests {
         let program = base58::encode(token_2022::PROGRAM_ID);
         let data = vec![init, initialize, set, vec![9]];
         let mut tx = ConfirmedTransaction {
-            transaction: Some(Transaction {
-                message: Some(Message {
+            transaction: buffa::MessageField::some(Transaction {
+                message: buffa::MessageField::some(Message {
                     account_keys: vec![vec![7; 32], vec![8; 32], token_2022::PROGRAM_ID.to_vec()],
                     instructions: data
                         .into_iter()
@@ -901,7 +901,7 @@ mod tests {
                 }),
                 ..Default::default()
             }),
-            meta: Some(TransactionStatusMeta {
+            meta: buffa::MessageField::some(TransactionStatusMeta {
                 log_messages: (0..4)
                     .flat_map(|_| [format!("Program {program} invoke [1]"), format!("Program {program} success")])
                     .collect(),
@@ -919,7 +919,7 @@ mod tests {
         assert!(matches!(changes[2].2, Change::SetFee(_)));
         assert_eq!(changes[3].2, Change::Close);
         assert!(changes.windows(2).all(|pair| pair[0].0 < pair[1].0));
-        block.transactions[0].meta.as_mut().unwrap().log_messages.clear();
+        block.transactions[0].meta.as_option_mut().unwrap().log_messages.clear();
         assert_eq!(
             native_changes(&block, 100),
             changes,
@@ -927,7 +927,7 @@ mod tests {
         );
         // A wrapper can catch a failed CPI; move the same calls under it so
         // rollback and truncated-log tests reflect actual Solana semantics.
-        let message = block.transactions[0].transaction.as_mut().unwrap().message.as_mut().unwrap();
+        let message = block.transactions[0].transaction.as_option_mut().unwrap().message.as_option_mut().unwrap();
         let originals = std::mem::take(&mut message.instructions);
         let wrapper_index = message.account_keys.len() as u32;
         message.account_keys.push(vec![9; 32]);
@@ -936,7 +936,7 @@ mod tests {
             accounts: vec![],
             data: vec![],
         });
-        let meta = block.transactions[0].meta.as_mut().unwrap();
+        let meta = block.transactions[0].meta.as_option_mut().unwrap();
         meta.inner_instructions = vec![substreams_solana::pb::sf::solana::r#type::v1::InnerInstructions {
             index: 0,
             instructions: originals
@@ -958,11 +958,11 @@ mod tests {
         meta.log_messages.push(format!("Program {wrapper} success"));
         meta.log_messages[6] = format!("Program {program} failed: caught");
         assert_eq!(native_changes(&block, 100).len(), 3);
-        block.transactions[0].meta.as_mut().unwrap().log_messages.truncate(6);
+        block.transactions[0].meta.as_option_mut().unwrap().log_messages.truncate(6);
         let changes = native_changes(&block, 100);
         assert_eq!(changes[2].2, Change::UnknownSetFee);
         assert_eq!(changes[3].2, Change::UnknownClose);
-        tx.transaction.as_mut().unwrap().message.as_mut().unwrap().instructions[0].data.push(0);
+        tx.transaction.as_option_mut().unwrap().message.as_option_mut().unwrap().instructions[0].data.push(0);
         assert_eq!(
             instruction_change(&tx.walk_instructions().next().unwrap(), 100).unwrap().1,
             Change::UnknownInitializeFee
@@ -1102,8 +1102,8 @@ mod tests {
         data.extend_from_slice(&200u64.to_le_bytes());
         let program = base58::encode(token_2022::PROGRAM_ID);
         let tx = ConfirmedTransaction {
-            transaction: Some(Transaction {
-                message: Some(Message {
+            transaction: buffa::MessageField::some(Transaction {
+                message: buffa::MessageField::some(Message {
                     account_keys: vec![vec![7; 32], vec![8; 32], token_2022::PROGRAM_ID.to_vec()],
                     instructions: vec![CompiledInstruction {
                         program_id_index: 2,
@@ -1114,7 +1114,7 @@ mod tests {
                 }),
                 ..Default::default()
             }),
-            meta: Some(TransactionStatusMeta {
+            meta: buffa::MessageField::some(TransactionStatusMeta {
                 log_messages: vec![format!("Program {program} invoke [1]"), format!("Program {program} success")],
                 ..Default::default()
             }),
@@ -1278,7 +1278,7 @@ mod tests {
             let decoded = decode(tx.clone());
             let rows: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(native_index)).collect();
             assert_eq!(rows.len(), 1);
-            assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDaam as i32);
+            assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDaam);
             assert_eq!((rows[0].input_amount, rows[0].output_amount), (input_amount, output_amount));
             assert_eq!(rows[0].source_transfer_index, Some(native_index + 1));
             assert!(rows[0].transfer_verified);
@@ -1291,7 +1291,7 @@ mod tests {
             for role in [0, 2, 3, 8, 9, 10, 11] {
                 let mut altered = tx.clone();
                 let mut changed = 0;
-                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                     for instruction in &mut group.instructions {
                         if instruction.data == native_data {
                             instruction.accounts[role] = instruction.accounts[1];
@@ -1305,7 +1305,7 @@ mod tests {
             for (data, role) in [(&output_data, 0), (&output_data, 3), (&referral_data, 0), (&referral_data, 3)] {
                 let mut altered = tx.clone();
                 let mut changed = 0;
-                for group in &mut altered.meta.as_mut().unwrap().inner_instructions {
+                for group in &mut altered.meta.as_option_mut().unwrap().inner_instructions {
                     for instruction in &mut group.instructions {
                         if &instruction.data == data {
                             instruction.accounts[role] = instruction.accounts[2];
@@ -1318,7 +1318,7 @@ mod tests {
             }
             let mut hidden_event = tx.clone();
             let mut hidden = 0;
-            for group in &mut hidden_event.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut hidden_event.meta.as_option_mut().unwrap().inner_instructions {
                 for instruction in &mut group.instructions {
                     if matches!(
                         substreams_solana_idls::meteora::daam::anchor_cpi_event::unpack(&instruction.data),
@@ -1338,7 +1338,7 @@ mod tests {
             // positive referral cannot be reclassified as the swap output.
             let mut zero_output = tx.clone();
             let mut changed = 0;
-            for group in &mut zero_output.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut zero_output.meta.as_option_mut().unwrap().inner_instructions {
                 for instruction in &mut group.instructions {
                     if instruction.data == output_data {
                         instruction.data[1..9].fill(0);
@@ -1349,7 +1349,7 @@ mod tests {
             assert_eq!(changed, 1);
             assert!(decode(zero_output).swaps.iter().all(|swap| swap.source_index != Some(native_index)));
             let mut missing_logs = tx;
-            missing_logs.meta.as_mut().unwrap().log_messages.clear();
+            missing_logs.meta.as_option_mut().unwrap().log_messages.clear();
             assert!(decode(missing_logs).swaps.iter().all(|swap| swap.source_index != Some(native_index)));
         }
     }
@@ -1371,7 +1371,7 @@ mod tests {
         ] {
             let mut tx = substreams::proto::decode::<ConfirmedTransaction>(&fixture.to_vec()).unwrap();
             let mut hidden = 0;
-            for group in &mut tx.meta.as_mut().unwrap().inner_instructions {
+            for group in &mut tx.meta.as_option_mut().unwrap().inner_instructions {
                 for ix in &mut group.instructions {
                     if ix.data.len() == 145 && ix.data[8..16] == [81, 108, 227, 190, 205, 208, 10, 196] {
                         // Keep the actual CPI instruction position/runtime logs
@@ -1394,10 +1394,10 @@ mod tests {
                 let rows: Vec<_> = decoded.swaps.iter().filter(|swap| swap.source_index == Some(*index)).collect();
                 assert_eq!(rows.len(), 1);
                 assert_eq!(rows[0].output_amount, *amount);
-                assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDlmm as i32);
+                assert_eq!(rows[0].protocol, proto::pb::dex::swaps::v1::Protocol::MeteoraDlmm);
                 assert!(rows[0].transfer_verified);
             }
-            tx.meta.as_mut().unwrap().log_messages.clear();
+            tx.meta.as_option_mut().unwrap().log_messages.clear();
             let unproven =
                 crate::process_transaction_with_metadata(tx, None, |_, _| None, |_, _| None, |mint, _| (mint == dew).then(|| schedule.at(1055)).flatten())
                     .unwrap();

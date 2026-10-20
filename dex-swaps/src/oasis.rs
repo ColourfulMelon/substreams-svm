@@ -1,7 +1,8 @@
 //! Oasis/MarcoPolo's observed Anchor swap format. Jupiter v4 declares these
 //! account roles; finalized receipts and owned pool/vaults corroborate them.
 //! Do not classify other instructions or infer trades from arbitrary transfers.
-use substreams_solana::{b58, block_view::InstructionView};
+use substreams_solana::{block_view::InstructionView};
+use substreams_solana_macro::b58;
 
 pub(crate) const PROGRAM_ID: [u8; 32] = b58!("9tKE7Mbmj4mxDjWatikzGAtkoWosiiZX9y6J4Hfm2R8H");
 
@@ -66,7 +67,7 @@ mod tests {
             let swaps: Vec<_> = decoded.swaps.iter().filter(|swap| swap.amm.as_slice() == PROGRAM_ID).collect();
             assert_eq!(swaps.len(), 1, "one physical leg, including the Jupiter wrapper");
             let swap = swaps[0];
-            assert_eq!(swap.protocol, Protocol::Oasis as i32);
+            assert_eq!(swap.protocol, Protocol::Oasis);
             assert_eq!(swap.source_index, Some(index));
             assert_eq!(swap.source_transfer_index, Some(index + 1));
             assert_eq!(base58::encode(&swap.amm_pool), row[3]);
@@ -77,7 +78,7 @@ mod tests {
             assert!(swap.transfer_verified);
             for mode in 0..37 {
                 let mut altered = tx.clone();
-                let meta = altered.meta.as_mut().unwrap();
+                let meta = altered.meta.as_option_mut().unwrap();
                 let (group, position) = meta
                     .inner_instructions
                     .iter()

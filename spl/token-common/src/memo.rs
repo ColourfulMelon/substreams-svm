@@ -12,10 +12,13 @@ pub fn unpack_memo(instruction: &InstructionView, program_id: &[u8]) -> Option<p
     let memo = from_utf8(instruction.data());
     if let Ok(memo) = memo {
         // Create a Memo instruction
-        return Some(pb::instruction::Instruction::Memo(pb::Memo {
-            data: instruction.data().to_vec(),
-            memo: memo.to_string(),
-        }));
+        return Some(pb::instruction::Instruction::Memo(
+            pb::Memo {
+                data: instruction.data().to_vec(),
+                memo: memo.to_string(),
+            }
+            .into(),
+        ));
     }
     None
 }

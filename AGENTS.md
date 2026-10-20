@@ -12,3 +12,6 @@ This file keeps agent guidance tool-agnostic and portable.
 - Prefer docs in `docs/` as source of durable repository knowledge.
 - Treat `.github/` as optional tooling-specific integration, not canonical docs.
 - When adding new repo orientation notes, update `docs/repo-navigation.md`.
+- New Substreams modules use the current workspace SDK and Buffa bindings. Read
+  `docs/protobuf.md` before changing generated models, protobuf dependencies or
+  native decoder boundaries; preserve the wire schema and explicit field presence.

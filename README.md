@@ -19,6 +19,7 @@ For a practical contributor map, start here:
 - `svm-*`: aggregate domain packages that emit `DatabaseChanges`
 - `svm-*/clickhouse`: ClickHouse sink manifests + schema files
 - `proto/`: shared protobuf schemas
+- `spl/transfers/`: native, storage-independent SPL transfer projector (no Substreams runtime), wrapped by `spl/transfers-substreams`
 - `common/`: shared Rust helpers
 - `spkg/`: local SPKG dependencies used by aggregate packages
 
@@ -124,3 +125,10 @@ cargo build --target wasm32-unknown-unknown --release
 ```
 
 Most module directories also expose `make build`, `make pack`, `make noop`, and `make gui` targets.
+
+## Rust SDK and protobuf models
+
+New modules use Substreams 0.8, Solana 0.16 and Buffa-generated messages.
+The protobuf wire schemas and existing Substreams module outputs remain the
+compatibility contract. See [protobuf development](docs/protobuf.md) for pinned
+code generation, message presence, enum handling and native decoder boundaries.
