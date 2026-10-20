@@ -4,8 +4,9 @@
 (Buffa) by merging upstream `main` at `e78c2ff1`. It pins the IDL fork at
 `8a11a11e898ebb1d448102f969725cd34c543361`, which applies the Pump.fun V2/V3 and
 Orca/DLMM fixes to the upstream Buffa IDL line. Decoding logic is unchanged from
-`pluto.33`. Upstream's native projection layer and its Orca event re-pairing
-(`0dd04b85`) are not adopted, so legacy output stays identical. The frozen
+`pluto.33`. Upstream's native projection layer is not adopted, so legacy output
+stays identical. Upstream's Orca pool and direction matching (`0dd04b85`) was
+already in the Pluto line as `1b2a97f0`, with the same fixture and tests. The frozen
 metadata binary and all six metadata module hashes are unchanged; only
 `map_events` and `db_out` change hash. The SQL schema is unchanged.
 
